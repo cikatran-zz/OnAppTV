@@ -9,20 +9,20 @@ const initialState = {
 
 export default function bannerReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.FETCHING_BANNER:
+        case actionTypes.FETCHING_CHANNEL:
             return {
                 ...state,
                 data: null,
                 isFetching: true
             };
-        case actionTypes.FETCH_BANNER_SUCCESS:
+        case actionTypes.FETCH_CHANNEL_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
                 fetched: true,
                 data: action.data
             };
-        case actionTypes.FETCH_BANNER_FAILURE:
+        case actionTypes.FETCH_CHANNEL_FAILURE:
             return {
                 ...state,
                 isFetching: false,
