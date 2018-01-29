@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, ScrollView, ImageBackground} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import {colors} from '../../utils/themeConfig'
 
@@ -20,7 +20,7 @@ export default class App extends Component {
         this.props.getChannel();
     };
 
-    _renderChannelList = ({item}) => (
+    _renderChannelListItem = ({item}) => (
         <View style={styles.itemContainer}>
             <View style={styles.itemImageContainer}>
                 <Image
@@ -36,52 +36,66 @@ export default class App extends Component {
 
     _keyExtractor = (item, index) => item.id;
 
+    _renderBanner = ({item}) => (
+      <View style={styles.bannerContainer}>
+          <Image
+            style={styles.bannerImage}
+            source={{uri: item.header_banner.cover_image}}/>
+          <View style={styles.labelGroup}>
+              <PinkRoundedLabel text="New Movie"/>
+              <Text style={styles.bannerTitle}>
+                {item.header_banner.title}
+              </Text>
+              <Text style={styles.bannerSubtitle}>
+                {item.header_banner.sub_title}
+              </Text>
+          </View>
+          <View style={styles.bannerPlayIconGroup}>
+              <View
+                blurRadius={15}
+                source={{uri: ''}}
+                style={styles.bannerPlayIconBackground}/>
+              <Image
+                resizeMode={'contain'}
+                style={styles.bannerPlayIcon}
+                source={{uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png'}}/>
 
+          </View>
+      </View>
+    )
+
+    _renderChannelList = ({item}) => (
+          <FlatList
+            style={styles.listHorizontal}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            data={item}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderChannelListItem}
+      />
+    )
+
+    _renderAds = () => (
+      <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
+          <View style={styles.adsLabelContainer}>
+              <PinkRoundedLabel text="+10.00$/MONTH"/>
+          </View>
+      </ImageBackground>
+    )
     render() {
         const {banner, channel} = this.props;
         if (!banner.data || banner.isFetching || !channel.data || channel.isFetching)
             return null;
         return (
-            <ScrollView style={styles.container}>
-                <View style={styles.bannerContainer}>
-                    <Image
-                        style={styles.bannerImage}
-                        source={{uri: banner.data.header_banner.cover_image}}/>
-                    <View style={styles.labelGroup}>
-                        <PinkRoundedLabel text="New Movie"/>
-                        <Text style={styles.bannerTitle}>
-                            {banner.data.header_banner.title}
-                        </Text>
-                        <Text style={styles.bannerSubtitle}>
-                            {banner.data.header_banner.sub_title}
-                        </Text>
-                    </View>
-                    <View style={styles.bannerPlayIconGroup}>
-                        <View
-                            blurRadius={15}
-                            source={{uri: ''}}
-                            style={styles.bannerPlayIconBackground}/>
-                        <Image
-                            resizeMode={'contain'}
-                            style={styles.bannerPlayIcon}
-                            source={{uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png'}}/>
-
-                    </View>
-                </View>
-                <FlatList
-                    style={styles.listHorizontal}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    data={channel.data}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderChannelList}
-                />
-                <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
-                    <View style={styles.adsLabelContainer}>
-                    <PinkRoundedLabel text="+10.00$/MONTH"/>
-                    </View>
-                </ImageBackground>
-            </ScrollView>
+            <SectionList
+              style={styles.container}
+              keyExtractor={this._keyExtractor}
+              sections={[
+                {data:[banner.data], renderItem: this._renderBanner},
+                {data:[channel.data], renderItem: this._renderChannelList},
+                {data:["ads"], renderItem: this._renderAds},
+              ]}
+            />
         );
     }
 }
