@@ -53,8 +53,6 @@ const styles = StyleSheet.create({
     aspectRatio: 2,
     borderRadius: 3,
     overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems:'center'
   },
   progressView: {
     backgroundColor: colors.progressColor,
@@ -71,7 +69,9 @@ const styles = StyleSheet.create({
   },
   textCenter: {
     ...textWhiteDefault,
-    textAlign: 'center'
+    textAlign: 'center',
+    alignSelf: 'center',
+    width: 150
   }
 });
 
