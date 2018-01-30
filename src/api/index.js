@@ -32,5 +32,8 @@ export const getChannel = () => {
 export const getLive = () => {
   return get(config.endpoints.LIVE);
 };
+export const getVOD = () => {
+  return get(config.endpoints.VOD);
+};
 
 
