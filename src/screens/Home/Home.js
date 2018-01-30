@@ -5,9 +5,10 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, findNodeHandle} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
-import {colors} from '../../utils/themeConfig'
+import VideoThumbnail from '../../components/VideoThumbnail'
+import {colors, textDarkDefault, textLightDefault} from '../../utils/themeConfig';
 
 export default class Home extends Component {
 
@@ -18,6 +19,7 @@ export default class Home extends Component {
     componentDidMount() {
         this.props.getBanner();
         this.props.getChannel();
+        this.props.getLive();
     };
 
     _renderChannelListItem = ({item}) => (
@@ -52,8 +54,7 @@ export default class Home extends Component {
           </View>
           <View style={styles.bannerPlayIconGroup}>
               <View
-                blurRadius={15}
-                source={{uri: ''}}
+                ref={(playBackground) => { this.playBackground = playBackground; }}
                 style={styles.bannerPlayIconBackground}/>
               <Image
                 resizeMode={'contain'}
@@ -71,9 +72,17 @@ export default class Home extends Component {
             showsHorizontalScrollIndicator={false}
             data={item}
             keyExtractor={this._keyExtractor}
-            renderItem={this._renderChannelListItem}
-      />
+            renderItem={this._renderChannelListItem} />
     )
+
+  _renderOnLiveItem = ({item}) => (
+    <View style={styles.videoThumbnailContainer}>
+      <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+      <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
+      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
+      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+    </View>
+  )
 
     _renderAds = () => (
       <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
@@ -82,18 +91,42 @@ export default class Home extends Component {
           </View>
       </ImageBackground>
     )
+
+    _renderOnLiveList = ({item}) => (
+        <FlatList
+          style={{flex: 1}}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderOnLiveItem} />
+    )
+
+    _renderSectionHeader = ({section}) => {
+      if (section.showHeader) {
+      return (
+        <View style={styles.headerSection}>
+          <PinkRoundedLabel text={section.title}/>
+        </View>
+      )} else {
+        return null
+      }
+    }
     render() {
-        const {banner, channel} = this.props;
-        if (!banner.data || banner.isFetching || !channel.data || channel.isFetching)
+        const {banner, channel, live} = this.props;
+        if (!banner.data || banner.isFetching || !channel.data || channel.isFetching || !live.data || live.isFetching)
             return null;
         return (
             <SectionList
               style={styles.container}
               keyExtractor={this._keyExtractor}
+              stickySectionHeadersEnabled={true}
+              renderSectionHeader={this._renderSectionHeader}
               sections={[
-                {data:[banner.data], renderItem: this._renderBanner},
-                {data:[channel.data], renderItem: this._renderChannelList},
-                {data:["ads"], renderItem: this._renderAds},
+                {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
+                {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
+                {data:["ads"], showHeader: false, renderItem: this._renderAds},
+                {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList}
               ]}
             />
         );
@@ -179,10 +212,31 @@ const styles = StyleSheet.create({
         backgroundColor: colors.mainLightGrey,
         width: 80,
         height: 80,
+        overflow: 'hidden'
     },
     itemImage: {
         width: 80,
         height: 80,
-        borderRadius: 10,
+    },
+    headerSection: {
+        flexDirection: 'row',
+        marginLeft: 10,
+        marginTop: 20,
+        marginBottom: 15
+    },
+    videoThumbnailContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textVideoTitle: {
+      ...textDarkDefault,
+      width: 150,
+      textAlign:'center',
+    },
+    textVideoInfo: {
+      ...textLightDefault,
+      width: 150,
+      textAlign:'center',
     }
 });
