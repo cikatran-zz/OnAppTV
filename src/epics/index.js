@@ -8,7 +8,8 @@ const rootEpic = combineEpics(
     getBannerEpic,
     getChannelEpic,
     getCategoryEpic,
-    getLiveEpic
+    getLiveEpic,
+    getVODEpic
 );
 
 export default rootEpic;

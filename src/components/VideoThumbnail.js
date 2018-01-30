@@ -1,8 +1,8 @@
 import React from 'react'
 import {
-  StyleSheet, ImageBackground, View
+  StyleSheet, ImageBackground, View, Text
 } from 'react-native'
-import {colors} from '../utils/themeConfig'
+import {colors, textWhiteDefault} from '../utils/themeConfig'
 
 class VideoThumbnail extends React.PureComponent{
   constructor(props){
@@ -34,6 +34,7 @@ class VideoThumbnail extends React.PureComponent{
       <View style={styles.container}>
         <ImageBackground imageStyle={{ borderRadius: 3 }} style={styles.imageContainer} source={{uri: this.props.imageUrl}}>
           <View style={[styles.progressView, this._runProgressView()]}/>
+          <Text style={styles.textCenter}>{this.props.textCenter}</Text>
         </ImageBackground>
           {this._renderRedlineProgress()}
       </View>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 2,
     borderRadius: 3,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   progressView: {
     backgroundColor: colors.progressColor,
@@ -65,6 +66,12 @@ const styles = StyleSheet.create({
     width: 1,
     left: '0%',
     bottom: -15
+  },
+  textCenter: {
+    ...textWhiteDefault,
+    textAlign: 'center',
+    alignSelf: 'center',
+    width: 150
   }
 });
 
