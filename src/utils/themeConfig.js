@@ -4,6 +4,7 @@ export const colors = {
   textWhitePrimary: '#ffffff',
   textGrey: '#a5a5a5',
   textDarkGrey: '#8a8a8a',
-  mainDarkGrey: '#767676',
-  mainLightGrey:'#ededed'
+  mainDarkGrey: '#767676F2',
+  mainLightGrey:'#ededed',
+  progressColor: '#00000080'
 };

@@ -5,11 +5,12 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, findNodeHandle} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
-import {colors} from '../../utils/themeConfig'
+import VideoThumbnail from '../../components/VideoThumbnail'
+import {colors} from '../../utils/themeConfig';
 
-export default class App extends Component {
+export default class Home extends Component {
 
     constructor(props) {
         super(props);
@@ -52,8 +53,7 @@ export default class App extends Component {
           </View>
           <View style={styles.bannerPlayIconGroup}>
               <View
-                blurRadius={15}
-                source={{uri: ''}}
+                ref={(playBackground) => { this.playBackground = playBackground; }}
                 style={styles.bannerPlayIconBackground}/>
               <Image
                 resizeMode={'contain'}
@@ -82,6 +82,10 @@ export default class App extends Component {
           </View>
       </ImageBackground>
     )
+
+    _renderOnLive = () => (
+      <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+    )
     render() {
         const {banner, channel} = this.props;
         if (!banner.data || banner.isFetching || !channel.data || channel.isFetching)
@@ -94,6 +98,7 @@ export default class App extends Component {
                 {data:[banner.data], renderItem: this._renderBanner},
                 {data:[channel.data], renderItem: this._renderChannelList},
                 {data:["ads"], renderItem: this._renderAds},
+                {data:["live"], renderItem: this._renderOnLive},
               ]}
             />
         );
@@ -179,10 +184,10 @@ const styles = StyleSheet.create({
         backgroundColor: colors.mainLightGrey,
         width: 80,
         height: 80,
+        overflow: 'hidden'
     },
     itemImage: {
         width: 80,
         height: 80,
-        borderRadius: 10,
     }
 });
