@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
 import {
-    StyleSheet, Text, SectionList, View, Image, FlatList
+    StyleSheet, Text, SectionList, View, Image, FlatList, Platform
 } from 'react-native'
-import {colors} from '../../utils/themeConfig'
+import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeConfig'
+import {connect} from "react-redux";
+import VideoThumbnail from '../../../components/VideoThumbnail'
+import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
 
 class HeaderLabel extends React.PureComponent{
     constructor(props){
@@ -33,50 +36,90 @@ class CategoryPageView extends React.PureComponent{
     constructor(props){
         super(props);
     }
+    componentDidMount() {
+        this.props.getLive();
+    };
     _keyExtractor = (item, index) => item.id;
-    _renderBanner = ({item}) => {
-        console.log("Banner: " + item);
+    _renderSlotMachines = ({item}) => {
         return (
-            <View style={styles.bannerContainer}>
+            <View style={styles.slotMachineContainer}>
             { item.map((it, index)=> {
                 return (<Image
                     keyExtractor={this._keyExtractor + index}
-                    style={styles.bannerImage}
+                    style={styles.slotMachineImage}
                     source={{uri: it.cover_image}}/>
                 )
             })}
             </View>
         )
     }
+    _renderOnLiveItem = ({item}) => (
+        <View style={styles.videoThumbnailContainer}>
+            <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+            <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
+            <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
+            <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+        </View>
+    )
+    _renderOnLiveList = ({item}) => (
+        <FlatList
+            style={{flex: 1}}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            data={item}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderOnLiveItem} />
+    )
+    _renderSectionHeader = ({section}) => {
+        if (section.showHeader) {
+            return (
+                <View style={styles.headerSection}>
+                    <PinkRoundedLabel text={section.title}/>
+                </View>
+            )} else {
+            return null
+        }
+    }
 
     render(){
+        const {live} = this.props;
+        if (!live.data || live.isFetching)
+            return null;
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
                 <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor}/>
                 <SectionList
                     style={styles.container}
                     keyExtractor={this._keyExtractor}
+                    stickySectionHeadersEnabled={true}
+                    renderSectionHeader={this._renderSectionHeader}
+                    showsVerticalScrollIndicator={false}
                     sections={[
-                        {data:[this.props.banner], renderItem: this._renderBanner}
+                        {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
+                        {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList}
                     ]}
                 />
             </View>
         )
     }
 }
+
+export default CategoryPageView;
+
 const styles = StyleSheet.create({
 
     rootView: {
         width: '100%',
         height: '100%',
-        backgroundColor: colors.screenBackground
+        backgroundColor: colors.screenBackground,
+        paddingBottom: (Platform.OS === 'ios') ? 30 : 0
     },
 
-    bannerImage: {
+    slotMachineImage: {
         width: '100%',
         aspectRatio: 2.0,
     },
-    bannerContainer: {
+    slotMachineContainer: {
         width: '100%',
         justifyContent: 'center',
         backgroundColor: colors.screenBackground,
@@ -87,11 +130,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.screenBackground,
         marginTop: 30
-    },
-    hotContentImageStyle: {
-        width: '100%',
-        aspectRatio: 2.0,
-        justifyContent: 'center'
     },
     beginHeaderLabelStyle : {
         width: '60%',
@@ -125,7 +163,26 @@ const styles = StyleSheet.create({
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary
-    }
+    },
+    videoThumbnailContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textVideoTitle: {
+        ...textDarkDefault,
+        width: 150,
+        textAlign:'center',
+    },
+    textVideoInfo: {
+        ...textLightDefault,
+        width: 150,
+        textAlign:'center',
+    },
+    headerSection: {
+        flexDirection: 'row',
+        marginLeft: 10,
+        marginTop: 20,
+        marginBottom: 15
+    },
 });
-
-export default CategoryPageView;

@@ -39,9 +39,9 @@ export default class Home extends Component {
     _keyExtractor = (item, index) => item.id;
 
     _renderBanner = ({item}) => (
-      <View style={styles.bannerContainer}>
+      <View style={styles.slotMachineContainer}>
           <Image
-            style={styles.bannerImage}
+            style={styles.slotMachineImage}
             source={{uri: item.header_banner.cover_image}}/>
           <View style={styles.labelGroup}>
               <PinkRoundedLabel text="New Movie"/>
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.screenBackground,
     },
-    bannerContainer: {
+    slotMachineContainer: {
         width: '100%',
         aspectRatio: 1.3,
         justifyContent: 'center',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: colors.textGrey
     },
-    bannerImage: {
+    slotMachineImage: {
         width: '100%',
         height: '100%'
     },

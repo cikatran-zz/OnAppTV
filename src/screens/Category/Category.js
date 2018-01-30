@@ -33,12 +33,12 @@ export default class Category extends Component {
         if (!category.data || category.isFetching) {
             return null;
         }
-        console.log(category.data);
-        _keyExtractor = (item, index) => item.id;
+        _keyExtractor = (item, index) => item.id + index;
         return (
             <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
                 { category.data.map((prop, index)=> {
-                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} banner={prop.banner} keyExtractor={this._keyExtractor + index}  />)
+                    console.log("DATA: " ,category.data);
+                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} slotMachines={prop.slot_machines} keyExtractor={this._keyExtractor}  />)
                 })}
             </Swiper>
         );
@@ -49,6 +49,7 @@ export default class Category extends Component {
 const styles = StyleSheet.create({
     pageViewStyle: {
         paddingTop: rootViewTopPadding(),
+        backgroundColor: colors.screenBackground
     }
 });
 
