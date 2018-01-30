@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-    StyleSheet, Text, SectionList
+    StyleSheet, Text, SectionList, View, Image, FlatList
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 
@@ -33,13 +33,61 @@ class CategoryPageView extends React.PureComponent{
     constructor(props){
         super(props);
     }
+    _keyExtractor = (item, index) => item.id;
+    _renderBanner = ({item}) => {
+        console.log("Banner: " + item);
+        return (
+            <View style={styles.bannerContainer}>
+            { item.map((it, index)=> {
+                return (<Image
+                    keyExtractor={this._keyExtractor + index}
+                    style={styles.bannerImage}
+                    source={{uri: it.cover_image}}/>
+                )
+            })}
+            </View>
+        )
+    }
+
     render(){
         return (
-            <HeaderLabel position={this.props.pagePosition} text={this.props.header}/>
+            <View keyExtractor={this._keyExtractor} style={styles.rootView}>
+                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor}/>
+                <SectionList
+                    style={styles.container}
+                    keyExtractor={this._keyExtractor}
+                    sections={[
+                        {data:[this.props.banner], renderItem: this._renderBanner}
+                    ]}
+                />
+            </View>
         )
     }
 }
 const styles = StyleSheet.create({
+
+    rootView: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: colors.screenBackground
+    },
+
+    bannerImage: {
+        width: '100%',
+        aspectRatio: 2.0,
+    },
+    bannerContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        backgroundColor: colors.screenBackground,
+        top: 0
+    },
+    container: {
+        flexDirection: 'column',
+        flex: 1,
+        backgroundColor: colors.screenBackground,
+        marginTop: 30
+    },
     hotContentImageStyle: {
         width: '100%',
         aspectRatio: 2.0,

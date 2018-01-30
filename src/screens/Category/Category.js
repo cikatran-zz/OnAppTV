@@ -15,10 +15,7 @@ export default class Category extends Component {
 
     componentDidMount() {
         this.props.getCategory();
-        console.log("Did mount")
     };
-
-    _keyExtractor = (item, index) => item.id;
 
     _getPagePosition = (index, length) => {
         if (index === 0) {
@@ -33,24 +30,25 @@ export default class Category extends Component {
 
     render() {
         const {category} = this.props;
-        if (!category.data || category.isFetching)
+        if (!category.data || category.isFetching) {
             return null;
+        }
         console.log(category.data);
+        _keyExtractor = (item, index) => item.id;
         return (
             <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
-                <CategoryPageView pagePosition="begin" header="TEST"/>
+                { category.data.map((prop, index)=> {
+                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} banner={prop.banner} keyExtractor={this._keyExtractor + index}  />)
+                })}
             </Swiper>
         );
     }
 }
-// { category.data.map((prop, index)=> {
-//     <CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} />
-// })}
+
 
 const styles = StyleSheet.create({
     pageViewStyle: {
         paddingTop: rootViewTopPadding(),
-        backgroundColor: 'red'
     }
 });
 
