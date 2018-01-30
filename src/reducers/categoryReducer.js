@@ -7,22 +7,22 @@ const initialState = {
     error: false,
 };
 
-export default function bannerReducer(state = initialState, action) {
+export default function categoryReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.FETCHING_BANNER:
+        case actionTypes.FETCHING_CATEGORY:
             return {
                 ...state,
                 data: null,
                 isFetching: true
             };
-        case actionTypes.FETCH_BANNER_SUCCESS:
+        case actionTypes.FETCHING_CATEGORY_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
                 fetched: true,
                 data: action.data
             };
-        case actionTypes.FETCH_BANNER_FAILURE:
+        case actionTypes.FETCHING_CATEGORY_FAILURE:
             return {
                 ...state,
                 isFetching: false,

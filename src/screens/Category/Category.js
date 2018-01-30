@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import { Pages } from 'react-native-pages';
+import Swiper from 'react-native-swiper'
 import {
-    FlatList, Image, StyleSheet, Text, View, ScrollView, ImageBackground, SafeAreaView,
-    Dimensions, Platform
+    FlatList, Image, StyleSheet, Text, View, ScrollView, ImageBackground,
 } from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
@@ -15,25 +14,43 @@ export default class Category extends Component {
     };
 
     componentDidMount() {
+        this.props.getCategory();
+        console.log("Did mount")
     };
 
     _keyExtractor = (item, index) => item.id;
 
+    _getPagePosition = (index, length) => {
+        if (index === 0) {
+            return 'begin';
+        } else if (index === length - 1) {
+            return 'end';
+        } else {
+            return 'inside';
+        }
+    };
+
 
     render() {
+        const {category} = this.props;
+        if (!category.data || category.isFetching)
+            return null;
+        console.log(category.data);
         return (
-            <Pages style={styles.pageViewStyle}>
-                <CategoryPageView pagePosition='begin' header='SPORTS' />
-                <CategoryPageView pagePosition='inside' header='MOVIES' />
-                <CategoryPageView pagePosition='end' header='ENTERTAINMENT'/>
-            </Pages>
+            <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
+                <CategoryPageView pagePosition="begin" header="TEST"/>
+            </Swiper>
         );
     }
 }
+// { category.data.map((prop, index)=> {
+//     <CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} />
+// })}
 
 const styles = StyleSheet.create({
     pageViewStyle: {
-        paddingTop: rootViewTopPadding()
+        paddingTop: rootViewTopPadding(),
+        backgroundColor: 'red'
     }
 });
 

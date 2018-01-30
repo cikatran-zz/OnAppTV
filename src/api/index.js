@@ -30,4 +30,8 @@ export const getChannel = () => {
     return get(config.endpoints.CHANNEL);
 };
 
+export const getCategory = () => {
+    return get(config.endpoints.CATEGORY);
+};
+
 
