@@ -9,7 +9,7 @@ import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} f
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import {colors} from '../../utils/themeConfig'
 
-export default class App extends Component {
+export default class Home extends Component {
 
     constructor(props) {
         super(props);
