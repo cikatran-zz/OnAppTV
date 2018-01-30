@@ -2,13 +2,13 @@ import * as actionTypes from './actionTypes';
 
 export function getLive() {
   return {
-    type: actionTypes.FETCHING_CHANNEL,
+    type: actionTypes.FETCHING_LIVE,
   }
 }
 
 export function getLiveSuccess(data) {
   return {
-    type: actionTypes.FETCH_CHANNEL_SUCCESS,
+    type: actionTypes.FETCH_LIVE_SUCCESS,
     data: data.data
   }
 }
@@ -16,7 +16,7 @@ export function getLiveSuccess(data) {
 
 export function getLiveFailure(error) {
   return {
-    type: actionTypes.FETCH_CHANNEL_FAILURE,
+    type: actionTypes.FETCH_LIVE_FAILURE,
     errorMessage: error
   }
 }

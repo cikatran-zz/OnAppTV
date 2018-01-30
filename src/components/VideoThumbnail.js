@@ -42,8 +42,9 @@ class VideoThumbnail extends React.PureComponent{
 }
 const styles = StyleSheet.create({
   container: {
-    width: '40%',
-    margin: 5,
+    width: 150,
+    marginVertical: 5,
+    marginHorizontal: 10
   },
   imageContainer: {
     flexDirection: 'row',
@@ -60,10 +61,10 @@ const styles = StyleSheet.create({
   redLine: {
     position: 'absolute',
     backgroundColor: colors.mainPink,
-    height: 30,
+    height: 25,
     width: 1,
     left: '0%',
-    bottom: -20
+    bottom: -15
   }
 });
 

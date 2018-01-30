@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, findNodeHandle} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
-import {colors} from '../../utils/themeConfig';
+import {colors, textDarkDefault, textLightDefault} from '../../utils/themeConfig';
 
 export default class Home extends Component {
 
@@ -19,7 +19,7 @@ export default class Home extends Component {
     componentDidMount() {
         this.props.getBanner();
         this.props.getChannel();
-        this.props.getLive()
+        this.props.getLive();
     };
 
     _renderChannelListItem = ({item}) => (
@@ -76,7 +76,12 @@ export default class Home extends Component {
     )
 
   _renderOnLiveItem = ({item}) => (
-    <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+    <View style={styles.videoThumbnailContainer}>
+      <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+      <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
+      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
+      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+    </View>
   )
 
     _renderAds = () => (
@@ -88,13 +93,13 @@ export default class Home extends Component {
     )
 
     _renderOnLiveList = ({item}) => (
-      <FlatList
-        style={styles.listHorizontal}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        data={item}
-        keyExtractor={this._keyExtractor}
-        renderItem={this._renderOnLiveItem} />
+        <FlatList
+          style={{flex: 1}}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderOnLiveItem} />
     )
 
     _renderSectionHeader = ({section}) => {
@@ -121,7 +126,7 @@ export default class Home extends Component {
                 {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
                 {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
                 {data:["ads"], showHeader: false, renderItem: this._renderAds},
-                {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList}
               ]}
             />
         );
@@ -218,5 +223,20 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 20,
         marginBottom: 15
+    },
+    videoThumbnailContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textVideoTitle: {
+      ...textDarkDefault,
+      width: 150,
+      textAlign:'center',
+    },
+    textVideoInfo: {
+      ...textLightDefault,
+      width: 150,
+      textAlign:'center',
     }
 });
