@@ -20,6 +20,7 @@ export default class Home extends Component {
         this.props.getBanner();
         this.props.getChannel();
         this.props.getLive();
+        this.props.getVOD();
     };
 
     _renderChannelListItem = ({item}) => (
@@ -102,6 +103,16 @@ export default class Home extends Component {
           renderItem={this._renderOnLiveItem} />
     )
 
+    _renderVODList = ({item}) => (
+      <FlatList
+        style={{flex: 1}}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={item}
+        keyExtractor={this._keyExtractor}
+        renderItem={this._renderOnLiveItem} />
+    )
+
     _renderSectionHeader = ({section}) => {
       if (section.showHeader) {
       return (
@@ -113,8 +124,11 @@ export default class Home extends Component {
       }
     }
     render() {
-        const {banner, channel, live} = this.props;
-        if (!banner.data || banner.isFetching || !channel.data || channel.isFetching || !live.data || live.isFetching)
+        const {banner, channel, live, vod} = this.props;
+        if (!banner.data || banner.isFetching ||
+          !channel.data || channel.isFetching ||
+          !live.data || live.isFetching ||
+          !vod.data || vod.isFetching)
             return null;
         return (
             <SectionList
@@ -126,7 +140,8 @@ export default class Home extends Component {
                 {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
                 {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
                 {data:["ads"], showHeader: false, renderItem: this._renderAds},
-                {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList}
+                {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                {data:[vod.data], title: "On VOD", showHeader: true, renderItem: this._renderVODList}
               ]}
             />
         );
