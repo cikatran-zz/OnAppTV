@@ -19,3 +19,8 @@ export const textLightDefault = {
   color: colors.textDarkGrey,
   fontSize: 12
 }
+
+export const textWhiteDefault = {
+  color: colors.textWhitePrimary,
+  fontSize: 14
+}
