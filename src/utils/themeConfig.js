@@ -24,3 +24,9 @@ export const textWhiteDefault = {
   color: colors.textWhitePrimary,
   fontSize: 14
 }
+
+export const borderedImageDefault = {
+  aspectRatio: 2,
+  borderRadius: 3,
+  overflow: 'hidden',
+}

@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, findNodeHandle} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
-import {colors, textDarkDefault, textLightDefault, textWhiteDefault} from '../../utils/themeConfig';
+import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -65,6 +65,14 @@ export default class Home extends Component {
                 source={{uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png'}}/>
 
           </View>
+      </View>
+    )
+
+    _renderFooter = ({item}) => (
+      <View style={styles.notificationContainer}>
+        <Image style={styles.notificationImage} source={{uri: item.cover_image}}/>
+        <Text style={styles.notificationTitle}>{item.title}</Text>
+        <Text style={styles.notificationSubTitle}>{item.sub_title}</Text>
       </View>
     )
 
@@ -170,6 +178,7 @@ export default class Home extends Component {
                 {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                 {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                 {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+                {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
         );
@@ -282,4 +291,20 @@ const styles = StyleSheet.create({
       width: 150,
       textAlign:'center',
     },
+    notificationContainer: {
+      flexDirection: 'column',
+      marginHorizontal: 10,
+    },
+    notificationImage: {
+      ...borderedImageDefault,
+      width: '100%',
+      aspectRatio: 2.5
+    },
+    notificationTitle: {
+      ...textDarkDefault,
+      marginVertical: 5
+    },
+    notificationSubTitle: {
+      ...textLightDefault
+    }
 });
