@@ -19,6 +19,7 @@ export default class Home extends Component {
     componentDidMount() {
         this.props.getBanner();
         this.props.getChannel();
+        this.props.getLive()
     };
 
     _renderChannelListItem = ({item}) => (
@@ -71,9 +72,12 @@ export default class Home extends Component {
             showsHorizontalScrollIndicator={false}
             data={item}
             keyExtractor={this._keyExtractor}
-            renderItem={this._renderChannelListItem}
-      />
+            renderItem={this._renderChannelListItem} />
     )
+
+  _renderOnLiveItem = ({item}) => (
+    <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+  )
 
     _renderAds = () => (
       <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
@@ -83,22 +87,41 @@ export default class Home extends Component {
       </ImageBackground>
     )
 
-    _renderOnLive = () => (
-      <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+    _renderOnLiveList = ({item}) => (
+      <FlatList
+        style={styles.listHorizontal}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={item}
+        keyExtractor={this._keyExtractor}
+        renderItem={this._renderOnLiveItem} />
     )
+
+    _renderSectionHeader = ({section}) => {
+      if (section.showHeader) {
+      return (
+        <View style={styles.headerSection}>
+          <PinkRoundedLabel text={section.title}/>
+        </View>
+      )} else {
+        return null
+      }
+    }
     render() {
-        const {banner, channel} = this.props;
-        if (!banner.data || banner.isFetching || !channel.data || channel.isFetching)
+        const {banner, channel, live} = this.props;
+        if (!banner.data || banner.isFetching || !channel.data || channel.isFetching || !live.data || live.isFetching)
             return null;
         return (
             <SectionList
               style={styles.container}
               keyExtractor={this._keyExtractor}
+              stickySectionHeadersEnabled={true}
+              renderSectionHeader={this._renderSectionHeader}
               sections={[
-                {data:[banner.data], renderItem: this._renderBanner},
-                {data:[channel.data], renderItem: this._renderChannelList},
-                {data:["ads"], renderItem: this._renderAds},
-                {data:["live"], renderItem: this._renderOnLive},
+                {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
+                {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
+                {data:["ads"], showHeader: false, renderItem: this._renderAds},
+                {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
               ]}
             />
         );
@@ -189,5 +212,11 @@ const styles = StyleSheet.create({
     itemImage: {
         width: 80,
         height: 80,
+    },
+    headerSection: {
+        flexDirection: 'row',
+        marginLeft: 10,
+        marginTop: 20,
+        marginBottom: 15
     }
 });

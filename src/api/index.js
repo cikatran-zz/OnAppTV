@@ -29,5 +29,8 @@ export const getBanner = () => {
 export const getChannel = () => {
     return get(config.endpoints.CHANNEL);
 };
+export const getLive = () => {
+  return get(config.endpoints.LIVE);
+};
 
 
