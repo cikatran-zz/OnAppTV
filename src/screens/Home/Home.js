@@ -87,25 +87,25 @@ export default class Home extends Component {
     )
 
   _renderOnLiveItem = ({item}) => (
-    <View style={styles.videoThumbnailContainer}>
+    <View style={styles.liveThumbnailContainer}>
       <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
     </View>
   )
 
   _renderVODItem = ({item}) => (
-    <View style={styles.videoThumbnailContainer}>
+    <View style={styles.liveThumbnailContainer}>
       <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
     </View>
   )
 
   _renderCategoryItem = ({item}) => (
-    <View style={styles.videoThumbnailContainer}>
+    <View style={styles.liveThumbnailContainer}>
       <VideoThumbnail showProgress={false} textCenter={item} imageUrl='http://wallpoper.com/images/00/41/16/00/gaussian-blur_00411600.jpg' />
     </View>
   )
@@ -276,17 +276,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 15
     },
-    videoThumbnailContainer: {
+    liveThumbnailContainer: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    textVideoTitle: {
+    textLiveVideoTitle: {
       ...textDarkDefault,
       width: 150,
       textAlign:'center',
     },
-    textVideoInfo: {
+    textLiveVideoInfo: {
       ...textLightDefault,
       width: 150,
       textAlign:'center',

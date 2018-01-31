@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-    StyleSheet, Text, SectionList, View, Image, FlatList, Platform
+    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions
 } from 'react-native'
 import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeConfig'
 import {connect} from "react-redux";
@@ -38,6 +38,7 @@ class CategoryPageView extends React.PureComponent{
     }
     componentDidMount() {
         this.props.getLive();
+        this.props.getVOD();
     };
     _keyExtractor = (item, index) => item.id;
     _renderSlotMachines = ({item}) => {
@@ -45,7 +46,7 @@ class CategoryPageView extends React.PureComponent{
             <View style={styles.slotMachineContainer}>
             { item.map((it, index)=> {
                 return (<Image
-                    keyExtractor={this._keyExtractor + index}
+                    key={ it.cover_image + index}
                     style={styles.slotMachineImage}
                     source={{uri: it.cover_image}}/>
                 )
@@ -54,11 +55,24 @@ class CategoryPageView extends React.PureComponent{
         )
     }
     _renderOnLiveItem = ({item}) => (
-        <View style={styles.videoThumbnailContainer}>
+        <View style={styles.liveThumbnailContainer}>
             <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-            <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
-            <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
-            <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+            <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+            <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
+            <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
+        </View>
+    )
+
+    _renderVODItem = ({item}) => (
+        <View style={styles.vodThumbnailContainer}>
+            <View>
+                <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+            </View>
+            <View style={{alignSelf: 'stretch', flex: 1, alignItems: 'center', justifyContent:'center'}}>
+                <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
+                <Text numberOfLines={1} style={styles.textVODInfo}>{item.category}</Text>
+                <Text numberOfLines={1} style={styles.textVODInfo}>{item.time}</Text>
+            </View>
         </View>
     )
     _renderOnLiveList = ({item}) => (
@@ -70,6 +84,8 @@ class CategoryPageView extends React.PureComponent{
             keyExtractor={this._keyExtractor}
             renderItem={this._renderOnLiveItem} />
     )
+
+
     _renderSectionHeader = ({section}) => {
         if (section.showHeader) {
             return (
@@ -80,10 +96,19 @@ class CategoryPageView extends React.PureComponent{
             return null
         }
     }
+    _renderVODList = ({item}) => (
+        <FlatList
+            style={{flex: 1}}
+            horizontal={false}
+            showsVerticalScrollIndicator={false}
+            data={item}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderVODItem} />
+    )
 
     render(){
-        const {live} = this.props;
-        if (!live.data || live.isFetching)
+        const {live, vod} = this.props;
+        if (!live.data || live.isFetching || !vod.data || vod.isFetching)
             return null;
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
@@ -91,12 +116,14 @@ class CategoryPageView extends React.PureComponent{
                 <SectionList
                     style={styles.container}
                     keyExtractor={this._keyExtractor}
-                    stickySectionHeadersEnabled={true}
+                    stickySectionHeadersEnabled={false}
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
+                    bounces={false}
                     sections={[
                         {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
-                        {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList}
+                        {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                        {data:[vod.data], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
                 />
             </View>
@@ -164,25 +191,39 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: colors.textWhitePrimary
     },
-    videoThumbnailContainer: {
+    liveThumbnailContainer: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    textVideoTitle: {
+    textLiveVideoTitle: {
         ...textDarkDefault,
         width: 150,
         textAlign:'center',
     },
-    textVideoInfo: {
+    textLiveVideoInfo: {
         ...textLightDefault,
         width: 150,
         textAlign:'center',
+    },
+    textVODTitle: {
+        ...textDarkDefault,
+        width: '100%',//Dimensions.get("window").width - 150,
+        textAlign:'left',
+    },
+    textVODInfo: {
+        ...textLightDefault,
+        width: '100%',//Dimensions.get("window").width - 150,
+        textAlign:'left',
     },
     headerSection: {
         flexDirection: 'row',
         marginLeft: 10,
         marginTop: 20,
         marginBottom: 15
+    },
+    vodThumbnailContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
 });

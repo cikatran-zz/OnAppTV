@@ -37,8 +37,7 @@ export default class Category extends Component {
         return (
             <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
                 { category.data.map((prop, index)=> {
-                    console.log("DATA: " ,category.data);
-                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} slotMachines={prop.slot_machines} keyExtractor={this._keyExtractor}  />)
+                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} slotMachines={prop.slot_machines} key={"category"+index}  />)
                 })}
             </Swiper>
         );
