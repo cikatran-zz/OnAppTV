@@ -171,7 +171,7 @@ export default class Home extends Component {
             <SectionList
               style={styles.container}
               keyExtractor={this._keyExtractor}
-              stickySectionHeadersEnabled={true}
+              stickySectionHeadersEnabled={false}
               renderSectionHeader={this._renderSectionHeader}
               sections={[
                 {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
