@@ -9,7 +9,7 @@ export function getChannel() {
 export function getChannelSuccess(data) {
     return {
         type: actionTypes.FETCH_CHANNEL_SUCCESS,
-        data: data
+        data: data.channelMany
     }
 }
 

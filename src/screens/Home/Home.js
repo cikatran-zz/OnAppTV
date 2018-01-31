@@ -25,19 +25,21 @@ export default class Home extends Component {
         this.props.getVOD();
     };
 
-    _renderChannelListItem = ({item}) => (
+    _renderChannelListItem = ({item}) => {
+      console.log("Thumbnail URL:",item.thumbnails[0].url);
+      return (
         <View style={styles.itemContainer}>
             <View style={styles.itemImageContainer}>
                 <Image
                   style={styles.itemImage}
                   resizeMode={'cover'}
-                  source={{uri: 'http://www.direct-vs-dish.com/media/channel_logos/180px-CN_logo.svg_-e1314879342640.png.300x300_q85.png'}}/>
+                  source={{uri: item.thumbnails[0].url}}/>
             </View>
             <Text
               numberOfLines={1}
               style={styles.itemLabel}>{item.title}</Text>
         </View>
-    )
+    )}
 
     _keyExtractor = (item, index) => index;
 
