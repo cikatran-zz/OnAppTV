@@ -56,3 +56,4 @@ buck-out/
 .vscode/
 package-lock.json
 android/app/src/main/*
+ios/Pods/*

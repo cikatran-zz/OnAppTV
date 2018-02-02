@@ -40,7 +40,6 @@
 		69F9A4EA20241C9900832440 /* BrightcovePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E920241C9900832440 /* BrightcovePlayer.m */; };
 		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
 		69F9A4F120244A9200832440 /* BlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F020244A9200832440 /* BlurView.m */; };
-		69F9A4F420244F1000832440 /* CustomBlurEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F320244F1000832440 /* CustomBlurEffect.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		D6AFBA30601D00909BF154F3 /* libPods-OnAppTV-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */; };
@@ -379,8 +378,6 @@
 		69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurViewManager.m; sourceTree = "<group>"; };
 		69F9A4EF20244A9200832440 /* BlurView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlurView.h; sourceTree = "<group>"; };
 		69F9A4F020244A9200832440 /* BlurView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlurView.m; sourceTree = "<group>"; };
-		69F9A4F220244F1000832440 /* CustomBlurEffect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomBlurEffect.h; sourceTree = "<group>"; };
-		69F9A4F320244F1000832440 /* CustomBlurEffect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomBlurEffect.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		87BE5FD4EA97A0DD7744997C /* Pods-OnAppTV-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV-tvOS/Pods-OnAppTV-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -633,8 +630,6 @@
 				69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */,
 				69F9A4EF20244A9200832440 /* BlurView.h */,
 				69F9A4F020244A9200832440 /* BlurView.m */,
-				69F9A4F220244F1000832440 /* CustomBlurEffect.h */,
-				69F9A4F320244F1000832440 /* CustomBlurEffect.m */,
 			);
 			path = BlurView;
 			sourceTree = "<group>";
@@ -1470,7 +1465,6 @@
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				69F9A4F420244F1000832440 /* CustomBlurEffect.m in Sources */,
 				69F9A4EA20241C9900832440 /* BrightcovePlayer.m in Sources */,
 				69F9A4F120244A9200832440 /* BlurView.m in Sources */,
 			);
