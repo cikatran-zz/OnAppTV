@@ -82,4 +82,8 @@ export const getVOD = () => {
   return get(config.endpoints.VOD);
 };
 
+export const getCategory = () => {
+    return get(config.endpoints.CATEGORY);
+};
+
 
