@@ -36,6 +36,11 @@
 		2DCD954D1E0B4F2C00145EB5 /* OnAppTVTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OnAppTVTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		693C2287AED1FF56D2EB0833 /* libPods-OnAppTV-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4257AC3EAD9CAB389072E44A /* libPods-OnAppTV-tvOS.a */; };
+		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
+		69F9A4EA20241C9900832440 /* BrightcovePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E920241C9900832440 /* BrightcovePlayer.m */; };
+		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
+		69F9A4F120244A9200832440 /* BlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F020244A9200832440 /* BlurView.m */; };
+		69F9A4F420244F1000832440 /* CustomBlurEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F320244F1000832440 /* CustomBlurEffect.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		D6AFBA30601D00909BF154F3 /* libPods-OnAppTV-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */; };
@@ -366,6 +371,16 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AA87E7057BAC21D712A3CA /* libPods-OnAppTVTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTVTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
+		69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBrightcovePlayerManager.m; sourceTree = "<group>"; };
+		69F9A4E820241C9900832440 /* BrightcovePlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayer.h; sourceTree = "<group>"; };
+		69F9A4E920241C9900832440 /* BrightcovePlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightcovePlayer.m; sourceTree = "<group>"; };
+		69F9A4EC20244A4D00832440 /* RCTBlurViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurViewManager.h; sourceTree = "<group>"; };
+		69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurViewManager.m; sourceTree = "<group>"; };
+		69F9A4EF20244A9200832440 /* BlurView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlurView.h; sourceTree = "<group>"; };
+		69F9A4F020244A9200832440 /* BlurView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlurView.m; sourceTree = "<group>"; };
+		69F9A4F220244F1000832440 /* CustomBlurEffect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomBlurEffect.h; sourceTree = "<group>"; };
+		69F9A4F320244F1000832440 /* CustomBlurEffect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomBlurEffect.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		87BE5FD4EA97A0DD7744997C /* Pods-OnAppTV-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV-tvOS/Pods-OnAppTV-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -518,6 +533,7 @@
 		13B07FAE1A68108700A75B9A /* OnAppTV */ = {
 			isa = PBXGroup;
 			children = (
+				69F9A4BC2024166600832440 /* NativeComponent */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -588,6 +604,39 @@
 				69F9A3A82020693B00832440 /* libRNBlur.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		69F9A4BC2024166600832440 /* NativeComponent */ = {
+			isa = PBXGroup;
+			children = (
+				69F9A4EB202449A800832440 /* BlurView */,
+				69F9A4E42024168000832440 /* BrightcovePlayer */,
+			);
+			path = NativeComponent;
+			sourceTree = "<group>";
+		};
+		69F9A4E42024168000832440 /* BrightcovePlayer */ = {
+			isa = PBXGroup;
+			children = (
+				69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */,
+				69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */,
+				69F9A4E820241C9900832440 /* BrightcovePlayer.h */,
+				69F9A4E920241C9900832440 /* BrightcovePlayer.m */,
+			);
+			path = BrightcovePlayer;
+			sourceTree = "<group>";
+		};
+		69F9A4EB202449A800832440 /* BlurView */ = {
+			isa = PBXGroup;
+			children = (
+				69F9A4EC20244A4D00832440 /* RCTBlurViewManager.h */,
+				69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */,
+				69F9A4EF20244A9200832440 /* BlurView.h */,
+				69F9A4F020244A9200832440 /* BlurView.m */,
+				69F9A4F220244F1000832440 /* CustomBlurEffect.h */,
+				69F9A4F320244F1000832440 /* CustomBlurEffect.m */,
+			);
+			path = BlurView;
 			sourceTree = "<group>";
 		};
 		769C17E7A87318D28EFAAEA4 /* Pods */ = {
@@ -1418,7 +1467,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
+				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				69F9A4F420244F1000832440 /* CustomBlurEffect.m in Sources */,
+				69F9A4EA20241C9900832440 /* BrightcovePlayer.m in Sources */,
+				69F9A4F120244A9200832440 /* BlurView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
