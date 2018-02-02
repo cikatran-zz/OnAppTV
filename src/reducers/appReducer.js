@@ -1,5 +1,5 @@
 import {ScreenStack} from '../registerScreens'
-const firstAction = ScreenStack.router.getActionForPathAndParams('Player');
+const firstAction = ScreenStack.router.getActionForPathAndParams('Home');
 const tempNavState = ScreenStack.router.getStateForAction(firstAction);
 
 const initialNavState = ScreenStack.router.getStateForAction(

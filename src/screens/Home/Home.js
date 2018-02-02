@@ -185,7 +185,7 @@ export default class Home extends Component {
                 {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
-            <BlurView blurRadius={100} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
+            <BlurView blurRadius={20} overlayColor={0} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
           </View>
         );
     }

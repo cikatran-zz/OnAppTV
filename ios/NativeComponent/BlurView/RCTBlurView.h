@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BlurView : UIVisualEffectView
+@interface RCTBlurView : UIVisualEffectView
 
 @property (nonatomic, copy) NSNumber *blurRadius;
 

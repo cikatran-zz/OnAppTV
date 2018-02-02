@@ -6,15 +6,15 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
-#import "BlurView.h"
+#import "RCTBlurView.h"
 
-@interface BlurView()
+@interface RCTBlurView()
 
 @property (nonatomic, copy) UIBlurEffect *blurEffect;
 
 @end
 
-@implementation BlurView
+@implementation RCTBlurView
 
 - (instancetype)init
 {

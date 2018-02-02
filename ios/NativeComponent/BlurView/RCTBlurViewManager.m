@@ -7,13 +7,13 @@
 //
 
 #import "RCTBlurViewManager.h"
-#import "BlurView.h"
+#import "RCTBlurView.h"
 
 @implementation RCTBlurViewManager
 
 RCT_EXPORT_MODULE()
 - (UIView *)view {
-  return [[BlurView alloc] init];
+  return [[RCTBlurView alloc] init];
 }
 
 RCT_EXPORT_VIEW_PROPERTY(blurRadius, NSNumber);

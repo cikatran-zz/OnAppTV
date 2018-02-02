@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
 import VerticalViewPager from 'react-native-vertical-view-pager';
 import {Image, StyleSheet, View, ViewPagerAndroid, Dimensions, Platform, StatusBar} from 'react-native';
-import { BlurView, VibrancyView } from 'react-native-blur';
 import BrightcovePlayer from '../../components/BrightcovePlayer'
 
 export default class Player extends Component {
