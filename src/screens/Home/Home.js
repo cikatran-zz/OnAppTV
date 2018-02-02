@@ -5,11 +5,11 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
-import BlurView from '../../components/BlurView'
+import BlurView from '../../components/BlurView';
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -185,7 +185,7 @@ export default class Home extends Component {
                 {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
-            <BlurView blurRadius={20} overlayColor={0} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
+            <BlurView blurRadius={Platform.OS === "ios" ? 10 : 30} overlayColor={0} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
           </View>
         );
     }
