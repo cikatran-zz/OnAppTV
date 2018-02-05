@@ -47,21 +47,21 @@ const get = (endpoints) => {
 
 const channelQuery = gql`
 query allChannels($limit: Int){
-  viewer(token: "hieudeptrai") {
-    channelMany (limit: $limit) {
-      contentId
-      showTitle
-      title
-      long_description
-      short_description
-      thumbnails {
-        height
-        width
-        url
-        name
-      }
+viewer(token: "hieudeptrai") {
+  channelMany (limit: $limit) {
+    contentId
+    showTitle
+    title
+    long_description
+    short_description
+    thumbnails {
+      height
+      width
+      url
+      name
     }
-   }
+  }
+  }
 }`
 
 export const getChannel = () => {

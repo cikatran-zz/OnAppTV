@@ -5,10 +5,11 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, findNodeHandle} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
+import BlurView from '../../components/BlurView'
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -168,6 +169,7 @@ export default class Home extends Component {
           !vod.data || vod.isFetching)
             return null;
         return (
+          <View style={{flex: 1, flexDirection: 'column'}}>
             <SectionList
               style={styles.container}
               keyExtractor={this._keyExtractor}
@@ -183,6 +185,8 @@ export default class Home extends Component {
                 {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
+            <BlurView blurRadius={100} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
+          </View>
         );
     }
 }
