@@ -11,7 +11,7 @@ const instance = axios.create({
     baseURL: `${config.baseURL}`
 });
 
-const httpLink = new HttpLink({uri: `http://192.168.10.110:3000/graphql`})
+const httpLink = new HttpLink({uri: `http://13.250.57.10:3000/graphql`})
 
 const errorHandler = onError(({ networkError }) => {
   switch (networkError.statusCode) {
@@ -47,19 +47,21 @@ const get = (endpoints) => {
 
 const channelQuery = gql`
 query allChannels($limit: Int){
-  channelMany (limit: $limit) {
-    contentId
-    showTitle
-    title
-    long_description
-    short_description
-    thumbnails {
-      height
-      width
-      url
-      name
+  viewer(token: "hieudeptrai") {
+    channelMany (limit: $limit) {
+      contentId
+      showTitle
+      title
+      long_description
+      short_description
+      thumbnails {
+        height
+        width
+        url
+        name
+      }
     }
-  }
+   }
 }`
 
 export const getChannel = () => {
