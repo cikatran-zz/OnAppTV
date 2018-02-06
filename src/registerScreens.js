@@ -12,7 +12,7 @@ const TabNav = TabNavigator({
   },
 }, {
   tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
-  tabBarPosition: 'bottom'
+  tabBarPosition: 'bottom',
 })
 
 export const ScreenStack = StackNavigator({

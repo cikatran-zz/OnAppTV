@@ -160,6 +160,13 @@ export default class Home extends Component {
         return null
       }
     }
+
+    //Fix bottom tabbar overlay the List
+    _renderListFooter = () => (
+      <View style={{width: '100%', height: 50, backgroundColor:'transparent'}}/>
+    )
+
+
     render() {
         const {banner, channel, live, vod} = this.props;
         if (!banner.data || banner.isFetching ||
@@ -173,6 +180,8 @@ export default class Home extends Component {
               style={styles.container}
               keyExtractor={this._keyExtractor}
               stickySectionHeadersEnabled={false}
+              onEndReachedThreshold={20}
+              ListFooterComponent={ this._renderListFooter }
               renderSectionHeader={this._renderSectionHeader}
               sections={[
                 {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
@@ -195,6 +204,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         backgroundColor: colors.screenBackground,
+
     },
     slotMachineContainer: {
         width: '100%',
