@@ -9,6 +9,7 @@ import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, P
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
+import BlurView from '../../components/BlurView'
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -60,7 +61,9 @@ export default class Home extends Component {
           <View style={styles.bannerPlayIconGroup}>
               <View
                 ref={(playBackground) => { this.playBackground = playBackground; }}
-                style={styles.bannerPlayIconBackground}/>
+                style={styles.bannerPlayIconBackground}>
+              <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
+              </View>
               <Image
                 resizeMode={'contain'}
                 style={styles.bannerPlayIcon}
@@ -252,7 +255,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         backgroundColor: colors.mainDarkGrey,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        overflow: 'hidden'
     },
     bannerPlayIcon: {
         position: 'absolute',
@@ -321,5 +325,13 @@ const styles = StyleSheet.create({
     },
     notificationSubTitle: {
       ...textLightDefault
-    }
+    },
+  blurview: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right:0,
+    top: 0,
+    borderRadius: 50,
+  },
 });

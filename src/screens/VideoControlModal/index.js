@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import actions from '../../actions'
+import actions from '../../actions/index'
 import VideoControlModal from './VideoControlModal'
 
 function mapStateToProps (state) {

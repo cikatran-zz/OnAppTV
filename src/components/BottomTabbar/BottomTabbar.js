@@ -31,7 +31,7 @@ class BottomTabbar extends React.PureComponent {
     if (i == 2) {
       return (
         <TouchableOpacity
-          onPress={() => this.props.showVideoModal(true)}
+          onPress={() => navigation.navigate("VideoControlModal")}
           style={styles.tab}
           key={tab}
         >

@@ -1,5 +1,6 @@
 import React from 'react'
 import Home from './screens/Home'
+import VideoControlModal from './screens/VideoControlModal'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import BottomTabbar from './components/BottomTabbar'
 
@@ -22,4 +23,11 @@ export const ScreenStack = StackNavigator({
       header: null
     }),
   },
+  VideoControlModal: {
+    screen: VideoControlModal
+  },
+
+}, {
+  mode: 'modal',
+  headerMode: 'none',
 });
