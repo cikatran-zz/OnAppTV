@@ -5,11 +5,11 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
-import BlurView from '../../components/BlurView'
+import BlurView from '../../components/BlurView';
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -45,9 +45,9 @@ export default class Home extends Component {
     _keyExtractor = (item, index) => index;
 
     _renderBanner = ({item}) => (
-      <View style={styles.bannerContainer}>
+      <View style={styles.slotMachineContainer}>
           <Image
-            style={styles.bannerImage}
+            style={styles.slotMachineImage}
             source={{uri: item.header_banner.cover_image}}/>
           <View style={styles.labelGroup}>
               <PinkRoundedLabel text="New Movie"/>
@@ -90,25 +90,25 @@ export default class Home extends Component {
     )
 
   _renderOnLiveItem = ({item}) => (
-    <View style={styles.videoThumbnailContainer}>
+    <View style={styles.liveThumbnailContainer}>
       <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
     </View>
   )
 
   _renderVODItem = ({item}) => (
-    <View style={styles.videoThumbnailContainer}>
+    <View style={styles.liveThumbnailContainer}>
       <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textVideoInfo}>{item.time}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
+      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
     </View>
   )
 
   _renderCategoryItem = ({item}) => (
-    <View style={styles.videoThumbnailContainer}>
+    <View style={styles.liveThumbnailContainer}>
       <VideoThumbnail showProgress={false} textCenter={item} imageUrl='http://wallpoper.com/images/00/41/16/00/gaussian-blur_00411600.jpg' />
     </View>
   )
@@ -185,7 +185,7 @@ export default class Home extends Component {
                 {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
-            <BlurView blurRadius={100} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
+            <BlurView blurRadius={Platform.OS === "ios" ? 10 : 30} overlayColor={0} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
           </View>
         );
     }
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.screenBackground,
     },
-    bannerContainer: {
+    slotMachineContainer: {
         width: '100%',
         aspectRatio: 1.3,
         justifyContent: 'center',
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: colors.textGrey
     },
-    bannerImage: {
+    slotMachineImage: {
         width: '100%',
         height: '100%'
     },
@@ -282,17 +282,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 15
     },
-    videoThumbnailContainer: {
+    liveThumbnailContainer: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    textVideoTitle: {
+    textLiveVideoTitle: {
       ...textDarkDefault,
       width: 150,
       textAlign:'center',
     },
-    textVideoInfo: {
+    textLiveVideoInfo: {
       ...textLightDefault,
       width: 150,
       textAlign:'center',
