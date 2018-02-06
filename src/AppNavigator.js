@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {ScreenStack} from './registerScreens'
 import {connect} from "react-redux";
-const initialState = {};
-
+import {View} from 'react-native'
+import VideoControlModal from './components/VideoControlModal'
 function mapStateToProps (state) {
   return {
     nav: state.nav,
@@ -11,7 +11,10 @@ function mapStateToProps (state) {
 class AppNavigator extends Component {
   render() {
     return (
-      <ScreenStack />
+      <View style={{flex: 1}}>
+        <ScreenStack />
+        <VideoControlModal />
+      </View>
     )
   };
 }

@@ -190,7 +190,7 @@ export default class Home extends Component {
                 {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                 {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                 {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
+                {data:[banner.data.footer_banner], title: "WHAT'S NEW?", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
 
