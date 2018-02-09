@@ -9,7 +9,8 @@ export const colors = {
   whitePrimary: '#ffffff',
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
-  textMainBlack: '#404040'
+  textMainBlack: '#404040',
+  greyOpacityBackground: 'rgba(83, 83, 83, 0.2)'
 };
 
 export const textDarkDefault = {
