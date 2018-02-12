@@ -9,6 +9,7 @@ target 'OnAppTV' do
 
   # Pods for OnAppTV
   pod 'Brightcove-Player-Core/dynamic'
+  pod 'lottie-ios'
   #pod 'Brightcove-Player-SDK-SidecarSubtitles/dynamic'
 
   target 'OnAppTVTests' do

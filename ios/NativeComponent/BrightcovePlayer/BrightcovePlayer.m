@@ -9,6 +9,7 @@
 #import "BrightcovePlayer.h"
 #import <BrightcovePlayerSDK/BCOVPlaybackController.h>
 #import "CustomVolumeView.h"
+#import <Lottie/Lottie.h>
 
 @interface BrightcovePlayer() {
   NSString *_videoId;
@@ -32,7 +33,11 @@
 @property (nonatomic, strong) UIButton* playbackButton;
 @property (nonatomic) BOOL isPlaying;
 @property (nonatomic) BOOL isPlayingBeforePan;
-@property (nonatomic) UIButton *captionButton;
+@property (nonatomic, strong) UIButton *captionButton;
+@property (nonatomic, strong) UIView *controlsView;
+@property (nonatomic) NSTimeInterval lastTimeOpenControlView;
+@property (nonatomic, strong) LOTAnimationView *fastforwardAnimation;
+@property (nonatomic, strong) LOTAnimationView *rewindAnimation;
 @end
 
 @implementation BrightcovePlayer
@@ -46,7 +51,6 @@
     _playbackController = [_bCOVSDKManager createPlaybackController];
     _playbackController.delegate = self;
     [_playbackController setAutoAdvance:YES];
-    [_playbackController setAutoPlay:NO];
     _isDragging = NO;
     
     // Set up player view
@@ -55,8 +59,10 @@
     _playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _playerView.delegate = self;
     _playerView.playbackController = _playbackController;
-    //[_playerView.controlsView setAlpha:0];
+    [_playerView.controlsView setAlpha:0];
     [_playbackController setAutoPlay:YES];
+    _isFadeIn = YES;
+    _lastTimeOpenControlView = [[NSDate date] timeIntervalSince1970];
     
     [self initBackgroundView];
     [self initProgressView];
@@ -64,29 +70,51 @@
     [self initPlaybackButton];
     [self initTimeLabel];
     [self initGesture];
+    [self initFastforwardAnimation];
     
-    _isFadeIn = YES;
     [self addSubview:_playerView];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      while (YES) {
+        [NSThread sleepForTimeInterval:1.0];
+        if ([[NSDate date] timeIntervalSince1970] - _lastTimeOpenControlView > 2.0 && _isFadeIn) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [self hideControls];
+          });
+        }
+      }
+    });
   }
+  
   return self;
 }
 
-- (void)resizeControlsView {
-  
-  // Remove old constraints
-  [_playerView.controlsView removeConstraints:_playerView.controlsView.constraints];
-  UIView *superview = _playerView.controlsView.superview;
-  while (superview != nil) {
-    for (NSLayoutConstraint *c in superview.constraints) {
-      if (c.firstItem == self || c.secondItem == self) {
-        [superview removeConstraint:c];
-      }
-    }
-    superview = superview.superview;
-  }
-  
-  // Add more constraints
-  
+- (void)playAnimationInRect:(CGRect)region {
+  [_fastforwardAnimation stop];
+  _fastforwardAnimation.alpha = 0.5;
+  _fastforwardAnimation.frame = region;
+  [_fastforwardAnimation playWithCompletion:^(BOOL animationFinished) {
+    
+    [UIView animateWithDuration:0.2 animations:^{
+      _fastforwardAnimation.alpha = 0.0;
+    } completion:^(BOOL finished) {
+      _fastforwardAnimation.frame = CGRectZero;
+    }];
+  }];
+}
+
+- (void)playFastforwardAnimation {
+  [self playAnimationInRect:CGRectMake(_playerView.controlsContainerView.frame.size.width - 200, -500, _playerView.controlsContainerView.frame.size.height + 500, _playerView.controlsContainerView.frame.size.height + 1000)];
+}
+
+- (void)playRewindAnimation {
+  [self playAnimationInRect:CGRectMake(-_playerView.controlsContainerView.frame.size.height - 300, -500, _playerView.controlsContainerView.frame.size.height + 500, _playerView.controlsContainerView.frame.size.height + 1000)];
+}
+
+- (void)initFastforwardAnimation {
+  _fastforwardAnimation = [[LOTAnimationView alloc] initWithContentsOfURL:[NSURL URLWithString:@"https://www.lottiefiles.com/storage/datafiles/rT1xFybxaeBO4Qf/data.json"]];
+  _fastforwardAnimation.translatesAutoresizingMaskIntoConstraints = YES;
+  _fastforwardAnimation.animationSpeed = 2.0;
+  [_playerView.controlsContainerView addSubview:_fastforwardAnimation];
 }
 
 - (void)initPlaybackButton {
@@ -116,18 +144,18 @@
                                                                  attribute: NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
                                                                   constant:60]];
-  [_playerView.controlsFadingView insertSubview:_playbackButton belowSubview:_playerView.controlsView];
-  [_playerView.controlsFadingView addConstraint:[NSLayoutConstraint constraintWithItem:_playbackButton
+  [_controlsView insertSubview:_playbackButton belowSubview:_playerView.controlsView];
+  [_controlsView addConstraint:[NSLayoutConstraint constraintWithItem:_playbackButton
                                                               attribute:NSLayoutAttributeCenterX
                                                               relatedBy:NSLayoutRelationEqual
-                                                                 toItem:_playerView.controlsFadingView
+                                                                 toItem:_controlsView
                                                               attribute: NSLayoutAttributeCenterX
                                                              multiplier:1.0
                                                                constant:0]];
-  [_playerView.controlsFadingView addConstraint:[NSLayoutConstraint constraintWithItem:_playbackButton
+  [_controlsView addConstraint:[NSLayoutConstraint constraintWithItem:_playbackButton
                                                                              attribute:NSLayoutAttributeCenterY
                                                                              relatedBy:NSLayoutRelationEqual
-                                                                                toItem:_playerView.controlsFadingView
+                                                                                toItem:_controlsView
                                                                              attribute: NSLayoutAttributeCenterY
                                                                             multiplier:1.0
                                                                               constant:0]];
@@ -140,45 +168,45 @@
   doubleTapGesture.numberOfTapsRequired = 2;
   [singleTapGesture requireGestureRecognizerToFail:doubleTapGesture];
   
-  [_playerView.overlayView addGestureRecognizer:singleTapGesture];
-  [_playerView.overlayView addGestureRecognizer:doubleTapGesture];
+  [_playerView.controlsContainerView addGestureRecognizer:singleTapGesture];
+  [_playerView.controlsContainerView addGestureRecognizer:doubleTapGesture];
   
   UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-  [_playerView.controlsFadingView addGestureRecognizer:panGesture];
+  [_controlsView addGestureRecognizer:panGesture];
 }
 
 - (void)initBackgroundView {
   
-  UIView *backgroundView = [[UIView alloc] init];
-  backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-  backgroundView.backgroundColor = [UIColor blackColor];
-  backgroundView.alpha = 0.4;
-  [_playerView.controlsFadingView insertSubview:backgroundView belowSubview:_playerView.controlsView];
+  _controlsView = [[UIView alloc] init];
+  _controlsView.translatesAutoresizingMaskIntoConstraints = NO;
+  _controlsView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
+  [_playerView.controlsContainerView addSubview:_controlsView];
 
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView
+  [_playerView.controlsContainerView addConstraint: [NSLayoutConstraint constraintWithItem:_controlsView
                                                                               attribute:NSLayoutAttributeLeading
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_playerView.controlsContainerView
                                                                               attribute:NSLayoutAttributeLeading
                                                                              multiplier:1.0
                                                                                constant:0]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView
-                                                                              attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+  [_playerView.controlsContainerView addConstraint: [NSLayoutConstraint constraintWithItem:_controlsView
+                                                                              attribute:NSLayoutAttributeBottom
+                                                                                 relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:_playerView.controlsContainerView
                                                                               attribute:NSLayoutAttributeBottom
                                                                              multiplier:1.0
                                                                                constant:0]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView
+  [_playerView.controlsContainerView addConstraint: [NSLayoutConstraint constraintWithItem:_controlsView
                                                                               attribute:NSLayoutAttributeTop
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_playerView.controlsContainerView
                                                                               attribute:NSLayoutAttributeTop
                                                                              multiplier:1.0
                                                                                constant:0]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView
+  [_playerView.controlsContainerView addConstraint: [NSLayoutConstraint constraintWithItem:_controlsView
                                                                               attribute:NSLayoutAttributeTrailing
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_playerView.controlsContainerView
                                                                               attribute:NSLayoutAttributeTrailing
                                                                              multiplier:1.0
                                                                                constant:0]];
@@ -189,25 +217,25 @@
   UIView *progressView = [[UIView alloc] init];
   progressView.translatesAutoresizingMaskIntoConstraints = NO;
   progressView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-  [_playerView.controlsFadingView insertSubview:progressView belowSubview:_playerView.controlsView];
+  [_controlsView addSubview:progressView];
   
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
                                                                               attribute:NSLayoutAttributeLeading
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeLeading
                                                                              multiplier:1.0
                                                                                constant:0]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
                                                                               attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeBottom
                                                                              multiplier:1.0
                                                                                constant:0]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
                                                                               attribute:NSLayoutAttributeTop
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeTop
                                                                              multiplier:1.0
                                                                                constant:0]];
@@ -263,18 +291,18 @@
   _currentTimeLabel = [[UILabel alloc] init];
   [_currentTimeLabel setTextColor:[UIColor whiteColor]];
   _currentTimeLabel.translatesAutoresizingMaskIntoConstraints = NO;
-  [_playerView.controlsFadingView insertSubview:_currentTimeLabel belowSubview:_playerView.controlsView];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:_currentTimeLabel
+  [_controlsView addSubview:_currentTimeLabel];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:_currentTimeLabel
                                                                               attribute:NSLayoutAttributeLeading
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeLeading
                                                                              multiplier:1.0
                                                                                constant:25]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:_currentTimeLabel
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:_currentTimeLabel
                                                                               attribute:NSLayoutAttributeCenterY
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeCenterY
                                                                              multiplier:1.0
                                                                                constant:0]];
@@ -282,18 +310,18 @@
   _etaTimeLabel = [[UILabel alloc] init];
   [_etaTimeLabel setTextColor:[UIColor whiteColor]];
   _etaTimeLabel.translatesAutoresizingMaskIntoConstraints = NO;
-  [_playerView.controlsFadingView insertSubview:_etaTimeLabel belowSubview:_playerView.controlsView];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:_etaTimeLabel
+  [_controlsView addSubview:_etaTimeLabel];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:_etaTimeLabel
                                                                               attribute:NSLayoutAttributeTrailing
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeTrailing
                                                                              multiplier:1.0
                                                                                constant:-25]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:_etaTimeLabel
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:_etaTimeLabel
                                                                               attribute:NSLayoutAttributeCenterY
                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_playerView.controlsFadingView
+                                                                                 toItem:_controlsView
                                                                               attribute:NSLayoutAttributeCenterY
                                                                              multiplier:1.0
                                                                                constant:0]];
@@ -306,7 +334,7 @@
   volumeView.showsVolumeSlider = YES;
   volumeView.tintColor = [UIColor colorWithRed:1.0 green:45/255 blue:85/255 alpha:1.0];
   [volumeView setVolumeThumbImage:[UIImage imageNamed:@"thumbImage"] forState:UIControlStateNormal];
-  [_playerView.controlsFadingView insertSubview:volumeView belowSubview:_playerView.controlsView];
+  [_controlsView addSubview:volumeView];
   
   volumeView.translatesAutoresizingMaskIntoConstraints = NO;
   
@@ -319,16 +347,16 @@
                                                          multiplier:1.0
                                                            constant:200]];
   [volumeView addConstraint: [NSLayoutConstraint constraintWithItem:volumeView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:NULL attribute: NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:20]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:volumeView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_playerView.controlsFadingView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:50]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:volumeView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_playerView.controlsFadingView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-30]];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:volumeView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_controlsView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:50]];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:volumeView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_controlsView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-30]];
   
   // Volume icon begining
   UIImageView *beginingIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"quieter"]];
   [beginingIcon setContentMode:UIViewContentModeScaleAspectFit];
   beginingIcon.translatesAutoresizingMaskIntoConstraints = NO;
-  [_playerView.controlsFadingView insertSubview:beginingIcon belowSubview:_playerView.controlsView];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:beginingIcon attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-10]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:beginingIcon attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeTop multiplier:1.0 constant:2]];
+  [_controlsView addSubview:beginingIcon];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:beginingIcon attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-10]];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:beginingIcon attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeTop multiplier:1.0 constant:2]];
   [beginingIcon addConstraint: [NSLayoutConstraint constraintWithItem:beginingIcon attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:NULL attribute: NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:15]];
   [beginingIcon addConstraint: [NSLayoutConstraint constraintWithItem:beginingIcon attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:beginingIcon attribute: NSLayoutAttributeWidth multiplier:1.0 constant:0]];
   
@@ -336,9 +364,9 @@
   UIImageView *endIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"louder"]];
   [endIcon setContentMode:UIViewContentModeScaleAspectFit];
   endIcon.translatesAutoresizingMaskIntoConstraints = NO;
-  [_playerView.controlsFadingView insertSubview:endIcon belowSubview:_playerView.controlsView];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:endIcon attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:10]];
-  [_playerView.controlsFadingView addConstraint: [NSLayoutConstraint constraintWithItem:endIcon attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeTop multiplier:1.0 constant:-2]];
+  [_controlsView addSubview:endIcon];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:endIcon attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:10]];
+  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:endIcon attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:volumeView attribute:NSLayoutAttributeTop multiplier:1.0 constant:-2]];
   [endIcon addConstraint: [NSLayoutConstraint constraintWithItem:endIcon attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:NULL attribute: NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:25]];
   [endIcon addConstraint: [NSLayoutConstraint constraintWithItem:endIcon attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:endIcon attribute: NSLayoutAttributeWidth multiplier:1.0 constant:0]];
   
@@ -347,8 +375,8 @@
   _captionButton.translatesAutoresizingMaskIntoConstraints = NO;
   [_captionButton setImage:[UIImage imageNamed:@"caption"] forState:UIControlStateNormal];
   [_playbackButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
-  [_playerView.controlsFadingView insertSubview:_captionButton belowSubview:_playerView.controlsView];
-  [_playerView.controlsFadingView addConstraint:[NSLayoutConstraint constraintWithItem:_captionButton
+  [_controlsView addSubview:_captionButton];
+  [_controlsView addConstraint:[NSLayoutConstraint constraintWithItem:_captionButton
                                                                              attribute:NSLayoutAttributeCenterY
                                                                              relatedBy:NSLayoutRelationEqual
                                                                                 toItem:endIcon
@@ -369,10 +397,10 @@
                                                                  attribute: NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
                                                                   constant:50]];
-  [_playerView.controlsFadingView addConstraint:[NSLayoutConstraint constraintWithItem:_captionButton
+  [_controlsView addConstraint:[NSLayoutConstraint constraintWithItem:_captionButton
                                                                              attribute:NSLayoutAttributeTrailing
                                                                              relatedBy:NSLayoutRelationEqual
-                                                                                toItem:_playerView.controlsFadingView
+                                                                                toItem:_controlsView
                                                                              attribute: NSLayoutAttributeTrailing
                                                                             multiplier:1.0
                                                                               constant:-25]];
@@ -384,6 +412,7 @@
 - (void)drawRect:(CGRect)rect {
   [super drawRect:rect];
   [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeFull];
+  [self hideControls];
 }
 
 - (void)requestVideo {
@@ -438,9 +467,11 @@
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender {
   NSLog(@"Pan gesture");
   
+  if (!_isFadeIn) { return; }
+  
   if (sender.state == UIGestureRecognizerStateBegan) {
     [_playbackController pause];
-    CGPoint tapLocation = [sender locationInView:_playerView.controlsFadingView];
+    CGPoint tapLocation = [sender locationInView:_controlsView];
     CGRect playheadRegion = CGRectMake(_playheadImageView.frame.origin.x - 20, _playheadImageView.frame.origin.y - 20, _playheadImageView.frame.size.width + 40, _playheadImageView.frame.size.height + 40);
     if (CGRectContainsPoint(playheadRegion, tapLocation)) {
       _isDragging = YES;
@@ -452,17 +483,16 @@
   }
   
   if (_isDragging) {
-    if (_isFadeIn) {
-    CGPoint tapLocation = [sender locationInView:_playerView.controlsFadingView];
-    if (tapLocation.x >= 0 && tapLocation.x <= _playerView.controlsFadingView.frame.size.width) {
-      NSTimeInterval seekingTime = _videoDuration * (tapLocation.x / _playerView.controlsFadingView.frame.size.width);
+    CGPoint tapLocation = [sender locationInView:_controlsView];
+    if (tapLocation.x >= 0 && tapLocation.x <= _controlsView.frame.size.width) {
+      NSTimeInterval seekingTime = _videoDuration * (tapLocation.x / _controlsView.frame.size.width);
       [_progressWidth setConstant: tapLocation.x];
       [self setTimeLabel:seekingTime];
       [_playbackController seekToTime:CMTimeMakeWithSeconds(seekingTime,1) completionHandler:NULL];
-    }
     } else {
       [sender setValue:@(UIGestureRecognizerStateEnded) forKey:@"state"];
     }
+    _lastTimeOpenControlView = [[NSDate date] timeIntervalSince1970];
   }
   
   if (sender.state == UIGestureRecognizerStateEnded) {
@@ -478,27 +508,54 @@
 
 - (void)handleTapGesture:(UITapGestureRecognizer *)sender {
   
-  if (sender.state == UIGestureRecognizerStateRecognized && _isFadeIn) {
-    CGPoint tapLocation = [sender locationInView:_playerView.controlsFadingView];
-    if (_playbackButton.alpha > 0 && CGRectContainsPoint([_playbackButton frame], tapLocation)) {
+  if (sender.state == UIGestureRecognizerStateRecognized) {
+    CGPoint tapLocation = [sender locationInView:_controlsView];
+    if (_isFadeIn && _playbackButton.alpha > 0 && CGRectContainsPoint([_playbackButton frame], tapLocation)) {
       [_playbackButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    } else if ([self isInProgressRegion:tapLocation]) {
-      double progress = tapLocation.x/_playerView.controlsFadingView.frame.size.width;
+    } else if (_isFadeIn && [self isInProgressRegion:tapLocation]) {
+      double progress = tapLocation.x/_controlsView.frame.size.width;
       [_playbackController seekToTime:CMTimeMakeWithSeconds(_videoDuration * progress, 1) completionHandler:NULL];
     } else {
+      _lastTimeOpenControlView = [[NSDate date] timeIntervalSince1970];
+      if (!_isFadeIn) {
+        
+        [self showControls];
+      } else {
+        [self hideControls];
+      }
     }
   }
 }
 
+- (void)showControls {
+  if (!_isFadeIn) {
+    [UIView animateWithDuration:0.5f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
+      [_controlsView setAlpha:1.0f];
+    } completion:nil];
+  }
+  _isFadeIn = YES;
+}
+
+- (void)hideControls {
+  if (_isFadeIn) {
+    [UIView animateWithDuration:0.5f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
+      [_controlsView setAlpha:0.0f];
+    } completion:nil];
+  }
+  _isFadeIn = NO;
+}
+
 - (void)handleDoubleTapGesture:(UITapGestureRecognizer *)sender {
   if (sender.state == UIGestureRecognizerStateRecognized) {
-    CGPoint tapLocation = [sender locationInView:_playerView.controlsFadingView];
+    CGPoint tapLocation = [sender locationInView:_controlsView];
     if ([self isFastForward:tapLocation]) {
       NSLog(@"Fast forward");
       [_playbackController seekToTime:CMTimeMakeWithSeconds((_currentTime + 10 > _videoDuration) ? _videoDuration : _currentTime + 10, 1) completionHandler:NULL];
+      [self playFastforwardAnimation];
     } else if ([self isReplay:tapLocation]) {
-      NSLog(@"Replay");
+      NSLog(@"Rewind");
       [_playbackController seekToTime:CMTimeMakeWithSeconds(_currentTime - 10, 1) completionHandler:NULL];
+      [self playRewindAnimation];
     } else {
       NSLog(@"Double click");
     }
@@ -506,17 +563,17 @@
 }
 
 - (BOOL)isInProgressRegion:(CGPoint)tapLocation {
-  CGRect progressRect = CGRectMake(0, _playerView.controlsFadingView.frame.size.height * 0.25, _playerView.controlsFadingView.frame.size.width, _playerView.controlsFadingView.frame.size.height * 0.5);
+  CGRect progressRect = CGRectMake(0, _controlsView.frame.size.height * 0.25, _controlsView.frame.size.width, _controlsView.frame.size.height * 0.5);
   return CGRectContainsPoint(progressRect, tapLocation);
 }
 
 - (BOOL)isFastForward:(CGPoint)tapLocation {
-  CGRect fastForwardRect = CGRectMake(_playerView.controlsFadingView.frame.size.width * 0.75, _playerView.controlsFadingView.frame.size.height * 0.25, _playerView.controlsFadingView.frame.size.width * 0.25, _playerView.controlsFadingView.frame.size.height * 0.5);
+  CGRect fastForwardRect = CGRectMake(_controlsView.frame.size.width * 0.75, _controlsView.frame.size.height * 0.25, _controlsView.frame.size.width * 0.25, _controlsView.frame.size.height * 0.5);
   return CGRectContainsPoint(fastForwardRect, tapLocation);
 }
 
 - (BOOL)isReplay:(CGPoint)tapLocation {
-  CGRect replayRect = CGRectMake(0, _playerView.controlsFadingView.frame.size.height * 0.25, _playerView.controlsFadingView.frame.size.width * 0.25, _playerView.controlsFadingView.frame.size.height * 0.5);
+  CGRect replayRect = CGRectMake(0, _controlsView.frame.size.height * 0.25, _controlsView.frame.size.width * 0.25, _controlsView.frame.size.height * 0.5);
   return CGRectContainsPoint(replayRect, tapLocation);
 }
 
@@ -541,7 +598,7 @@
   NSLog(@"CURENT TIME: %f", progress);
   _currentTime = (progress != INFINITY && progress != -INFINITY) ? progress : _currentTime;
   if (!_isDragging) {
-    [_progressWidth setConstant: _playerView.controlsFadingView.frame.size.width * (_currentTime/_videoDuration)];
+    [_progressWidth setConstant: _controlsView.frame.size.width * (_currentTime/_videoDuration)];
     [self setTimeLabel:_currentTime];
   }
 }

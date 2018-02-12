@@ -1,12 +1,15 @@
 PODS:
   - Brightcove-Player-Core/dynamic (6.2.2)
+  - lottie-ios (2.5.0)
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
+  - lottie-ios
 
 SPEC CHECKSUMS:
   Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
+  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
 
-PODFILE CHECKSUM: a0494ca56d06bdc356dc7c6d5a3f7fae261175d5
+PODFILE CHECKSUM: bed7db5f60e669317d1c92e48cce69c1ff5fd0b8
 
 COCOAPODS: 1.4.0
