@@ -11,7 +11,7 @@ const instance = axios.create({
     baseURL: `${config.baseURL}`
 });
 
-const httpLink = new HttpLink({uri: `http://192.168.1.155:3000/graphql`})
+const httpLink = new HttpLink({uri: `http://13.250.57.10:3000/graphql`})
 
 const errorHandler = onError(({ networkError }) => {
   switch (networkError.statusCode) {

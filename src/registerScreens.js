@@ -1,25 +1,33 @@
+import React from 'react'
 import Home from './screens/Home'
-import Category from './screens/Category'
-import {StackNavigator} from 'react-navigation'
-import Player from "./screens/Player/Player";
+import VideoControlModal from './screens/VideoControlModal'
+import {StackNavigator, TabNavigator} from 'react-navigation'
+import BottomTabbar from './components/BottomTabbar'
+
+const TabNav = TabNavigator({
+  Home: {
+    screen: Home,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    }),
+  },
+}, {
+  tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
+  tabBarPosition: 'bottom',
+})
 
 export const ScreenStack = StackNavigator({
-  // Home: {
-  //         screen: Home,
-  //         navigationOptions: ({navigation}) => ({
-  //             header: null
-  //         }),
-  //     },
-    // Category: {
-    //     screen: Category,
-    //     navigationOptions: ({navigation}) => ({
-    //         header: null
-    //     }),
-    // },
-    Player: {
-        screen: Player,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        }),
-    }
+  Root: {
+    screen: TabNav,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    }),
+  },
+  VideoControlModal: {
+    screen: VideoControlModal
+  },
+
+}, {
+  mode: 'modal',
+  headerMode: 'none',
 });

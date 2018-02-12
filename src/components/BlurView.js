@@ -10,4 +10,5 @@ let blurview = {
   },
 };
 
-module.exports = requireNativeComponent('RCTBlurView', blurview);
+const BlurView = requireNativeComponent('RCTBlurView', blurview);
+export default BlurView

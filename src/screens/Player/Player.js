@@ -30,7 +30,7 @@ export default class Player extends Component {
                         accountId='5706818955001'
                         policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>
                 </View>
-                <View style={styles.pageContainer}></View>
+                <View style={styles.pageContainer} />
 
             </VerticalViewPager>
         )

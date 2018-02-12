@@ -9,7 +9,7 @@ import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, P
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
-import BlurView from '../../components/BlurView';
+import BlurView from '../../components/BlurView'
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -61,7 +61,9 @@ export default class Home extends Component {
           <View style={styles.bannerPlayIconGroup}>
               <View
                 ref={(playBackground) => { this.playBackground = playBackground; }}
-                style={styles.bannerPlayIconBackground}/>
+                style={styles.bannerPlayIconBackground}>
+              <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
+              </View>
               <Image
                 resizeMode={'contain'}
                 style={styles.bannerPlayIcon}
@@ -161,6 +163,13 @@ export default class Home extends Component {
         return null
       }
     }
+
+    //Fix bottom tabbar overlay the List
+    _renderListFooter = () => (
+      <View style={{width: '100%', height: 50, backgroundColor:'transparent'}}/>
+    )
+
+
     render() {
         const {banner, channel, live, vod} = this.props;
         if (!banner.data || banner.isFetching ||
@@ -174,6 +183,8 @@ export default class Home extends Component {
               style={styles.container}
               keyExtractor={this._keyExtractor}
               stickySectionHeadersEnabled={false}
+              onEndReachedThreshold={20}
+              ListFooterComponent={ this._renderListFooter }
               renderSectionHeader={this._renderSectionHeader}
               sections={[
                 {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
@@ -182,10 +193,10 @@ export default class Home extends Component {
                 {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                 {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                 {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
+                {data:[banner.data.footer_banner], title: "WHAT'S NEW?", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
-            <BlurView blurRadius={Platform.OS === "ios" ? 10 : 30} overlayColor={0} style={{position: 'absolute', bottom: 0, left: 0, right:0, height: 100}}/>
+
           </View>
         );
     }
@@ -196,6 +207,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         backgroundColor: colors.screenBackground,
+
     },
     slotMachineContainer: {
         width: '100%',
@@ -243,7 +255,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         backgroundColor: colors.mainDarkGrey,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        overflow: 'hidden'
     },
     bannerPlayIcon: {
         position: 'absolute',
@@ -312,5 +325,13 @@ const styles = StyleSheet.create({
     },
     notificationSubTitle: {
       ...textLightDefault
-    }
+    },
+  blurview: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right:0,
+    top: 0,
+    borderRadius: 50,
+  },
 });
