@@ -10,6 +10,8 @@ import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
 import BlurView from '../../components/BlurView'
+import Orientation from 'react-native-orientation';
+import BrightcovePlayer from '../../components/BrightcovePlayer'
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -24,6 +26,7 @@ export default class Home extends Component {
         this.props.getChannel();
         this.props.getLive();
         this.props.getVOD();
+        Orientation.lockToPortrait()
     };
 
     _renderChannelListItem = ({item}) => {

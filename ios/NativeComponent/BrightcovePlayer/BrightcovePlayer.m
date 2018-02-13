@@ -42,6 +42,15 @@
 
 @implementation BrightcovePlayer
 
+- (void)stop {
+  [_playbackController pause];
+  [_playbackController setVideos: @[] ];
+}
+
+- (void)dealloc {
+  [self stop];
+}
+
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -411,7 +420,7 @@
 
 - (void)drawRect:(CGRect)rect {
   [super drawRect:rect];
-  [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeFull];
+  //[_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeFull];
   [self hideControls];
 }
 
@@ -427,6 +436,11 @@
       }
     }];
   }
+}
+
+- (void)removeFromSuperview {
+  [self stop];
+  [super removeFromSuperview];
 }
 
 - (void)setVideoId:(NSString *)videoId {
