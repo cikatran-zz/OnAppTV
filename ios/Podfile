@@ -13,6 +13,7 @@ target 'OnAppTV' do
   # Pods for OnAppTV
   pod 'Brightcove-Player-Core/dynamic'
   pod 'lottie-ios'
+  pod 'WebViewJavascriptBridge', '~> 6.0'
 
 
 

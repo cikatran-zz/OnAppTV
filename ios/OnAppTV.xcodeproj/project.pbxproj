@@ -44,7 +44,6 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
-		69646A3C2052367700542E83 /* spinner.html in Resources */ = {isa = PBXBuildFile; fileRef = 69646A2C2052367700542E83 /* spinner.html */; };
 		6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE4C204C29E400470C97 /* CustomControlsView.swift */; };
 		6969BE77204C2A8000470C97 /* SliderMPVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE76204C2A8000470C97 /* SliderMPVolumeView.swift */; };
 		6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE78204C2CFC00470C97 /* CustomVolumeView.swift */; };
@@ -52,9 +51,43 @@
 		6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */; };
 		69BD179D20319DB500E33978 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD179A20319D8900E33978 /* libART.a */; };
 		69BD17D82032988000E33978 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD17BE2032986D00E33978 /* libRCTOrientation.a */; };
-		69D21DE72052447300DFA90A /* js in Resources */ = {isa = PBXBuildFile; fileRef = 69D21DE42052447300DFA90A /* js */; };
-		69D21DE82052447300DFA90A /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 69D21DE52052447300DFA90A /* bootstrap */; };
-		69D21DE92052447300DFA90A /* css in Resources */ = {isa = PBXBuildFile; fileRef = 69D21DE62052447300DFA90A /* css */; };
+		69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D21E5A20525C8200DFA90A /* STBConnectionView.swift */; };
+		69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */; };
+		69D21EB620525DE600DFA90A /* database-test.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9520525DE300DFA90A /* database-test.xml */; };
+		69D21EB720525DE600DFA90A /* Welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9620525DE300DFA90A /* Welcome.html */; };
+		69D21EB820525DE600DFA90A /* Revolution.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9720525DE300DFA90A /* Revolution.html */; };
+		69D21EB920525DE600DFA90A /* database _IBC_2017.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9820525DE300DFA90A /* database _IBC_2017.xml */; };
+		69D21EBA20525DE600DFA90A /* database 2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9920525DE300DFA90A /* database 2.xml */; };
+		69D21EBB20525DE600DFA90A /* STB-PIN.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9A20525DE300DFA90A /* STB-PIN.html */; };
+		69D21EBC20525DE600DFA90A /* Login.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9B20525DE300DFA90A /* Login.html */; };
+		69D21EBD20525DE600DFA90A /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9C20525DE300DFA90A /* database _IBC_2017-2.xml */; };
+		69D21EBE20525DE600DFA90A /* On.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9D20525DE300DFA90A /* On.html */; };
+		69D21EBF20525DE600DFA90A /* SelectSTB.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9E20525DE300DFA90A /* SelectSTB.html */; };
+		69D21EC020525DE600DFA90A /* WifiPassword.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9F20525DE400DFA90A /* WifiPassword.html */; };
+		69D21EC120525DE600DFA90A /* 无声.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA020525DE400DFA90A /* 无声.mp3 */; };
+		69D21EC220525DE600DFA90A /* css in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA120525DE400DFA90A /* css */; };
+		69D21EC320525DE600DFA90A /* TROPICALISLAND_4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA220525DE400DFA90A /* TROPICALISLAND_4.gif */; };
+		69D21EC420525DE600DFA90A /* download_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA320525DE400DFA90A /* download_list.json */; };
+		69D21EC520525DE600DFA90A /* WifiConnectionList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA420525DE400DFA90A /* WifiConnectionList.html */; };
+		69D21EC620525DE600DFA90A /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA520525DE400DFA90A /* bootstrap */; };
+		69D21EC720525DE600DFA90A /* TROPICALISLAND_42.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA620525DE400DFA90A /* TROPICALISLAND_42.gif */; };
+		69D21EC820525DE600DFA90A /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA720525DE400DFA90A /* Load.html */; };
+		69D21EC920525DE600DFA90A /* spinner.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA820525DE400DFA90A /* spinner.html */; };
+		69D21ECA20525DE600DFA90A /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA920525DE400DFA90A /* SF-UI-Text-Regular.otf */; };
+		69D21ECB20525DE600DFA90A /* WifiConnection.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAA20525DE400DFA90A /* WifiConnection.html */; };
+		69D21ECC20525DE600DFA90A /* STB.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAB20525DE400DFA90A /* STB.html */; };
+		69D21ECD20525DE600DFA90A /* Register.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAC20525DE400DFA90A /* Register.html */; };
+		69D21ECE20525DE600DFA90A /* TROPICALISLAND_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAD20525DE500DFA90A /* TROPICALISLAND_4.png */; };
+		69D21ECF20525DE600DFA90A /* ConnectLoad.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAE20525DE500DFA90A /* ConnectLoad.html */; };
+		69D21ED020525DE600DFA90A /* Parental.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAF20525DE500DFA90A /* Parental.html */; };
+		69D21ED120525DE600DFA90A /* js in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB020525DE500DFA90A /* js */; };
+		69D21ED220525DE600DFA90A /* SelectDecoder.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB120525DE500DFA90A /* SelectDecoder.html */; };
+		69D21ED320525DE600DFA90A /* ChannelList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB220525DE500DFA90A /* ChannelList.html */; };
+		69D21ED420525DE600DFA90A /* Antional.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB320525DE500DFA90A /* Antional.html */; };
+		69D21ED520525DE600DFA90A /* SignIn.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB420525DE500DFA90A /* SignIn.html */; };
+		69D21ED620525DE600DFA90A /* img in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB520525DE500DFA90A /* img */; };
+		69D21EDA20526E1300DFA90A /* STBAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D21ED920526E1300DFA90A /* STBAPI.framework */; };
+		69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */; };
 		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
 		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
 		69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F020244A9200832440 /* RCTBlurView.m */; };
@@ -402,7 +435,6 @@
 		60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
-		69646A2C2052367700542E83 /* spinner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = spinner.html; sourceTree = "<group>"; };
 		6969BE4B204C29E400470C97 /* OnAppTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnAppTV-Bridging-Header.h"; sourceTree = "<group>"; };
 		6969BE4C204C29E400470C97 /* CustomControlsView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = CustomControlsView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		6969BE76204C2A8000470C97 /* SliderMPVolumeView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = SliderMPVolumeView.swift; sourceTree = "<group>"; tabWidth = 4; };
@@ -411,9 +443,44 @@
 		6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		69BD179420319D8900E33978 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		69BD17AB2032986D00E33978 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
-		69D21DE42052447300DFA90A /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = js; sourceTree = "<group>"; };
-		69D21DE52052447300DFA90A /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bootstrap; sourceTree = "<group>"; };
-		69D21DE62052447300DFA90A /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; path = css; sourceTree = "<group>"; };
+		69D21E5A20525C8200DFA90A /* STBConnectionView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = STBConnectionView.swift; sourceTree = "<group>"; tabWidth = 4; };
+		69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STBConnectionView.xib; sourceTree = "<group>"; };
+		69D21E9520525DE300DFA90A /* database-test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database-test.xml"; path = "../src/STBConnection/database-test.xml"; sourceTree = "<group>"; };
+		69D21E9620525DE300DFA90A /* Welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Welcome.html; path = ../src/STBConnection/Welcome.html; sourceTree = "<group>"; };
+		69D21E9720525DE300DFA90A /* Revolution.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Revolution.html; path = ../src/STBConnection/Revolution.html; sourceTree = "<group>"; };
+		69D21E9820525DE300DFA90A /* database _IBC_2017.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017.xml"; path = "../src/STBConnection/database _IBC_2017.xml"; sourceTree = "<group>"; };
+		69D21E9920525DE300DFA90A /* database 2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database 2.xml"; path = "../src/STBConnection/database 2.xml"; sourceTree = "<group>"; };
+		69D21E9A20525DE300DFA90A /* STB-PIN.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "STB-PIN.html"; path = "../src/STBConnection/STB-PIN.html"; sourceTree = "<group>"; };
+		69D21E9B20525DE300DFA90A /* Login.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Login.html; path = ../src/STBConnection/Login.html; sourceTree = "<group>"; };
+		69D21E9C20525DE300DFA90A /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "../src/STBConnection/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
+		69D21E9D20525DE300DFA90A /* On.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = On.html; path = ../src/STBConnection/On.html; sourceTree = "<group>"; };
+		69D21E9E20525DE300DFA90A /* SelectSTB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectSTB.html; path = ../src/STBConnection/SelectSTB.html; sourceTree = "<group>"; };
+		69D21E9F20525DE400DFA90A /* WifiPassword.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiPassword.html; path = ../src/STBConnection/WifiPassword.html; sourceTree = "<group>"; };
+		69D21EA020525DE400DFA90A /* 无声.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "无声.mp3"; path = "../src/STBConnection/无声.mp3"; sourceTree = "<group>"; };
+		69D21EA120525DE400DFA90A /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../src/STBConnection/css; sourceTree = "<group>"; };
+		69D21EA220525DE400DFA90A /* TROPICALISLAND_4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TROPICALISLAND_4.gif; path = ../src/STBConnection/TROPICALISLAND_4.gif; sourceTree = "<group>"; };
+		69D21EA320525DE400DFA90A /* download_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = download_list.json; path = ../src/STBConnection/download_list.json; sourceTree = "<group>"; };
+		69D21EA420525DE400DFA90A /* WifiConnectionList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnectionList.html; path = ../src/STBConnection/WifiConnectionList.html; sourceTree = "<group>"; };
+		69D21EA520525DE400DFA90A /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../src/STBConnection/bootstrap; sourceTree = "<group>"; };
+		69D21EA620525DE400DFA90A /* TROPICALISLAND_42.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TROPICALISLAND_42.gif; path = ../src/STBConnection/TROPICALISLAND_42.gif; sourceTree = "<group>"; };
+		69D21EA720525DE400DFA90A /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = ../src/STBConnection/Load.html; sourceTree = "<group>"; };
+		69D21EA820525DE400DFA90A /* spinner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = spinner.html; path = ../src/STBConnection/spinner.html; sourceTree = "<group>"; };
+		69D21EA920525DE400DFA90A /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Regular.otf"; path = "../src/STBConnection/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
+		69D21EAA20525DE400DFA90A /* WifiConnection.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnection.html; path = ../src/STBConnection/WifiConnection.html; sourceTree = "<group>"; };
+		69D21EAB20525DE400DFA90A /* STB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = STB.html; path = ../src/STBConnection/STB.html; sourceTree = "<group>"; };
+		69D21EAC20525DE400DFA90A /* Register.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Register.html; path = ../src/STBConnection/Register.html; sourceTree = "<group>"; };
+		69D21EAD20525DE500DFA90A /* TROPICALISLAND_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TROPICALISLAND_4.png; path = ../src/STBConnection/TROPICALISLAND_4.png; sourceTree = "<group>"; };
+		69D21EAE20525DE500DFA90A /* ConnectLoad.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ConnectLoad.html; path = ../src/STBConnection/ConnectLoad.html; sourceTree = "<group>"; };
+		69D21EAF20525DE500DFA90A /* Parental.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Parental.html; path = ../src/STBConnection/Parental.html; sourceTree = "<group>"; };
+		69D21EB020525DE500DFA90A /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = ../src/STBConnection/js; sourceTree = "<group>"; };
+		69D21EB120525DE500DFA90A /* SelectDecoder.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectDecoder.html; path = ../src/STBConnection/SelectDecoder.html; sourceTree = "<group>"; };
+		69D21EB220525DE500DFA90A /* ChannelList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ChannelList.html; path = ../src/STBConnection/ChannelList.html; sourceTree = "<group>"; };
+		69D21EB320525DE500DFA90A /* Antional.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Antional.html; path = ../src/STBConnection/Antional.html; sourceTree = "<group>"; };
+		69D21EB420525DE500DFA90A /* SignIn.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SignIn.html; path = ../src/STBConnection/SignIn.html; sourceTree = "<group>"; };
+		69D21EB520525DE500DFA90A /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = ../src/STBConnection/img; sourceTree = "<group>"; };
+		69D21ED920526E1300DFA90A /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
+		69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSTBConnectionViewManager.h; sourceTree = "<group>"; };
+		69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSTBConnectionViewManager.m; sourceTree = "<group>"; };
 		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
 		69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBrightcovePlayerManager.m; sourceTree = "<group>"; };
 		69F9A4EC20244A4D00832440 /* RCTBlurViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurViewManager.h; sourceTree = "<group>"; };
@@ -463,6 +530,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				69D21EDA20526E1300DFA90A /* STBAPI.framework in Frameworks */,
 				A20D31429B8FEED8F2605160 /* Pods_OnAppTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -574,7 +642,7 @@
 		13B07FAE1A68108700A75B9A /* OnAppTV */ = {
 			isa = PBXGroup;
 			children = (
-				696469C1205235AF00542E83 /* Resources */,
+				69D21E9420525DC300DFA90A /* Resources */,
 				69F9A4BC2024166600832440 /* NativeComponent */,
 				6969BE4B204C29E400470C97 /* OnAppTV-Bridging-Header.h */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -614,6 +682,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				69D21ED920526E1300DFA90A /* STBAPI.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				4257AC3EAD9CAB389072E44A /* libPods-OnAppTV-tvOS.a */,
 				60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */,
@@ -669,17 +738,6 @@
 			path = Controls;
 			sourceTree = "<group>";
 		};
-		696469C1205235AF00542E83 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				69D21DE52052447300DFA90A /* bootstrap */,
-				69D21DE62052447300DFA90A /* css */,
-				69D21DE42052447300DFA90A /* js */,
-				69646A2C2052367700542E83 /* spinner.html */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		6969BED1204E4A4900470C97 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -705,6 +763,57 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		69D21DF8205259E300DFA90A /* STBConnection */ = {
+			isa = PBXGroup;
+			children = (
+				69D21E5A20525C8200DFA90A /* STBConnectionView.swift */,
+				69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */,
+				69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */,
+				69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */,
+			);
+			path = STBConnection;
+			sourceTree = "<group>";
+		};
+		69D21E9420525DC300DFA90A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				69D21EB320525DE500DFA90A /* Antional.html */,
+				69D21EA520525DE400DFA90A /* bootstrap */,
+				69D21EB220525DE500DFA90A /* ChannelList.html */,
+				69D21EAE20525DE500DFA90A /* ConnectLoad.html */,
+				69D21EA120525DE400DFA90A /* css */,
+				69D21E9C20525DE300DFA90A /* database _IBC_2017-2.xml */,
+				69D21E9820525DE300DFA90A /* database _IBC_2017.xml */,
+				69D21E9920525DE300DFA90A /* database 2.xml */,
+				69D21E9520525DE300DFA90A /* database-test.xml */,
+				69D21EA320525DE400DFA90A /* download_list.json */,
+				69D21EB520525DE500DFA90A /* img */,
+				69D21EB020525DE500DFA90A /* js */,
+				69D21EA720525DE400DFA90A /* Load.html */,
+				69D21E9B20525DE300DFA90A /* Login.html */,
+				69D21E9D20525DE300DFA90A /* On.html */,
+				69D21EAF20525DE500DFA90A /* Parental.html */,
+				69D21EAC20525DE400DFA90A /* Register.html */,
+				69D21E9720525DE300DFA90A /* Revolution.html */,
+				69D21EB120525DE500DFA90A /* SelectDecoder.html */,
+				69D21E9E20525DE300DFA90A /* SelectSTB.html */,
+				69D21EA920525DE400DFA90A /* SF-UI-Text-Regular.otf */,
+				69D21EB420525DE500DFA90A /* SignIn.html */,
+				69D21EA820525DE400DFA90A /* spinner.html */,
+				69D21E9A20525DE300DFA90A /* STB-PIN.html */,
+				69D21EAB20525DE400DFA90A /* STB.html */,
+				69D21EA220525DE400DFA90A /* TROPICALISLAND_4.gif */,
+				69D21EAD20525DE500DFA90A /* TROPICALISLAND_4.png */,
+				69D21EA620525DE400DFA90A /* TROPICALISLAND_42.gif */,
+				69D21E9620525DE300DFA90A /* Welcome.html */,
+				69D21EAA20525DE400DFA90A /* WifiConnection.html */,
+				69D21EA420525DE400DFA90A /* WifiConnectionList.html */,
+				69D21E9F20525DE400DFA90A /* WifiPassword.html */,
+				69D21EA020525DE400DFA90A /* 无声.mp3 */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		69F9A36B2020681F00832440 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -716,6 +825,7 @@
 		69F9A4BC2024166600832440 /* NativeComponent */ = {
 			isa = PBXGroup;
 			children = (
+				69D21DF8205259E300DFA90A /* STBConnection */,
 				6969BED1204E4A4900470C97 /* Extension */,
 				69F9A4EB202449A800832440 /* BlurView */,
 				69F9A4E42024168000832440 /* BrightcovePlayer */,
@@ -1317,25 +1427,55 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69D21EC120525DE600DFA90A /* 无声.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				69D21EBE20525DE600DFA90A /* On.html in Resources */,
+				69D21EBD20525DE600DFA90A /* database _IBC_2017-2.xml in Resources */,
 				69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */,
+				69D21EC820525DE600DFA90A /* Load.html in Resources */,
+				69D21EC920525DE600DFA90A /* spinner.html in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				9D2C60BC2BB342CE83B123C7 /* Entypo.ttf in Resources */,
+				69D21ECE20525DE600DFA90A /* TROPICALISLAND_4.png in Resources */,
 				330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */,
+				69D21ECA20525DE600DFA90A /* SF-UI-Text-Regular.otf in Resources */,
+				69D21ED020525DE600DFA90A /* Parental.html in Resources */,
+				69D21EC020525DE600DFA90A /* WifiPassword.html in Resources */,
+				69D21EB620525DE600DFA90A /* database-test.xml in Resources */,
+				69D21EB820525DE600DFA90A /* Revolution.html in Resources */,
+				69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */,
+				69D21EC420525DE600DFA90A /* download_list.json in Resources */,
+				69D21EBF20525DE600DFA90A /* SelectSTB.html in Resources */,
+				69D21EB920525DE600DFA90A /* database _IBC_2017.xml in Resources */,
+				69D21ED220525DE600DFA90A /* SelectDecoder.html in Resources */,
+				69D21EBC20525DE600DFA90A /* Login.html in Resources */,
+				69D21ED520525DE600DFA90A /* SignIn.html in Resources */,
+				69D21ED620525DE600DFA90A /* img in Resources */,
 				2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */,
 				CC40F05A00924368B7051154 /* FontAwesome.ttf in Resources */,
-				69646A3C2052367700542E83 /* spinner.html in Resources */,
+				69D21ECB20525DE600DFA90A /* WifiConnection.html in Resources */,
 				1D185041E25D442E86B5B882 /* Foundation.ttf in Resources */,
-				69D21DE72052447300DFA90A /* js in Resources */,
+				69D21EC720525DE600DFA90A /* TROPICALISLAND_42.gif in Resources */,
+				69D21ECF20525DE600DFA90A /* ConnectLoad.html in Resources */,
+				69D21ED320525DE600DFA90A /* ChannelList.html in Resources */,
 				69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */,
-				69D21DE82052447300DFA90A /* bootstrap in Resources */,
+				69D21EB720525DE600DFA90A /* Welcome.html in Resources */,
+				69D21EC520525DE600DFA90A /* WifiConnectionList.html in Resources */,
 				48D3EB7181F444FA878162B3 /* Ionicons.ttf in Resources */,
 				C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */,
-				69D21DE92052447300DFA90A /* css in Resources */,
+				69D21ECD20525DE600DFA90A /* Register.html in Resources */,
+				69D21ED420525DE600DFA90A /* Antional.html in Resources */,
+				69D21EC320525DE600DFA90A /* TROPICALISLAND_4.gif in Resources */,
+				69D21ECC20525DE600DFA90A /* STB.html in Resources */,
+				69D21EBB20525DE600DFA90A /* STB-PIN.html in Resources */,
+				69D21EBA20525DE600DFA90A /* database 2.xml in Resources */,
 				B40B0805BE5A4CCCA084F1F4 /* MaterialIcons.ttf in Resources */,
 				1EE00015034747ECB3577192 /* Octicons.ttf in Resources */,
+				69D21ED120525DE600DFA90A /* js in Resources */,
 				CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */,
+				69D21EC220525DE600DFA90A /* css in Resources */,
 				5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */,
+				69D21EC620525DE600DFA90A /* bootstrap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1459,11 +1599,13 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV-frameworks.sh",
 				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/WebViewJavascriptBridge/WebViewJavascriptBridge.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebViewJavascriptBridge.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1508,12 +1650,14 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */,
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
+				69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */,
 				6969BE77204C2A8000470C97 /* SliderMPVolumeView.swift in Sources */,
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */,
 				69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */,
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,
+				69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1631,6 +1775,11 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8TP5543C2X;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
@@ -1661,6 +1810,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8TP5543C2X;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
