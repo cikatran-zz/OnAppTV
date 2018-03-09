@@ -41,7 +41,7 @@ export default class Player extends Component {
     {/*style={{width:'100%', height:'100%'}}*/}
     {/*videoId='5723698349001'*/}
     {/*accountId='5241932513001'*/}
-    {/*policyKey='BCpkADawqM2nPgviDdx5RqQbh0sU6Fagg8tYOd8HeRrO3CukX-ZTKEJV9VVtj4tPR5gUDxCC9iMZMswS6uy1S358GkPJtfZJCDamJd2g1_vzSXJmSGmOKUbYBHcBN5BNRxE3lXIag8uqVNJB'/>
+    {/*policyKey='BCpkADawqM2nPgviDdx5RqQbh0sU6Fagg8tYOd8HeRrO3CukX-ZTKEJV9VVtj4tPR5gUDxCC9iMZMswS6uy1S358GkPJtfZJCDamJd2g1_vzSXJmSGmOKUbYBHcBN5BNRxE3lXIag8uqVNJB'/>*/}
 {/*<BrightcovePlayer*/}
     {/*style={{width:'100%', height:'100%'}}*/}
     {/*videoId='5714823997001'*/}

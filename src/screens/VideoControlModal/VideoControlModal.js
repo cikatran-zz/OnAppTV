@@ -6,6 +6,14 @@ import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 
 export default class VideoControlModal extends React.PureComponent {
+  onLayout(e) {
+    const { width, height } = Dimensions.get("window")
+    if (width > height) {
+      this.setState({showBrightcove: true})
+    } else {
+      this.setState({showBrightcove: false})
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -28,14 +36,18 @@ export default class VideoControlModal extends React.PureComponent {
   };
   _renderModal = () => {
     if (this.state.showBrightcove) {
-      return (<BrightcovePlayer
+      return (
+        <BrightcovePlayer
+          onLayout={this.onLayout.bind(this)}
           style={{width: '100%', height: '100%', left: 0, top: 0}}
           videoId='5714823997001'
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
         return (
-            <View style={{width: '100%', height: '100%', left: 0, top: 0}}>
+            <View
+              onLayout={this.onLayout.bind(this)}
+              style={{width: '100%', height: '100%', left: 0, top: 0}}>
                 <View style={styles.topContainer}>
                     <ImageBackground style={styles.topVideoControl}
                                      resizeMode="cover"

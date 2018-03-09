@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.brightcove.player.view.BrightcoveExoPlayerVideoView
+        android:background="@android:color/black"
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.brightcove.player.view.BrightcoveExoPlayerVideoView>
+    <include layout="@layout/custom_media_controller"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            android:id="@+id/animation_forward"
+            android:layout_width="150dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:layout_alignParentStart="true"
+            android:visibility="invisible"
+            android:id="@+id/animation_backward"
+            android:layout_width="150dp"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</FrameLayout>
