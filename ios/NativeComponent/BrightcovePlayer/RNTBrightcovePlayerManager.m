@@ -7,16 +7,7 @@
 //
 
 #import "RNTBrightcovePlayerManager.h"
-#import "BrightcovePlayer.h"
-
-@interface RNTBrightcovePlayerManager()
-
-@property (nonatomic, strong) BCOVPlaybackService *playbackService;
-@property (nonatomic, strong) id<BCOVPlaybackController> playbackController;
-@property (nonatomic, strong) BCOVPlayerSDKManager *bCOVSDKManager;
-@property (nonatomic, strong) BCOVPUIPlayerView *playerView;
-
-@end
+#import "OnAppTV-Swift.h"
 
 @implementation RNTBrightcovePlayerManager
 

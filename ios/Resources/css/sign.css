@@ -1,0 +1,321 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	/*overflow: hidden;*/
+	overflow-x: hidden;
+	overflow-y: scroll;
+	
+}
+header {
+	padding-top: 20px;
+    /* iOS11+中状态栏的高度 */
+    padding-top: constant(safe-area-inset-top);
+}
+a {
+	text-decoration: none;
+}
+
+ul {
+	list-style-type: none;
+}
+/*.animsition{
+	width: 100%;
+	position: absolute;
+	display: none;
+}*/
+.content{
+	padding: 0 !important;
+}
+.modal-content {
+	border-radius: 0 !important;
+	border: 0 !important;
+	height: 100%;
+}
+
+.modal-title p {
+	margin: 0 auto;
+}
+
+.HIG-Container {
+	height: 100%;
+	width: 100%;
+}
+
+.modal-header {
+	position: relative;
+	margin: 0 auto;
+	text-align: center;
+	border-bottom: 0px !important;
+	padding: 0px !important;
+	height: 13.5%;
+}
+
+.modal-header div {
+	font-size: 0.587rem;
+	margin-top: 16%;
+	font-weight: bold;
+	font-family: helvetica;
+}
+.close {
+	background-color: #E1E1E1 !important;
+	opacity: 1 !important;
+	border-radius: 22px;
+	line-height: 2;
+	text-align: center;
+	height: 44px;
+	width: 44px;
+	font-size: 16px;
+	padding: 10px;
+	visibility: visible;
+}
+
+.close:before {
+	content: url(../img/close.png);
+	color: #FFFFFF;
+}
+
+.close {
+	top: 4.8%;
+	right: 5%;
+	position: fixed;
+	z-index: 999;
+}
+
+.modal-body {
+	position: fixed;
+	margin: 0 auto;
+	padding-top: 10% !important;
+	/*background-color: #398439;*/
+	height: 49.5%;
+}
+
+.modal-form {
+	text-align: center;
+	font-family: SF UI Text;
+	font-size: 0.347rem;
+}
+
+.modal-form .LoginForm {
+	display: grid;
+	/*width: 311.5px;*/
+	width: 91%;
+	max-width: 10.67rem;
+	position: relative;
+	margin: 0 auto;
+	margin-top: -webkit-calc(1.6% - .5067rem);
+	border-style: none;
+}
+
+input[type='text'],
+input[type="password"],
+input[type="email"] {
+	margin-top: 0.5067rem;
+	height: 1.067rem;
+	background: no-repeat 0 0 scroll #FFFFFF;
+	border: none;
+	outline: medium;
+	font-family: Helvetica Neue;
+	font-size: .3734rem;
+	border-radius: .8rem;
+	border: 1px solid rgba(222, 222, 222, 1);
+	padding-left: .8rem;
+}
+
+.LoginForm input::-webkit-input-placeholder {
+	color: #000000;
+	font-size: .3734rem;
+	/*padding-left: 20px;*/
+}
+input:focus::-webkit-input-placeholder {
+    color: rgba(0,0,0,.07);
+}
+.modal {
+	border-radius: 0px;
+}
+ 
+.modal-form .ForgotMessage {
+	font-family: SF UI Text;
+	font-size: .347rem;
+	margin: 0px auto;
+	padding-top: 4.5%;
+	width: 91%;
+	max-width: 10.67rem;
+	text-align: right;
+}
+
+.modal-button {
+	/*min-width: 50%;*/
+	display: -webkit-grid;
+	position: relative;
+	margin-top: 6.2%;
+}
+
+.imgClass {
+	top: 0px;
+	width: 100%;
+}
+.button-a{
+width: 70%;
+background-color: #FC355B;
+border-radius: .8rem;
+display: block;
+margin: 0 auto;
+line-height: .89rem;
+border-style: none;
+min-height: .89rem;
+font-size: .453rem;
+font-family: SF UI Text;
+color: #FFFFFF;
+outline: none;
+-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.curt{
+	background-color: #3765A3;
+	border: 1px solid #3765A3;
+}
+.button-a:hover{
+color: #FFFFFF;
+text-decoration: none;
+}
+
+.modal-button button {
+	min-width: 70%;
+	background-color: #FC355B;
+	border-radius: .8rem;
+	border-style: none;
+	min-height: .89rem;
+	font-size: .453rem;
+	font-family: SF UI Text;
+	color: #FFFFFF;
+	outline: none;
+}
+
+.modal-button p {
+	font-family: SF UI Text;
+	font-size: .347rem;
+	margin-top: 4%;
+	color: #FC355B;
+	padding-bottom: 4.5%;
+}
+
+.modal-footer {
+	width: 100%;
+	overflow: hidden !important;
+	padding: 0px !important;
+/*	height: 500px;*/
+}
+
+.modal-footer img {
+	width: 100%;
+	margin: auto;
+	height: auto;
+	z-index: 2;
+}
+.imgbg{
+	width: 100%;
+	z-index: 2;
+	/*height: 500px;*/
+	background: url(../img/offrecopie.png) no-repeat left top;
+	background-size: 100%;
+	margin: auto;
+}
+.modal-footer{
+	/*background-color:#204D74 ;*/
+}
+.modal-footer .SelectList {
+	position: absolute;
+	height: 37%;
+	z-index: 3;
+	width: 100%;
+	/*margin: 0 auto;*/
+	display: grid;
+}
+
+.SelectList .free {
+	padding-top: 1.6rem;
+	font-size: .7734rem;
+	height: 0.97rem;
+	font-weight: bold;
+	font-family: helvetica;
+	color: #FFFFFF;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.SelectList .price {
+	width: 62.2%;
+	margin: 0 auto;
+	border-radius: .8rem;
+	height: .89rem;
+	background: none;
+	color: #FFFFFF;
+	font-size: .453rem;
+	font-family: SF UI Text;
+	border-style: none;
+	border: 1px solid #FFFFFF;
+	/*margin-top: -1%;*/
+}
+
+.SelectList .commitment {
+	color: #FFFFFF;
+	font-size: .347rem;
+	margin: 0 auto;
+	margin-top: -0.8rem;
+}
+
+
+/*上滑动画*/
+
+.animation {
+	animation: mymove 3s;
+	-webkit-animation: mymove 3s;
+}
+
+@keyframes mymove {
+	from {
+		top: 300px
+	}
+	to {
+		top: 0px;
+	}
+}
+
+@-webkit-keyframes mymove{
+	from {
+		top: 300px;
+	}
+	to {
+		top: 0px;
+	}
+}
+
+
+/*下滑动画*/
+
+.animation_down {
+	animation: mydown 3s;
+	-webkit-animation: mydown 3s;
+}
+
+@-webkit-keyframes mydown {
+	from {
+		top: 0px;
+	}
+	to {
+		top: 300px;
+	}
+}
+
+@keyframes mydown {
+	from {
+		top: 0px;
+	}
+	to {
+		top: 300px;
+	}
+}

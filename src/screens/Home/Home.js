@@ -21,12 +21,15 @@ export default class Home extends Component {
         super(props);
     };
 
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
     componentDidMount() {
         this.props.getBanner();
         this.props.getChannel();
         this.props.getLive();
         this.props.getVOD();
-        Orientation.lockToPortrait()
     };
 
     _renderChannelListItem = ({item}) => {

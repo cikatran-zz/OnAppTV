@@ -8,6 +8,6 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface CustomVolumeView : MPVolumeView
+@interface SliderMPVolumeView : MPVolumeView
 
 @end

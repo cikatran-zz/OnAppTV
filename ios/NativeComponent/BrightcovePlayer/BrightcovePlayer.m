@@ -8,8 +8,8 @@
 
 #import "BrightcovePlayer.h"
 #import <BrightcovePlayerSDK/BCOVPlaybackController.h>
-#import "CustomVolumeView.h"
 #import <Lottie/Lottie.h>
+#import "CustomControlsView.h"
 
 @interface BrightcovePlayer() {
   NSString *_videoId;
@@ -34,7 +34,7 @@
 @property (nonatomic) BOOL isPlaying;
 @property (nonatomic) BOOL isPlayingBeforePan;
 @property (nonatomic, strong) UIButton *captionButton;
-@property (nonatomic, strong) UIView *controlsView;
+@property (nonatomic, strong) CustomControlsView *controlsView;
 @property (nonatomic) NSTimeInterval lastTimeOpenControlView;
 @property (nonatomic, strong) LOTAnimationView *fastforwardAnimation;
 @property (nonatomic, strong) LOTAnimationView *rewindAnimation;
@@ -73,14 +73,14 @@
     _isFadeIn = YES;
     _lastTimeOpenControlView = [[NSDate date] timeIntervalSince1970];
     
-    [self initBackgroundView];
-    [self initProgressView];
+    
+    [self initControlsView];
     [self initVolumeView];
     [self initPlaybackButton];
     [self initTimeLabel];
     [self initGesture];
     [self initFastforwardAnimation];
-    
+
     [self addSubview:_playerView];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       while (YES) {
@@ -153,7 +153,7 @@
                                                                  attribute: NSLayoutAttributeNotAnAttribute
                                                                 multiplier:1.0
                                                                   constant:60]];
-  [_controlsView insertSubview:_playbackButton belowSubview:_playerView.controlsView];
+  [_controlsView addSubview:_playbackButton];
   [_controlsView addConstraint:[NSLayoutConstraint constraintWithItem:_playbackButton
                                                               attribute:NSLayoutAttributeCenterX
                                                               relatedBy:NSLayoutRelationEqual
@@ -184,11 +184,9 @@
   [_controlsView addGestureRecognizer:panGesture];
 }
 
-- (void)initBackgroundView {
+- (void)initControlsView {
   
-  _controlsView = [[UIView alloc] init];
-  _controlsView.translatesAutoresizingMaskIntoConstraints = NO;
-  _controlsView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
+  _controlsView = [[CustomControlsView alloc] init];
   [_playerView.controlsContainerView addSubview:_controlsView];
 
   [_playerView.controlsContainerView addConstraint: [NSLayoutConstraint constraintWithItem:_controlsView
@@ -219,80 +217,6 @@
                                                                               attribute:NSLayoutAttributeTrailing
                                                                              multiplier:1.0
                                                                                constant:0]];
-}
-
-- (void) initProgressView {
-  
-  UIView *progressView = [[UIView alloc] init];
-  progressView.translatesAutoresizingMaskIntoConstraints = NO;
-  progressView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-  [_controlsView addSubview:progressView];
-  
-  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
-                                                                              attribute:NSLayoutAttributeLeading
-                                                                              relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_controlsView
-                                                                              attribute:NSLayoutAttributeLeading
-                                                                             multiplier:1.0
-                                                                               constant:0]];
-  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
-                                                                              attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_controlsView
-                                                                              attribute:NSLayoutAttributeBottom
-                                                                             multiplier:1.0
-                                                                               constant:0]];
-  [_controlsView addConstraint: [NSLayoutConstraint constraintWithItem:progressView
-                                                                              attribute:NSLayoutAttributeTop
-                                                                              relatedBy:NSLayoutRelationEqual
-                                                                                 toItem:_controlsView
-                                                                              attribute:NSLayoutAttributeTop
-                                                                             multiplier:1.0
-                                                                               constant:0]];
-  _progressWidth = [NSLayoutConstraint constraintWithItem:progressView
-                                                attribute:NSLayoutAttributeWidth
-                                                relatedBy:NSLayoutRelationEqual
-                                                   toItem:NULL
-                                                attribute: NSLayoutAttributeNotAnAttribute
-                                               multiplier:1.0
-                                                 constant:0];
-  [progressView addConstraint: _progressWidth];
-  
-  
-  // Progress head
-  _playheadImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ProgressHead"]];
-  _playheadImageView.translatesAutoresizingMaskIntoConstraints = NO;
-  _playheadImageView.userInteractionEnabled = YES;
-  progressView.userInteractionEnabled = YES;
-  [_playheadImageView setContentMode: UIViewContentModeScaleAspectFit];
-  [_playheadImageView addConstraint:[NSLayoutConstraint constraintWithItem:_playheadImageView
-                                                            attribute:NSLayoutAttributeWidth
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:NULL
-                                                            attribute: NSLayoutAttributeNotAnAttribute
-                                                           multiplier:1.0
-                                                             constant:26]];
-  [_playheadImageView addConstraint:[NSLayoutConstraint constraintWithItem:_playheadImageView
-                                                            attribute:NSLayoutAttributeHeight
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:NULL
-                                                            attribute: NSLayoutAttributeNotAnAttribute
-                                                           multiplier:1.0
-                                                             constant:135]];
-  [progressView addSubview:_playheadImageView];
-  [progressView addConstraint:[NSLayoutConstraint constraintWithItem:_playheadImageView
-                                                           attribute:NSLayoutAttributeCenterY
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:progressView
-                                                           attribute:NSLayoutAttributeCenterY
-                                                          multiplier:1.0
-                                                            constant:0]];
-  [progressView addConstraint:[NSLayoutConstraint constraintWithItem:_playheadImageView
-                                                           attribute:NSLayoutAttributeCenterX
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:progressView
-                                                           attribute:NSLayoutAttributeTrailing
-                                                          multiplier:1.0
-                                                            constant:0]];
 }
 
 - (void)initTimeLabel {
@@ -338,14 +262,10 @@
 
 - (void) initVolumeView {
   // Volume view
-  CustomVolumeView *volumeView = [[CustomVolumeView alloc] init];
-  volumeView.showsRouteButton = NO;
-  volumeView.showsVolumeSlider = YES;
-  volumeView.tintColor = [UIColor colorWithRed:1.0 green:45/255 blue:85/255 alpha:1.0];
-  [volumeView setVolumeThumbImage:[UIImage imageNamed:@"thumbImage"] forState:UIControlStateNormal];
+  SliderMPVolumeView *volumeView = [[SliderMPVolumeView alloc] init];
   [_controlsView addSubview:volumeView];
   
-  volumeView.translatesAutoresizingMaskIntoConstraints = NO;
+  
   
   // --- Constraints
   [volumeView addConstraint: [NSLayoutConstraint constraintWithItem:volumeView
@@ -609,25 +529,25 @@
 #pragma mark - playback controller delegate
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didProgressTo:(NSTimeInterval)progress {
   
-  NSLog(@"CURENT TIME: %f", progress);
-  _currentTime = (progress != INFINITY && progress != -INFINITY) ? progress : _currentTime;
-  if (!_isDragging) {
-    [_progressWidth setConstant: _controlsView.frame.size.width * (_currentTime/_videoDuration)];
-    [self setTimeLabel:_currentTime];
-  }
+//  NSLog(@"CURENT TIME: %f", progress);
+//  _currentTime = (progress != INFINITY && progress != -INFINITY) ? progress : _currentTime;
+//  if (!_isDragging) {
+//    [_progressWidth setConstant: _controlsView.frame.size.width * (_currentTime/_videoDuration)];
+//    [self setTimeLabel:_currentTime];
+//  }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
   
-  if ([lifecycleEvent.eventType isEqualToString:kBCOVPlaybackSessionLifecycleEventPlay]) {
-    _isPlaying = YES;
-    [_playbackButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-  }
-  
-  if ([lifecycleEvent.eventType isEqualToString:kBCOVPlaybackSessionLifecycleEventPause]) {
-    _isPlaying = NO;
-    [_playbackButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-  }
+//  if ([lifecycleEvent.eventType isEqualToString:kBCOVPlaybackSessionLifecycleEventPlay]) {
+//    _isPlaying = YES;
+//    [_playbackButton setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+//  }
+//
+//  if ([lifecycleEvent.eventType isEqualToString:kBCOVPlaybackSessionLifecycleEventPause]) {
+//    _isPlaying = NO;
+//    [_playbackButton setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+//  }
 }
 
 #pragma mark - playview delegate
