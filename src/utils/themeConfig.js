@@ -1,5 +1,5 @@
 export const colors = {
-  mainPink: '#ff4061',
+  mainPink: '#FF2D55',
   screenBackground: '#F5FCFF',
   textWhitePrimary: '#ffffff',
   textGrey: '#a5a5a5',
