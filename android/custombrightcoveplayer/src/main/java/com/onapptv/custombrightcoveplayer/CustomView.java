@@ -60,7 +60,7 @@ public class CustomView extends FrameLayout implements Component {
     private SeekBar mVolumeSeekBar;
     private ImageView mForwardAnimation;
     private ImageView mBackwardAnimation;
-    private Button mRepeatToggle;
+    private Button mRewindToggle;
     private Button mSubtitleToggle;
 
     private int captionsDialogOkToken;
@@ -68,10 +68,7 @@ public class CustomView extends FrameLayout implements Component {
     private int activityResumedToken;
     private int fragmentResumedToken;
 
-    public String videoId;
-    public String accountId;
-    public String policyKey;
-
+    private Boolean isDragging = false;
     private Boolean isShowing = false;
     private int endTime = 0;
     private boolean isRepeatEnabled = false;
@@ -131,7 +128,7 @@ public class CustomView extends FrameLayout implements Component {
         mVolumeSeekBar = findViewById(R.id.volume_seek);
         mForwardAnimation = findViewById(R.id.animation_forward);
         mBackwardAnimation = findViewById(R.id.animation_backward);
-        mRepeatToggle = findViewById(R.id.repeat);
+        mRewindToggle = findViewById(R.id.rewind);
         mSubtitleToggle = findViewById(R.id.subtitle);
     }
 
@@ -200,10 +197,11 @@ public class CustomView extends FrameLayout implements Component {
     }
 
     private void initButtons() {
-        mRepeatToggle.setOnClickListener(new OnClickListener() {
+        mRewindToggle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                isRepeatEnabled = !isRepeatEnabled;
+                mPlayerVideoView.seekTo(0);
+                resetFadeOutCallback();
             }
         });
 
@@ -216,11 +214,11 @@ public class CustomView extends FrameLayout implements Component {
             public void onClick(View v) {
                 if (mPlayerVideoView.isPlaying()) {
                     mPlayerVideoView.pause();
-                    removeCallbacks(mFadeOut);
                 }
                 else {
                     mPlayerVideoView.start();
                 }
+                resetFadeOutCallback();
             }
         });
 
@@ -234,6 +232,7 @@ public class CustomView extends FrameLayout implements Component {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 leftAm.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+                resetFadeOutCallback();
             }
 
             @Override
@@ -340,7 +339,7 @@ public class CustomView extends FrameLayout implements Component {
 
         @Default
         public void processEvent(Event event) {
-//            if(!isDragging()) {
+            if(!isDragging) {
 
                 int position = event.getIntegerProperty("playheadPosition");
                 if(mCurrTime != null) {
@@ -354,18 +353,9 @@ public class CustomView extends FrameLayout implements Component {
                 }
                 mProgressBar.setProgress((int) ((float) (position * 100/ duration)));
 
-                if (Objects.equals(event.getType(), "completed")) {
-                    if (isRepeatEnabled) {
-                        mPlayerVideoView.seekTo(0);
-                        mPlayerVideoView.start();
-                    }
-                    else {
-                        mPlayBtn.setBackgroundResource(R.drawable.play);
-                    }
-                }
-//            } else {
-//                Log.d(TAG, "The seek bar is being dragged.  No progress updates are being applied.");
-//            }
+            } else {
+                Log.d(TAG, "The seek bar is being dragged.  No progress updates are being applied.");
+            }
 
         }
     }
@@ -376,20 +366,17 @@ public class CustomView extends FrameLayout implements Component {
 
         @Default
         public void processEvent(Event event) {
-//            if(!.this.isDragging()) {
-                int position;
-                if(event.properties.containsKey("originalSeekPosition")) {
-                    position = event.getIntegerProperty("originalSeekPosition");
-                } else {
-                    position = event.getIntegerProperty("seekPosition");
-                }
+            isDragging = false;
+            int position;
+            if(event.properties.containsKey("originalSeekPosition")) {
+                position = event.getIntegerProperty("originalSeekPosition");
+            } else {
+                position = event.getIntegerProperty("seekPosition");
+            }
 
-                if(mCurrTime != null) {
-                    mCurrTime.setText(StringUtil.stringForTime((long)position));
-                }
-//            } else {
-//                Log.d(TAG, "The seek bar is being dragged.  No SEEK_TO updates are being applied.");
-//            }
+            if(mCurrTime != null) {
+                mCurrTime.setText(StringUtil.stringForTime((long)position));
+            }
 
         }
     }
@@ -428,6 +415,8 @@ public class CustomView extends FrameLayout implements Component {
             }
 
             mPlayerVideoView.getClosedCaptioningController().showCaptionsDialog();
+
+            resetFadeOutCallback();
         }
     }
 
@@ -440,6 +429,14 @@ public class CustomView extends FrameLayout implements Component {
             Log.d(TAG, String.format(Locale.getDefault(), "Process event: %s.", event.getType()));
             switch (event.getType()) {
                 case "didPause":
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!mPlayerVideoView.isPlaying() && isDragging) {
+                                mPlayerVideoView.start();
+                            }
+                        }
+                    }, 2000);
                     mPlayBtn.setBackground(mContext.getResources().getDrawable(R.drawable.play));
                     break;
                 case "didPlay":
@@ -473,6 +470,50 @@ public class CustomView extends FrameLayout implements Component {
                 mForwardAnimation.setVisibility(INVISIBLE);
                 mBackwardAnimation.setVisibility(VISIBLE);
                 mBackwardAnimation.startAnimation(animationSet);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                float distanceX, float distanceY) {
+            int deviceWith = mContext.getResources().getDisplayMetrics().widthPixels;
+            if (!isDragging) {
+                // Start dragging
+                int startProgressCoordinate = (int) (e1.getX() * 100 / deviceWith);
+                if (Math.abs(startProgressCoordinate - mProgressBar.getProgress()) > 5) return false;
+            }
+
+            isDragging = true;
+            if (mPlayerVideoView.isPlaying()) mPlayerVideoView.pause();
+
+            removeCallbacks(mFadeOut);
+
+            int progress = (int) (e2.getX() * 100 / deviceWith);
+
+            float msec = (progress / 100.0f) * endTime;
+            mProgressBar.setProgress(progress);
+            if (mCurrTime != null) {
+                mCurrTime.setText(StringUtil.stringForTime((long)msec));
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                               float velocityY) {
+            if (isDragging) {
+                isDragging = false;
+                int deviceWith = mContext.getResources().getDisplayMetrics().widthPixels;
+                int progress = (int) (e2.getX() * 100 / deviceWith);
+
+                float msec = (progress / 100.0f) * endTime;
+                mPlayerVideoView.seekTo((int) msec);
+                mPlayerVideoView.start();
+
+                postDelayed(mFadeOut, sDefaultTimeout);
+
             }
             return false;
         }
@@ -521,9 +562,14 @@ public class CustomView extends FrameLayout implements Component {
 
     });
 
+
     /** Public function **/
 
     public BrightcoveExoPlayerVideoView getPlayerVideoView() { return mPlayerVideoView; }
     public View getControlBar() { return mControlBar; }
+    public void resetFadeOutCallback() {
+        removeCallbacks(mFadeOut);
+        postDelayed(mFadeOut, sDefaultTimeout);
+    }
 
 }

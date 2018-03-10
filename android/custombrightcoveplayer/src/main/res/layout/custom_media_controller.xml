@@ -108,7 +108,7 @@
 
             <Button
                 android:layout_marginStart="20dp"
-                android:id="@+id/repeat"
+                android:id="@+id/rewind"
                 style="@style/BorderlessButton"
                 android:layout_height="15dp"
                 android:layout_width="15dp"
