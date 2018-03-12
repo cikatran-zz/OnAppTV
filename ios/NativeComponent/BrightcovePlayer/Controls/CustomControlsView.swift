@@ -134,7 +134,7 @@ extension CustomControlsView {
         if sender.state == .began {
             pauseBlock()
             let tapLocation = sender.location(in: self)
-            let playheadRegion = CGRect(x: progressView.frame.maxX - 30, y: progressView.frame.minY + progressView.frame.size.height / 4 - 20, width: 60, height: progressView.frame.size.height / 2 + 40)
+            let playheadRegion = CGRect(x: 0, y: progressView.frame.minY + progressView.frame.size.height / 4 - 20, width: self.frame.width, height: progressView.frame.size.height / 2 + 40)
             if  playheadRegion.contains(tapLocation) {
                 isDragging = true
                 isPlayingBeforePan = isPlaying
@@ -143,11 +143,14 @@ extension CustomControlsView {
         
         if isDragging {
             let tapLocation = sender.location(in: self)
+            
             if tapLocation.x >= 0 && tapLocation.x <= self.frame.width {
-                let seekingTime = videoDuration * Double(tapLocation.x / self.frame.width)
-                progressWidth.constant = tapLocation.x
+                let translation = sender.translation(in: self)
+                progressWidth.constant = progressWidth.constant + translation.x
+                let seekingTime = videoDuration * Double(progressWidth.constant / self.frame.width)
                 setLabelTime(seekingTime)
                 seekingBlock(seekingTime)
+                sender.setTranslation(.zero, in: self)
             } else {
                 sender.setValue(UIGestureRecognizerState.ended, forKey: "state")
             }
