@@ -8,7 +8,7 @@ import gql from 'graphql-tag';
 
 
 const instance = axios.create({
-    baseURL: `${config.baseURL}`
+  baseURL: `${config.baseURL}`
 });
 
 const httpLink = new HttpLink({uri: `http://13.250.57.10:3000/graphql`})
@@ -28,51 +28,52 @@ const client = new ApolloClient({
 })
 
 const get = (endpoints) => {
-    return instance.get(`${endpoints}`)
-        .then((response) => {
-            switch (response.status) {
-                case 403:
-                    return {error: {message: 'Invalid token'}, kickOut: true};
-                case 404:
-                    return {error: {message: 'Cannot connect to server'}};
-                default:
-                    return response;
-            }
-        })
-        .catch((err) => {
-            throw err;
-        });
+  return instance.get(`${endpoints}`)
+    .then((response) => {
+      switch (response.status) {
+        case 403:
+          return {error: {message: 'Invalid token'}, kickOut: true};
+        case 404:
+          return {error: {message: 'Cannot connect to server'}};
+        default:
+          return response;
+      }
+    })
+    .catch((err) => {
+      throw err;
+    });
 };
 
 
 const channelQuery = gql`
-query allChannels($limit: Int){
-viewer(token: "hieudeptrai") {
-  channelMany (limit: $limit) {
-    contentId
-    showTitle
-    title
-    long_description
-    short_description
-    thumbnails {
-      height
-      width
-      url
-      name
-    }
-  }
-  }
+query allChannels($page: Int){
+  viewer {
+    channelPagination(page: $page) {
+      count
+      data: items {
+        contentId
+        originalImage
+        title
+        longDescription
+        shortDescription
+        thumbnails {
+          url
+          name
+        }
+      }
+    } 
+   }
 }`
 
 export const getChannel = () => {
   return client.query({
     query: channelQuery,
-    variables: {limit: 10}
+    variables: {page: 1}
   });
 };
 
 export const getBanner = () => {
-    return get(config.endpoints.BANNER);
+  return get(config.endpoints.BANNER);
 };
 
 export const getLive = () => {
@@ -83,7 +84,7 @@ export const getVOD = () => {
 };
 
 export const getCategory = () => {
-    return get(config.endpoints.CATEGORY);
+  return get(config.endpoints.CATEGORY);
 };
 
 
