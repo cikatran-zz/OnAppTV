@@ -22,7 +22,7 @@ export default class Home extends Component {
     };
 
     componentWillMount() {
-        Orientation.lockToPortrait();
+        //Orientation.lockToPortrait();
     }
 
     componentDidMount() {

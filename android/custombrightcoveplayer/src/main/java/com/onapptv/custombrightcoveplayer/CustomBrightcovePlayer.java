@@ -8,10 +8,14 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -20,6 +24,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.brightcove.player.captioning.BrightcoveCaptionFormat;
+import com.brightcove.player.edge.Catalog;
+import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.event.Component;
 import com.brightcove.player.event.Default;
 import com.brightcove.player.event.Event;
@@ -27,6 +33,7 @@ import com.brightcove.player.event.EventEmitter;
 import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
+import com.brightcove.player.model.Video;
 import com.brightcove.player.util.ErrorUtil;
 import com.brightcove.player.util.StringUtil;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
@@ -35,13 +42,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by oldmen on 3/1/18.
  */
 
-public class CustomView extends FrameLayout implements Component {
+public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private final String TAG = this.getClass().getName();
     private static final int sDefaultTimeout = 3000;
     private final int FORWARD = 1;
@@ -71,9 +77,45 @@ public class CustomView extends FrameLayout implements Component {
     private Boolean isDragging = false;
     private Boolean isShowing = false;
     private int endTime = 0;
-    private boolean isRepeatEnabled = false;
     private long currentTimeInMs = 0;
     private final AnimationSet animationSet = new AnimationSet(true);
+    private WebView mWebview;
+
+    private String videoId;
+    private String accountId;
+    private String policyKey;
+
+    public void setVideoKey(String id) {
+        this.videoId = id;
+        playVideoWithReactParams();
+    }
+    public String getVideoKey() { return videoId; }
+    public void setAccountId(String id) {
+        this.accountId = id;
+        playVideoWithReactParams();
+    }
+    public String getAccountId() { return accountId; }
+    public void setPolicyKey(String id) {
+        this.policyKey = id;
+        playVideoWithReactParams();
+    }
+    public String getPolicyKey() { return policyKey; }
+
+    private void playVideoWithReactParams() {
+        if (videoId != null && accountId != null && policyKey != null) {
+            Catalog catalog = new Catalog(getEventEmitter(),
+                    accountId,
+                    policyKey);
+            catalog.findVideoByID(videoId, new VideoListener() {
+                @Override
+                public void onVideo(Video video) {
+                    mPlayerVideoView.add(video);
+                    mPlayerVideoView.start();
+                }
+            });
+
+        }
+    }
 
     /** AbstractComponent function **/
 
@@ -130,6 +172,7 @@ public class CustomView extends FrameLayout implements Component {
         mBackwardAnimation = findViewById(R.id.animation_backward);
         mRewindToggle = findViewById(R.id.rewind);
         mSubtitleToggle = findViewById(R.id.subtitle);
+        mWebview = findViewById(R.id.loading_spinner);
     }
 
     private void initPlayer() {
@@ -137,6 +180,9 @@ public class CustomView extends FrameLayout implements Component {
         initSubtitle();
 
         mPlayerVideoView.setMediaController((BrightcoveMediaController) null);
+        mWebview.setWebViewClient(new WebViewClient());
+        mWebview.setWebChromeClient(new WebChromeClient());
+        mWebview.loadUrl("file:///android_asset/spinner.html");
     }
 
     private void initDoubleTapForwardAnimation() {
@@ -171,21 +217,22 @@ public class CustomView extends FrameLayout implements Component {
         this.addListener("stop", playPauseHandler);
         this.addListener("activityResumed", playPauseHandler);
         this.addListener("completed", playPauseHandler);
+        this.addListener("bufferedUpdate",new BufferedUpdateHandler());
     }
 
     private void initSubtitle() {
-        BrightcoveCaptionFormat brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "de");
-        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_de), brightcoveCaptionFormat);
-        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "en");
-        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_en), brightcoveCaptionFormat);
-        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "es");
-        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_es), brightcoveCaptionFormat);
-        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "fr");
-        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_fr), brightcoveCaptionFormat);
-        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "it");
-        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_it), brightcoveCaptionFormat);
-        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "nl");
-        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_nl), brightcoveCaptionFormat);
+//        BrightcoveCaptionFormat brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "de");
+//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_de), brightcoveCaptionFormat);
+//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "en");
+//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_en), brightcoveCaptionFormat);
+//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "es");
+//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_es), brightcoveCaptionFormat);
+//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "fr");
+//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_fr), brightcoveCaptionFormat);
+//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "it");
+//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_it), brightcoveCaptionFormat);
+//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "nl");
+//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_nl), brightcoveCaptionFormat);
 
         mPlayerVideoView.getEventEmitter().once(EventType.CAPTIONS_LANGUAGES, new EventListener() {
             @Override
@@ -212,13 +259,13 @@ public class CustomView extends FrameLayout implements Component {
         mPlayBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                resetFadeOutCallback();
                 if (mPlayerVideoView.isPlaying()) {
                     mPlayerVideoView.pause();
                 }
                 else {
                     mPlayerVideoView.start();
                 }
-                resetFadeOutCallback();
             }
         });
 
@@ -249,7 +296,7 @@ public class CustomView extends FrameLayout implements Component {
 
     /** Constructor **/
 
-    public CustomView(Context context) {
+    public CustomBrightcovePlayer(Context context) {
         super(context);
         mContext = context;
         mAccessibilityManager = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
@@ -261,7 +308,7 @@ public class CustomView extends FrameLayout implements Component {
         initDoubleTapForwardAnimation();
     }
 
-    public CustomView(Context context, AttributeSet attrs) {
+    public CustomBrightcovePlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         mAccessibilityManager = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
@@ -349,7 +396,8 @@ public class CustomView extends FrameLayout implements Component {
 
                 int duration = event.getIntegerProperty("duration");
                 if(!mPlayerVideoView.getVideoDisplay().isLive() && mEndTime != null) {
-                    mEndTime.setText(StringUtil.stringForTime((long)duration));
+                    int etr = duration - position;
+                    mEndTime.setText(StringUtil.stringForTime((long)etr));
                 }
                 mProgressBar.setProgress((int) ((float) (position * 100/ duration)));
 
@@ -367,6 +415,7 @@ public class CustomView extends FrameLayout implements Component {
         @Default
         public void processEvent(Event event) {
             isDragging = false;
+            bufferLoading();
             int position;
             if(event.properties.containsKey("originalSeekPosition")) {
                 position = event.getIntegerProperty("originalSeekPosition");
@@ -381,6 +430,15 @@ public class CustomView extends FrameLayout implements Component {
         }
     }
 
+    private class BufferedUpdateHandler implements EventListener {
+        private BufferedUpdateHandler(){ }
+
+        @Override
+        public void processEvent(Event event) {
+            int percentComplete = event.getIntegerProperty("percentComplete");
+        }
+    }
+
     private class CaptionsDialogLauncher implements OnClickListener {
         private CaptionsDialogLauncher() {
         }
@@ -389,27 +447,27 @@ public class CustomView extends FrameLayout implements Component {
             Log.d(TAG, "Showing the captions dialog.");
             if(mPlayerVideoView.isPlaying()) {
                 mPlayerVideoView.pause();
-                CustomView.this.captionsDialogOkToken = CustomView.this.eventEmitter.once("captionsDialogOk", new EventListener() {
+                CustomBrightcovePlayer.this.captionsDialogOkToken = CustomBrightcovePlayer.this.eventEmitter.once("captionsDialogOk", new EventListener() {
                     public void processEvent(Event event) {
                         mPlayerVideoView.start();
-                        CustomView.this.eventEmitter.off("captionsDialogSettings", CustomView.this.captionsDialogSettingsToken);
+                        CustomBrightcovePlayer.this.eventEmitter.off("captionsDialogSettings", CustomBrightcovePlayer.this.captionsDialogSettingsToken);
                     }
                 });
-                CustomView.this.captionsDialogSettingsToken = CustomView.this.eventEmitter.once("captionsDialogSettings", new EventListener() {
+                CustomBrightcovePlayer.this.captionsDialogSettingsToken = CustomBrightcovePlayer.this.eventEmitter.once("captionsDialogSettings", new EventListener() {
                     public void processEvent(Event event) {
-                        CustomView.this.activityResumedToken = CustomView.this.eventEmitter.once("activityResumed", new EventListener() {
+                        CustomBrightcovePlayer.this.activityResumedToken = CustomBrightcovePlayer.this.eventEmitter.once("activityResumed", new EventListener() {
                             public void processEvent(Event event) {
                                 mPlayerVideoView.start();
-                                CustomView.this.eventEmitter.off("fragmentResumed", CustomView.this.fragmentResumedToken);
+                                CustomBrightcovePlayer.this.eventEmitter.off("fragmentResumed", CustomBrightcovePlayer.this.fragmentResumedToken);
                             }
                         });
-                        CustomView.this.fragmentResumedToken = CustomView.this.eventEmitter.once("fragmentResumed", new EventListener() {
+                        CustomBrightcovePlayer.this.fragmentResumedToken = CustomBrightcovePlayer.this.eventEmitter.once("fragmentResumed", new EventListener() {
                             public void processEvent(Event event) {
                                 mPlayerVideoView.start();
-                                CustomView.this.eventEmitter.off("activityResumed", CustomView.this.activityResumedToken);
+                                CustomBrightcovePlayer.this.eventEmitter.off("activityResumed", CustomBrightcovePlayer.this.activityResumedToken);
                             }
                         });
-                        CustomView.this.eventEmitter.off("captionsDialogOk", CustomView.this.captionsDialogOkToken);
+                        CustomBrightcovePlayer.this.eventEmitter.off("captionsDialogOk", CustomBrightcovePlayer.this.captionsDialogOkToken);
                     }
                 });
             }
@@ -429,6 +487,7 @@ public class CustomView extends FrameLayout implements Component {
             Log.d(TAG, String.format(Locale.getDefault(), "Process event: %s.", event.getType()));
             switch (event.getType()) {
                 case "didPause":
+                    removeCallbacks(mFadeOut);
                     postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -440,6 +499,12 @@ public class CustomView extends FrameLayout implements Component {
                     mPlayBtn.setBackground(mContext.getResources().getDrawable(R.drawable.play));
                     break;
                 case "didPlay":
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWebview.setVisibility(INVISIBLE);
+                        }
+                    }, 500);
                     mPlayBtn.setBackground(mContext.getResources().getDrawable(R.drawable.pause));
                     break;
                 default:
@@ -570,6 +635,21 @@ public class CustomView extends FrameLayout implements Component {
     public void resetFadeOutCallback() {
         removeCallbacks(mFadeOut);
         postDelayed(mFadeOut, sDefaultTimeout);
+    }
+
+    private void bufferLoading() {
+        mWebview.setVisibility(VISIBLE);
+        getEventEmitter().once("progress", new EventListener() {
+            @Override
+            public void processEvent(Event event) {
+                mWebview.setVisibility(INVISIBLE);
+            }
+        });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
 }
