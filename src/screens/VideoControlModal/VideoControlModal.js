@@ -28,7 +28,7 @@ export default class VideoControlModal extends React.PureComponent {
 
   _orientationDidChange = (orientation) => {
       console.log(orientation);
-      if (orientation === 'LANDSCAPE') {
+      if (orientation === 'LANDSCAPE' || (width > height)) {
           this.setState({showBrightcove: true})
       } else {
           this.setState({showBrightcove: false})
