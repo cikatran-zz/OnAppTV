@@ -41,13 +41,18 @@ export default class Home extends Component {
         </View>
     )}
 
+    _renderChannelListItemSeparator = () => (
+      <View style={styles.itemContainerSeparator}/>
+    )
+
     _keyExtractor = (item, index) => index;
 
-    _renderBanner = ({item}) => (
+    _renderBanner = ({item}) => {
+      return (
       <View style={styles.slotMachineContainer}>
           <Image
             style={styles.slotMachineImage}
-            source={{uri: item.header_banner.cover_image}}/>
+            source={{uri: item.header_banner.cover_image.toString()}}/>
           <View style={styles.labelGroup}>
               <PinkRoundedLabel text="New Movie"/>
               <Text style={styles.bannerTitle}>
@@ -68,11 +73,11 @@ export default class Home extends Component {
 
           </View>
       </View>
-    )
+    )}
 
     _renderFooter = ({item}) => (
       <View style={styles.notificationContainer}>
-        <Image style={styles.notificationImage} source={{uri: item.cover_image}}/>
+        <Image style={styles.notificationImage} source={{uri: item.cover_image.toString()}}/>
         <Text style={styles.notificationTitle}>{item.title}</Text>
         <Text style={styles.notificationSubTitle}>{item.sub_title}</Text>
       </View>
@@ -83,6 +88,7 @@ export default class Home extends Component {
             style={styles.listHorizontal}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={this._renderChannelListItemSeparator}
             data={item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderChannelListItem} />
@@ -271,6 +277,10 @@ const styles = StyleSheet.create({
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    itemContainerSeparator: {
+        width: 50,
+        height: 100
     },
     itemImageContainer: {
         justifyContent: 'center',
