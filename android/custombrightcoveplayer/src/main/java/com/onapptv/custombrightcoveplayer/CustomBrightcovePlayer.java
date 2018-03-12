@@ -2,13 +2,11 @@ package com.onapptv.custombrightcoveplayer;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
@@ -23,7 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.brightcove.player.captioning.BrightcoveCaptionFormat;
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.event.Component;
@@ -74,8 +71,9 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private int activityResumedToken;
     private int fragmentResumedToken;
 
+    private int distanceDragging = 0;
     private Boolean isDragging = false;
-    private Boolean isShowing = false;
+    private Boolean isShowing = true;
     private int endTime = 0;
     private long currentTimeInMs = 0;
     private final AnimationSet animationSet = new AnimationSet(true);
@@ -221,18 +219,6 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     }
 
     private void initSubtitle() {
-//        BrightcoveCaptionFormat brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "de");
-//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_de), brightcoveCaptionFormat);
-//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "en");
-//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_en), brightcoveCaptionFormat);
-//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "es");
-//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_es), brightcoveCaptionFormat);
-//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "fr");
-//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_fr), brightcoveCaptionFormat);
-//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "it");
-//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_it), brightcoveCaptionFormat);
-//        brightcoveCaptionFormat = BrightcoveCaptionFormat.createCaptionFormat("text/vtt", "nl");
-//        mPlayerVideoView.addSubtitleSource(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.sintel_trailer_nl), brightcoveCaptionFormat);
 
         mPlayerVideoView.getEventEmitter().once(EventType.CAPTIONS_LANGUAGES, new EventListener() {
             @Override
@@ -397,7 +383,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 int duration = event.getIntegerProperty("duration");
                 if(!mPlayerVideoView.getVideoDisplay().isLive() && mEndTime != null) {
                     int etr = duration - position;
-                    mEndTime.setText(StringUtil.stringForTime((long)etr));
+                    mEndTime.setText(StringUtil.stringForTime((long) etr));
                 }
                 mProgressBar.setProgress((int) ((float) (position * 100/ duration)));
 
@@ -436,6 +422,9 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         @Override
         public void processEvent(Event event) {
             int percentComplete = event.getIntegerProperty("percentComplete");
+            if ((mWebview.getVisibility() != VISIBLE) && (percentComplete < (currentTimeInMs * 100.0f / endTime) + 5) ) {
+                bufferLoading();
+            }
         }
     }
 
@@ -502,6 +491,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                     postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            hide();
                             mWebview.setVisibility(INVISIBLE);
                         }
                     }, 500);
@@ -545,8 +535,9 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
             int deviceWith = mContext.getResources().getDisplayMetrics().widthPixels;
             if (!isDragging) {
                 // Start dragging
+                resetFadeOutCallback();
                 int startProgressCoordinate = (int) (e1.getX() * 100 / deviceWith);
-                if (Math.abs(startProgressCoordinate - mProgressBar.getProgress()) > 5) return false;
+                distanceDragging = mProgressBar.getProgress() - startProgressCoordinate;
             }
 
             isDragging = true;
@@ -554,12 +545,13 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
 
             removeCallbacks(mFadeOut);
 
-            int progress = (int) (e2.getX() * 100 / deviceWith);
+            int progress = (int) ((e2.getX() * 100 / deviceWith) + distanceDragging);
 
             float msec = (progress / 100.0f) * endTime;
             mProgressBar.setProgress(progress);
             if (mCurrTime != null) {
                 mCurrTime.setText(StringUtil.stringForTime((long)msec));
+                mEndTime.setText(StringUtil.stringForTime((long) (endTime - msec)));
             }
 
             return false;
@@ -569,9 +561,10 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                                float velocityY) {
             if (isDragging) {
+                resetFadeOutCallback();
                 isDragging = false;
                 int deviceWith = mContext.getResources().getDisplayMetrics().widthPixels;
-                int progress = (int) (e2.getX() * 100 / deviceWith);
+                int progress = (int) ((e2.getX() * 100 / deviceWith) + distanceDragging);
 
                 float msec = (progress / 100.0f) * endTime;
                 mPlayerVideoView.seekTo((int) msec);

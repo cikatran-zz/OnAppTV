@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="Overdraw"
     android:background="#40000000"
-    android:visibility="invisible"
     android:id="@+id/brightcove_control"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -51,9 +50,13 @@
                 android:layout_width="15dp"
                 android:visibility="visible"
                 android:background="@drawable/play"/>
-
             <TextView
-                android:id="@id/end_time"
+                android:text="-"
+                android:textColor="@color/bmc_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/end_time"
                 android:text="@string/time_placeholder"
                 android:gravity="center"
                 android:textColor="@color/bmc_time_text"
