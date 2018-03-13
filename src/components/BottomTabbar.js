@@ -90,12 +90,12 @@ const styles = StyleSheet.create({
   },
   tabTextActive: {
     color: colors.textWhitePrimary,
-    fontSize: 12,
+    fontSize: 11,
     backgroundColor:'transparent'
   },
   tabTextInActive: {
     color: colors.greyOpacity,
-    fontSize: 12,
+    fontSize: 11,
     backgroundColor:'transparent'
   }
 })
