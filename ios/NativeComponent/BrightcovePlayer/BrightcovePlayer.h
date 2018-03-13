@@ -16,5 +16,6 @@
 @property (nonatomic, copy) NSString *policyKey;
 
 - (instancetype)init;
+- (void)stop;
 
 @end

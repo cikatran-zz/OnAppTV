@@ -3,8 +3,8 @@ import {
   StyleSheet, Text, View, TouchableOpacity
 } from 'react-native'
 import PropTypes from 'prop-types'
-import {colors, textWhiteDefault} from '../utils/themeConfig'
-import BlurView from './BlurView'
+import {colors, textWhiteDefault} from '../../utils/themeConfig'
+import BlurView from '../BlurView'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const tabs = [
@@ -21,12 +21,17 @@ class BottomTabbar extends React.PureComponent {
   constructor(props){
     super(props);
   }
+
+  componentDidMount() {
+
+  }
   _renderTab = (tab, i) => {
     const {navigation} = this.props;
     let {index} = navigation.state;
     if (i == 2) {
       return (
         <TouchableOpacity
+          onPress={() => navigation.navigate("VideoControlModal")}
           style={styles.tab}
           key={tab}
         >
