@@ -37,7 +37,7 @@ export default class Home extends Component {
             </View>
             <Text
               numberOfLines={1}
-              style={styles.itemLabel}>{item.title}</Text>
+              style={styles.itemLabel}>{item.title.toUpperCase()}</Text>
         </View>
     )}
 
@@ -54,7 +54,7 @@ export default class Home extends Component {
             style={styles.slotMachineImage}
             source={{uri: item.header_banner.cover_image.toString()}}/>
           <View style={styles.labelGroup}>
-              <PinkRoundedLabel text="New Movie"/>
+              <PinkRoundedLabel text="NEW MOVIE" style={{fontSize: 10, color: colors.whitePrimary}}/>
               <Text style={styles.bannerTitle}>
                 {item.header_banner.title}
               </Text>
@@ -121,7 +121,7 @@ export default class Home extends Component {
     _renderAds = () => (
       <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
           <View style={styles.adsLabelContainer}>
-              <PinkRoundedLabel text="+10.00$/MONTH"/>
+              <PinkRoundedLabel text="+10.00$/MONTH" style={{fontSize: 10, color: colors.whitePrimary}}/>
           </View>
       </ImageBackground>
     )
@@ -160,7 +160,7 @@ export default class Home extends Component {
       if (section.showHeader) {
       return (
         <View style={styles.headerSection}>
-          <PinkRoundedLabel text={section.title}/>
+          <PinkRoundedLabel text={section.title} style={{fontSize: 10, color: colors.whitePrimary}}/>
         </View>
       )} else {
         return null
@@ -183,7 +183,7 @@ export default class Home extends Component {
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
             <SectionList
-              style={styles.container}
+              style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
               keyExtractor={this._keyExtractor}
               stickySectionHeadersEnabled={false}
               onEndReachedThreshold={20}
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     bannerSubtitle: {
         marginTop: 5,
         fontSize: 12,
-        color: colors.textGrey
+        color: colors.bannerSubtitleColor
     },
     slotMachineImage: {
         width: '100%',
@@ -266,20 +266,24 @@ const styles = StyleSheet.create({
         height: '80%'
     },
     listHorizontal: {
-        marginVertical: 30
+        marginVertical: 30,
+        backgroundColor: colors.whitePrimary
     },
     itemLabel: {
-        fontSize: 12,
-        color: colors.textDarkGrey
+        fontSize: 10,
+        color: colors.textDarkGrey,
+        marginTop: 5,
     },
     itemContainer: {
+        marginLeft: 5,
+        backgroundColor: 'transparent',
         width: 100,
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',
     },
     itemContainerSeparator: {
-        width: 50,
+        width: 0,
         height: 100
     },
     itemImageContainer: {
