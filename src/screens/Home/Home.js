@@ -8,6 +8,7 @@ import React, {Component} from 'react';
 import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
+import BlurView from '../../components/BlurView'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
@@ -54,7 +55,7 @@ export default class Home extends Component {
             style={styles.slotMachineImage}
             source={{uri: item.header_banner.cover_image.toString()}}/>
           <View style={styles.labelGroup}>
-              <PinkRoundedLabel text="NEW MOVIE" style={{fontSize: 10, color: colors.whitePrimary}}/>
+              <PinkRoundedLabel text="NEW MOVIE"/>
               <Text style={styles.bannerTitle}>
                 {item.header_banner.title}
               </Text>
@@ -63,14 +64,15 @@ export default class Home extends Component {
               </Text>
           </View>
           <View style={styles.bannerPlayIconGroup}>
-              <View
-                ref={(playBackground) => { this.playBackground = playBackground; }}
-                style={styles.bannerPlayIconBackground}/>
+              {/*<View*/}
+                {/*ref={(playBackground) => { this.playBackground = playBackground; }}*/}
+                {/*style={styles.bannerPlayIconBackground}/>*/}
+              /* Under Play icon is Blur view with hsl background (0,100, 15). It's has blur radius 30*/
+              <BlurView style={styles.bannerPlayIconBackground}/>
               <Image
                 resizeMode={'contain'}
                 style={styles.bannerPlayIcon}
                 source={{uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png'}}/>
-
           </View>
       </View>
     )}
@@ -199,7 +201,6 @@ export default class Home extends Component {
                 {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
               ]}
             />
-
           </View>
         );
     }
@@ -248,6 +249,7 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     bannerPlayIconGroup: {
+        backgroundColor: 'hsl(0, 100%, 15%)',
         position: 'absolute',
         width: 60,
         height: 60,
@@ -256,7 +258,7 @@ const styles = StyleSheet.create({
     },
     bannerPlayIconBackground: {
         borderRadius: 50,
-        backgroundColor: colors.mainDarkGrey,
+        backgroundColor: colors.whitePrimary,
         width: '100%',
         height: '100%'
     },
