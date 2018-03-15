@@ -9,6 +9,7 @@
 import UIKit
 import STBAPI
 import WebViewJavascriptBridge
+import UserKitIdentity
 
 class STBConnectionView: UIView {
     
@@ -53,20 +54,21 @@ class STBConnectionView: UIView {
     func setupJavascriptBridge() {
         
         //        Whether it's the first time to start an APP
-        let isStarted = UserDefaults.standard.bool(forKey: "isStarted");
+        let isStarted = true
+        
         //        The HTML file name of the webView
         var webViewName = "" ;
         //        Determine whether the APP is first started
-        if isStarted == true{
+        if UserKitIdentity.mainInstance().accountManager.isLoggedIn() {
             //            Not for the first time
             webViewName = "Revolution";
         }else {
             //            Start the APP for the first time
-            UserDefaults.standard.set(true, forKey: "isStarted");
+//            UserDefaults.standard.set(true, forKey: "isStarted");
             webViewName = "Login";
         }
         //        Antional\Login\WifiConnection\SignIn\ChannelList\Revolution
-        self.webView.loadRequest(NSURLRequest.init(url: URL.init(fileURLWithPath: Bundle.main.path(forResource: webViewName, ofType: "html")!)) as URLRequest);
+        
         self.webView.scrollView.showsVerticalScrollIndicator = false;
         self.webView.scrollView.showsHorizontalScrollIndicator = false;
         self.webView.scrollView.bounces = false;
@@ -89,6 +91,8 @@ class STBConnectionView: UIView {
                 }
             })
         };
+        
+        
         self.bridge.registerHandler("HIG_ConnectSTB") { (data, responseCallback) in
             let str = data as! String;
             //json文件
@@ -187,6 +191,13 @@ class STBConnectionView: UIView {
                 self.bridge.callHandler("HIG_STBWlanAP",data:jsonString)
             })
         }
+        
+        // Additional javascript bridge
+        self.bridge.registerHandler("HIG_AllowNotification") { (data, callback) in
+            NotificationCenter.shared.requestPermission(successBlock: nil, errorBlock: nil)
+        }
+        
+        self.webView.loadRequest(NSURLRequest.init(url: URL.init(fileURLWithPath: Bundle.main.path(forResource: webViewName, ofType: "html")!)) as URLRequest);
     }
 }
 

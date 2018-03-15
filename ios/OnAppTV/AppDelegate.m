@@ -13,32 +13,47 @@
 #import <React/RCTRootView.h>
 #import <AVFoundation/AVFoundation.h>
 #import "Orientation.h"
+#import "OnAppTV-Swift.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-  NSURL *jsCodeLocation;
-
-  //jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:@"main" fallbackExtension:@"jsbundle"];
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"OnAppTV"
-                                               initialProperties:nil
-                                                   launchOptions:launchOptions];
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
-  rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
-  [self.window makeKeyAndVisible];
-  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
-  return YES;
-}
-
-
+    {
+        NSURL *jsCodeLocation;
+        
+        //jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:@"main" fallbackExtension:@"jsbundle"];
+        
+        // For debug
+        jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+        
+        RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                            moduleName:@"OnAppTV"
+                                                     initialProperties:nil
+                                                         launchOptions:launchOptions];
+        rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+        
+        self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        UIViewController *rootViewController = [UIViewController new];
+        rootViewController.view = rootView;
+        self.window.rootViewController = rootViewController;
+        [self.window makeKeyAndVisible];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+        
+        // Initialize UserKit
+        
+        NSString *token = @"";
+#if DEBUG
+        token = @"";
+#elif STAGING_SERVER
+        token = @"";
+#else
+        token = @"";
+#endif
+        [UserKitModule initializeWithToken:token];
+        [UserKitIdentityModule initializeWithToken:token];
+        
+        return YES;
+    }
 
 
 @end
