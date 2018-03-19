@@ -9,6 +9,10 @@ export default class LowerPageComponent extends React.PureComponent {
     super(props);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.props = nextProps;
+  }
+
   _renderBanner = ({item}) => {
       return (
         <View style={styles.topContainer}>
@@ -20,13 +24,13 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   _renderBannerInfo = ({item}) => {
-    console.log(item)
+    let currentItem = item.EPGs[0]
     return (
       <View style={{flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.bannerInfoContainer}>
           <View style={{flexDirection: 'column', flex: 1, justifyContent: 'flex-start'}}>
-            <Text style={styles.videoTitleText}>{item.title}</Text>
-            <Text style={styles.videoTypeText}>{item.type}</Text>
+            <Text style={styles.videoTitleText}>{currentItem.videoData.title}</Text>
+            <Text style={styles.videoTypeText}>{currentItem.videoData.type}</Text>
           </View>
           <View style={{flexDirection: 'row', flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
             <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.videoPlayButton}/>
@@ -35,7 +39,7 @@ export default class LowerPageComponent extends React.PureComponent {
           </View>
         </View>
         <View style={styles.videoSpecificInfo}>
-          <Text style={{fontSize: 12, color: '#ACACAC'}}>{item.specificInfo}</Text>
+          <Text style={{fontSize: 12, color: '#ACACAC'}}>{currentItem.videoData.longDescription}</Text>
         </View>
       </View>
     )
@@ -44,6 +48,7 @@ export default class LowerPageComponent extends React.PureComponent {
   _keyExtractor = (item, index) => index;
 
   _renderList = ({item}) => {
+    let currentList = item.EPGs.slice(1)
     return (
       <View>
         <View style={styles.listHeader}>
@@ -57,11 +62,18 @@ export default class LowerPageComponent extends React.PureComponent {
         <FlatList
         style={styles.list}
         horizontal={false}
-        data={item}
+        data={currentList}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderListVideoItem}/>
       </View>
     )
+  }
+
+  _timeFormatter(time) {
+    let date = new Date(time)
+    let hours = date.getHours()
+    let minutes = date.getMinutes()
+    return ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes))
   }
 
   _renderListVideoItem = ({item}) => {
@@ -69,12 +81,12 @@ export default class LowerPageComponent extends React.PureComponent {
       <View style={styles.itemContainer}>
         <Image
           style={styles.videoThumnbail}
-          source={{uri: item.url}}
+          source={{uri: item.url ? item.url : fakeBannerData.url}}
         />
         <View style={styles.itemInformationContainer}>
-          <Text style={styles.itemTitle}>{item.key}</Text>
-          <Text style={styles.itemType}>{item.type}</Text>
-          <Text style={styles.itemTime}>{item.start_time} - {item.end_time}</Text>
+          <Text style={styles.itemTitle}>{item.videoData.title}</Text>
+          <Text style={styles.itemType}>{item.videoData.type}</Text>
+          <Text style={styles.itemTime}>{this._timeFormatter(item.startTime)} - {this._timeFormatter(item.endTime)}</Text>
         </View>
         <View style={styles.itemActionsContainer}>
           <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.itemPlayButton}/>
@@ -85,6 +97,10 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   render() {
+    const {epgs} = this.props;
+    if (!epgs.data)
+      return null;
+
     return (
       <View style={{flex: 1, flexDirection: 'column'}}>
         <StatusBar
@@ -97,8 +113,8 @@ export default class LowerPageComponent extends React.PureComponent {
           stickySectionHeadersEnabled={false}
           sections={[
             {data: [fakeBannerData],showHeader: false, renderItem: this._renderBanner},
-            {data: [fakeBannerInfoData], renderItem: this._renderBannerInfo},
-            {data: [fakeListData],showHeader: false, renderItem: this._renderList},
+            {data: [epgs.data], renderItem: this._renderBannerInfo},
+            {data: [epgs.data],showHeader: false, renderItem: this._renderList},
           ]}
         />
       </View>
@@ -127,7 +143,6 @@ const styles = StyleSheet.create({
     borderRadius: (Platform.OS === 'ios') ? 4 : 8
   },
   list: {
-    height: 667,
     width: '100%',
   },
   itemContainer: {
@@ -221,11 +236,12 @@ const styles = StyleSheet.create({
   videoSpecificInfo: {
     width: '90%',
     marginTop: 15,
+    maxHeight: 162,
     height: 162,
     flexDirection: 'column',
   },
   nextButtonContainer: {
-    flex: 1,
+    marginLeft: 14,
     justifyContent: 'flex-start'
   },
   logoContainer: {
@@ -245,16 +261,16 @@ const fakeBannerData = {
   url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'
 }
 
-const fakeBannerInfoData = {
-  title: 'At Frida Kahlo’s',
-  type: 'Drama',
-  specificInfo: 'The Blue House” located in Mexico City, is the home where Frida Kahlo was born (1907) and would die (1954). She is surrounded not only by painter Diego Rivera, but also by Leon Trotsky, André Breton, Sergei Eisenstein, Pablo Neruda, Waldo Frank, Pablo Picasso, Marcel Duchamp, Vassily Kandinsky, etc'
-}
-
-const fakeListData = [
-  {key: 'Nicolas',type: 'Drama',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'Gorrilas in Danger',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'I\'m Roger Casement',type: 'Art-Dance',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'Aaron',type: 'Concert',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'The Mythes - Orphee',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'Art of Movie',type: 'Documentary',start_time: '22h30',end_time: '23h15',url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}]
+// const fakeBannerInfoData = {
+//   title: 'At Frida Kahlo’s',
+//   type: 'Drama',
+//   specificInfo: 'The Blue House” located in Mexico City, is the home where Frida Kahlo was born (1907) and would die (1954). She is surrounded not only by painter Diego Rivera, but also by Leon Trotsky, André Breton, Sergei Eisenstein, Pablo Neruda, Waldo Frank, Pablo Picasso, Marcel Duchamp, Vassily Kandinsky, etc'
+// }
+//
+// const fakeListData = [
+//   {key: 'Nicolas',type: 'Drama',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+//   {key: 'Gorrilas in Danger',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+//   {key: 'I\'m Roger Casement',type: 'Art-Dance',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+//   {key: 'Aaron',type: 'Concert',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+//   {key: 'The Mythes - Orphee',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+//   {key: 'Art of Movie',type: 'Documentary',start_time: '22h30',end_time: '23h15',url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}]
