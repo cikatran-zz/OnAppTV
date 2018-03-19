@@ -24,8 +24,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textWhitePrimary,
       overflow: "hidden",
-    width: 60,
-    marginLeft: 14
   },
 });
 
