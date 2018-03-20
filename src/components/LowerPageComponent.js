@@ -11,12 +11,21 @@ export default class LowerPageComponent extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     this.props = nextProps;
+
+    const {videoType, contentData} = this.props;
+    // VideoType : 'channel', 'episode', 'standalone'
+    // ContentData will be channelId || seriesId || type of standalone video
+
+    this.setState({
+        videoType: videoType ? videoType : "channel",
+        contentData: contentData ? contentData : "sampleChannelId"
+    })
   }
 
   _renderBanner = ({item}) => {
       return (
         <View style={styles.topContainer}>
-            <View style={styles.bannerContainer}>
+            <View style={styles.bannerThumbnailContainer}>
               <Image source={{uri: item.url}} style={styles.banner}/>
             </View>
         </View>
@@ -24,45 +33,63 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   _renderBannerInfo = ({item}) => {
-    let currentItem = item.EPGs[0]
     return (
-      <View style={{flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.bannerContainer}>
         <View style={styles.bannerInfoContainer}>
-          <View style={{flexDirection: 'column', flex: 1, justifyContent: 'flex-start'}}>
-            <Text style={styles.videoTitleText}>{currentItem.videoData.title}</Text>
-            <Text style={styles.videoTypeText}>{currentItem.videoData.type}</Text>
+          <View style={styles.bannerInfo}>
+            <Text style={styles.videoTitleText}>{item.title}</Text>
+            <Text style={styles.videoTypeText}>{item.type}</Text>
           </View>
-          <View style={{flexDirection: 'row', flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
+          <View style={styles.bannerButtonsContainer}>
             <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.videoPlayButton}/>
             <Image source={require('../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
             <Image source={require('../assets/share.png')} style={styles.videoShareButton}/>
           </View>
         </View>
-        <View style={styles.videoSpecificInfo}>
-          <Text style={{fontSize: 12, color: '#ACACAC'}}>{currentItem.videoData.longDescription}</Text>
+        <View style={styles.videoDescriptionContainer}>
+          <Text style={styles.videoDescription}>{item.longDescription}</Text>
         </View>
       </View>
     )
   }
 
+  _renderPinkIndicatorButton = () => {
+      const {videoType} = this.state;
+      switch (videoType) {
+        case 'channel': return (<PinkRoundedLabel text={"NEXT"}/>)
+        case 'episode': return (<PinkRoundedLabel text={"SEASON"}/>)
+        case 'standalone': return (<PinkRoundedLabel text={"RELATED"}/>)
+        default: return (<PinkRoundedLabel text={"NEXT"}/>)
+      }
+  }
+
+  _renderLogoChannel = ({url}) => {
+    const {videoType} = this.state
+    let logoUrl = url ? url : '../assets/arte.png'
+    if (videoType === 'channel') {
+        return (<Image source={require(logoUrl)}/>)
+    }
+  }
+
   _keyExtractor = (item, index) => index;
 
-  _renderList = ({item}) => {
-    let currentList = item.EPGs.slice(1)
+  _renderList = ({data}) => {
+    // data is list of epgs
     return (
       <View>
         <View style={styles.listHeader}>
           <View style={styles.nextButtonContainer}>
-            <PinkRoundedLabel text="NEXT"/>
+            {this._renderPinkIndicatorButton}
           </View>
           <View style={styles.logoContainer}>
-            <Image source={require('../assets/arte.png')}/>
+            {/*// TODO: Logo*/}
+            {this._renderLogoChannel(data.originalImages[0].url)}
           </View>
         </View>
         <FlatList
         style={styles.list}
         horizontal={false}
-        data={currentList}
+        data={data}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderListVideoItem}/>
       </View>
@@ -77,15 +104,16 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   _renderListVideoItem = ({item}) => {
+    let videoData = item.videoData
     return (
       <View style={styles.itemContainer}>
         <Image
           style={styles.videoThumnbail}
-          source={{uri: item.url ? item.url : fakeBannerData.url}}
+          source={{uri: item.originalImages[0].url ? item.url : fakeBannerData.url}}
         />
         <View style={styles.itemInformationContainer}>
-          <Text style={styles.itemTitle}>{item.videoData.title}</Text>
-          <Text style={styles.itemType}>{item.videoData.type}</Text>
+          <Text style={styles.itemTitle}>{videoData.title}</Text>
+          <Text style={styles.itemType}>{videoData.type}</Text>
           <Text style={styles.itemTime}>{this._timeFormatter(item.startTime)} - {this._timeFormatter(item.endTime)}</Text>
         </View>
         <View style={styles.itemActionsContainer}>
@@ -97,12 +125,21 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   render() {
-    const {epgs} = this.props;
-    if (!epgs.data)
+    // EPGs is EPG array, video is an EPG or videoModel depend on videoType
+    const {listData, video} = this.props;
+    if (!listData.data || !video.data)
       return null;
 
+    const {videoType} = this.state;
+    let videoModel
+    if (videoType === 'channel'){
+      videoModel = video.data.videoData
+    } else {
+      videoModel = video.data
+    }
+
     return (
-      <View style={{flex: 1, flexDirection: 'column'}}>
+      <View style={styles.container}>
         <StatusBar
           translucent={true}
           backgroundColor='#00000000'
@@ -112,9 +149,9 @@ export default class LowerPageComponent extends React.PureComponent {
           keyExtractor={this._keyExtractor}
           stickySectionHeadersEnabled={false}
           sections={[
-            {data: [fakeBannerData],showHeader: false, renderItem: this._renderBanner},
-            {data: [epgs.data], renderItem: this._renderBannerInfo},
-            {data: [epgs.data],showHeader: false, renderItem: this._renderList},
+            {data: [videoModel],showHeader: false, renderItem: this._renderBanner},
+            {data: [videoModel], renderItem: this._renderBannerInfo},
+            {data: [listData.data],showHeader: false, renderItem: this._renderList},
           ]}
         />
       </View>
@@ -135,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bannerContainer: {
+  bannerThumbnailContainer: {
     marginTop: 40,
     height: 164,
     width: '92%',
@@ -220,10 +257,27 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: colors.whitePrimary
   },
+  bannerContainer: {
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   bannerInfoContainer: {
     width: '90%',
     height: 35,
     flexDirection: 'row'
+  },
+  bannerInfo: {
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'flex-start'
+  },
+  bannerButtonsContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
   videoTitleText: {
     fontSize: 16,
@@ -233,12 +287,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#383838'
   },
-  videoSpecificInfo: {
+  videoDescriptionContainer: {
     width: '90%',
     marginTop: 15,
     maxHeight: 162,
     height: 162,
     flexDirection: 'column',
+  },
+  videoDescription: {
+    fontSize: 12,
+    color: '#ACACAC'
   },
   nextButtonContainer: {
     marginLeft: 14,
