@@ -35,6 +35,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* OnAppTVTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OnAppTVTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		692EE6512060CE1E009612BC /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 692EE64E2060CE0C009612BC /* libART.a */; };
 		693C2287AED1FF56D2EB0833 /* libPods-OnAppTV-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4257AC3EAD9CAB389072E44A /* libPods-OnAppTV-tvOS.a */; };
 		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
 		69F9A4EA20241C9900832440 /* BrightcovePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E920241C9900832440 /* BrightcovePlayer.m */; };
@@ -244,6 +245,20 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		692EE64D2060CE0C009612BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 692EE6482060CE0C009612BC /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
+			remoteInfo = ART;
+		};
+		692EE64F2060CE0C009612BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 692EE6482060CE0C009612BC /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 323A12871E5F266B004975B8;
+			remoteInfo = "ART-tvOS";
+		};
 		69F9A3912020681F00832440 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -300,20 +315,6 @@
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
 		};
-		69F9A3A52020693B00832440 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E628AF317E064DD1AF4C947A /* RNBlur.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
-			remoteInfo = RNBlur;
-		};
-		69F9A3A72020693B00832440 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E628AF317E064DD1AF4C947A /* RNBlur.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 64D1BD361EEFE88700F3F219;
-			remoteInfo = "RNBlur-tvOS";
-		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -369,6 +370,7 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AA87E7057BAC21D712A3CA /* libPods-OnAppTVTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTVTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		692EE6482060CE0C009612BC /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
 		69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBrightcovePlayerManager.m; sourceTree = "<group>"; };
 		69F9A4E820241C9900832440 /* BrightcovePlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayer.h; sourceTree = "<group>"; };
@@ -383,7 +385,6 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		AFE11BA9A7B0A9D528098249 /* Pods-OnAppTVTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTVTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTVTests/Pods-OnAppTVTests.release.xcconfig"; sourceTree = "<group>"; };
 		B6F46B9B844A4731B5D3B567 /* libRNBlur.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBlur.a; sourceTree = "<group>"; };
-		E628AF317E064DD1AF4C947A /* RNBlur.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		EAFA4A160F75C38B6CE87ECF /* Pods-OnAppTV-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV-tvOSTests/Pods-OnAppTV-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F1ED615A3403825005C24C7B /* Pods-OnAppTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -402,6 +403,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				692EE6512060CE1E009612BC /* libART.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -584,21 +586,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		692EE6492060CE0C009612BC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				692EE64E2060CE0C009612BC /* libART.a */,
+				692EE6502060CE0C009612BC /* libART-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		69F9A36B2020681F00832440 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				B6F46B9B844A4731B5D3B567 /* libRNBlur.a */,
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		69F9A3A12020693B00832440 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				69F9A3A62020693B00832440 /* libRNBlur.a */,
-				69F9A3A82020693B00832440 /* libRNBlur.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		69F9A4BC2024166600832440 /* NativeComponent */ = {
@@ -659,6 +661,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				692EE6482060CE0C009612BC /* ART.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -671,7 +674,6 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				E628AF317E064DD1AF4C947A /* RNBlur.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -845,6 +847,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 692EE6492060CE0C009612BC /* Products */;
+					ProjectRef = 692EE6482060CE0C009612BC /* ART.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -891,10 +897,6 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-				},
-				{
-					ProductGroup = 69F9A3A12020693B00832440 /* Products */;
-					ProjectRef = E628AF317E064DD1AF4C947A /* RNBlur.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1090,6 +1092,20 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		692EE64E2060CE0C009612BC /* libART.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libART.a;
+			remoteRef = 692EE64D2060CE0C009612BC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		692EE6502060CE0C009612BC /* libART-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libART-tvOS.a";
+			remoteRef = 692EE64F2060CE0C009612BC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		69F9A3922020681F00832440 /* libjsinspector.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1144,20 +1160,6 @@
 			fileType = archive.ar;
 			path = "libprivatedata-tvOS.a";
 			remoteRef = 69F9A39F2020681F00832440 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		69F9A3A62020693B00832440 /* libRNBlur.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBlur.a;
-			remoteRef = 69F9A3A52020693B00832440 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		69F9A3A82020693B00832440 /* libRNBlur.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBlur.a;
-			remoteRef = 69F9A3A72020693B00832440 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
@@ -1367,11 +1369,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/Brightcove-Player-Core/BCOVPUIResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Brightcove-Player-Core/BCOVPUIResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BCOVPUIResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

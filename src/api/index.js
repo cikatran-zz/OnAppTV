@@ -8,10 +8,10 @@ import gql from 'graphql-tag';
 
 
 const instance = axios.create({
-  baseURL: `${config.baseURL}`
+  serverURL: `${config.serverURL}`
 });
 
-const httpLink = new HttpLink({uri: `http://13.250.57.10:3000/graphql`})
+const httpLink = new HttpLink({uri: config.serverURL})
 
 const errorHandler = onError(({ networkError }) => {
   switch (networkError.statusCode) {
@@ -44,47 +44,28 @@ const get = (endpoints) => {
     });
 };
 
-
-const channelQuery = gql`
-query allChannels($page: Int){
-  viewer {
-    channelPagination(page: $page) {
-      count
-      data: items {
-        contentId
-        originalImage
-        title
-        longDescription
-        shortDescription
-        thumbnails {
-          url
-          name
-        }
-      }
-    } 
-   }
-}`
-
-export const getChannel = () => {
+export const getChannel = (limit) => {
   return client.query({
-    query: channelQuery,
-    variables: {page: 1}
+     query: config.queries.CHANNEL,
+     variables:  {limit: limit}
   });
 };
 
 export const getBanner = () => {
-  return get(config.endpoints.BANNER);
+    return client.query({
+        query: config.queries.BANNER
+    });
 };
 
 export const getLive = () => {
-  return get(config.endpoints.LIVE);
+  return get(config.queries.LIVE);
 };
 export const getVOD = () => {
-  return get(config.endpoints.VOD);
+  return get(config.queries.VOD);
 };
 
 export const getCategory = () => {
-  return get(config.endpoints.CATEGORY);
+  return get(config.queries.CATEGORY);
 };
 
 

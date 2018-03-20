@@ -49,25 +49,25 @@ export default class Home extends Component {
     _keyExtractor = (item, index) => index;
 
     _renderBanner = ({item}) => {
+        var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
       return (
       <View style={styles.slotMachineContainer}>
           <Image
             style={styles.slotMachineImage}
-            source={{uri: item.header_banner.cover_image.toString()}}/>
+            source={{uri: image}}/>
           <View style={styles.labelGroup}>
               <PinkRoundedLabel text="NEW MOVIE"/>
               <Text style={styles.bannerTitle}>
-                {item.header_banner.title}
+                {item.title}
               </Text>
               <Text style={styles.bannerSubtitle}>
-                {item.header_banner.sub_title}
+                {item.shortDescription}
               </Text>
           </View>
           <View style={styles.bannerPlayIconGroup}>
-              {/*<View*/}
-                {/*ref={(playBackground) => { this.playBackground = playBackground; }}*/}
-                {/*style={styles.bannerPlayIconBackground}/>*/}
-              /* Under Play icon is Blur view with hsl background (0,100, 15). It's has blur radius 30*/
               <BlurView style={styles.bannerPlayIconBackground}/>
               <Image
                 resizeMode={'contain'}
@@ -177,10 +177,10 @@ export default class Home extends Component {
 
     render() {
         const {banner, channel, live, vod} = this.props;
-        if (!banner.data || banner.isFetching ||
-          !channel.data || channel.isFetching ||
-          !live.data || live.isFetching ||
-          !vod.data || vod.isFetching)
+        if (!banner.data || banner.isFetching )//||
+          // !channel.data || channel.isFetching ||
+          // !live.data || live.isFetching ||
+          // !vod.data || vod.isFetching)
             return null;
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
@@ -192,19 +192,21 @@ export default class Home extends Component {
               ListFooterComponent={ this._renderListFooter }
               renderSectionHeader={this._renderSectionHeader}
               sections={[
-                {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
-                {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
-                {data:["ads"], showHeader: false, renderItem: this._renderAds},
-                {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
-                {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
-                {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
+                {data:[banner.data], showHeader: false, renderItem: this._renderBanner}
               ]}
             />
           </View>
         );
     }
 }
+/**
+ {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
+ {data:["ads"], showHeader: false, renderItem: this._renderAds},
+ {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+ {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
+ {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+ {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
+ */
 
 const styles = StyleSheet.create({
     container: {
@@ -254,11 +256,11 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderRadius: 25,
+        overflow: "hidden"
     },
     bannerPlayIconBackground: {
-        borderRadius: 50,
-        backgroundColor: colors.whitePrimary,
         width: '100%',
         height: '100%'
     },
