@@ -10,6 +10,9 @@ import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
+import BlurView from '../../components/BlurView'
+import Orientation from 'react-native-orientation';
+import BrightcovePlayer from '../../components/BrightcovePlayer'
 
 const CATEGORY = ["Movie", "Sports", "Entertainment"];
 
@@ -18,6 +21,10 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
     };
+
+    componentWillMount() {
+        //Orientation.lockToPortrait();
+    }
 
     componentDidMount() {
         this.props.getBanner();
@@ -68,7 +75,15 @@ export default class Home extends Component {
               </Text>
           </View>
           <View style={styles.bannerPlayIconGroup}>
+<<<<<<< HEAD
               <BlurView style={styles.bannerPlayIconBackground}/>
+=======
+              <View
+                ref={(playBackground) => { this.playBackground = playBackground; }}
+                style={styles.bannerPlayIconBackground}>
+              <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
+              </View>
+>>>>>>> develop
               <Image
                 resizeMode={'contain'}
                 style={styles.bannerPlayIcon}
@@ -192,7 +207,17 @@ export default class Home extends Component {
               ListFooterComponent={ this._renderListFooter }
               renderSectionHeader={this._renderSectionHeader}
               sections={[
+<<<<<<< HEAD
                 {data:[banner.data], showHeader: false, renderItem: this._renderBanner}
+=======
+                {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
+                {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
+                {data:["ads"], showHeader: false, renderItem: this._renderAds},
+                {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
+                {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+                {data:[banner.data.footer_banner], title: "WHAT'S NEW?", showHeader: true, renderItem: this._renderFooter},
+>>>>>>> develop
               ]}
             />
           </View>
@@ -262,7 +287,8 @@ const styles = StyleSheet.create({
     },
     bannerPlayIconBackground: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        overflow: 'hidden'
     },
     bannerPlayIcon: {
         position: 'absolute',
@@ -339,5 +365,13 @@ const styles = StyleSheet.create({
     },
     notificationSubTitle: {
       ...textLightDefault
-    }
+    },
+  blurview: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right:0,
+    top: 0,
+    borderRadius: 50,
+  },
 });

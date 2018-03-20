@@ -10,6 +10,4 @@
 
 @interface RNTBrightcovePlayerManager : RCTViewManager
 
-
-
 @end

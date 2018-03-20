@@ -1,12 +1,18 @@
 PODS:
-  - Brightcove-Player-Core/dynamic (6.2.1)
+  - Brightcove-Player-Core/dynamic (6.2.2)
+  - lottie-ios (2.5.0)
+  - WebViewJavascriptBridge (6.0.3)
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
+  - lottie-ios
+  - WebViewJavascriptBridge (~> 6.0)
 
 SPEC CHECKSUMS:
-  Brightcove-Player-Core: d6bdc6b3d06587063e714eb44d678dc087d20c98
+  Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
+  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
+  WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: 30b59518f7a014bcc66acd717c9ec18e23c23a5b
+PODFILE CHECKSUM: 545b66571afc417080646bb39876de4e9fda02f7
 
 COCOAPODS: 1.4.0
