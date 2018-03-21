@@ -86,4 +86,53 @@ export const getCategory = () => {
     return get(config.endpoints.CATEGORY);
 };
 
+const epgsFromChannelIdQuery = gql`
+query queryEpg($channelId: String){
+viewer {
+  channelByContentId(_id: $channelId)     {
+      _id
+      channelId
+      title
+      longDescription
+      shortDescription
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+      updatedAt
+      createdAt
+      EPGs {
+        videoId
+        startTime
+        endTime
+        videoData {
+          contentId
+          duration_in_seconds
+          publishDate
+          title
+          longDescription
+          shortDescription
+          feature
+          seriesId
+          seasonIndex
+          episodeIndex
+          type
+          impression  
+          updatedAt
+          createdAt
+        }
+      }
+    }
+}
+}`
+
+export const getEpgs = (channelId) => {
+  return client.query({
+    query: epgsFromChannelIdQuery,
+    variables: {channelId: channelId}
+  })
+}
 

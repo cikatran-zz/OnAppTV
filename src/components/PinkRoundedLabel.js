@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainPink,
     fontSize: 13,
     color: colors.textWhitePrimary,
-      overflow: "hidden"
+      overflow: "hidden",
   },
 });
 
