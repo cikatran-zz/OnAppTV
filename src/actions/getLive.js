@@ -1,15 +1,17 @@
 import * as actionTypes from './actionTypes';
 
-export function getLive() {
+export function getLive(currentTime) {
   return {
     type: actionTypes.FETCHING_LIVE,
+      currentTime: currentTime
   }
 }
 
 export function getLiveSuccess(data) {
+    console.log(data)
   return {
     type: actionTypes.FETCH_LIVE_SUCCESS,
-    data: data.data
+    data: data.viewer.epgMany
   }
 }
 

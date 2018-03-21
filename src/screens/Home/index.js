@@ -24,7 +24,7 @@ function mapDispatchToProps(dispatch) {
     return {
         getBanner: () => dispatch(getBanner()),
         getChannel: (numberOfItems) => dispatch(getChannel(numberOfItems)),
-        getLive: () => dispatch(getVOD(0, 1)),
+        getLive: (time) => dispatch(getLive(time)),
         getVOD: (page, itemPerPage) => dispatch(getVOD(page, itemPerPage)),
         getAds: () => dispatch(getAds()),
         getCategory: () => dispatch(getCategory()),

@@ -130,6 +130,38 @@ query{
 }
 `;
 
+const liveQuery = gql`
+query {
+  viewer{
+    epgMany(filter: {
+      _operators:{
+        startTime: {
+          lte: "2018-03-15T07:10:00.000Z"
+        },
+        endTime:{
+          gte: "2018-03-15T07:10:00.000Z"
+        }
+      }
+    }) {
+      channelData {
+        title
+      }
+      videoData {
+        title
+        originalImages {
+          url
+        }
+        genresData {
+          name
+        }
+      }
+      startTime
+      endTime
+    }
+  }
+}
+`;
+
 export default {
     serverURL: 'http://13.250.57.10:3000/graphql',
     queries: {
@@ -137,7 +169,7 @@ export default {
         CHANNEL: channelQuery,
         ADS: adsQuery,
         CATEGORY: categoryQuery,
-        LIVE: '/5a6feeb13300001000ff59de',
+        LIVE: liveQuery,
         VOD: vodQuery,
         NEWS: newsQuery
     }

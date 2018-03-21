@@ -11,6 +11,7 @@ import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
+import {secondFormatter, timeFormatter} from "../../utils/stringUtils";
 
 export default class Home extends Component {
 
@@ -26,7 +27,7 @@ export default class Home extends Component {
         this.props.getBanner();
         this.props.getChannel(6);
         this.props.getAds();
-        // this.props.getLive();
+        this.props.getLive((new Date()).toISOString());
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
@@ -111,14 +112,33 @@ export default class Home extends Component {
             renderItem={this._renderChannelListItem} />
     )
 
-  _renderOnLiveItem = ({item}) => (
-    <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
-    </View>
-  )
+  _renderOnLiveItem = ({item}) => {
+      var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+      if (item.videoData.originalImages.length > 0) {
+          image = item.videoData.originalImages[0].url;
+      }
+      var genres = '';
+      if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
+          item.videoData.genresData.forEach((genre, index) => {
+              if (genres.length != 0) {
+                  genres = genres.concat(", ");
+              }
+              genres = genres.concat(genre.name.toString());
+          })
+      }
+
+      var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+
+
+        return (
+          <View style={styles.liveThumbnailContainer}>
+              <VideoThumbnail showProgress={true} progress="80%" imageUrl={image}/>
+              <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
+          </View>
+      )
+  }
 
   _renderVODItem = ({item}) => {
         var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
@@ -140,7 +160,7 @@ export default class Home extends Component {
               <VideoThumbnail showProgress={false} imageUrl={image}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.durationInSeconds}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
             </View>)
     };
 
@@ -216,7 +236,8 @@ export default class Home extends Component {
                 !ads.data || ads.isFetching ||
                 !vod.data || vod.isFetching ||
                 !category.data || category.isFetching ||
-                !news.data || news.isFetching)
+                !news.data || news.isFetching ||
+                !live.data || live.isFetching)
             return null;
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
@@ -233,6 +254,7 @@ export default class Home extends Component {
                   {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
                   {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
                   {data:[ads.data], showHeader: false, renderItem: this._renderAds},
+                  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                   {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
                   {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
@@ -243,7 +265,7 @@ export default class Home extends Component {
     }
 }
 /**
- {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+ ,
 
  ,
  */

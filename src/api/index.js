@@ -63,8 +63,11 @@ export const getAds = () => {
     });
 };
 
-export const getLive = () => {
-  return get(config.queries.LIVE);
+export const getLive = (currentTime) => {
+    return client.query({
+        query: config.queries.LIVE,
+        variables:  {currentTime: currentTime}
+    });
 };
 export const getVOD = (page, itemPerPage) => {
     return client.query({
