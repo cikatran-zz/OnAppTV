@@ -6,6 +6,8 @@ export const colors = {
   textDarkGrey: '#8a8a8a',
   mainDarkGrey: '#767676F2',
   mainLightGrey:'#ededed',
+  greyDescriptionText: '#ACACAC',
+  textLittleBlack: '#383838',
   whitePrimary: '#ffffff',
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
