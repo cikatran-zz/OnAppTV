@@ -30,9 +30,13 @@ class VideoThumbnail extends React.PureComponent{
     }
   }
   render(){
+    var source = require('../assets/bg_category.png');
+    if (this.props.imageUrl != null) {
+      source = {uri: this.props.imageUrl};
+    }
     return (
       <View style={styles.container}>
-        <ImageBackground imageStyle={{ borderRadius: 3 }} style={styles.imageContainer} source={{uri: this.props.imageUrl}}>
+        <ImageBackground imageStyle={{ borderRadius: 3 }} style={styles.imageContainer} source={source}>
           <View style={[styles.progressView, this._runProgressView()]}/>
           <Text style={styles.textCenter}>{this.props.textCenter}</Text>
         </ImageBackground>

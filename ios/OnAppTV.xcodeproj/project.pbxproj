@@ -42,10 +42,6 @@
 		55CA32248C200F9C3DE047FB /* Pods_OnAppTVTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 059A53021B4082D460CEA8BB /* Pods_OnAppTVTests.framework */; };
 		5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D821A71BEE6F4A7BB51C69C6 /* Zocial.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-<<<<<<< HEAD
-		692EE6512060CE1E009612BC /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 692EE64E2060CE0C009612BC /* libART.a */; };
-		693C2287AED1FF56D2EB0833 /* libPods-OnAppTV-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4257AC3EAD9CAB389072E44A /* libPods-OnAppTV-tvOS.a */; };
-=======
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
 		6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE4C204C29E400470C97 /* CustomControlsView.swift */; };
@@ -92,7 +88,6 @@
 		69D21ED620525DE600DFA90A /* img in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB520525DE500DFA90A /* img */; };
 		69D21EDA20526E1300DFA90A /* STBAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D21ED920526E1300DFA90A /* STBAPI.framework */; };
 		69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */; };
->>>>>>> develop
 		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
 		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
 		69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F020244A9200832440 /* RCTBlurView.m */; };
@@ -303,34 +298,20 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
-<<<<<<< HEAD
-		692EE64D2060CE0C009612BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 692EE6482060CE0C009612BC /* ART.xcodeproj */;
-=======
 		69BD179920319D8900E33978 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 69BD179420319D8900E33978 /* ART.xcodeproj */;
->>>>>>> develop
 			proxyType = 2;
 			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
 			remoteInfo = ART;
 		};
-<<<<<<< HEAD
-		692EE64F2060CE0C009612BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 692EE6482060CE0C009612BC /* ART.xcodeproj */;
-=======
 		69BD179B20319D8900E33978 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 69BD179420319D8900E33978 /* ART.xcodeproj */;
->>>>>>> develop
 			proxyType = 2;
 			remoteGlobalIDString = 323A12871E5F266B004975B8;
 			remoteInfo = "ART-tvOS";
 		};
-<<<<<<< HEAD
-=======
 		69BD17BD2032986D00E33978 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 69BD17AB2032986D00E33978 /* RCTOrientation.xcodeproj */;
@@ -338,7 +319,6 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTOrientation;
 		};
->>>>>>> develop
 		69F9A3912020681F00832440 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -453,10 +433,6 @@
 		5E7DE88C26ADDFB7EEFB0F0D /* Pods-OnAppTVTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTVTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTVTests/Pods-OnAppTVTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-<<<<<<< HEAD
-		63AA87E7057BAC21D712A3CA /* libPods-OnAppTVTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTVTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		692EE6482060CE0C009612BC /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
-=======
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
 		6969BE4B204C29E400470C97 /* OnAppTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnAppTV-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -505,7 +481,7 @@
 		69D21ED920526E1300DFA90A /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
 		69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSTBConnectionViewManager.h; sourceTree = "<group>"; };
 		69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSTBConnectionViewManager.m; sourceTree = "<group>"; };
->>>>>>> develop
+
 		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
 		69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBrightcovePlayerManager.m; sourceTree = "<group>"; };
 		69F9A4EC20244A4D00832440 /* RCTBlurViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurViewManager.h; sourceTree = "<group>"; };
@@ -518,14 +494,10 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		AFE11BA9A7B0A9D528098249 /* Pods-OnAppTVTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTVTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTVTests/Pods-OnAppTVTests.release.xcconfig"; sourceTree = "<group>"; };
 		B6F46B9B844A4731B5D3B567 /* libRNBlur.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBlur.a; sourceTree = "<group>"; };
-<<<<<<< HEAD
-		EAFA4A160F75C38B6CE87ECF /* Pods-OnAppTV-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV-tvOSTests/Pods-OnAppTV-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-=======
 		D821A71BEE6F4A7BB51C69C6 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		D8F10A88BF404C30A23EF581 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		D95F211BEEE94A0D94986107 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		DE0BD7F0BD7346FBAF6ADA1B /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
->>>>>>> develop
 		F1ED615A3403825005C24C7B /* Pods-OnAppTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.debug.xcconfig"; sourceTree = "<group>"; };
 		F73B5AC3F8114036B7B1C791 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -544,12 +516,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< HEAD
-				692EE6512060CE1E009612BC /* libART.a in Frameworks */,
-=======
 				69BD17D82032988000E33978 /* libRCTOrientation.a in Frameworks */,
 				69BD179D20319DB500E33978 /* libART.a in Frameworks */,
->>>>>>> develop
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -734,21 +702,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-<<<<<<< HEAD
-		692EE6492060CE0C009612BC /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				692EE64E2060CE0C009612BC /* libART.a */,
-				692EE6502060CE0C009612BC /* libART-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		69F9A36B2020681F00832440 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				B6F46B9B844A4731B5D3B567 /* libRNBlur.a */,
-=======
 		6636BC7258DF4491AF9FB28E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -799,7 +752,6 @@
 			children = (
 				69BD179A20319D8900E33978 /* libART.a */,
 				69BD179C20319D8900E33978 /* libART-tvOS.a */,
->>>>>>> develop
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -928,12 +880,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
-				692EE6482060CE0C009612BC /* ART.xcodeproj */,
-=======
 				69BD17AB2032986D00E33978 /* RCTOrientation.xcodeproj */,
 				69BD179420319D8900E33978 /* ART.xcodeproj */,
->>>>>>> develop
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -1119,13 +1067,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-<<<<<<< HEAD
-					ProductGroup = 692EE6492060CE0C009612BC /* Products */;
-					ProjectRef = 692EE6482060CE0C009612BC /* ART.xcodeproj */;
-=======
 					ProductGroup = 69BD179520319D8900E33978 /* Products */;
 					ProjectRef = 69BD179420319D8900E33978 /* ART.xcodeproj */;
->>>>>>> develop
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1373,20 +1316,6 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-<<<<<<< HEAD
-		692EE64E2060CE0C009612BC /* libART.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libART.a;
-			remoteRef = 692EE64D2060CE0C009612BC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		692EE6502060CE0C009612BC /* libART-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libART-tvOS.a";
-			remoteRef = 692EE64F2060CE0C009612BC /* PBXContainerItemProxy */;
-=======
 		69BD179A20319D8900E33978 /* libART.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1406,7 +1335,6 @@
 			fileType = archive.ar;
 			path = libRCTOrientation.a;
 			remoteRef = 69BD17BD2032986D00E33978 /* PBXContainerItemProxy */;
->>>>>>> develop
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		69F9A3922020681F00832440 /* libjsinspector.a */ = {

@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable';
 const getChannelEpic = (action$) =>
     action$.ofType(actionTypes.FETCHING_CHANNEL)
         .mergeMap(action =>
-            Observable.from(getChannel())
+            Observable.from(getChannel(action.limit))
                 .map(response => getChannelSuccess(response.data))
                 .catch(error => Observable.of(getChannelFailure(error)))
         );

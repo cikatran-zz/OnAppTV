@@ -10,12 +10,9 @@ export const colors = {
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
   textMainBlack: '#404040',
-<<<<<<< HEAD
   bannerSubtitleColor: '#ffffffab',
-  tabTextInActive: '#ffffff7d'
-=======
+  tabTextInActive: '#ffffff7d',
   greyOpacityBackground: 'rgba(83, 83, 83, 0.2)'
->>>>>>> develop
 };
 
 export const textDarkDefault = {

@@ -57,15 +57,32 @@ export const getBanner = () => {
     });
 };
 
+export const getAds = () => {
+    return client.query({
+        query: config.queries.ADS
+    });
+};
+
 export const getLive = () => {
   return get(config.queries.LIVE);
 };
-export const getVOD = () => {
-  return get(config.queries.VOD);
+export const getVOD = (page, itemPerPage) => {
+    return client.query({
+        query: config.queries.VOD,
+        variables:  {page: page, perPage: itemPerPage}
+    });
 };
 
 export const getCategory = () => {
-  return get(config.queries.CATEGORY);
+    return client.query({
+        query: config.queries.CATEGORY
+    });
+};
+
+export const getNews = () => {
+    return client.query({
+        query: config.queries.NEWS
+    });
 };
 
 

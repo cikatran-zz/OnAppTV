@@ -5,16 +5,12 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
-import BlurView from '../../components/BlurView'
-import Orientation from 'react-native-orientation';
-import BrightcovePlayer from '../../components/BrightcovePlayer'
-
-const CATEGORY = ["Movie", "Sports", "Entertainment"];
+import {getBlurRadius} from '../../utils/blurRadius'
 
 export default class Home extends Component {
 
@@ -28,20 +24,26 @@ export default class Home extends Component {
 
     componentDidMount() {
         this.props.getBanner();
-        this.props.getChannel();
-        this.props.getLive();
-        this.props.getVOD();
+        this.props.getChannel(6);
+        this.props.getAds();
+        // this.props.getLive();
+        this.props.getVOD(1, 10);
+        this.props.getCategory();
+        this.props.getNews();
     };
 
     _renderChannelListItem = ({item}) => {
-      console.log("Thumbnail URL:",item.thumbnails[0].url);
+        var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            imageUrl = item.originalImages[0].url;
+        }
       return (
         <View style={styles.itemContainer}>
             <View style={styles.itemImageContainer}>
                 <Image
                   style={styles.itemImage}
                   resizeMode={'cover'}
-                  source={{uri: item.thumbnails[0].url}}/>
+                  source={{uri: imageUrl}}/>
             </View>
             <Text
               numberOfLines={1}
@@ -75,30 +77,28 @@ export default class Home extends Component {
               </Text>
           </View>
           <View style={styles.bannerPlayIconGroup}>
-<<<<<<< HEAD
-              <BlurView style={styles.bannerPlayIconBackground}/>
-=======
-              <View
-                ref={(playBackground) => { this.playBackground = playBackground; }}
-                style={styles.bannerPlayIconBackground}>
-              <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
-              </View>
->>>>>>> develop
+              <BlurView style={styles.bannerPlayIconBackground} blurRadius={getBlurRadius(30)} overlayColor={1}/>
               <Image
-                resizeMode={'contain'}
+                resizeMode={'center'}
                 style={styles.bannerPlayIcon}
-                source={{uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png'}}/>
+                source={require('../../assets/ic_play.png')}/>
           </View>
       </View>
     )}
 
-    _renderFooter = ({item}) => (
-      <View style={styles.notificationContainer}>
-        <Image style={styles.notificationImage} source={{uri: item.cover_image.toString()}}/>
-        <Text style={styles.notificationTitle}>{item.title}</Text>
-        <Text style={styles.notificationSubTitle}>{item.sub_title}</Text>
-      </View>
-    )
+    _renderFooter = ({item}) => {
+        var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+        return (
+            <View style={styles.notificationContainer}>
+                <Image style={styles.notificationImage} source={{uri: image}}/>
+                <Text style={styles.notificationTitle}>{item.title}</Text>
+                <Text style={styles.notificationSubTitle}>{item.shortDescription}</Text>
+            </View>
+        )
+    };
 
     _renderChannelList = ({item}) => (
           <FlatList
@@ -120,28 +120,47 @@ export default class Home extends Component {
     </View>
   )
 
-  _renderVODItem = ({item}) => (
-    <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
-    </View>
-  )
+  _renderVODItem = ({item}) => {
+        var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.originalImages != null && item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+
+        var genres = '';
+        if (item.genresData != null && item.genresData.length > 0) {
+            item.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        return (
+            <View style={styles.liveThumbnailContainer}>
+              <VideoThumbnail showProgress={false} imageUrl={image}/>
+              <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.durationInSeconds}</Text>
+            </View>)
+    };
 
   _renderCategoryItem = ({item}) => (
     <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={false} textCenter={item} imageUrl='http://wallpoper.com/images/00/41/16/00/gaussian-blur_00411600.jpg' />
+      <VideoThumbnail showProgress={false} textCenter={item.name} />
     </View>
   )
 
-    _renderAds = () => (
-      <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
+    _renderAds = ({item}) => {
+        var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.originalImages != null && item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+      return (<ImageBackground style={styles.adsContainer} source={{uri: image}}>
           <View style={styles.adsLabelContainer}>
-              <PinkRoundedLabel text="+10.00$/MONTH" style={{fontSize: 10, color: colors.whitePrimary}}/>
+              <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
           </View>
-      </ImageBackground>
-    )
+      </ImageBackground>)
+    }
 
     _renderOnLiveList = ({item}) => (
         <FlatList
@@ -186,16 +205,18 @@ export default class Home extends Component {
 
     //Fix bottom tabbar overlay the List
     _renderListFooter = () => (
-      <View style={{width: '100%', height: 50, backgroundColor:'transparent'}}/>
+      <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
     )
 
 
     render() {
-        const {banner, channel, live, vod} = this.props;
-        if (!banner.data || banner.isFetching )//||
-          // !channel.data || channel.isFetching ||
-          // !live.data || live.isFetching ||
-          // !vod.data || vod.isFetching)
+        const {banner, channel, live, vod, ads, category, news} = this.props;
+        if (!banner.data || banner.isFetching ||
+          !channel.data || channel.isFetching ||
+                !ads.data || ads.isFetching ||
+                !vod.data || vod.isFetching ||
+                !category.data || category.isFetching ||
+                !news.data || news.isFetching)
             return null;
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
@@ -206,31 +227,25 @@ export default class Home extends Component {
               onEndReachedThreshold={20}
               ListFooterComponent={ this._renderListFooter }
               renderSectionHeader={this._renderSectionHeader}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
               sections={[
-<<<<<<< HEAD
-                {data:[banner.data], showHeader: false, renderItem: this._renderBanner}
-=======
-                {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
-                {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
-                {data:["ads"], showHeader: false, renderItem: this._renderAds},
-                {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
-                {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
-                {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                {data:[banner.data.footer_banner], title: "WHAT'S NEW?", showHeader: true, renderItem: this._renderFooter},
->>>>>>> develop
-              ]}
+                  {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
+                  {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
+                  {data:[ads.data], showHeader: false, renderItem: this._renderAds},
+                  {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
+                  {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+                  {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
+                ]}
             />
           </View>
         );
     }
 }
 /**
- {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
- {data:["ads"], showHeader: false, renderItem: this._renderAds},
  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
- {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
- {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
- {data:[banner.data.footer_banner], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter},
+
+ ,
  */
 
 const styles = StyleSheet.create({
@@ -276,24 +291,25 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     bannerPlayIconGroup: {
-        backgroundColor: 'hsl(0, 100%, 15%)',
-        position: 'absolute',
-        width: 60,
-        height: 60,
         alignSelf: 'center',
         justifyContent: 'center',
-        borderRadius: 25,
-        overflow: "hidden"
+        position: 'absolute',
+        width: 75,
+        height: 75,
+        borderRadius: 37.5,
+        overflow: 'hidden'
     },
     bannerPlayIconBackground: {
         width: '100%',
         height: '100%',
-        overflow: 'hidden'
+        overflow: 'hidden',
+
     },
     bannerPlayIcon: {
-        position: 'absolute',
-        width: '100%',
-        height: '80%'
+        alignSelf: 'center',
+        width: 25,
+        height: 25,
+        position: 'absolute'
     },
     listHorizontal: {
         marginVertical: 30,
@@ -352,7 +368,7 @@ const styles = StyleSheet.create({
     },
     notificationContainer: {
       flexDirection: 'column',
-      marginHorizontal: 10,
+      marginHorizontal: 10
     },
     notificationImage: {
       ...borderedImageDefault,

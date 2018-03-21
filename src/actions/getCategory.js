@@ -8,15 +8,15 @@ export function getCategory() {
 
 export function getCategorySuccess(data) {
     return {
-        type: actionTypes.FETCHING_CATEGORY_SUCCESS,
-        data: data.data
+        type: actionTypes.FETCH_CATEGORY_SUCCESS,
+        data: data.viewer.genreMany
     }
 }
 
 
 export function getCategoryFailure(error) {
     return {
-        type: actionTypes.FETCHING_CATEGORY_FAILURE,
+        type: actionTypes.FETCH_CATEGORY_FAILURE,
         errorMessage: error
     }
 }
