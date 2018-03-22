@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, ListView, Image, Dimensions} from 'react-native';
+import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, ListView, Image, Dimensions, FlatList} from 'react-native';
 import Orientation from 'react-native-orientation';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import ZapperCell from '../../components/ZapperCell'
@@ -14,16 +14,15 @@ export default class Zappers extends Component {
 
     constructor(props) {
         super(props);
-        this.dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
         this.state = {
-            channelData: this.dataSource.cloneWithRows([
+            channelData: [
                 'a',
                 'b',
                 'c',
                 'd',
                 'e',
                 'f',
-            ])
+            ]
         };
     };
 
@@ -40,9 +39,14 @@ export default class Zappers extends Component {
         if (item.originalImages != undefined && item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
-        console.log("Get image",image);
         return image;
     }
+
+    _renderItem = (item) => (<ZapperCell image={this._imageUri(item.item)}
+                                         style={styles.item}/>);
+    _renderListFooter = () => (
+        <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 50, backgroundColor:'transparent'}}/>
+    )
 
     render(){
         const { navigate } = this.props.navigation;
@@ -51,7 +55,7 @@ export default class Zappers extends Component {
             return null;
         }
         console.log("Channel data:",channel.data);
-        this.state.channelData = this.dataSource.cloneWithRows(channel.data);
+        this.state.channelData = channel.data;
         return (
             <View style={styles.root}>
                 <StatusBar
@@ -61,11 +65,13 @@ export default class Zappers extends Component {
                 <ImageBackground style={styles.image}
                                  source={require('../../assets/conn_bg.png')}
                                  blurRadius={30}>
-                    <ListView contentContainerStyle={styles.contentGrid}
-                              style={styles.grid}
-                              dataSource={this.state.channelData}
-                              renderRow={(rowData) => <ZapperCell image={this._imageUri(rowData)}
-                                                                  style={styles.item}/>}/>
+                    <FlatList style={styles.grid}
+                              data={this.state.channelData}
+                              numColumns={3}
+                              showsVerticalScrollIndicator={false}
+                              keyExtractor={(item, index) => index}
+                              renderItem={this._renderItem}
+                              ListFooterComponent={this._renderListFooter}/>
                 </ImageBackground>
             </View>
         );
@@ -121,6 +127,6 @@ const styles = StyleSheet.create({
     },
     item: {
         aspectRatio: 1,
-        ...calculateItemSize(Dimensions.get("window").width - 90, 100, 3)
+        ...calculateItemSize(Dimensions.get("window").width - 90, 90, 3)
     },
 });
