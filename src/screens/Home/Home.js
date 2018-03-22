@@ -5,15 +5,13 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
-import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
 import BlurView from '../../components/BlurView'
-import Orientation from 'react-native-orientation';
-import BrightcovePlayer from '../../components/BrightcovePlayer'
-
-const CATEGORY = ["Movie", "Sports", "Entertainment"];
+import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
+import {getBlurRadius} from '../../utils/blurRadius'
+import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
 
 export default class Home extends Component {
 
@@ -27,107 +25,162 @@ export default class Home extends Component {
 
     componentDidMount() {
         this.props.getBanner();
-        this.props.getChannel();
-        this.props.getLive();
-        this.props.getVOD();
+        this.props.getChannel(6);
+        this.props.getAds();
+        this.props.getLive((new Date()).toISOString());
+        this.props.getVOD(1, 10);
+        this.props.getCategory();
+        this.props.getNews();
     };
 
     _renderChannelListItem = ({item}) => {
-      console.log("Thumbnail URL:",item.thumbnails[0].url);
+        var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            imageUrl = item.originalImages[0].url;
+        }
       return (
         <View style={styles.itemContainer}>
             <View style={styles.itemImageContainer}>
                 <Image
                   style={styles.itemImage}
                   resizeMode={'cover'}
-                  source={{uri: item.thumbnails[0].url}}/>
+                  source={{uri: imageUrl}}/>
             </View>
             <Text
               numberOfLines={1}
-              style={styles.itemLabel}>{item.title}</Text>
+              style={styles.itemLabel}>{item.title.toUpperCase()}</Text>
         </View>
     )}
 
+    _renderChannelListItemSeparator = () => (
+      <View style={styles.itemContainerSeparator}/>
+    )
+
     _keyExtractor = (item, index) => index;
 
-    _renderBanner = ({item}) => (
+    _renderBanner = ({item}) => {
+        var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+      return (
       <View style={styles.slotMachineContainer}>
           <Image
             style={styles.slotMachineImage}
-            source={{uri: item.header_banner.cover_image}}/>
+            source={{uri: image}}/>
           <View style={styles.labelGroup}>
-              <PinkRoundedLabel text="New Movie"/>
+              <PinkRoundedLabel text="NEW MOVIE"/>
               <Text style={styles.bannerTitle}>
-                {item.header_banner.title}
+                {item.title}
               </Text>
               <Text style={styles.bannerSubtitle}>
-                {item.header_banner.sub_title}
+                {item.shortDescription}
               </Text>
           </View>
           <View style={styles.bannerPlayIconGroup}>
-              <View
-                ref={(playBackground) => { this.playBackground = playBackground; }}
-                style={styles.bannerPlayIconBackground}>
-              <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
-              </View>
+              <BlurView style={styles.bannerPlayIconBackground} blurRadius={getBlurRadius(30)} overlayColor={1}/>
               <Image
-                resizeMode={'contain'}
+                resizeMode={'center'}
                 style={styles.bannerPlayIcon}
-                source={{uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_play_arrow_48px-512.png'}}/>
-
+                source={require('../../assets/ic_play.png')}/>
           </View>
       </View>
-    )
+    )}
 
-    _renderFooter = ({item}) => (
-      <View style={styles.notificationContainer}>
-        <Image style={styles.notificationImage} source={{uri: item.cover_image}}/>
-        <Text style={styles.notificationTitle}>{item.title}</Text>
-        <Text style={styles.notificationSubTitle}>{item.sub_title}</Text>
-      </View>
-    )
+    _renderFooter = ({item}) => {
+        var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+        return (
+            <View style={styles.notificationContainer}>
+                <Image style={styles.notificationImage} source={{uri: image}}/>
+                <Text style={styles.notificationTitle}>{item.title}</Text>
+                <Text style={styles.notificationSubTitle}>{item.shortDescription}</Text>
+            </View>
+        )
+    };
 
     _renderChannelList = ({item}) => (
           <FlatList
             style={styles.listHorizontal}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={this._renderChannelListItemSeparator}
             data={item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderChannelListItem} />
     )
 
-  _renderOnLiveItem = ({item}) => (
-    <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
-    </View>
-  )
+  _renderOnLiveItem = ({item}) => {
+      var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+      if (item.videoData.originalImages.length > 0) {
+          image = item.videoData.originalImages[0].url;
+      }
+      var genres = '';
+      if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
+          item.videoData.genresData.forEach((genre, index) => {
+              if (genres.length != 0) {
+                  genres = genres.concat(", ");
+              }
+              genres = genres.concat(genre.name.toString());
+          })
+      }
 
-  _renderVODItem = ({item}) => (
-    <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-      <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
-      <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
-    </View>
-  )
+      var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+
+
+        return (
+          <View style={styles.liveThumbnailContainer}>
+              <VideoThumbnail showProgress={true} progress="80%" imageUrl={image}/>
+              <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
+          </View>
+      )
+  }
+
+  _renderVODItem = ({item}) => {
+        var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.originalImages != null && item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+
+        var genres = '';
+        if (item.genresData != null && item.genresData.length > 0) {
+            item.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        return (
+            <View style={styles.liveThumbnailContainer}>
+              <VideoThumbnail showProgress={false} imageUrl={image}/>
+              <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
+            </View>)
+    };
 
   _renderCategoryItem = ({item}) => (
     <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={false} textCenter={item} imageUrl='http://wallpoper.com/images/00/41/16/00/gaussian-blur_00411600.jpg' />
+      <VideoThumbnail showProgress={false} textCenter={item.name} />
     </View>
   )
 
-    _renderAds = () => (
-      <ImageBackground style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}>
+    _renderAds = ({item}) => {
+        var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.originalImages != null && item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+      return (<ImageBackground style={styles.adsContainer} source={{uri: image}}>
           <View style={styles.adsLabelContainer}>
-              <PinkRoundedLabel text="+10.00$/MONTH"/>
+              <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
           </View>
-      </ImageBackground>
-    )
+      </ImageBackground>)
+    }
 
     _renderOnLiveList = ({item}) => (
         <FlatList
@@ -163,7 +216,7 @@ export default class Home extends Component {
       if (section.showHeader) {
       return (
         <View style={styles.headerSection}>
-          <PinkRoundedLabel text={section.title}/>
+          <PinkRoundedLabel text={section.title} style={{fontSize: 10, color: colors.whitePrimary}}/>
         </View>
       )} else {
         return null
@@ -172,41 +225,50 @@ export default class Home extends Component {
 
     //Fix bottom tabbar overlay the List
     _renderListFooter = () => (
-      <View style={{width: '100%', height: 50, backgroundColor:'transparent'}}/>
+      <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
     )
 
 
     render() {
-        const {banner, channel, live, vod} = this.props;
+        const {banner, channel, live, vod, ads, category, news} = this.props;
         if (!banner.data || banner.isFetching ||
           !channel.data || channel.isFetching ||
-          !live.data || live.isFetching ||
-          !vod.data || vod.isFetching)
+                !ads.data || ads.isFetching ||
+                !vod.data || vod.isFetching ||
+                !category.data || category.isFetching ||
+                !news.data || news.isFetching ||
+                !live.data || live.isFetching)
             return null;
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
             <SectionList
-              style={styles.container}
+              style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
               keyExtractor={this._keyExtractor}
               stickySectionHeadersEnabled={false}
               onEndReachedThreshold={20}
               ListFooterComponent={ this._renderListFooter }
               renderSectionHeader={this._renderSectionHeader}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
               sections={[
-                {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
-                {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
-                {data:["ads"], showHeader: false, renderItem: this._renderAds},
-                {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
-                {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
-                {data:[CATEGORY], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                {data:[banner.data.footer_banner], title: "WHAT'S NEW?", showHeader: true, renderItem: this._renderFooter},
-              ]}
+                  {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
+                  {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
+                  {data:[ads.data], showHeader: false, renderItem: this._renderAds},
+                  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                  {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
+                  {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+                  {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
+                ]}
             />
-
           </View>
         );
     }
 }
+/**
+ ,
+
+ ,
+ */
 
 const styles = StyleSheet.create({
     container: {
@@ -244,43 +306,53 @@ const styles = StyleSheet.create({
     bannerSubtitle: {
         marginTop: 5,
         fontSize: 12,
-        color: colors.textGrey
+        color: colors.bannerSubtitleColor
     },
     slotMachineImage: {
         width: '100%',
         height: '100%'
     },
     bannerPlayIconGroup: {
-        position: 'absolute',
-        width: 60,
-        height: 60,
         alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    bannerPlayIconBackground: {
-        borderRadius: 50,
-        backgroundColor: colors.mainDarkGrey,
-        width: '100%',
-        height: '100%',
+        justifyContent: 'center',
+        position: 'absolute',
+        width: 75,
+        height: 75,
+        borderRadius: 37.5,
         overflow: 'hidden'
     },
-    bannerPlayIcon: {
-        position: 'absolute',
+    bannerPlayIconBackground: {
         width: '100%',
-        height: '80%'
+        height: '100%',
+        overflow: 'hidden',
+
+    },
+    bannerPlayIcon: {
+        alignSelf: 'center',
+        width: 25,
+        height: 25,
+        position: 'absolute'
     },
     listHorizontal: {
-        marginVertical: 30
+        marginVertical: 30,
+        backgroundColor: colors.whitePrimary
     },
     itemLabel: {
-        fontSize: 12,
-        color: colors.textDarkGrey
+        fontSize: 10,
+        color: colors.textDarkGrey,
+        marginTop: 5,
     },
     itemContainer: {
+        marginLeft: 5,
+        backgroundColor: 'transparent',
         width: 100,
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    itemContainerSeparator: {
+        width: 0,
+        height: 100
     },
     itemImageContainer: {
         justifyContent: 'center',
@@ -318,7 +390,7 @@ const styles = StyleSheet.create({
     },
     notificationContainer: {
       flexDirection: 'column',
-      marginHorizontal: 10,
+      marginHorizontal: 10
     },
     notificationImage: {
       ...borderedImageDefault,

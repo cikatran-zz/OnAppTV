@@ -9,7 +9,7 @@ export function getBanner() {
 export function getBannerSuccess(data) {
   return {
     type: actionTypes.FETCH_BANNER_SUCCESS,
-    data: data.data
+    data: data.viewer.videoOne
   }
 }
 

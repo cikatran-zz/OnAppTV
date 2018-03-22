@@ -8,10 +8,10 @@ import gql from 'graphql-tag';
 
 
 const instance = axios.create({
-    baseURL: `${config.baseURL}`
+  serverURL: `${config.serverURL}`
 });
 
-const httpLink = new HttpLink({uri: `http://13.250.57.10:3000/graphql`})
+const httpLink = new HttpLink({uri: config.serverURL})
 
 const errorHandler = onError(({ networkError }) => {
   switch (networkError.statusCode) {
@@ -28,62 +28,64 @@ const client = new ApolloClient({
 })
 
 const get = (endpoints) => {
-    return instance.get(`${endpoints}`)
-        .then((response) => {
-            switch (response.status) {
-                case 403:
-                    return {error: {message: 'Invalid token'}, kickOut: true};
-                case 404:
-                    return {error: {message: 'Cannot connect to server'}};
-                default:
-                    return response;
-            }
-        })
-        .catch((err) => {
-            throw err;
-        });
+  return instance.get(`${endpoints}`)
+    .then((response) => {
+      switch (response.status) {
+        case 403:
+          return {error: {message: 'Invalid token'}, kickOut: true};
+        case 404:
+          return {error: {message: 'Cannot connect to server'}};
+        default:
+          return response;
+      }
+    })
+    .catch((err) => {
+      throw err;
+    });
 };
 
-
-const channelQuery = gql`
-query allChannels($limit: Int){
-viewer(token: "hieudeptrai") {
-  channelMany (limit: $limit) {
-    contentId
-    showTitle
-    title
-    long_description
-    short_description
-    thumbnails {
-      height
-      width
-      url
-      name
-    }
-  }
-  }
-}`
-
-export const getChannel = () => {
+export const getChannel = (limit) => {
   return client.query({
-    query: channelQuery,
-    variables: {limit: 10}
+     query: config.queries.CHANNEL,
+     variables:  {limit: limit}
   });
 };
 
 export const getBanner = () => {
-    return get(config.endpoints.BANNER);
+    return client.query({
+        query: config.queries.BANNER
+    });
 };
 
-export const getLive = () => {
-  return get(config.endpoints.LIVE);
+export const getAds = () => {
+    return client.query({
+        query: config.queries.ADS
+    });
 };
-export const getVOD = () => {
-  return get(config.endpoints.VOD);
+
+export const getLive = (currentTime) => {
+    return client.query({
+        query: config.queries.LIVE,
+        variables:  {currentTime: currentTime}
+    });
+};
+export const getVOD = (page, itemPerPage) => {
+    return client.query({
+        query: config.queries.VOD,
+        variables:  {page: page, perPage: itemPerPage}
+    });
 };
 
 export const getCategory = () => {
-    return get(config.endpoints.CATEGORY);
+    return client.query({
+        query: config.queries.CATEGORY
+    });
+};
+
+export const getNews = () => {
+    return client.query({
+        query: config.queries.NEWS
+    });
 };
 
 const epgsFromChannelIdQuery = gql`

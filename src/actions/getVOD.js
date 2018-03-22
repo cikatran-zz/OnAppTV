@@ -1,15 +1,17 @@
 import * as actionTypes from './actionTypes';
 
-export function getVOD() {
+export function getVOD(page, itemPerPage) {
   return {
     type: actionTypes.FETCHING_VOD,
+      page: page,
+      itemPerPage: itemPerPage
   }
 }
 
 export function getVODSuccess(data) {
   return {
     type: actionTypes.FETCH_VOD_SUCCESS,
-    data: data.data
+    data: data.viewer.videoPagination.items
   }
 }
 

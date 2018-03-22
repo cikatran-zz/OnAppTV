@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: (Platform.OS === 'ios') ? 15 : 30,
     padding: 8,
     backgroundColor: colors.mainPink,
-    fontSize: 13,
+    fontSize: 10,
     color: colors.textWhitePrimary,
       overflow: "hidden",
   },

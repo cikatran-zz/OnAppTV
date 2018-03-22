@@ -481,6 +481,7 @@
 		69D21ED920526E1300DFA90A /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
 		69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSTBConnectionViewManager.h; sourceTree = "<group>"; };
 		69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSTBConnectionViewManager.m; sourceTree = "<group>"; };
+
 		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
 		69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBrightcovePlayerManager.m; sourceTree = "<group>"; };
 		69F9A4EC20244A4D00832440 /* RCTBlurViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurViewManager.h; sourceTree = "<group>"; };
@@ -752,7 +753,7 @@
 				69BD179A20319D8900E33978 /* libART.a */,
 				69BD179C20319D8900E33978 /* libART-tvOS.a */,
 			);
-			name = Products;
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		69BD17AC2032986D00E33978 /* Products */ = {
