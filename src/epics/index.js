@@ -4,6 +4,8 @@ import getChannelEpic from './channelRequestEpic'
 import getCategoryEpic from "./categoryRequestEpic";
 import getLiveEpic from './liveRequestEpic'
 import getVODEpic from  './vodRequestEpic'
+import getAdsEpic from "./adsRequestEpic";
+import getNewsEpic from "./newsRequestEpic";
 import epgsRequestEpic from './epgsRequestEpic'
 
 const rootEpic = combineEpics(
@@ -12,6 +14,8 @@ const rootEpic = combineEpics(
     getCategoryEpic,
     getLiveEpic,
     getVODEpic,
+    getAdsEpic,
+    getNewsEpic,
     epgsRequestEpic
 );
 

@@ -1,10 +1,176 @@
+import gql from "graphql-tag";
+
+
+const channelQuery = gql`
+query queryChannel($limit: Int){
+  viewer{
+    channelMany(limit: $limit) {
+      channelId
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+        scaledImage {
+          height
+          width
+          url
+        }
+      }
+      title
+      longDescription
+      shortDescription
+    }
+  }
+}`;
+
+const bannerQuery = gql`
+query{
+  viewer{
+		videoOne(filter:{
+      feature: true
+    }) {
+		  title
+		  shortDescription
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+		}
+  }
+}
+`;
+
+const adsQuery = gql`
+query{
+  viewer{
+    adsOne{
+      deal
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+      url
+    }
+  }
+}
+`;
+
+const  vodQuery = gql`
+query queryVOD($perPage: Int, $page: Int){
+  viewer{
+    videoPagination(perPage: $perPage, page: $page) {
+    	items {
+    	  contentId
+    	  durationInSeconds
+    	  publishDate
+    	  title
+    	  longDescription
+    	  shortDescription
+    	  feature
+    	  seriesId
+    	  seasonIndex
+    	  episodeIndex
+    	  type
+    	  impression
+    	  updatedAt
+    	  createdAt
+        originalImages {
+          height
+          width
+          url
+          name
+          fileName
+        }
+        genresData {
+          name
+        }
+    	}
+    }
+  }
+}
+`;
+
+const categoryQuery = gql`
+query{
+  viewer{
+    genreMany {
+      name
+  	}
+	}
+}
+`;
+
+const newsQuery = gql`
+query{
+  viewer{
+    newsOne {
+      title
+      longDescription
+      shortDescription
+      url
+      updatedAt
+      createdAt
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+    }
+  }
+}
+`;
+
+const liveQuery = gql`
+query {
+  viewer{
+    epgMany(filter: {
+      _operators:{
+        startTime: {
+          lte: "2018-03-15T07:10:00.000Z"
+        },
+        endTime:{
+          gte: "2018-03-15T07:10:00.000Z"
+        }
+      }
+    }) {
+      channelData {
+        title
+      }
+      videoData {
+        title
+        originalImages {
+          url
+        }
+        genresData {
+          name
+        }
+      }
+      startTime
+      endTime
+    }
+  }
+}
+`;
+
 export default {
-    baseURL: 'http://www.mocky.io/v2',
-    endpoints: {
-        BANNER: '/5a683f6d2e0000e204d5b2b0',
-        CHANNEL: '/5a6836cb2e00007401d5b28b',
-        CATEGORY: '/5a7036b03300004f00ff5b42',
-        LIVE: '/5a6feeb13300001000ff59de',
-        VOD: '/5a702f7f3300001000ff5b1d'
+    serverURL: 'http://13.250.57.10:3000/graphql',
+    queries: {
+        BANNER: bannerQuery,
+        CHANNEL: channelQuery,
+        ADS: adsQuery,
+        CATEGORY: categoryQuery,
+        LIVE: liveQuery,
+        VOD: vodQuery,
+        NEWS: newsQuery
     }
 };

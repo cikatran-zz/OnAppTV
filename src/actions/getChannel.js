@@ -1,8 +1,9 @@
 import * as actionTypes from './actionTypes';
 
-export function getChannel() {
+export function getChannel(limit) {
     return {
         type: actionTypes.FETCHING_CHANNEL,
+        limit: limit
     }
 }
 
