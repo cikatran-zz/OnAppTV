@@ -11,7 +11,7 @@ import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
 import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
-import {secondFormatter, timeFormatter} from "../../utils/stringUtils";
+import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
 
 export default class Home extends Component {
 
