@@ -65,7 +65,8 @@ export default class LowerPageComponent extends React.PureComponent {
 
   _renderLogoChannel = ({url}) => {
     const {videoType} = this.state
-    let logoUrl = url ? url : '../assets/arte.png'
+    // let logoUrl = url ? url : '../assets/arte.png'
+    let logoUrl = '../assets/arte.png'
     if (videoType === 'channel') {
         return (<Image source={require(logoUrl)}/>)
     }
@@ -319,16 +320,4 @@ const fakeBannerData = {
   url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'
 }
 
-// const fakeBannerInfoData = {
-//   title: 'At Frida Kahlo’s',
-//   type: 'Drama',
-//   specificInfo: 'The Blue House” located in Mexico City, is the home where Frida Kahlo was born (1907) and would die (1954). She is surrounded not only by painter Diego Rivera, but also by Leon Trotsky, André Breton, Sergei Eisenstein, Pablo Neruda, Waldo Frank, Pablo Picasso, Marcel Duchamp, Vassily Kandinsky, etc'
-// }
-//
-// const fakeListData = [
-//   {key: 'Nicolas',type: 'Drama',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-//   {key: 'Gorrilas in Danger',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-//   {key: 'I\'m Roger Casement',type: 'Art-Dance',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-//   {key: 'Aaron',type: 'Concert',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-//   {key: 'The Mythes - Orphee',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-//   {key: 'Art of Movie',type: 'Documentary',start_time: '22h30',end_time: '23h15',url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}]
+

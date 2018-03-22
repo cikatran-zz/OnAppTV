@@ -6,6 +6,9 @@ import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import CircleButton from "../../components/CircleButton"
 import VolumeSeeker from "../../components/VolumeSeeker"
+import LowerPagerComponent from "../../components/LowerPageComponent"
+import Swiper from '@nart/react-native-swiper';
+
 
 export default class VideoControlModal extends React.PureComponent {
   onLayout(e) {
@@ -20,7 +23,7 @@ export default class VideoControlModal extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-        showBrightcove: false,
+      showBrightcove: false,
     }
   }
 
@@ -29,12 +32,12 @@ export default class VideoControlModal extends React.PureComponent {
   }
 
   _orientationDidChange = (orientation) => {
-      console.log(orientation);
-      if (orientation === 'LANDSCAPE' || (width > height)) {
-          this.setState({showBrightcove: true})
-      } else {
-          this.setState({showBrightcove: false})
-      }
+    console.log(orientation);
+    if (orientation === 'LANDSCAPE' || (width > height)) {
+      this.setState({showBrightcove: true})
+    } else {
+      this.setState({showBrightcove: false})
+    }
   };
 
   _renderPlaybackController = () => {
@@ -63,7 +66,7 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.volumeLessIcon}>
           <Image source={require('../../assets/ic_quieter.png')}/>
         </TouchableOpacity>
-      <VolumeSeeker width={270} thumbSize={16} maxValue={100}/>
+        <VolumeSeeker width={270} thumbSize={16} maxValue={100}/>
         <TouchableOpacity style={styles.volumeMoreIcon}>
           <Image source={require('../../assets/ic_louder.png')}/>
         </TouchableOpacity>
@@ -81,24 +84,31 @@ export default class VideoControlModal extends React.PureComponent {
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
-        return (
-            <View
-              onLayout={this.onLayout.bind(this)}
-              style={{width: '100%', height: '100%', left: 0, top: 0}}>
-                <View style={styles.topContainer}>
-                    <ImageBackground style={styles.topVideoControl}
-                                     resizeMode="cover"
-                                     source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
-                </View>
-                <View style={styles.bottomContainer}>
-                    <ImageBackground style={styles.bottomVideoControl}
-                                     resizeMode="stretch"
-                                     source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
-                    <View style={styles.blurOverlay}/>
-                    <BlurView blurRadius={100} overlayColor={1} style={styles.blurView}/>
-                  {this._renderPlaybackController()}
-                </View>
-            </View>);
+      return (
+        <View
+          onLayout={this.onLayout.bind(this)}
+          style={{width: '100%', height: '100%'}}>
+          <Swiper horizontal={false} loop={false} showsPagination={false}>
+            <View style={{width: '100%', height: '100%'}}>
+              <View style={styles.topContainer}>
+                <ImageBackground style={styles.topVideoControl}
+                                 resizeMode="cover"
+                                 source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
+              </View>
+              <View style={styles.bottomContainer}>
+                <ImageBackground style={styles.bottomVideoControl}
+                                 resizeMode="cover"
+                                 blurRadius={10}
+                                 source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
+                <View style={styles.blurOverlay}/>
+                {this._renderPlaybackController()}
+              </View>
+            </View>
+            <LowerPagerComponent videoType="channel" listData={fakeListData} />
+          </Swiper>
+        </View>
+
+      );
     }
   }
 
@@ -109,7 +119,7 @@ export default class VideoControlModal extends React.PureComponent {
           translucent={true}
           backgroundColor='#00000000'
           barStyle='light-content' />
-          {this._renderModal()}
+        {this._renderModal()}
 
       </View>
     )
@@ -238,3 +248,17 @@ const styles = StyleSheet.create({
     height: 15
   }
 })
+
+const fakeBannerInfoData = {
+  title: 'At Frida Kahlo’s',
+  type: 'Drama',
+  specificInfo: 'The Blue House” located in Mexico City, is the home where Frida Kahlo was born (1907) and would die (1954). She is surrounded not only by painter Diego Rivera, but also by Leon Trotsky, André Breton, Sergei Eisenstein, Pablo Neruda, Waldo Frank, Pablo Picasso, Marcel Duchamp, Vassily Kandinsky, etc'
+}
+
+const fakeListData = [
+  {key: 'Nicolas',type: 'Drama',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'Gorrilas in Danger',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'I\'m Roger Casement',type: 'Art-Dance',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'Aaron',type: 'Concert',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'The Mythes - Orphee',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'Art of Movie',type: 'Documentary',start_time: '22h30',end_time: '23h15',url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}]
