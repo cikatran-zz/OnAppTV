@@ -33,7 +33,7 @@ export default class Zappers extends Component {
     };
 
     componentWillMount() {
-        Orientation.lockToPortrait();
+        //Orientation.lockToPortrait();
     };
 
     componentDidMount() {
