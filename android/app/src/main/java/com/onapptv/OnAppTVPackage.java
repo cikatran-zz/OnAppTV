@@ -6,7 +6,6 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class OnAppTVPackage implements ReactPackage {
 //    );
     List<ViewManager> managerList = new ArrayList<>();
     managerList.add(new ReactBlurViewManager());
-    //managerList.add(new ReactBrightcovePlayerViewManager());
+    managerList.add(new ReactBrightcovePlayerViewManager());
     return managerList;
   }
 }
