@@ -1,15 +1,17 @@
 import React from 'react'
-import {View,Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity} from 'react-native'
+import {View,Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity, SectionList, Animated} from 'react-native'
 import BlurView from '../../components/BlurView'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import CircleButton from "../../components/CircleButton"
 import VolumeSeeker from "../../components/VolumeSeeker"
+import LowerPagerComponent from "../../components/LowerPageComponent"
+import Swiper from '@nart/react-native-swiper';
 
+const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.PureComponent {
   onLayout(e) {
-    const { width, height } = Dimensions.get("window")
     if (width > height) {
       this.setState({showBrightcove: true})
     } else {
@@ -20,29 +22,30 @@ export default class VideoControlModal extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-        showBrightcove: false,
+      showBrightcove: false,
     }
   }
 
   componentDidMount() {
     Orientation.addOrientationListener(this._orientationDidChange);
+    this.props.getEpgs("putChannelIdHere")
   }
 
   _orientationDidChange = (orientation) => {
-      console.log(orientation);
-      if (orientation === 'LANDSCAPE' || (width > height)) {
-          this.setState({showBrightcove: true})
-      } else {
-          this.setState({showBrightcove: false})
-      }
+    console.log(orientation);
+    if (orientation === 'LANDSCAPE' || (width > height)) {
+      this.setState({showBrightcove: true})
+    } else {
+      this.setState({showBrightcove: false})
+    }
   };
 
   _renderPlaybackController = () => {
     return (<View style={styles.playbackContainer}>
       <View style={styles.topButtonsContainer}>
-        <CircleButton size={44} image={'record'} style={{marginRight: 12}}/>
+        <CircleButton size={44} image={'record'} style={{marginRight: 12}} />
         <CircleButton size={44} image={'favorite'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'share'} style={{marginRight: 12}}/>
+        <CircleButton size={44} image={'share'} style={{marginRight: 12}} imageStyle={{marginBottom: 4}}/>
         <CircleButton size={44} image={'rewind'} style={{marginRight: 12}}/>
         <CircleButton size={44} image={'subtitle'} style={{marginRight: 12}}/>
       </View>
@@ -54,7 +57,7 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.rewindButton}>
           <Image source={require('../../assets/ic_rewind.png')}/>
         </TouchableOpacity>
-        <CircleButton size={70} image={'play'}/>
+        <CircleButton size={70} image={'play'} imageStyle={{marginLeft: 5}}/>
         <TouchableOpacity style={styles.fastForwardButton}>
           <Image source={require('../../assets/ic_fastforward.png')}/>
         </TouchableOpacity>
@@ -63,7 +66,7 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.volumeLessIcon}>
           <Image source={require('../../assets/ic_quieter.png')}/>
         </TouchableOpacity>
-      <VolumeSeeker width={270} thumbSize={16} maxValue={100}/>
+        <VolumeSeeker width={270} thumbSize={16} maxValue={100}/>
         <TouchableOpacity style={styles.volumeMoreIcon}>
           <Image source={require('../../assets/ic_louder.png')}/>
         </TouchableOpacity>
@@ -71,6 +74,48 @@ export default class VideoControlModal extends React.PureComponent {
     </View>)
   }
 
+  _renderLowerPage = () => {
+    const {epg} = this.props
+    if (!epg.data) {
+      return (<LowerPagerComponent/>)
+    }
+    let listData = epg.data.epgsData
+    // PUT HERE CURRENT PLAYING VIDEO
+    // CURRENTLY SET THIS TO FIRST VIDEO OF CHANNEL
+    // CHANGE LOGIC HERE FOR ANOTHER VIDEO LIKE STANDALONE
+    let video = listData[0]
+
+    return(
+      <LowerPagerComponent videoType="channel" listData={epg.data} video={video}/>
+    )
+  }
+
+  _renderUpperPage = () => (<View style={{width: '100%', height: height}}>
+    <View style={styles.topContainer}>
+      <ImageBackground style={styles.topVideoControl}
+                       resizeMode="cover"
+                       source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
+    </View>
+    <View style={styles.bottomContainer}>
+      <ImageBackground style={styles.bottomVideoControl}
+                       resizeMode="cover"
+                       blurRadius={10}
+                       source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
+      <View style={styles.blurOverlay}/>
+      {this._renderPlaybackController()}
+    </View>
+  </View>)
+
+  _keyExtractor = (item, index) => index;
+
+  _handleViewableChanged = (viewableItems) => {
+    console.log("on Scroll");
+    // this.videoScroll.scrollToLocation({sectionIndex: 1, itemIndex: 1, viewPosition: 0});
+    Animated.event([
+      { nativeEvent: { contentOffset: { y: this.scrollY } } },
+      { useNativeDriver: true },
+    ])
+  }
   _renderModal = () => {
     if (this.state.showBrightcove) {
       return (
@@ -81,24 +126,29 @@ export default class VideoControlModal extends React.PureComponent {
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
-        return (
-            <View
-              onLayout={this.onLayout.bind(this)}
-              style={{width: '100%', height: '100%', left: 0, top: 0}}>
-                <View style={styles.topContainer}>
-                    <ImageBackground style={styles.topVideoControl}
-                                     resizeMode="cover"
-                                     source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
-                </View>
-                <View style={styles.bottomContainer}>
-                    <ImageBackground style={styles.bottomVideoControl}
-                                     resizeMode="stretch"
-                                     source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
-                    <View style={styles.blurOverlay}/>
-                    <BlurView blurRadius={100} overlayColor={1} style={styles.blurView}/>
-                  {this._renderPlaybackController()}
-                </View>
-            </View>);
+
+      return (
+        <Animated.View
+          onLayout={this.onLayout.bind(this)}
+          style={{flex: 1}}>
+          <SectionList
+            ref={ref => {this.videoScroll = ref}}
+            style={{flex: 1, flexDirection: "column"}}
+            keyExtractor={this._keyExtractor}
+            stickySectionHeadersEnabled={false}
+            scrollEventThrottle={1}
+            onEndReachedThreshold={20}
+            onScroll={ this._handleViewableChanged}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+            sections={[
+              {data:["Video Controller"], showHeader: false, renderItem: this._renderUpperPage},
+              {data:["Video Detail"], showHeader: false, renderItem: this._renderLowerPage},
+            ]}
+          />
+        </Animated.View>
+
+      );
     }
   }
 
@@ -109,14 +159,12 @@ export default class VideoControlModal extends React.PureComponent {
           translucent={true}
           backgroundColor='#00000000'
           barStyle='light-content' />
-          {this._renderModal()}
+        {this._renderModal()}
 
       </View>
     )
   }
 }
-
-const {width, height} = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -238,3 +286,17 @@ const styles = StyleSheet.create({
     height: 15
   }
 })
+
+const fakeBannerInfoData = {
+  title: 'At Frida Kahlo’s',
+  type: 'Drama',
+  specificInfo: 'The Blue House” located in Mexico City, is the home where Frida Kahlo was born (1907) and would die (1954). She is surrounded not only by painter Diego Rivera, but also by Leon Trotsky, André Breton, Sergei Eisenstein, Pablo Neruda, Waldo Frank, Pablo Picasso, Marcel Duchamp, Vassily Kandinsky, etc'
+}
+
+const fakeListData = [
+  {key: 'Nicolas',type: 'Drama',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'Gorrilas in Danger',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'I\'m Roger Casement',type: 'Art-Dance',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'Aaron',type: 'Concert',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'The Mythes - Orphee',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
+  {key: 'Art of Movie',type: 'Documentary',start_time: '22h30',end_time: '23h15',url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}]
