@@ -44,9 +44,9 @@ export default class VideoControlModal extends React.PureComponent {
   _renderPlaybackController = () => {
     return (<View style={styles.playbackContainer}>
       <View style={styles.topButtonsContainer}>
-        <CircleButton size={44} image={'record'} style={{marginRight: 12}}/>
+        <CircleButton size={44} image={'record'} style={{marginRight: 12}} />
         <CircleButton size={44} image={'favorite'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'share'} style={{marginRight: 12}}/>
+        <CircleButton size={44} image={'share'} style={{marginRight: 12}} imageStyle={{marginBottom: 4}}/>
         <CircleButton size={44} image={'rewind'} style={{marginRight: 12}}/>
         <CircleButton size={44} image={'subtitle'} style={{marginRight: 12}}/>
       </View>
@@ -58,7 +58,7 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.rewindButton}>
           <Image source={require('../../assets/ic_rewind.png')}/>
         </TouchableOpacity>
-        <CircleButton size={70} image={'play'}/>
+        <CircleButton size={70} image={'play'} imageStyle={{marginLeft: 5}}/>
         <TouchableOpacity style={styles.fastForwardButton}>
           <Image source={require('../../assets/ic_fastforward.png')}/>
         </TouchableOpacity>
