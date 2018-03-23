@@ -29,6 +29,7 @@ export default class VideoControlModal extends React.PureComponent {
 
   componentDidMount() {
     Orientation.addOrientationListener(this._orientationDidChange);
+    this.props.getEpgs("putChannelIdHere")
   }
 
   _orientationDidChange = (orientation) => {
@@ -74,6 +75,22 @@ export default class VideoControlModal extends React.PureComponent {
     </View>)
   }
 
+  _renderLowerPage = () => {
+    const {epg} = this.props
+    if (!epg.data) {
+      return (<LowerPagerComponent/>)
+    }
+    let listData = epg.data.epgsData
+    // PUT HERE CURRENT PLAYING VIDEO
+    // CURRENTLY SET THIS TO FIRST VIDEO OF CHANNEL
+    // CHANGE LOGIC HERE FOR ANOTHER VIDEO LIKE STANDALONE
+    let video = listData[0]
+
+    return(
+      <LowerPagerComponent videoType="channel" listData={epg.data} video={video}/>
+    )
+  }
+
   _renderModal = () => {
     if (this.state.showBrightcove) {
       return (
@@ -104,7 +121,7 @@ export default class VideoControlModal extends React.PureComponent {
                 {this._renderPlaybackController()}
               </View>
             </View>
-            <LowerPagerComponent videoType="channel" listData={fakeListData} />
+            {this._renderLowerPage()}
           </Swiper>
         </View>
 
