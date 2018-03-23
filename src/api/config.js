@@ -5,7 +5,6 @@ const channelQuery = gql`
 query queryChannel($limit: Int){
   viewer{
     channelMany(limit: $limit) {
-      channelId
       originalImages {
         height
         width

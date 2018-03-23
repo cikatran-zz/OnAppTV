@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity} from 'react-native'
+import {View,Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity, SectionList, Animated} from 'react-native'
 import BlurView from '../../components/BlurView'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -9,10 +9,9 @@ import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../../components/LowerPageComponent"
 import Swiper from '@nart/react-native-swiper';
 
-
+const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.PureComponent {
   onLayout(e) {
-    const { width, height } = Dimensions.get("window")
     if (width > height) {
       this.setState({showBrightcove: true})
     } else {
@@ -91,6 +90,32 @@ export default class VideoControlModal extends React.PureComponent {
     )
   }
 
+  _renderUpperPage = () => (<View style={{width: '100%', height: height}}>
+    <View style={styles.topContainer}>
+      <ImageBackground style={styles.topVideoControl}
+                       resizeMode="cover"
+                       source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
+    </View>
+    <View style={styles.bottomContainer}>
+      <ImageBackground style={styles.bottomVideoControl}
+                       resizeMode="cover"
+                       blurRadius={10}
+                       source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
+      <View style={styles.blurOverlay}/>
+      {this._renderPlaybackController()}
+    </View>
+  </View>)
+
+  _keyExtractor = (item, index) => index;
+
+  _handleViewableChanged = (viewableItems) => {
+    console.log("on Scroll");
+    // this.videoScroll.scrollToLocation({sectionIndex: 1, itemIndex: 1, viewPosition: 0});
+    Animated.event([
+      { nativeEvent: { contentOffset: { y: this.scrollY } } },
+      { useNativeDriver: true },
+    ])
+  }
   _renderModal = () => {
     if (this.state.showBrightcove) {
       return (
@@ -101,29 +126,27 @@ export default class VideoControlModal extends React.PureComponent {
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
+
       return (
-        <View
+        <Animated.View
           onLayout={this.onLayout.bind(this)}
-          style={{width: '100%', height: '100%'}}>
-          <Swiper horizontal={false} loop={false} showsPagination={false}>
-            <View style={{width: '100%', height: '100%'}}>
-              <View style={styles.topContainer}>
-                <ImageBackground style={styles.topVideoControl}
-                                 resizeMode="cover"
-                                 source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
-              </View>
-              <View style={styles.bottomContainer}>
-                <ImageBackground style={styles.bottomVideoControl}
-                                 resizeMode="cover"
-                                 blurRadius={10}
-                                 source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
-                <View style={styles.blurOverlay}/>
-                {this._renderPlaybackController()}
-              </View>
-            </View>
-            {this._renderLowerPage()}
-          </Swiper>
-        </View>
+          style={{flex: 1}}>
+          <SectionList
+            ref={ref => {this.videoScroll = ref}}
+            style={{flex: 1, flexDirection: "column"}}
+            keyExtractor={this._keyExtractor}
+            stickySectionHeadersEnabled={false}
+            scrollEventThrottle={1}
+            onEndReachedThreshold={20}
+            onScroll={ this._handleViewableChanged}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+            sections={[
+              {data:["Video Controller"], showHeader: false, renderItem: this._renderUpperPage},
+              {data:["Video Detail"], showHeader: false, renderItem: this._renderLowerPage},
+            ]}
+          />
+        </Animated.View>
 
       );
     }
@@ -142,8 +165,6 @@ export default class VideoControlModal extends React.PureComponent {
     )
   }
 }
-
-const {width, height} = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
