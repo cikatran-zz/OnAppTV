@@ -301,7 +301,6 @@ const styles = StyleSheet.create({
     width: '90%',
     marginTop: 15,
     maxHeight: 162,
-    height: 162,
     flexDirection: 'column',
   },
   videoDescription: {
@@ -321,7 +320,8 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     width: '100%',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: 25
   }
 })
 
