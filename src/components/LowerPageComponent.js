@@ -1,5 +1,5 @@
 import React from 'react'
-import {SectionList, FlatList,Text, View, Image, ImageBackground, StyleSheet, StatusBar, Platform} from 'react-native'
+import {SectionList, FlatList,Text, View, Image, ImageBackground, StyleSheet, StatusBar, Platform, Dimensions} from 'react-native'
 import {colors} from '../utils/themeConfig'
 import PinkRoundedLabel from './PinkRoundedLabel'
 
@@ -9,18 +9,6 @@ export default class LowerPageComponent extends React.PureComponent {
     super(props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.props = nextProps;
-
-    const {videoType, contentData} = this.props;
-    // VideoType : 'channel', 'episode', 'standalone'
-    // ContentData will be channelId || seriesId || type of standalone video
-
-    this.setState({
-        videoType: videoType ? videoType : "channel",
-        contentData: contentData ? contentData : "sampleChannelId"
-    })
-  }
 
   _renderBanner = ({item}) => {
       return (
@@ -54,7 +42,7 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   _renderPinkIndicatorButton = () => {
-      const {videoType} = this.state;
+      const {videoType} = this.props;
       switch (videoType) {
         case 'channel': return (<PinkRoundedLabel text={"NEXT"}/>)
         case 'episode': return (<PinkRoundedLabel text={"SEASON"}/>)
@@ -64,7 +52,7 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   _renderLogoChannel = ({urlArray}) => {
-    const {videoType} = this.state
+    const {videoType} = this.props;
     // let logoUrl = url ? url : '../assets/arte.png'
     let logoUrl = require('../assets/arte.png')
     if (urlArray && urlArray.length > 0) logoUrl = {uri :urlArray[0].url}
@@ -130,7 +118,7 @@ export default class LowerPageComponent extends React.PureComponent {
 
   render() {
     // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-    const {listData, video} = this.props;
+    const {listData, video, videoType} = this.props;
 
     console.log("RENDER_LOWERPAGE" )
 
@@ -139,7 +127,6 @@ export default class LowerPageComponent extends React.PureComponent {
 
     console.log(listData)
 
-    const {videoType} = this.state;
     let videoModel
     if (videoType === 'channel'){
       videoModel = video.videoData
@@ -168,15 +155,16 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
 }
-
+const {w, h} = Dimensions.get("window")
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    height: h
   },
   topContainer: {
     flexDirection: 'row',
-    height: 226,
+    height: 400,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',

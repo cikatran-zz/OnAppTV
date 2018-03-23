@@ -12,6 +12,7 @@ import Swiper from '@nart/react-native-swiper';
 const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.PureComponent {
   onLayout(e) {
+    const { width, height } = Dimensions.get("window")
     if (width > height) {
       this.setState({showBrightcove: true})
     } else {
@@ -43,9 +44,9 @@ export default class VideoControlModal extends React.PureComponent {
   _renderPlaybackController = () => {
     return (<View style={styles.playbackContainer}>
       <View style={styles.topButtonsContainer}>
-        <CircleButton size={44} image={'record'} style={{marginRight: 12}} />
+        <CircleButton size={44} image={'record'} style={{marginRight: 12}}/>
         <CircleButton size={44} image={'favorite'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'share'} style={{marginRight: 12}} imageStyle={{marginBottom: 4}}/>
+        <CircleButton size={44} image={'share'} style={{marginRight: 12}}/>
         <CircleButton size={44} image={'rewind'} style={{marginRight: 12}}/>
         <CircleButton size={44} image={'subtitle'} style={{marginRight: 12}}/>
       </View>
@@ -57,7 +58,7 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.rewindButton}>
           <Image source={require('../../assets/ic_rewind.png')}/>
         </TouchableOpacity>
-        <CircleButton size={70} image={'play'} imageStyle={{marginLeft: 5}}/>
+        <CircleButton size={70} image={'play'}/>
         <TouchableOpacity style={styles.fastForwardButton}>
           <Image source={require('../../assets/ic_fastforward.png')}/>
         </TouchableOpacity>
@@ -101,7 +102,6 @@ export default class VideoControlModal extends React.PureComponent {
                        resizeMode="cover"
                        blurRadius={10}
                        source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
-      <View style={styles.blurOverlay}/>
       {this._renderPlaybackController()}
     </View>
   </View>)
@@ -126,7 +126,6 @@ export default class VideoControlModal extends React.PureComponent {
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
-
       return (
         <Animated.View
           onLayout={this.onLayout.bind(this)}
@@ -178,6 +177,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     height: '60%',
     width: '100%',
+    overflow:'hidden'
   },
   topVideoControl: {
     width: '100%',
