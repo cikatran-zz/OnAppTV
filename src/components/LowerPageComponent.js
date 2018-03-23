@@ -26,7 +26,7 @@ export default class LowerPageComponent extends React.PureComponent {
       return (
         <View style={styles.topContainer}>
             <View style={styles.bannerThumbnailContainer}>
-              <Image source={{uri: item.url}} style={styles.banner}/>
+              <Image source={{uri: item.originalImages[0].url}} style={styles.banner}/>
             </View>
         </View>
       )
@@ -63,34 +63,35 @@ export default class LowerPageComponent extends React.PureComponent {
       }
   }
 
-  _renderLogoChannel = ({url}) => {
+  _renderLogoChannel = ({urlArray}) => {
     const {videoType} = this.state
     // let logoUrl = url ? url : '../assets/arte.png'
-    let logoUrl = '../assets/arte.png'
+    let logoUrl = require('../assets/arte.png')
+    if (urlArray && urlArray.length > 0) logoUrl = {uri :urlArray[0].url}
     if (videoType === 'channel') {
-        return (<Image source={require(logoUrl)}/>)
+        return (<Image source={logoUrl}/>)
     }
   }
 
   _keyExtractor = (item, index) => index;
 
-  _renderList = ({data}) => {
+  _renderList = (data) => {
     // data is list of epgs
     return (
       <View>
         <View style={styles.listHeader}>
           <View style={styles.nextButtonContainer}>
-            {this._renderPinkIndicatorButton}
+            {this._renderPinkIndicatorButton()}
           </View>
           <View style={styles.logoContainer}>
             {/*// TODO: Logo*/}
-            {this._renderLogoChannel(data.originalImages[0].url)}
+            {this._renderLogoChannel(data.item.originalImages)}
           </View>
         </View>
         <FlatList
         style={styles.list}
         horizontal={false}
-        data={data}
+        data={data.item.epgsData}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderListVideoItem}/>
       </View>
@@ -105,12 +106,14 @@ export default class LowerPageComponent extends React.PureComponent {
   }
 
   _renderListVideoItem = ({item}) => {
+    console.log("RENDER_LIST_ITEM")
+    console.log(item)
     let videoData = item.videoData
     return (
       <View style={styles.itemContainer}>
         <Image
           style={styles.videoThumnbail}
-          source={{uri: item.originalImages[0].url ? item.url : fakeBannerData.url}}
+          source={{uri: videoData.originalImages.length > 0 ? videoData.originalImages[0].url : fakeBannerData.url}}
         />
         <View style={styles.itemInformationContainer}>
           <Text style={styles.itemTitle}>{videoData.title}</Text>
@@ -128,15 +131,20 @@ export default class LowerPageComponent extends React.PureComponent {
   render() {
     // EPGs is EPG array, video is an EPG or videoModel depend on videoType
     const {listData, video} = this.props;
-    if (!listData.data || !video.data)
+
+    console.log("RENDER_LOWERPAGE" )
+
+    if (!listData || !video)
       return null;
+
+    console.log(listData)
 
     const {videoType} = this.state;
     let videoModel
     if (videoType === 'channel'){
-      videoModel = video.data.videoData
+      videoModel = video.videoData
     } else {
-      videoModel = video.data
+      videoModel = video
     }
 
     return (
@@ -152,7 +160,7 @@ export default class LowerPageComponent extends React.PureComponent {
           sections={[
             {data: [videoModel],showHeader: false, renderItem: this._renderBanner},
             {data: [videoModel], renderItem: this._renderBannerInfo},
-            {data: [listData.data],showHeader: false, renderItem: this._renderList},
+            {data: [listData],showHeader: false, renderItem: this._renderList}
           ]}
         />
       </View>
@@ -181,7 +189,7 @@ const styles = StyleSheet.create({
     borderRadius: (Platform.OS === 'ios') ? 4 : 8
   },
   list: {
-    width: '100%',
+    width: '100%'
   },
   itemContainer: {
     flexDirection: 'row',
@@ -198,7 +206,8 @@ const styles = StyleSheet.create({
     borderRadius: (Platform.OS === 'ios') ? 4 : 8
   },
   itemInformationContainer: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: '50%',
   },
   itemActionsContainer: {
     flexDirection: 'column',
