@@ -9,6 +9,7 @@ import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView
 import Orientation from 'react-native-orientation';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import ZapperCell from '../../components/ZapperCell'
+import ChannelModal from "./ChannelModal/ChannelModal";
 
 const favoriteImg = require('../../assets/ic_favorite.png');
 const allImg = require('../../assets/ic_all.png');
@@ -28,7 +29,7 @@ export default class Zappers extends Component {
             ],
             showAllChannels: true
         };
-
+        this.channelModal = null;
     };
 
     componentWillMount() {
@@ -47,8 +48,15 @@ export default class Zappers extends Component {
         return image;
     }
 
-    _renderItem = (item) => (<ZapperCell image={this._imageUri(item.item)}
-                                         style={styles.item}/>);
+    _showChannelModal = (item) => {
+        console.log("Show channel modal");
+        this.channelModal.toggleModal();
+    }
+
+    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item)}
+                                               style={styles.item}>
+                                    <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
+                            </TouchableOpacity>);
     _renderListFooter = () => (
         <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 50, backgroundColor:'transparent'}}/>
     )
@@ -64,13 +72,13 @@ export default class Zappers extends Component {
     };
 
     _onSwitchPress = () => {
-        this.setState({ showAllChannels: !this.state.showAllChannels });
 
+        this.setState({showAllChannels: !this.state.showAllChannels});
         // TODO: Change datasource
+
     };
 
     render(){
-        const { navigate } = this.props.navigation;
         const { channel } = this.props;
         if (!channel.data || channel.isFetching) {
             return null;
@@ -82,6 +90,7 @@ export default class Zappers extends Component {
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content' />
+                <ChannelModal ref={(modal) => this.channelModal = modal}/>
                 <ImageBackground style={styles.image}
                                  source={require('../../assets/conn_bg.png')}
                                  blurRadius={30}>

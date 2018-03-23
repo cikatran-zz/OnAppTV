@@ -39,10 +39,9 @@ export const ScreenStack = StackNavigator({
   },
   VideoControlModal: {
     screen: VideoControlModal
-  },
-
+  }
 
 }, {
   mode: 'modal',
-  headerMode: 'none',
+  headerMode: 'none'
 });
