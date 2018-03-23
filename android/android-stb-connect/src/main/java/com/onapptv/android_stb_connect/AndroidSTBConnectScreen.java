@@ -3,10 +3,8 @@ package com.onapptv.android_stb_connect;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -39,11 +37,13 @@ public class AndroidSTBConnectScreen extends FrameLayout {
     
     public AndroidSTBConnectScreen(@NonNull Context context) {
         super(context);
+        inflate(context, R.layout.screen, this);
         initialize(context);
     }
 
     public AndroidSTBConnectScreen(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        inflate(context, R.layout.screen, this);
         initialize(context);
     }
 
@@ -52,7 +52,7 @@ public class AndroidSTBConnectScreen extends FrameLayout {
         
         Api_Implementation.sharedManager().hIG_setContext(context);
         launch_View = findViewById(R.id.launch_view);
-        bWebView =(BridgeWebView) findViewById(R.id.webView);
+        bWebView = findViewById(R.id.webView);
 //        设置编码
         bWebView.getSettings().setDefaultTextEncodingName("utf-8");
 //        支持 js
@@ -255,9 +255,8 @@ public class AndroidSTBConnectScreen extends FrameLayout {
                 try {
                     JSONObject jObject = new JSONObject(data);
                     if(jObject.getBoolean("connectState")) {
-//                        Intent intents = new Intent(MainActivity.this,TabBarActivity.class);
-//                        startActivity(intents);
-//                        MainActivity.this.finish();
+                        Intent intents = new Intent(context,TabBarActivity .class);
+                        context.startActivity(intents);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -301,28 +300,17 @@ public class AndroidSTBConnectScreen extends FrameLayout {
      */
 
     private void jumpPagetoLogin(final boolean bool) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                耗时任务,比如网络加载数据
-                ((AppCompatActivity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String webName = "";
-                        if(bool) {
-                            webName = "Login";
-                        } else {
-                            webName = "Revolution";
+        String webName = "";
+        if(bool) {
+            webName = "Login";
+        } else {
+            webName = "Revolution";
 //                            webName = "Login";
-                        }
+        }
 //                        隐藏启动页
-                        launch_View.setVisibility(View.GONE);
-                        bWebView.setVisibility(View.VISIBLE);
+        launch_View.setVisibility(View.GONE);
+        bWebView.setVisibility(View.VISIBLE);
 //                        加载网页
-                        bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
-                    }
-                });
-            }
-        }, SPLASH_DELAY_MILLS);
+        bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
     }
 }
