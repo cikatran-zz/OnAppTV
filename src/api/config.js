@@ -162,6 +162,57 @@ query {
 }
 `;
 
+const epgQuery = gql`
+query {
+  viewer{
+      channelById(_id : "5aa9e1788248e3381bc82356") {
+        title
+        longDescription
+        shortDescription
+        createdAt
+        updatedAt
+        originalImages {
+              height
+              width
+              url
+              name
+              fileName
+        }
+        epgsData {
+          videoId
+          channelId
+          startTime
+          endTime
+          videoData {
+            originalImages {
+              height
+              width
+              url
+              name
+              fileName
+            }
+            contentId
+            durationInSeconds
+            publishDate
+            title
+            longDescription
+            shortDescription
+            feature
+            seriesId
+            seasonIndex
+            episodeIndex
+            type
+            impression
+            state
+            createdAt
+            updatedAt
+          }
+        }
+      }  
+    }
+}
+`;
+
 export default {
     serverURL: 'http://13.250.57.10:3000/graphql',
     queries: {
@@ -171,6 +222,7 @@ export default {
         CATEGORY: categoryQuery,
         LIVE: liveQuery,
         VOD: vodQuery,
-        NEWS: newsQuery
+        NEWS: newsQuery,
+        EPG: epgQuery
     }
 };
