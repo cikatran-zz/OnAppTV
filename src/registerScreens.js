@@ -3,6 +3,7 @@ import Home from './screens/Home'
 import VideoControlModal from './screens/VideoControlModal'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import BottomTabbar from './components/BottomTabbar'
+import Zappers from "./screens/Zappers";
 //import STBConnection from  './screens/STBConnection'
 
 const TabNav = TabNavigator({
@@ -12,6 +13,12 @@ const TabNav = TabNavigator({
       header: null
     }),
   },
+    Zappers: {
+        screen: Zappers,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        }),
+    },
 }, {
   tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
   tabBarPosition: 'bottom',
@@ -32,10 +39,9 @@ export const ScreenStack = StackNavigator({
   },
   VideoControlModal: {
     screen: VideoControlModal
-  },
-
+  }
 
 }, {
   mode: 'modal',
-  headerMode: 'none',
+  headerMode: 'none'
 });
