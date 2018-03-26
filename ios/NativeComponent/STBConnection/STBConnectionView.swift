@@ -170,10 +170,9 @@ class STBConnectionView: UIView {
             let jsonData = str.data(using:.utf8);
             let dic = try?JSONSerialization.jsonObject(with: jsonData!, options:.mutableContainers) as! NSDictionary;
             let connectState = dic!["connectState"] as! Bool;
-            if connectState {
-                // TODO: - Notify event to React Native
+            //if connectState {
                 self.onFinished([:])
-            }
+            //}
         }
         self.bridge.registerHandler("HIG_GetMobileWifiInfo") { (data, responseCallback) in
             Api.shared().hIG_GetMobileWifiInfo(inJson: { (jsonString) in
