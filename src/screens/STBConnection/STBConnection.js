@@ -18,7 +18,7 @@ export default class STBConnection extends Component {
     };
 
     componentWillMount() {
-        Orientation.lockToPortrait();
+        //Orientation.lockToPortrait();
     }
 
     _onFinished = (event) => {

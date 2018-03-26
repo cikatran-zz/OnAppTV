@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" name="viewport" content="viewport-fit=cover"/>
+		<!--jquery-->
+		<script src="js/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="js/jquery.params.js"></script>
+		<script type="text/javascript" src="js/config.js" ></script>
+		<!--bootstrap-->
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+		<script src="bootstrap/js/bootstrap.js"></script>
+		<!--css-->
+		<link type="text/css" rel="stylesheet" href="css/paramer.css" />
+		<title>Antional</title>
+		<style>
+			.selectcoder {
+				width: 100%;
+				position: absolute;
+				display: block;
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body class="bg">
+		<div class="selectcoder">
+			<div class="LunchImg"></div>
+			<div class="mask"></div>
+			<div class="STBContainer">
+				<div class="STBContainer-body">
+					<div class="content-main">
+						<img src="img/icon-square.png" />
+						<div class="content-message">
+							NATIONAL<br/>GEOGRAPHIC
+						</div>
+					</div>
+				</div>
+				<div class="STBContainer-footer">
+					<div class="footer-button">
+						<button id="Avalible">Is now available</button>
+						<span>Without engagement</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			var connectState = $.query.get("connectState");
+			window.onload = function setupWebViewJavascriptBridge(callback) {
+				if(window.WebViewJavascriptBridge) {
+					return callback(WebViewJavascriptBridge);
+				}
+				if(window.WVJBCallbacks) {
+					return window.WVJBCallbacks.push(callback);
+				}
+				window.WVJBCallbacks = [callback];
+				var WVJBIframe = document.createElement('iframe');
+				WVJBIframe.style.display = 'none';
+				WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+				document.documentElement.appendChild(WVJBIframe);
+				setTimeout(function() {
+					document.documentElement.removeChild(WVJBIframe)
+				}, 0)
+			}
+			$(function() {
+//				$(".selectcoder").css({
+//						height: 0,
+//						top: $(window).height() / 2,
+//						"transform": "scale(1)"
+//					}).animate({
+//						height: $(window).height(),
+//						top: 0,
+//						"opacity": "toggle"
+//					}, 1200)
+//					.css("display", "block");
+//setTimeout(function(){
+//	$(".selectcoder").toggle();
+//},50);
+				$("#Avalible").click(function() {
+					//状态
+					var obj = {
+						"connectState": connectState
+					};
+					var data = JSON.stringify(obj);
+					window.WebViewJavascriptBridge.callHandler('HIG_STBConnectStatus', data);
+				})
+			})
+		</script>
+	</body>
+
+</html>
