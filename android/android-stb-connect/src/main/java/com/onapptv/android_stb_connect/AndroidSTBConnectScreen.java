@@ -1,15 +1,19 @@
 package com.onapptv.android_stb_connect;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.github.lzyzsd.jsbridge.BridgeHandler;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.github.lzyzsd.jsbridge.CallBackFunction;
@@ -254,15 +258,17 @@ public class AndroidSTBConnectScreen extends FrameLayout {
             public void handler(String data, CallBackFunction function) {
                 try {
                     JSONObject jObject = new JSONObject(data);
+                    onFinished();
                     if(jObject.getBoolean("connectState")) {
-                        Intent intents = new Intent(context,TabBarActivity .class);
-                        context.startActivity(intents);
+//                        Intent intents = new Intent(context,TabBarActivity .class);
+//                        context.startActivity(intents);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
+
 
         /**
          * 获取手机 WIFI 信息
@@ -313,4 +319,19 @@ public class AndroidSTBConnectScreen extends FrameLayout {
 //                        加载网页
         bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
     }
+
+    /*
+     * Receive native event
+     */
+    public void onFinished() {
+        WritableMap event = Arguments.createMap();
+        event.putString("message", "new message");
+        ReactContext reactContext = (ReactContext)getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "finished",
+                event);
+    }
+
+
 }

@@ -9,4 +9,6 @@ let stbConnectionView = {
     },
 };
 
-module.exports = requireNativeComponent('RNTSTBConnectionView', stbConnectionView);
+module.exports = requireNativeComponent('RNTSTBConnectionView', stbConnectionView, {
+   nativeOnly: {onFinished: true}
+});
