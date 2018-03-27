@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
 import Orientation from 'react-native-orientation';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import ZapperCell from '../../components/ZapperCell'
@@ -30,6 +30,7 @@ export default class Zappers extends Component {
             showAllChannels: true
         };
         this.channelModal = null;
+        this.stbManager = NativeModules.STBManager;
     };
 
     componentWillMount() {
@@ -42,8 +43,8 @@ export default class Zappers extends Component {
 
     _imageUri(item) {
         var image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
-        if (item.originalImages != undefined && item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
+        if (item.image != undefined) {
+            image = item.image;
         }
         return image;
     }
@@ -51,10 +52,22 @@ export default class Zappers extends Component {
     _showChannelModal = (item) => {
         console.log("Show channel modal");
         this.channelModal.toggleModal();
-    }
+    };
+
+    _zapChannel = (lcn) => {
+        console.log("Zap", lcn);
+        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(JSON.parse(events[0]))
+            }
+        } )
+    };
 
     _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item)}
-                                               style={styles.item}>
+                                               style={styles.item}
+                                               onPress={()=>this._zapChannel(item.item.lCN)}>
                                     <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
                             </TouchableOpacity>);
     _renderListFooter = () => (

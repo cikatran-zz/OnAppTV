@@ -4,7 +4,7 @@ import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error'
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import gql from 'graphql-tag';
+import { NativeModules } from 'react-native'
 
 
 const instance = axios.create({
@@ -44,11 +44,47 @@ const get = (endpoints) => {
     });
 };
 
+getSTBChannel = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getZapServiceListInJson((error, events) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(JSON.parse(events[0]))
+            }
+        });
+    });
+};
+
 export const getChannel = (limit) => {
-  return client.query({
-     query: config.queries.CHANNEL,
-     variables:  {limit: limit}
-  });
+    var zapList = null;
+    return getSTBChannel()
+      .then((value) => {
+          zapList = value;
+          var serviceIDs = []
+          for (var i = 0; i< value.length; i++) {
+              serviceIDs.push(value[i].serviceID);
+          }
+          return client.query({
+              query: config.queries.CHANNEL,
+              variables:  {serviceIDs: serviceIDs}
+          })
+      })
+      .then((response) =>{
+          var images = {};
+          let data = response.data.viewer.channelMany;
+          for (var i = 0; i< data.length; i++) {
+              if (data[i].originalImages != null && data[i].originalImages.length > 0) {
+                  images[data[i].serviceId] = data[i].originalImages[0].url;
+              }
+          }
+          for (var i = 0; i< zapList.length; i++) {
+              zapList[i].image = images[zapList[i].serviceID];
+          }
+          return new Promise((resolve,reject) => {
+              resolve(zapList);
+          });
+      });
 };
 
 export const getBanner = () => {

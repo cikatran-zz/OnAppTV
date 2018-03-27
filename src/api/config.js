@@ -2,26 +2,29 @@ import gql from "graphql-tag";
 
 
 const channelQuery = gql`
-query queryChannel($limit: Int){
+query queryChannel($serviceIDs: [Float]!){
   viewer{
-    channelMany(limit: $limit) {
+    channelMany(filter:{
+      _operators: {
+        serviceId: {
+          in: $serviceIDs
+        }
+      }
+    }) {
       serviceId
       lcn
+      title
+      longDescription
+      shortDescription
+      createdAt
+      updatedAt
       originalImages {
         height
         width
         url
         name
         fileName
-        scaledImage {
-          height
-          width
-          url
-        }
       }
-      title
-      longDescription
-      shortDescription
     }
   }
 }`;

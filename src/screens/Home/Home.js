@@ -25,7 +25,7 @@ export default class Home extends Component {
 
     componentDidMount() {
         this.props.getBanner();
-        this.props.getChannel(6);
+        this.props.getChannel(-1);
         this.props.getAds();
         this.props.getLive((new Date()).toISOString());
         this.props.getVOD(1, 10);
@@ -35,8 +35,8 @@ export default class Home extends Component {
 
     _renderChannelListItem = ({item}) => {
         var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
-        if (item.originalImages.length > 0) {
-            imageUrl = item.originalImages[0].url;
+        if (item.image != null) {
+            imageUrl = item.image;
         }
       return (
         <View style={styles.itemContainer}>
@@ -48,7 +48,7 @@ export default class Home extends Component {
             </View>
             <Text
               numberOfLines={1}
-              style={styles.itemLabel}>{item.title.toUpperCase()}</Text>
+              style={styles.itemLabel}>{item.serviceName == null ? "" : item.serviceName.toString().toUpperCase()}</Text>
         </View>
     )}
 
@@ -63,6 +63,7 @@ export default class Home extends Component {
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
+        console.log("title: ", item);
       return (
       <View style={styles.slotMachineContainer}>
           <Image
@@ -92,6 +93,7 @@ export default class Home extends Component {
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
+        console.log("title: ", item);
         return (
             <View style={styles.notificationContainer}>
                 <Image style={styles.notificationImage} source={{uri: image}}/>
@@ -126,7 +128,6 @@ export default class Home extends Component {
               genres = genres.concat(genre.name.toString());
           })
       }
-
       var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
 
@@ -254,7 +255,7 @@ export default class Home extends Component {
                   {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
                   {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
                   {data:[ads.data], showHeader: false, renderItem: this._renderAds},
-                  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                  // {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                   {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
                   {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
