@@ -1,5 +1,8 @@
 import React from 'react'
-import { Text, ImageBackground, View, StyleSheet, FlatList } from 'react-native'
+import {
+  Text, ImageBackground, View, StyleSheet, FlatList, SectionList, Image, StatusBar,
+  TouchableOpacity
+} from 'react-native'
 import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 
@@ -7,33 +10,75 @@ export default class Settings extends React.PureComponent {
 
   constructor(props) {
     super(props)
+    console.log("Constructor")
   }
 
+  _keyExtractor = (item, index) => index
+
   _renderSettingItem = ({item}) => {
+    const {navigation} = this.props
+
     return (
       <View style={styles.settingItemContainer}>
-        <Text style={styles.settingItemName}>Sample Text</Text>
+        <Image source={require('../../assets/ic_wifi.png')} style={styles.settingItemIcon}/>
+        <Text style={styles.settingItemName}>{item.name}</Text>
+        <TouchableOpacity style={{marginLeft: 'auto', flexDirection: 'row', alignItems: 'center'}} onPress={() => navigation.navigate('AudioLanguage', {})}>
+          <Text style={styles.settingItemValue}>{item.value}</Text>
+          <Image source={require('../../assets/ic_right_arrow.png')}/>
+        </TouchableOpacity>
+
       </View>
     )
   }
 
-  _renderSection = ({data}) => {
+  _renderSection = ({item}) => {
+    console.log("renderSection")
+    console.log(item)
     return (
       <View style={styles.container}>
-        <PinkRoundedLabel text={data ? data.title : "ON TV"}/>
         <FlatList
-          data={data.list}
+          data={item.list}
           renderItem={this._renderSettingItem}
+          keyExtractor = {this._keyExtractor}
         />
       </View>
     )
+  }
+
+  _renderSectionHeader = ({section}) => {
+    if (section.showHeader) {
+      return (
+        <View style={styles.headerSectionContainer}>
+          <PinkRoundedLabel text={section.title} style={styles.headerSection}/>
+        </View>
+      )
+    } else {
+      return null
+    }
   }
 
   render() {
 
     return (
       <View style={styles.container}>
-        {this._renderSection(fakeData)}
+        <StatusBar/>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerLabel}>Settings</Text>
+        </View>
+        <SectionList
+          style={styles.sectionListContainer}
+          keyExtractor={this._keyExtractor}
+          stickySectionHeadersEnabled={false}
+          onEndReachedThreshold={20}
+          renderSectionHeader={this._renderSectionHeader}
+          showsVerticalScrollIndicator={false}
+          sections={[
+            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
+            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
+            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
+            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
+          ]}
+        />
       </View>
     )
   }
@@ -46,16 +91,27 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'transparent'
   },
-  headerLabel: {
+  sectionListContainer: {
+    marginLeft: 15,
+    marginRight: 15
+  },
+  headerContainer: {
+    marginTop: 15,
+    height: 36,
     width: '100%',
-    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  headerLabel: {
     fontSize: 17,
-    color: colors.greySettingLabel
+    color: colors.greySettingLabel,
   },
   settingItemContainer: {
     width: '100%',
     flexDirection: 'row',
-    height: 43
+    height: 43,
+    alignItems: 'center'
   },
   settingItemName: {
     fontSize: 16,
@@ -63,20 +119,35 @@ const styles = StyleSheet.create({
   },
   settingItemValue: {
     fontSize: 14,
-    color: colors.greySettingItemText
+    color: colors.greySettingItemText,
+    marginRight: 12
+  },
+  headerSection: {
+    fontSize: 10,
+    color: colors.whitePrimary
+  },
+  settingItemIcon: {
+    marginRight: 23
+  },
+  headerSectionContainer: {
+    flexDirection: 'row',
+    marginBottom: 10
   }
 })
 
-const fakeData = [{
+const fakeData = {
   title: "ON TV",
   list: [
     {
-    test: "Test"
+      name: "Test",
+      value: "Value"
     },
     {
-      test: "Test"
+      name: "Test",
+      value: "Value"
     },
     {
-      test: "Test"
+      name: "Test",
+      value: "Value"
     }]
-}]
+}

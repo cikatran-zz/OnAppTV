@@ -12,7 +12,9 @@ export const colors = {
   textMainBlack: '#404040',
   bannerSubtitleColor: '#ffffffab',
   tabTextInActive: '#ffffff7d',
-  greyOpacityBackground: 'rgba(83, 83, 83, 0.2)'
+  greyOpacityBackground: 'rgba(83, 83, 83, 0.2)',
+  greySettingLabel: '#777777',
+  greySettingItemText: '#9A9A9A'
 };
 
 export const textDarkDefault = {
