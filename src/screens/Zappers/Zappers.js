@@ -131,25 +131,26 @@ export default class Zappers extends Component {
 calculateItemSize = (contentWidth, maxItemSize, minimumItem) => {
 
 
-    var _contentWidth = contentWidth;
-    var _maxItemSize = maxItemSize;
-    var _minimumItem = minimumItem;
+    // var _contentWidth = contentWidth;
+    // var _maxItemSize = maxItemSize;
+    // var _minimumItem = minimumItem;
+    //
+    // // Increase number of item
+    // while (true) {
+    //     if ((_contentWidth - _maxItemSize * _minimumItem) / _minimumItem > 20) {
+    //         _minimumItem++;
+    //         continue;
+    //     }
+    //     if (_contentWidth - _maxItemSize * _minimumItem < 5) {
+    //         _maxItemSize -= 5;
+    //         continue;
+    //     }
+    //     break;
+    // }
+    // let _width = _maxItemSize;
+    // let _margin = (_contentWidth - _maxItemSize * _minimumItem) / (2*_minimumItem);
 
-    // Increase number of item
-    while (true) {
-        if ((_contentWidth - _maxItemSize * _minimumItem) / _minimumItem > 20) {
-            _minimumItem++;
-            continue;
-        }
-        if (_contentWidth - _maxItemSize * _minimumItem < 5) {
-            _maxItemSize -= 5;
-            continue;
-        }
-        break;
-    }
-    let _width = _maxItemSize;
-    let _margin = (_contentWidth - _maxItemSize * _minimumItem) / (2*_minimumItem);
-    return {width: _width, margin: _margin}
+    return {width: (contentWidth-60)/3, margin: 10}
 
 };
 
@@ -182,8 +183,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     grid: {
-        paddingLeft: 40,
-        paddingRight: 40,
+        paddingLeft: 30,
+        paddingRight: 30,
         width: '100%'
     },
 
@@ -194,6 +195,6 @@ const styles = StyleSheet.create({
     },
     item: {
         aspectRatio: 1,
-        ...calculateItemSize(Dimensions.get("window").width - 90, 90, 3)
+        ...calculateItemSize(Dimensions.get("window").width - 60, 90, 0)
     },
 });
