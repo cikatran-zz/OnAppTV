@@ -22,7 +22,7 @@ import tv.hi_global.stbapi.implementation.Api_Implementation;
  */
 
 public class AndroidSTBFramework extends ReactContextBaseJavaModule {
-    public static final String REACT_MODULE = "AndroiSTBFramework";
+    public static final String REACT_MODULE = "STBManager";
 
     public AndroidSTBFramework(ReactApplicationContext reactContext) {
         super(reactContext);
