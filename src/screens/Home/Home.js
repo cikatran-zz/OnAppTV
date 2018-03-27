@@ -316,21 +316,21 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         position: 'absolute',
-        width: 75,
-        height: 75,
-        borderRadius: 37.5,
+        width: 70,
+        height: 70,
+        borderRadius: 35,
         overflow: 'hidden'
     },
     bannerPlayIconBackground: {
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-
     },
     bannerPlayIcon: {
-        alignSelf: 'center',
-        width: 25,
-        height: 25,
+        top: 22.5,
+        left: 26.5,
+         width: 25,
+         height: 25,
         position: 'absolute'
     },
     listHorizontal: {
