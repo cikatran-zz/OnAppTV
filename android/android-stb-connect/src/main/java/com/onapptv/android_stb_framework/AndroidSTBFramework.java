@@ -6,6 +6,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -179,7 +180,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetZapServiceListInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
