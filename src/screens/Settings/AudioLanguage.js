@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  Text, Switch, View, StyleSheet, FlatList, Image, StatusBar,
-  TouchableOpacity
+  Text, Switch, View, StyleSheet, FlatList, StatusBar
 } from 'react-native'
 import { colors } from '../../utils/themeConfig'
+import SettingHeader from '../../components/SettingHeader'
 
 export default class AudioLanguage extends React.PureComponent {
 
@@ -28,12 +28,7 @@ export default class AudioLanguage extends React.PureComponent {
     return (
       <View style={styles.container}>
         <StatusBar/>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Root')} style={styles.backIcon}>
-            <Image source={require('../../assets/ic_left_arrow.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerLabel}>Audio Language</Text>
-        </View>
+        <SettingHeader text={'Audio Language'} backButton={true} navigation={navigation}/>
         <FlatList
           style={styles.listContainer}
           keyExtractor={this._keyExtractor}
@@ -57,22 +52,6 @@ const styles = StyleSheet.create({
     marginTop: 46,
     marginLeft: 32,
     marginRight: 17
-  },
-  headerContainer: {
-    marginTop: 15,
-    height: 36,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  headerLabel: {
-    fontSize: 17,
-    color: colors.greySettingLabel,
-  },
-  backIcon: {
-    position: 'absolute',
-    left: 18
   },
   listItemContainer: {
     height: 43,
