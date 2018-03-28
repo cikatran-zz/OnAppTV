@@ -14,7 +14,8 @@ export const colors = {
   tabTextInActive: '#ffffff7d',
   greyOpacityBackground: 'rgba(83, 83, 83, 0.2)',
   greySettingLabel: '#777777',
-  greySettingItemText: '#9A9A9A'
+  greySettingItemText: '#9A9A9A',
+  greyParentalLock: '#dbdbdb'
 };
 
 export const textDarkDefault = {
