@@ -15,7 +15,9 @@ export const colors = {
   greyOpacityBackground: 'rgba(83, 83, 83, 0.2)',
   greySettingLabel: '#777777',
   greySettingItemText: '#9A9A9A',
-  greyParentalLock: '#dbdbdb'
+  greyParentalLock: '#dbdbdb',
+  greyParentalControl: '#ACACAC',
+  greyTextBelowParentControl: '#7E7E7E'
 };
 
 export const textDarkDefault = {
