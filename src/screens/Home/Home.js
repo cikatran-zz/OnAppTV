@@ -307,7 +307,10 @@ const styles = StyleSheet.create({
     bannerSubtitle: {
         marginTop: 5,
         fontSize: 12,
-        color: colors.bannerSubtitleColor
+        color: colors.bannerSubtitleColor,
+        width: '90%',
+        flexWrap: "wrap",
+        textAlign: 'right'
     },
     slotMachineImage: {
         width: '100%',

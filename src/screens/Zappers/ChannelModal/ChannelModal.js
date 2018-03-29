@@ -48,7 +48,7 @@ export default class ChannelModal extends React.Component {
                    visible={this.state.isShow}
                    presentationStyle="overFullScreen"
                    onRequestClose={() => {
-
+                       this.setState({isShow: !this.state.isShow});
                    }}>
                 <View style={styles.container}>
                     <BlurView style={styles.blurView}
@@ -56,7 +56,7 @@ export default class ChannelModal extends React.Component {
                               overlayColor={1} />
                     <Animated.View style={[...styles.animationView, {transform: [{translateY: this.animationY}]}]}>
                         <TouchableOpacity style={styles.upArrow} onPress={this.toggleModal}>
-                            <Image source={require('../../../assets/ic_up_arrow.png')} style={{width: '100%', height: '100%', resizeMode: 'stretch'}}/>
+                            <Image source={require('../../../assets/ic_up_arrow.png')} style={{width: '50%', height: '50%', resizeMode: 'stretch', alignSelf: 'center'}}/>
                         </TouchableOpacity>
                     </Animated.View>
                 </View>
@@ -82,12 +82,15 @@ const styles = StyleSheet.create({
         height: '50%',
         left: 0,
         justifyContent: 'center',
+        backgroundColor: "#ff0000",
+        position: "absolute"
     },
     upArrow: {
         alignSelf: 'center',
         justifyContent: 'center',
-        position: 'absolute',
-        width: 25,
-        height: 10,
+        // position: 'absolute',
+        top: 0,
+        width: 50,
+        height: 20,
     }
 });
