@@ -17,7 +17,8 @@ export const colors = {
   greySettingItemText: '#9A9A9A',
   greyParentalLock: '#dbdbdb',
   greyParentalControl: '#ACACAC',
-  greyTextBelowParentControl: '#7E7E7E'
+  greyTextBelowParentControl: '#7E7E7E',
+  greyTextInputBorder: '#989898'
 };
 
 export const textDarkDefault = {

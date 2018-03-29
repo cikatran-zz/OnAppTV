@@ -13,7 +13,7 @@ export default class SettingHeader extends React.PureComponent {
 
     if (backButton) {
       return (
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
+        <TouchableOpacity onPress={() => {if (navigation) navigation.goBack()}} style={styles.backIcon}>
           <Image source={require('../assets/ic_left_arrow.png')} />
         </TouchableOpacity>
       )
