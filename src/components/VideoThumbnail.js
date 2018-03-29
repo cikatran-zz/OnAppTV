@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  StyleSheet, ImageBackground, View, Text
+  StyleSheet, ImageBackground, View, Text, Image, TouchableOpacity
 } from 'react-native'
 import {colors, textWhiteDefault} from '../utils/themeConfig'
 

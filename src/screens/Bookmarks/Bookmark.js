@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, TextInput, StyleSheet, FlatList } from 'react-native'
+import { Text, View, SectionList, Button, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Platform } from 'react-native'
 import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
 import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -12,15 +12,37 @@ export default class Bookmark extends React.PureComponent {
 
   _keyExtractor = (item, index) => index
 
-  _renderListBookmarks = (data) => {
+  _renderListBookmarks = ({data}) => {
     return (
       <View style={styles.bookmarkSection}>
         <View style={styles.bookmarkLabelContainer}>
-          <PinkRoundedLabel text="BOOKING"/>
+          <PinkRoundedLabel text="BOOKING" style={styles.bookingHeaderLabel}/>
+          <View style={styles.textInputContainer}>
+            <TextInput placeholder={'Emissions'} style={styles.textInput} underlineColorAndroid='rgba(0,0,0,0)' inlineImageLeft='ic_search'/>
+            <Image source={require('../../assets/ic_close.png')} style={{position: 'absolute', right: 10, top: 0}}/>
+          </View>
         </View>
+        <FlatList
+          style={styles.listBookmarks}
+          horizontal={false}
+          data={fakeList}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderBookmarkItem}/>
       </View>
     )
   }
+
+  _renderBookmarkItem = ({item}) => {
+    return (
+      <View>
+        <HorizontalVideoThumbnail item={item}/>
+        <TouchableOpacity style={styles.deleteButton}>
+          <Text style={styles.deleteTextStyle}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
 
   _renderScheduledItem = ({item}) => {
     return (
@@ -29,19 +51,25 @@ export default class Bookmark extends React.PureComponent {
         <Text style={styles.textTitle}>{item.videoData.title}</Text>
         <Text style={styles.textType}>{item.videoData.type}</Text>
         <Text style={styles.textTime}>15/07 - 15h30 to 17h15</Text>
+        <TouchableOpacity style={styles.closeIcon}>
+          <Image source={require('../../assets/ic_close.png')}/>
+        </TouchableOpacity>
       </View>
     )
   }
 
-  _renderListScheduledRecords = (data) => {
+  _renderListScheduledRecords = ({data}) => {
       return(
-        <FlatList
-          style={styles.listScheduledRecord}
-          horizontal={true}
-          data={data}
-          keyExtractor={this._keyExtractor}
-          showsHorizontalScrollIndicator={false}
-          renderItem={this._renderScheduledItem}/>
+        <View style={{flexDirection: 'column'}}>
+          <PinkRoundedLabel text="MY SCHEDULED RECORD" style={styles.myScheduledRecordLabel}/>
+          <FlatList
+            style={styles.listScheduledRecord}
+            horizontal={true}
+            data={fakeList}
+            keyExtractor={this._keyExtractor}
+            showsHorizontalScrollIndicator={false}
+            renderItem={this._renderScheduledItem}/>
+        </View>
       )
   }
 
@@ -49,9 +77,16 @@ export default class Bookmark extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <PinkRoundedLabel text="MY SCHEDULED RECORD" style={styles.myScheduledRecordLabel}/>
-        {this._renderListScheduledRecords(fakeList)}
-        {this._renderListBookmarks(fakeList)}
+        <SectionList
+          style={styles.container}
+          keyExtractor={this._keyExtractor}
+          stickySectionHeadersEnabled={false}
+          onEndReachedThreshold={20}
+          sections={[
+            {data: [fakeList], renderItem: this._renderListScheduledRecords},
+            {data: [fakeList], renderItem: this._renderListBookmarks}
+          ]}
+        />
       </View>
     )
   }
@@ -60,23 +95,30 @@ export default class Bookmark extends React.PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   myScheduledRecordLabel: {
     width: 479,
     marginLeft: 143,
-    marginTop: 21
+    marginTop: 21,
+    paddingLeft: 15,
+    fontSize: 10
+  },
+  bookingHeaderLabel: {
+    width: 78,
+    textAlign: 'center',
+    fontSize: 10
   },
   listScheduledRecord: {
     marginTop: 16,
     width: '100%',
     height: 156,
-    marginLeft: 8
+    marginLeft: 8,
   },
   horizontalItemContainer: {
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   textTitle: {
     marginTop: 18,
@@ -102,10 +144,52 @@ const styles = StyleSheet.create({
     paddingLeft: 17,
     flexDirection: 'row'
   },
-  textInputSearch: {
-    width: 255,
+  listBookmarks: {
+    marginTop: 26,
+    width: '100%',
+  },
+  closeIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.greyCloseIconBg,
+    aspectRatio: 1,
+    width: 15,
+    borderRadius: 7.5,
+    position: 'absolute',
+    top: 6,
+    right: 12,
+  },
+  textInputContainer: {
+    width: '68%',
     height: 29,
-    marginLeft: 10
+    borderRadius: 15,
+    borderColor: '#95989A',
+    borderWidth: 1,
+    marginLeft: 10,
+  },
+  textInput: {
+    width: '100%',
+    height: '100%',
+    paddingLeft: 22,
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+  deleteButton: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 42,
+    right: 15,
+    width: 44,
+    height: 18,
+    borderRadius: (Platform.OS === 'ios') ? 6 : 3,
+    borderColor: colors.blackDeleteButton,
+    borderWidth: 1
+  },
+  deleteTextStyle: {
+    color: colors.textMainBlack,
+    fontSize: 9
   }
 })
 

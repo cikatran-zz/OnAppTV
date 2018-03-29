@@ -12,6 +12,8 @@ export const colors = {
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
   textMainBlack: '#404040',
+  greyCloseIconBg: '#B9B9B9',
+  blackDeleteButton: '#393939',
   greyOpacityBackground: 'rgba(83, 83, 83, 0.2)'
 };
 

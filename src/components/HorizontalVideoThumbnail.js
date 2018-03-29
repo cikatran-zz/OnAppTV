@@ -23,12 +23,7 @@ export default class HorizontalVideoThumbnail extends React.PureComponent {
         <View style={styles.itemInformationContainer}>
           <Text style={styles.itemTitle}>{videoData.title}</Text>
           <Text style={styles.itemType}>{videoData.type}</Text>
-          {/*<Text style={styles.itemTime}>{timeFormatter(item.startTime)} - {timeFormatter(item.endTime)}</Text>*/}
         </View>
-        {/*<View style={styles.itemActionsContainer}>*/}
-          {/*<Image source={require('../assets/lowerpage_playbtn.png')} style={styles.itemPlayButton}/>*/}
-          {/*<Image source={require('../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>*/}
-        {/*</View>*/}
       </View>
     )
   }
