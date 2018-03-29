@@ -63,7 +63,6 @@ export default class Home extends Component {
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
-        console.log("title: ", item);
       return (
       <View style={styles.slotMachineContainer}>
           <Image
@@ -93,7 +92,6 @@ export default class Home extends Component {
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
-        console.log("title: ", item);
         return (
             <View style={styles.notificationContainer}>
                 <Image style={styles.notificationImage} source={{uri: image}}/>

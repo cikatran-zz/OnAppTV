@@ -23,7 +23,9 @@
   _blurEffect = (UIBlurEffect *)[[customBlurClass alloc] init];
   [_blurEffect setValue:@1.0 forKey:@"scale"];
   [_blurEffect setValue:@0 forKey:@"blurRadius"];
+    
   self = [super initWithEffect:_blurEffect];
+  
   return self;
 }
 

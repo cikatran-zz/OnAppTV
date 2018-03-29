@@ -72,14 +72,18 @@ export const getChannel = (limit) => {
       })
       .then((response) =>{
           var images = {};
+          var shortTitles = {}
           let data = response.data.viewer.channelMany;
           for (var i = 0; i< data.length; i++) {
               if (data[i].originalImages != null && data[i].originalImages.length > 0) {
                   images[data[i].serviceId] = data[i].originalImages[0].url;
               }
+              shortTitles[data[i].serviceId] = data[i].shortDescription;
+
           }
           for (var i = 0; i< zapList.length; i++) {
               zapList[i].image = images[zapList[i].serviceID];
+              zapList[i].shortDescription = shortTitles[zapList[i].serviceID];
           }
           return new Promise((resolve,reject) => {
               resolve(zapList);
