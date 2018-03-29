@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   settingItemName: {
     fontSize: 16,
-    color: colors.textMainBlack
+    color: 'black'
   },
   settingItemValue: {
     fontSize: 14,
