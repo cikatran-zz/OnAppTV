@@ -1,13 +1,13 @@
 import React from 'react'
 import {View,Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity, SectionList, Animated} from 'react-native'
-import BlurView from '../../components/BlurView'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import CircleButton from "../../components/CircleButton"
 import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../../components/LowerPageComponent"
-import Swiper from '@nart/react-native-swiper';
+import VerticalSwiper from '../../components/VerticalSwiper';
+
 
 const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.PureComponent {
@@ -127,25 +127,30 @@ export default class VideoControlModal extends React.PureComponent {
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
       return (
-        <Animated.View
+        <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          <SectionList
-            ref={ref => {this.videoScroll = ref}}
-            style={{flex: 1, flexDirection: "column"}}
-            keyExtractor={this._keyExtractor}
-            stickySectionHeadersEnabled={false}
-            scrollEventThrottle={1}
-            onEndReachedThreshold={20}
-            onScroll={ this._handleViewableChanged}
-            showsVerticalScrollIndicator={false}
-            bounces={false}
-            sections={[
-              {data:["Video Controller"], showHeader: false, renderItem: this._renderUpperPage},
-              {data:["Video Detail"], showHeader: false, renderItem: this._renderLowerPage},
-            ]}
-          />
-        </Animated.View>
+          <VerticalSwiper
+            style={styles.dragContainer}
+            // content={(
+            //     <SectionList
+            //       style={{flex: 1, flexDirection: "column"}}
+            //       keyExtractor={this._keyExtractor}
+            //       stickySectionHeadersEnabled={false}
+            //       scrollEventThrottle={1}
+            //       onEndReachedThreshold={20}
+            //       onScroll={ this._handleViewableChanged}
+            //       showsVerticalScrollIndicator={false}
+            //       bounces={false}
+            //       sections={[
+            //         {data:["Video Detail"], showHeader: false, renderItem: this._renderLowerPage},
+            //       ]}
+            //     />
+            // )}>
+            content={this._renderUpperPage()}>
+            {this._renderUpperPage()}
+          </VerticalSwiper>
+        </View>
 
       );
     }
@@ -284,7 +289,12 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     width: 17,
     height: 15
-  }
+  },
+  dragContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 })
 
 const fakeBannerInfoData = {
