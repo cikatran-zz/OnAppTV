@@ -48,7 +48,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_UdpReceiveMessageInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -58,7 +60,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_UndiscoveredSTBListInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -73,7 +77,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ConnectSTB(string, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -83,7 +89,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_DisconnectAndCallback(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -93,7 +101,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_DisconnectInJsonAndCallback(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -109,7 +119,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ParseXML(is, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -120,7 +132,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ParseXMLLast(is, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -130,7 +144,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetDataBase(string, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -140,7 +156,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetSatelliteListInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -150,7 +168,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetSatellite(json, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -160,7 +180,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetServiceListInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -170,7 +192,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetServiceList(json, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -192,7 +216,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetFavoriteServiceListInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -202,7 +228,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetServiceList(string, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -212,7 +240,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetSTBConfigure(json, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -222,7 +252,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetSTBConfigure(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -232,7 +264,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetZap(json, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -242,7 +276,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetVolume(json, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -257,7 +293,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetAspectRatio(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -272,7 +310,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetResolution(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -287,7 +327,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetVideoStandard(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -302,7 +344,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetDigitalAudio(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -317,7 +361,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetCountry(jsonString, new Api.OnSuccessCallbackBlock() {
             @Override
             public void OnSuccessCallback(Boolean aBoolean, String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -332,7 +378,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetCountryCodeIndex(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -347,7 +395,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetOSDLanguage(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -362,7 +412,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetPreferSubtitleLanguage(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -377,7 +429,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetSubtitleLanguageCodeIndex(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -392,7 +446,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetPreferAudioLanguage(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -407,7 +463,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetAudioLanguageCodeIndex(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -422,7 +480,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetAudioDescription(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -437,7 +497,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetParentalGuideRating(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -452,7 +514,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetTimeshiftLimitSize(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -467,7 +531,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetFeTun(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -477,7 +543,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetSignal(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -487,7 +555,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetSignalAfterSetFeTun(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -497,7 +567,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ResetDataSource(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -507,7 +579,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ResetConfigure(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -522,7 +596,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ResetSTBPIN(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -532,7 +608,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_CheckSTBPIN(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -542,7 +620,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetSubtitleList(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -552,7 +632,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetSubtitle(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -562,7 +644,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetSubtitle(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -572,7 +656,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetAudioList(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -582,7 +668,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetAudio(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -592,7 +680,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetAudio(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -602,7 +692,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetUSBDisks(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -612,7 +704,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ReadUSBDir(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -622,7 +716,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetUSBFormatPartition(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -633,7 +729,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ReceiverNotifyEvent(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -643,7 +741,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetPvrPath(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -653,7 +753,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetPvrRecordPath(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -663,7 +765,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_RecordPvrStart(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -673,7 +777,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_RecordPvrStop(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -683,7 +789,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrStart(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -693,7 +801,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrStop(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -703,7 +813,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrPause(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -713,7 +825,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrResume(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -723,7 +837,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrSetPosition(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -733,7 +849,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrGetPosition(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -753,7 +871,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayPvrGetSpeed(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -763,7 +883,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetPvrList(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -773,7 +895,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetPvrInfo(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -783,7 +907,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_DeletePvr(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -797,7 +923,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaStart(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -807,7 +935,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaStop(new Api.OnSuccessCallbackBlock() {
             @Override
             public void OnSuccessCallback(Boolean aBoolean, String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -817,7 +947,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaPause(new Api.OnSuccessCallbackBlock() {
             @Override
             public void OnSuccessCallback(Boolean aBoolean, String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -827,7 +959,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaResume(new Api.OnSuccessCallbackBlock() {
             @Override
             public void OnSuccessCallback(Boolean aBoolean, String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -837,7 +971,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaSetPosition(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -847,7 +983,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaGetPosition(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -857,7 +995,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaSetSpeed(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -867,7 +1007,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaGetSpeed(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -877,7 +1019,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetMediaInfo(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -887,7 +1031,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetMediaAudio(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -897,7 +1043,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetMediaInfo(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -907,7 +1055,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ReadMusicDir(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -917,7 +1067,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ReadPhotoDir(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -927,7 +1079,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ReadMovieDir(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -937,7 +1091,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_ReadMediaDir(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -953,7 +1109,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
             @Override
             public void OnStringCallback(String s) {
 
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -963,7 +1121,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_MediaDownloadStart(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -973,7 +1133,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_MediaDownloadStop(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -983,7 +1145,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_MediaDownloadGetProgress(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -993,7 +1157,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_USBMakeDirectory(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1003,7 +1169,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_USBCopy(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1013,7 +1181,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_USBRemove(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1023,7 +1193,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_USBRename(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1033,7 +1205,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetMobileWifiInfoInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1043,7 +1217,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_STBWlanAP(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1053,7 +1229,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_SetPvrBookList(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1063,7 +1241,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_GetPvrBookListInJson(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1073,7 +1253,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_AddPvrBooKList(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1083,7 +1265,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_DeletePvrBook(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1093,7 +1277,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_STBSetPushAVStreamWithEnable(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
@@ -1108,8 +1294,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_switchCodeStream(bool, new Api.OnSuccessCallbackBlock() {
             @Override
             public void OnSuccessCallback(Boolean aBoolean, String s) {
-                if (aBoolean) callback.invoke(s);
-                else callback.invoke(aBoolean);
+                    WritableNativeArray array = new WritableNativeArray();
+                    array.pushString(s);
+                    callback.invoke(null, array);
             }
         });
     }
@@ -1119,7 +1306,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayVideo(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
-                callback.invoke(s);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
