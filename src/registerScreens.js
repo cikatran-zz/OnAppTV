@@ -49,7 +49,7 @@ export const ScreenStack = StackNavigator({
     }),
   },
   VideoControlModal: {
-    screen: Book
+    screen: VideoControlModal
   },
   Bookmark: {
     screen: Bookmark
