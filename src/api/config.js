@@ -135,15 +135,15 @@ query{
 `;
 
 const liveQuery = gql`
-query {
+query getLiveEPG($currentTime: Date){
   viewer{
     epgMany(filter: {
       _operators:{
         startTime: {
-          lte: "2018-03-15T07:10:00.000Z"
+          lte: $currentTime
         },
         endTime:{
-          gte: "2018-03-15T07:10:00.000Z"
+          gte: $currentTime
         }
       }
     }) {

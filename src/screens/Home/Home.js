@@ -27,7 +27,7 @@ export default class Home extends Component {
         this.props.getBanner();
         this.props.getChannel(-1);
         this.props.getAds();
-        this.props.getLive((new Date()).toISOString());
+        this.props.getLive(new Date());
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
@@ -128,10 +128,14 @@ export default class Home extends Component {
       }
       var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
+      var currentDate = (new Date()).getSeconds();
+      var startDate = (new Date(item.startTime)).getSeconds();
+      var endDate = (new Date(item.endTime)).getSeconds();
+      var progress = (currentDate-startDate)/(endDate - startDate) * 100;
 
         return (
           <View style={styles.liveThumbnailContainer}>
-              <VideoThumbnail showProgress={true} progress="80%" imageUrl={image}/>
+              <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
@@ -232,12 +236,24 @@ export default class Home extends Component {
         const {banner, channel, live, vod, ads, category, news} = this.props;
         if (!banner.data || banner.isFetching ||
           !channel.data || channel.isFetching ||
-                !ads.data || ads.isFetching ||
+                ads.isFetching ||
                 !vod.data || vod.isFetching ||
                 !category.data || category.isFetching ||
-                !news.data || news.isFetching ||
+                news.isFetching ||
                 !live.data || live.isFetching)
             return null;
+        var adsSection = {data:[], showHeader: false, renderItem: this._renderAds};
+        if (ads.data != null) {
+            adsSection.data = [ads.data]
+        }
+
+        var newsSection = {data:[], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter};
+        if (news.data != null) {
+            newsSection.data = [news.data];
+        }
+
+        var channelData = channel.data.filter(item => item.favorite == 1);
+
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
             <SectionList
@@ -251,12 +267,12 @@ export default class Home extends Component {
               bounces={false}
               sections={[
                   {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
-                  {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
-                  {data:[ads.data], showHeader: false, renderItem: this._renderAds},
-                  // {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                  {data:[channelData], showHeader: false, renderItem: this._renderChannelList},
+                  adsSection,
+                  //{data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                   {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                  {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
+                  newsSection
                 ]}
             />
           </View>

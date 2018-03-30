@@ -15,7 +15,7 @@ export default class ChannelModal extends React.Component {
             currentDescription: "",
             currentFavorite: "Favorite"
         };
-        this.animationY = new Animated.Value(-Dimensions.get("window").height*0.5);
+        this.animationY = new Animated.Value(-450);
         this.carousel = null;
     }
 
@@ -26,7 +26,7 @@ export default class ChannelModal extends React.Component {
             Animated.timing(
                 this.animationY,
                 {
-                    toValue: Dimensions.get("window").height * 0.4,
+                    toValue: Dimensions.get("window").height - 500,
                     duration: 500,
                     easing: Easing.linear
                 }
@@ -36,7 +36,7 @@ export default class ChannelModal extends React.Component {
             Animated.timing(
                 this.animationY,
                 {
-                    toValue: -Dimensions.get("window").height * 0.5,
+                    toValue: -450,
                     duration: 400,
                     easing: Easing.linear
                 }
@@ -87,7 +87,7 @@ export default class ChannelModal extends React.Component {
                     <BlurView style={styles.blurView}
                               blurRadius={getBlurRadius(50)}
                               overlayColor={1} />
-                    <Animated.View style={[...styles.animationView, {transform: [{translateY: this.animationY}]}]}>
+                    <Animated.View style={[styles.animationView, {transform: [{translateY: this.animationY}]}, ]}>
                         <TouchableOpacity style={styles.upArrow} onPress={this.toggleModal}>
                             <Image source={require('../../../assets/ic_up_arrow.png')} style={{width: '50%', height: '100%', resizeMode: 'center', alignSelf: 'center'}}/>
                         </TouchableOpacity>
@@ -100,6 +100,8 @@ export default class ChannelModal extends React.Component {
                             itemWidth={170}
                             layout={'default'}
                             layoutCardOffset={30}
+                            sliderHeight={170}
+                            style={{height: 170}}
                             onSnapToItem={(slideIndex)=> {this._onSnapItem(slideIndex)}}
                         />
                         <Text style={styles.serviceName}>{this.state.currentTitle}</Text>
@@ -133,11 +135,7 @@ const styles = StyleSheet.create({
         position: 'absolute'
     },
     animationView: {
-        width: '100%',
-        height: '50%',
-        left: 0,
-        justifyContent: 'center',
-        position: "absolute"
+
     },
     upArrow: {
         alignSelf: 'center',
@@ -165,7 +163,9 @@ const styles = StyleSheet.create({
         color: "#E3DFDF",
         alignSelf: 'center',
         fontSize: 16,
-        marginTop: 26
+        marginTop: 26,
+        marginHorizontal: 45,
+        textAlign: 'center'
     },
     controlView: {
         top: 30,
@@ -174,12 +174,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff30",
         marginLeft: 45,
         marginRight: 45,
-        paddingHorizontal: 25
+        paddingHorizontal: 25,
+        marginBottom: 30
     },
     controlItem: {
         color: "#ffffff",
         alignSelf: 'center',
-        fontSize: 16,
+        fontSize: 16
     },
     line: {
         backgroundColor: "#ffffff0D",
