@@ -1242,18 +1242,6 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
  */
 - (void)hIG_SetPvrPathWithJsonString:(NSString *)jsonString callback:(TypeNSStringCallbackBlock)callback;
 /**
- 设置PVR录制路径
- @param partition 分区
- @param callback 回调
- */
-- (void)hIG_SetPvrRecordPathWithPartition:(PartitonModel *)partition callback:(TypeIsSuccessCallbackBlock)callback;
-/**
- 设置PVR录制路径
- @param jsonString 分区以JSON字符串的方式
- @param callback 回调
- */
-- (void)hIG_SetPvrRecordPathWithJsonString:(NSString *)jsonString callback:(TypeNSStringCallbackBlock)callback;
-/**
  获取PVR录制路径
  @param callback 回调
  */
@@ -1359,7 +1347,7 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
 - (void)hIG_PlayPvrGetPositionInJson:(TypeNSStringCallbackBlock)callback;
 /**
  设置播放Pvr的速度
- @param speed 速度
+ @param speed 速度(-8000|-4000|-2000|-1000|1000|2000|4000|8000)
  @param callback 回调
  */
 - (void)hIG_PlayPvrSetSpeedWithSpeed:(int)speed callback:(TypeIsSuccessCallbackBlock)callback;
@@ -1789,6 +1777,8 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
  @param jsonString 版本号和路径以JSON字符串的方式
  */
 - (void)hIG_STBUpgradeSoftwareWithJsonString:(NSString *)jsonString;
+
+- (void)hIG_switchCodeStream:(BOOL)isSwitch callback:(TypeIsSuccessCallbackBlock)callback;
 //------------------------------------------------------------------------------------
 
 /**
@@ -1807,6 +1797,4 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
  @param callback 回调
  */
 - (void)hIG_PlayVideoWithJsonString:(NSString *)jsonString callback:(TypeNSStringCallbackBlock)callback;
-
-- (void)hIG_switchCodeStream:(BOOL)isSwitch callback:(TypeIsSuccessCallbackBlock)callback;
 @end

@@ -5,6 +5,9 @@ import {StackNavigator, TabNavigator} from 'react-navigation'
 import BottomTabbar from './components/BottomTabbar'
 import Zappers from "./screens/Zappers";
 import STBConnection from  './screens/STBConnection'
+import Bookmark from './screens/Bookmarks/Bookmark'
+import RecordList from './screens/Bookmarks/RecordList'
+import Book from './screens/Bookmarks/Book'
 
 const TabNav = TabNavigator({
   Home: {
@@ -19,9 +22,18 @@ const TabNav = TabNavigator({
             header: null
         }),
     },
+  Book: {
+    screen: Book,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  }
 }, {
   tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
   tabBarPosition: 'bottom',
+  swipeEnabled: false,
+  lazyload: true,
+  animationEnabled: false
 })
 
 export const ScreenStack = StackNavigator({
@@ -36,6 +48,15 @@ export const ScreenStack = StackNavigator({
   },
   VideoControlModal: {
     screen: VideoControlModal
+  },
+  Bookmark: {
+    screen: Bookmark
+  },
+  Book: {
+    screen: Book
+  },
+  RecordList: {
+    screen: RecordList
   }
 
 }, {

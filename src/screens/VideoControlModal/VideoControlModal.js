@@ -44,11 +44,21 @@ export default class VideoControlModal extends React.PureComponent {
   _renderPlaybackController = () => {
     return (<View style={styles.playbackContainer}>
       <View style={styles.topButtonsContainer}>
-        <CircleButton size={44} image={'record'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'favorite'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'share'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'rewind'} style={{marginRight: 12}}/>
-        <CircleButton size={44} image={'subtitle'} style={{marginRight: 12}}/>
+        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
+          <Image source={require('../../assets/ic_record.png')} style={{alignSelf: 'center'}}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
+          <Image source={require('../../assets/ic_heart_with_border.png')} style={{alignSelf: 'center'}}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
+          <Image source={require('../../assets/ic_share.png')} style={{alignSelf: 'center'}}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
+          <Image source={require('../../assets/ic_repeat.png')} style={{alignSelf: 'center'}}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
+          <Image source={require('../../assets/ic_caption.png')} style={{alignSelf: 'center'}}/>
+        </TouchableOpacity>
       </View>
       <View style={styles.mediaInfoContainer}>
         <Text style={styles.titleText}>At Frida Kahlo's</Text>
@@ -58,7 +68,9 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.rewindButton}>
           <Image source={require('../../assets/ic_rewind.png')}/>
         </TouchableOpacity>
-        <CircleButton size={70} image={'play'}/>
+        <TouchableOpacity style={{ width: 75, height: 75}}>
+          <Image source={require('../../assets/ic_play_with_border.png')} style={{alignSelf: 'center'}}/>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.fastForwardButton}>
           <Image source={require('../../assets/ic_fastforward.png')}/>
         </TouchableOpacity>
@@ -182,7 +194,8 @@ const styles = StyleSheet.create({
   bottomContainer: {
     height: '60%',
     width: '100%',
-    overflow:'hidden'
+    overflow:'hidden',
+    alignItems: 'center'
   },
   topVideoControl: {
     width: '100%',
@@ -215,7 +228,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: 44,
     height: 44,
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
@@ -226,22 +238,21 @@ const styles = StyleSheet.create({
   },
   playbackContainer: {
     position: 'absolute',
-    top: 43,
-    width: 272,
-    height: 260,
-    left: 51,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    paddingTop: 43,
   },
   topButtonsContainer: {
-    flex: 1,
     flexDirection: 'row',
-    width: '100%',
+    alignSelf: 'center',
   },
   mediaInfoContainer: {
-    flex: 1,
     flexDirection: 'column',
     width: '100%',
     alignItems: 'center',
-    marginTop: 27
+    marginTop: 20,
   },
   titleText: {
     color: colors.whitePrimary,
@@ -254,26 +265,22 @@ const styles = StyleSheet.create({
   },
   playbackButtons: {
     width: '100%',
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 34
+    marginTop: 28
   },
   rewindButton: {
     width: 33,
     height: 21,
-    opacity: 0.17,
     marginRight: 40
   },
   fastForwardButton: {
     marginLeft: 40,
     width: 33,
     height: 21,
-    opacity: 0.17
   },
   volumeSeekBarContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
