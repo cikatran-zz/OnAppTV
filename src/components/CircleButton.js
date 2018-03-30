@@ -6,11 +6,16 @@ class CircleButton extends React.PureComponent {
     super(props)
   }
 
+  _renderImage = (isPlay, image, height, width) => {
+    return !isPlay ? (<Image style={styles.mainImage} source={icons[image]}/>)
+      : (<Image source={icons[image]} style={[ styles.mainImage, {position: 'absolute', top: height * 0.3, left: width * 0.38,  width: width * 0.33, height: height * 0.33}]}/>)
+  }
+
   render() {
-    const {size} = this.props
+    const {size, image} = this.props
       return(
         <TouchableOpacity style={[styles.circleContainer, {height: size, width: size, borderRadius: size * 0.5}, this.props.style]}>
-            <Image style={[styles.mainImage, this.props.imageStyle]} source={icons[this.props.image]}/>
+          {this._renderImage(image === 'play', image, size, size)}
         </TouchableOpacity>
       )
   }

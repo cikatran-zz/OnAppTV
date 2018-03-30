@@ -6,6 +6,8 @@ export const colors = {
   textDarkGrey: '#8a8a8a',
   mainDarkGrey: '#767676F2',
   mainLightGrey:'#ededed',
+  greyDescriptionText: '#ACACAC',
+  textLittleBlack: '#383838',
   whitePrimary: '#ffffff',
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
@@ -18,7 +20,9 @@ export const colors = {
   greyParentalLock: '#dbdbdb',
   greyParentalControl: '#ACACAC',
   greyTextBelowParentControl: '#7E7E7E',
-  greyTextInputBorder: '#989898'
+  greyTextInputBorder: '#989898',
+  greyCloseIconBg: '#B9B9B9',
+  blackDeleteButton: '#393939'
 };
 
 export const textDarkDefault = {
