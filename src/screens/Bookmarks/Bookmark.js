@@ -4,10 +4,26 @@ import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
 import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
 import VideoThumbnail from '../../components/VideoThumbnail'
 import { colors } from '../../utils/themeConfig'
+import Modal from './DeleteBookmarModal'
 
 export default class Bookmark extends React.PureComponent {
   constructor(props) {
     super(props)
+    this.state = {
+      openModal: false,
+      data: {}
+    }
+  }
+
+  _toggleModal = (data) => {
+    const {openModal} = this.state
+
+    console.log('Toggle ' + data)
+
+    this.setState({
+      openModal: !openModal,
+      data: data
+    })
   }
 
   _keyExtractor = (item, index) => index
@@ -16,9 +32,9 @@ export default class Bookmark extends React.PureComponent {
     return (
       <View style={styles.bookmarkSection}>
         <View style={styles.bookmarkLabelContainer}>
-          <PinkRoundedLabel text="BOOKING" style={styles.bookingHeaderLabel}/>
+          <PinkRoundedLabel text="BOOKMARK" style={styles.bookingHeaderLabel}/>
           <View style={styles.textInputContainer}>
-            <TextInput placeholder={'Emissions'} style={styles.textInput} underlineColorAndroid='rgba(0,0,0,0)' inlineImageLeft='ic_search'/>
+            <TextInput placeholder={'Emissions'} style={styles.textInput} underlineColorAndroid='rgba(0,0,0,0)' inlineImageLeft='ic_search' inlineImagePadding={8}/>
             <Image source={require('../../assets/ic_close.png')} style={{position: 'absolute', right: 10, top: 0}}/>
           </View>
         </View>
@@ -36,7 +52,7 @@ export default class Bookmark extends React.PureComponent {
     return (
       <View>
         <HorizontalVideoThumbnail item={item}/>
-        <TouchableOpacity style={styles.deleteButton}>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => this._toggleModal(item)}>
           <Text style={styles.deleteTextStyle}>Delete</Text>
         </TouchableOpacity>
       </View>
@@ -77,6 +93,7 @@ export default class Bookmark extends React.PureComponent {
 
     return (
       <View style={styles.container}>
+        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'bookmark'} onClosePress={() => this._toggleModal({})} data={this.state.data}/>
         <SectionList
           style={styles.container}
           keyExtractor={this._keyExtractor}
@@ -170,7 +187,7 @@ const styles = StyleSheet.create({
   textInput: {
     width: '100%',
     height: '100%',
-    paddingLeft: 22,
+    paddingLeft: 10,
     paddingTop: 0,
     paddingBottom: 0
   },
