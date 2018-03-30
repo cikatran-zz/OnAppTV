@@ -59,7 +59,7 @@ export default class Home extends Component {
     _keyExtractor = (item, index) => index;
 
     _renderBanner = ({item}) => {
-        var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
@@ -80,9 +80,9 @@ export default class Home extends Component {
           <View style={styles.bannerPlayIconGroup}>
               <BlurView style={styles.bannerPlayIconBackground} blurRadius={getBlurRadius(30)} overlayColor={1}/>
               <Image
-                resizeMode={'center'}
+                resizeMode={'cover'}
                 style={styles.bannerPlayIcon}
-                source={require('../../assets/ic_play.png')}/>
+                source={require('../../assets/ic_play_with_border.png')}/>
           </View>
       </View>
     )}
@@ -113,11 +113,11 @@ export default class Home extends Component {
     )
 
   _renderOnLiveItem = ({item}) => {
-      var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+      let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
       if (item.videoData.originalImages.length > 0) {
           image = item.videoData.originalImages[0].url;
       }
-      var genres = '';
+      let genres = '';
       if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
           item.videoData.genresData.forEach((genre, index) => {
               if (genres.length != 0) {
@@ -127,7 +127,7 @@ export default class Home extends Component {
           })
       }
 
-      var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+      let timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
 
         return (
@@ -141,12 +141,12 @@ export default class Home extends Component {
   }
 
   _renderVODItem = ({item}) => {
-        var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
         if (item.originalImages != null && item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
 
-        var genres = '';
+        let genres = '';
         if (item.genresData != null && item.genresData.length > 0) {
             item.genresData.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -171,7 +171,7 @@ export default class Home extends Component {
   )
 
     _renderAds = ({item}) => {
-        var image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
         if (item.originalImages != null && item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
@@ -254,7 +254,7 @@ export default class Home extends Component {
                   {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
                   {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
                   {data:[ads.data], showHeader: false, renderItem: this._renderAds},
-                  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                  // {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                   {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
                   {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
@@ -327,11 +327,12 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     bannerPlayIcon: {
-        top: 22.5,
-        left: 26.5,
-         width: 25,
-         height: 25,
-        position: 'absolute'
+        top: 0,
+        left: 0,
+        position: 'absolute',
+      backgroundColor: 'transparent',
+      width: '100%',
+      height: '100%'
     },
     listHorizontal: {
         marginVertical: 30,
