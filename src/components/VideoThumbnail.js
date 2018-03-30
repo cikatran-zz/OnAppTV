@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  StyleSheet, ImageBackground, View, Text
+  StyleSheet, ImageBackground, View, Text, Image, TouchableOpacity
 } from 'react-native'
 import {colors, textWhiteDefault} from '../utils/themeConfig'
 
@@ -30,12 +30,14 @@ class VideoThumbnail extends React.PureComponent{
     }
   }
   render(){
-    var source = require('../assets/bg_category.png');
+    const {marginHorizontal} = this.props;
+
+    let source = require('../assets/bg_category.png');
     if (this.props.imageUrl != null) {
       source = {uri: this.props.imageUrl};
     }
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {marginHorizontal: marginHorizontal ? marginHorizontal * 0.5 : 0}]}>
         <ImageBackground imageStyle={{ borderRadius: 3 }} style={styles.imageContainer} source={source}>
           <View style={[styles.progressView, this._runProgressView()]}/>
           <Text style={styles.textCenter}>{this.props.textCenter}</Text>

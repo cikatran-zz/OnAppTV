@@ -9,7 +9,7 @@ class PinkRoundedButton extends React.PureComponent{
   }
   render(){
     return (
-      <Text style={styles.labelStyle} >
+      <Text style={[styles.labelStyle, this.props.style]}>
         {this.props.text}
       </Text>
 
