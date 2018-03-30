@@ -14,9 +14,15 @@ export const colors = {
   textMainBlack: '#404040',
   bannerSubtitleColor: '#ffffffab',
   tabTextInActive: '#ffffff7d',
+  greyOpacityBackground: 'rgba(83, 83, 83, 0.2)',
+  greySettingLabel: '#777777',
+  greySettingItemText: '#9A9A9A',
+  greyParentalLock: '#dbdbdb',
+  greyParentalControl: '#ACACAC',
+  greyTextBelowParentControl: '#7E7E7E',
+  greyTextInputBorder: '#989898',
   greyCloseIconBg: '#B9B9B9',
-  blackDeleteButton: '#393939',
-  greyOpacityBackground: 'rgba(83, 83, 83, 0.2)'
+  blackDeleteButton: '#393939'
 };
 
 export const textDarkDefault = {
