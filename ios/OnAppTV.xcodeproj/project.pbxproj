@@ -42,6 +42,14 @@
 		55CA32248C200F9C3DE047FB /* Pods_OnAppTVTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 059A53021B4082D460CEA8BB /* Pods_OnAppTVTests.framework */; };
 		5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D821A71BEE6F4A7BB51C69C6 /* Zocial.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		69025A912071E90600F66EBE /* RNUserKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69025A902071E90600F66EBE /* RNUserKit.m */; };
+		69025ABC2071EECE00F66EBE /* RNUserKitIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = 69025ABB2071EECE00F66EBE /* RNUserKitIdentity.m */; };
+		69025ABE2071F32600F66EBE /* AuthenticationModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025ABD2071F32600F66EBE /* AuthenticationModel+Extension.swift */; };
+		69025AC02071F44F00F66EBE /* UserKitIdentityProfile+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025ABF2071F44F00F66EBE /* UserKitIdentityProfile+Extension.swift */; };
+		69025AC32071F4C200F66EBE /* ImageUpload+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC22071F4C200F66EBE /* ImageUpload+Extension.swift */; };
+		69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC42072149200F66EBE /* UKIError+Extension.swift */; };
+		69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC72072287C00F66EBE /* OANotificationCenter.swift */; };
+		69025ACB2072303000F66EBE /* RNNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 69025ACA2072303000F66EBE /* RNNotificationCenter.m */; };
 		690EEFE5205791350099484A /* UserKitModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE4205791350099484A /* UserKitModule.swift */; };
 		690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE62057915E0099484A /* UserKitIdentityModule.swift */; };
 		690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFF62057B75F0099484A /* NotificationCenter.swift */; };
@@ -437,6 +445,17 @@
 		5E7DE88C26ADDFB7EEFB0F0D /* Pods-OnAppTVTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTVTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTVTests/Pods-OnAppTVTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		69025A8F2071E90600F66EBE /* RNUserKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNUserKit.h; sourceTree = "<group>"; };
+		69025A902071E90600F66EBE /* RNUserKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNUserKit.m; sourceTree = "<group>"; };
+		69025ABA2071EECE00F66EBE /* RNUserKitIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNUserKitIdentity.h; sourceTree = "<group>"; };
+		69025ABB2071EECE00F66EBE /* RNUserKitIdentity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNUserKitIdentity.m; sourceTree = "<group>"; };
+		69025ABD2071F32600F66EBE /* AuthenticationModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticationModel+Extension.swift"; sourceTree = "<group>"; };
+		69025ABF2071F44F00F66EBE /* UserKitIdentityProfile+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserKitIdentityProfile+Extension.swift"; sourceTree = "<group>"; };
+		69025AC22071F4C200F66EBE /* ImageUpload+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageUpload+Extension.swift"; sourceTree = "<group>"; };
+		69025AC42072149200F66EBE /* UKIError+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UKIError+Extension.swift"; sourceTree = "<group>"; };
+		69025AC72072287C00F66EBE /* OANotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OANotificationCenter.swift; sourceTree = "<group>"; };
+		69025AC92072303000F66EBE /* RNNotificationCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNNotificationCenter.h; sourceTree = "<group>"; };
+		69025ACA2072303000F66EBE /* RNNotificationCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNNotificationCenter.m; sourceTree = "<group>"; };
 		690EEFE4205791350099484A /* UserKitModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitModule.swift; sourceTree = "<group>"; };
 		690EEFE62057915E0099484A /* UserKitIdentityModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitIdentityModule.swift; sourceTree = "<group>"; };
 		690EEFF62057B75F0099484A /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
@@ -730,9 +749,31 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		69025AC12071F46C00F66EBE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				69025ABD2071F32600F66EBE /* AuthenticationModel+Extension.swift */,
+				69025ABF2071F44F00F66EBE /* UserKitIdentityProfile+Extension.swift */,
+				69025AC22071F4C200F66EBE /* ImageUpload+Extension.swift */,
+				69025AC42072149200F66EBE /* UKIError+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		69025AC62072284200F66EBE /* OANotificationCenter */ = {
+			isa = PBXGroup;
+			children = (
+				69025AC72072287C00F66EBE /* OANotificationCenter.swift */,
+				69025AC92072303000F66EBE /* RNNotificationCenter.h */,
+				69025ACA2072303000F66EBE /* RNNotificationCenter.m */,
+			);
+			path = OANotificationCenter;
+			sourceTree = "<group>";
+		};
 		690EEFE1205790F80099484A /* NativeModule */ = {
 			isa = PBXGroup;
 			children = (
+				69025AC62072284200F66EBE /* OANotificationCenter */,
 				690EEFE2205790F80099484A /* UserKit */,
 				690EEFE3205790F80099484A /* UserKitIdentity */,
 			);
@@ -743,6 +784,8 @@
 			isa = PBXGroup;
 			children = (
 				690EEFE4205791350099484A /* UserKitModule.swift */,
+				69025A8F2071E90600F66EBE /* RNUserKit.h */,
+				69025A902071E90600F66EBE /* RNUserKit.m */,
 			);
 			path = UserKit;
 			sourceTree = "<group>";
@@ -750,7 +793,10 @@
 		690EEFE3205790F80099484A /* UserKitIdentity */ = {
 			isa = PBXGroup;
 			children = (
+				69025AC12071F46C00F66EBE /* Extensions */,
 				690EEFE62057915E0099484A /* UserKitIdentityModule.swift */,
+				69025ABA2071EECE00F66EBE /* RNUserKitIdentity.h */,
+				69025ABB2071EECE00F66EBE /* RNUserKitIdentity.m */,
 			);
 			path = UserKitIdentity;
 			sourceTree = "<group>";
@@ -1696,22 +1742,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69025A912071E90600F66EBE /* RNUserKit.m in Sources */,
 				6969BE7B204C32CD00470C97 /* BrightcovePlayer.swift in Sources */,
+				69025AC32071F4C200F66EBE /* ImageUpload+Extension.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				69025ABC2071EECE00F66EBE /* RNUserKitIdentity.m in Sources */,
 				6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */,
 				690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */,
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
 				69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */,
+				69025ACB2072303000F66EBE /* RNNotificationCenter.m in Sources */,
 				69A16FD02068DABE00E215B8 /* STBManager.m in Sources */,
 				690EEFE5205791350099484A /* UserKitModule.swift in Sources */,
 				690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */,
+				69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */,
 				6969BE77204C2A8000470C97 /* SliderMPVolumeView.swift in Sources */,
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */,
 				69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */,
+				69025ABE2071F32600F66EBE /* AuthenticationModel+Extension.swift in Sources */,
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,
+				69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */,
 				69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */,
+				69025AC02071F44F00F66EBE /* UserKitIdentityProfile+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

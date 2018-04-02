@@ -11,8 +11,32 @@ import UserKit
 
 @objc(UserKitModule)
 class UserKitModule: NSObject {
-    @objc class func initialize(token: String) {
+    
+    public static let sharedInstance = UserKitModule()
+    private var module: UserKitInstance! = nil
+    
+    private override init() {
+        super.init()
+    }
+    
+    @objc public func initialize(token: String) {
         UserKit.initialize(token: token)
-        UserKit.mainInstance().deviceType = DeviceType.Phone.rawValue
+        module = UserKit.mainInstance()
+    }
+    
+    @objc public func setDeviceType(type: String) {
+        module.deviceType = type
+    }
+    
+    @objc public func time(event: String) {
+        module.time(event: event)
+    }
+    
+    @objc public func track(event: String, properties: [String: Any]) {
+        module.track(event: event, properties: properties)
+    }
+    
+    @objc public func addDeviceToken(_ token: Data) {
+        module.deviceToken = token
     }
 }
