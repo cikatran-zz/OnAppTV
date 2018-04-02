@@ -18,22 +18,18 @@ export default class STBConnection extends Component {
     };
 
     componentWillMount() {
-        Orientation.lockToPortrait();
+        //Orientation.lockToPortrait();
     }
 
     _onFinished = (event) => {
-        console.log("Test finish");
+      const { navigate } = this.props.navigation;
+        navigate('Home', {})
     }
 
     render() {
-        const { navigate } = this.props.navigation;
         return (
 
-            <STBConnectionView style={{width: '100%', height: '100%', left: 0, top: 0}} onFinished={(event) =>
-                navigate('Home', {})
-            }>
-
-            </STBConnectionView>
+            <STBConnectionView style={{width: '100%', height: '100%', left: 0, top: 0}} onFinished={this._onFinished} />
         );
     }
 }

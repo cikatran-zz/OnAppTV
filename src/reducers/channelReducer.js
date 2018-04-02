@@ -7,7 +7,7 @@ const initialState = {
     error: false,
 };
 
-export default function bannerReducer(state = initialState, action) {
+export default function channelReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.FETCHING_CHANNEL:
             return {

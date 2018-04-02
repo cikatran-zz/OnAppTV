@@ -15,14 +15,14 @@ export default function categoryReducer(state = initialState, action) {
                 data: null,
                 isFetching: true
             };
-        case actionTypes.FETCHING_CATEGORY_SUCCESS:
+        case actionTypes.FETCH_CATEGORY_SUCCESS:
             return {
                 ...state,
                 isFetching: false,
                 fetched: true,
                 data: action.data
             };
-        case actionTypes.FETCHING_CATEGORY_FAILURE:
+        case actionTypes.FETCH_CATEGORY_FAILURE:
             return {
                 ...state,
                 isFetching: false,

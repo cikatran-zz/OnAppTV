@@ -9,7 +9,7 @@ class PinkRoundedButton extends React.PureComponent{
   }
   render(){
     return (
-      <Text style={styles.labelStyle}>
+      <Text style={[styles.labelStyle, this.props.style]}>
         {this.props.text}
       </Text>
 
@@ -19,11 +19,14 @@ class PinkRoundedButton extends React.PureComponent{
 const styles = StyleSheet.create({
   labelStyle: {
     borderRadius: (Platform.OS === 'ios') ? 15 : 30,
-    padding: 8,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 14,
+    paddingRight: 14,
     backgroundColor: colors.mainPink,
-    fontSize: 13,
+    fontSize: 10,
     color: colors.textWhitePrimary,
-      overflow: "hidden"
+      overflow: "hidden",
   },
 });
 

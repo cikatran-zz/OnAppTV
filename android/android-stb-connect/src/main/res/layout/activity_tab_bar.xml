@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/edittext"
+        android:hint="link"
+        android:layout_width="100dp"
+        android:layout_height="50dp" />
+    <TextView
+        android:id="@+id/urlmedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="URLMedia"
+        tools:layout_editor_absoluteX="151dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/zap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="zap"
+        tools:layout_editor_absoluteX="317dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/recordstart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RecordStart"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="79dp" />
+
+    <TextView
+        android:id="@+id/recordstop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RecordStop"
+        tools:layout_editor_absoluteX="155dp"
+        tools:layout_editor_absoluteY="79dp" />
+
+    <TextView
+        android:id="@+id/booklist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BookList"
+        tools:layout_editor_absoluteX="299dp"
+        tools:layout_editor_absoluteY="79dp" />
+
+    <TextView
+        android:id="@+id/getstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GetStatus"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="135dp" />
+
+    <TextView
+        android:id="@+id/switchcodestream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="switchCodeStream"
+        tools:layout_editor_absoluteX="133dp"
+        tools:layout_editor_absoluteY="135dp" />
+
+    <TextView
+        android:id="@+id/standby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Standby"
+        tools:layout_editor_absoluteX="317dp"
+        tools:layout_editor_absoluteY="135dp" />
+</android.support.constraint.ConstraintLayout>

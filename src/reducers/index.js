@@ -6,6 +6,9 @@ import categoryReducer from './categoryReducer'
 import liveReducer from './liveReducer'
 import vodReducer from './vodReducer'
 import videoModalReducer from './videoModalReducer'
+import adsReducer from "./adsReducer";
+import newsReducer from "./newsReducer";
+import epgsReducer from './epgsReducer'
 
 export default combineReducers({
     nav,
@@ -14,5 +17,8 @@ export default combineReducers({
     categoryReducer,
     liveReducer,
     vodReducer,
-    videoModalReducer
+    videoModalReducer,
+    adsReducer,
+    newsReducer,
+    epgsReducer
 });
