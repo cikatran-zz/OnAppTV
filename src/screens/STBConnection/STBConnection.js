@@ -23,7 +23,6 @@ export default class STBConnection extends Component {
 
     _onFinished = (event) => {
       const { navigate } = this.props.navigation;
-      console.log("Test finish " + event);
         navigate('Home', {})
     }
 

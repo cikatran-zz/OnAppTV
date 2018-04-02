@@ -10,7 +10,7 @@ export function getChannel(limit) {
 export function getChannelSuccess(data) {
     return {
         type: actionTypes.FETCH_CHANNEL_SUCCESS,
-        data: data.viewer.channelMany
+        data: data
     }
 }
 

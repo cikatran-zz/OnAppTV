@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
 import Orientation from 'react-native-orientation';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import ZapperCell from '../../components/ZapperCell'
@@ -27,9 +27,13 @@ export default class Zappers extends Component {
                 'e',
                 'f',
             ],
-            showAllChannels: true
+            showAllChannels: true,
+            favoriteChannels: [],
+            allChannels: []
         };
         this.channelModal = null;
+        this.stbManager = NativeModules.STBManager;
+        this.isFetch = false;
     };
 
     componentWillMount() {
@@ -42,19 +46,41 @@ export default class Zappers extends Component {
 
     _imageUri(item) {
         var image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
-        if (item.originalImages != undefined && item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
+        if (item.image != undefined) {
+            image = item.image;
         }
         return image;
     }
 
     _showChannelModal = (item) => {
-        console.log("Show channel modal");
+        var index = 0;
+        for (var i = 0; i < this.state.channelData.length; i++) {
+            if (this.state.channelData[i].serviceID == item.serviceID) {
+                index = i;
+                break;
+            }
+        }
+        this.channelModal.state.currentIndex = index;
+        this.channelModal.state.currentTitle = this.state.channelData[index].serviceName;
+        this.channelModal.state.currentDescription = this.state.channelData[index].shortDescription;
+        this.channelModal.state.currentFavorite = (this.state.channelData[index].favorite == 0) ? "Favorite" : "Unfavorite";
         this.channelModal.toggleModal();
-    }
+    };
 
-    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item)}
-                                               style={styles.item}>
+    _zapChannel = (lcn) => {
+        console.log("Zap", lcn);
+        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(JSON.parse(events[0]))
+            }
+        } )
+    };
+
+    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
+                                               style={styles.item}
+                                               onPress={()=>this._zapChannel(item.item.lCN)}>
                                     <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
                             </TouchableOpacity>);
     _renderListFooter = () => (
@@ -71,26 +97,77 @@ export default class Zappers extends Component {
         );
     };
 
-    _onSwitchPress = () => {
+    _favoriteItem = (serviceId, isFavorite) => {
+        var index = 0;
+        for (var i = 0; i < this.state.allChannels.length; i++) {
+            if (this.state.allChannels[i].serviceID == serviceId) {
+                index = i;
+                break;
+            }
+        }
+        this.state.allChannels[index].favorite = isFavorite ? 1 : 0;
 
-        this.setState({showAllChannels: !this.state.showAllChannels});
-        // TODO: Change datasource
+        NativeModules.STBManager.setServiceListWithJsonString(JSON.stringify(this.state.allChannels[index]), (error, events)=>{});
 
+        for (var i = 0; i < this.state.channelData.length; i++) {
+            if (this.state.channelData[i].serviceID == serviceId) {
+                index = i;
+                break;
+            }
+        }
+        this.state.channelData[i].favorite = isFavorite ? 1 : 0;
+        this._filterFavoriteChannel();
+
+
+        var newData = this.state.allChannels;
+        if (!this.state.showAllChannels) {
+            newData = this.state.favoriteChannels;
+            this.channelModal.setState({currentFavorite: "Unfavorite"});
+            if (newData.length == 1) {
+                this.channelModal.setState({currentIndex: 0});
+            }
+        } else {
+            this.channelModal.setState({currentFavorite: this.channelModal.state.currentFavorite == "Favorite" ? "Unfavorite" : "Favorite"});
+        }
+
+        if (newData == null || newData.length == 0) {
+            this.channelModal.setState({isShow: false});
+        }
+
+        this.setState({channelData: newData});
     };
 
-    render(){
-        const { channel } = this.props;
-        if (!channel.data || channel.isFetching) {
-            return null;
+    _onSwitchPress = () => {
+        var newData = this.state.allChannels;
+        if (this.state.showAllChannels) {
+            newData = this.state.favoriteChannels;
         }
-        this.state.channelData = channel.data;
+        this.setState({showAllChannels: !this.state.showAllChannels, channelData: newData});
+        // TODO: Change datasource
+    };
+
+    _filterFavoriteChannel = () => {
+        this.state.favoriteChannels = this.state.allChannels.filter(channel => channel.favorite == 1);
+    };
+
+    render() {
+        if (this.isFetch == false) {
+            const {channel} = this.props;
+            if (!channel.data || channel.isFetching) {
+                return null;
+            }
+            this.state.channelData = channel.data;
+            this.state.allChannels = channel.data;
+            this._filterFavoriteChannel();
+            this.isFetch = true;
+        }
         return (
             <View style={styles.root}>
                 <StatusBar
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content' />
-                <ChannelModal ref={(modal) => this.channelModal = modal}/>
+                <ChannelModal ref={(modal) => this.channelModal = modal} channels={this.state.channelData} onFavoriteItem={this._favoriteItem}/>
                 <ImageBackground style={styles.image}
                                  source={require('../../assets/conn_bg.png')}
                                  blurRadius={30}>
@@ -116,27 +193,7 @@ export default class Zappers extends Component {
 }
 
 calculateItemSize = (contentWidth, maxItemSize, minimumItem) => {
-
-
-    var _contentWidth = contentWidth;
-    var _maxItemSize = maxItemSize;
-    var _minimumItem = minimumItem;
-
-    // Increase number of item
-    while (true) {
-        if ((_contentWidth - _maxItemSize * _minimumItem) / _minimumItem > 20) {
-            _minimumItem++;
-            continue;
-        }
-        if (_contentWidth - _maxItemSize * _minimumItem < 5) {
-            _maxItemSize -= 5;
-            continue;
-        }
-        break;
-    }
-    let _width = _maxItemSize;
-    let _margin = (_contentWidth - _maxItemSize * _minimumItem) / (2*_minimumItem);
-    return {width: _width, margin: _margin}
+    return {width: (contentWidth-60)/3, margin: 10}
 
 };
 
@@ -169,8 +226,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     grid: {
-        paddingLeft: 40,
-        paddingRight: 40,
+        paddingLeft: 30,
+        paddingRight: 30,
         width: '100%'
     },
 
@@ -181,6 +238,6 @@ const styles = StyleSheet.create({
     },
     item: {
         aspectRatio: 1,
-        ...calculateItemSize(Dimensions.get("window").width - 90, 90, 3)
+        ...calculateItemSize(Dimensions.get("window").width - 60, 90, 0)
     },
 });

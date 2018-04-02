@@ -25,9 +25,9 @@ export default class Home extends Component {
 
     componentDidMount() {
         this.props.getBanner();
-        this.props.getChannel(6);
+        this.props.getChannel(-1);
         this.props.getAds();
-        this.props.getLive((new Date()).toISOString());
+        this.props.getLive(new Date());
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
@@ -35,8 +35,8 @@ export default class Home extends Component {
 
     _renderChannelListItem = ({item}) => {
         var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
-        if (item.originalImages.length > 0) {
-            imageUrl = item.originalImages[0].url;
+        if (item.image != null) {
+            imageUrl = item.image;
         }
       return (
         <View style={styles.itemContainer}>
@@ -48,7 +48,7 @@ export default class Home extends Component {
             </View>
             <Text
               numberOfLines={1}
-              style={styles.itemLabel}>{item.title.toUpperCase()}</Text>
+              style={styles.itemLabel}>{item.serviceName == null ? "" : item.serviceName.toString().toUpperCase()}</Text>
         </View>
     )}
 
@@ -126,13 +126,16 @@ export default class Home extends Component {
               genres = genres.concat(genre.name.toString());
           })
       }
+      var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
-      let timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
-
-
+      var currentDate = (new Date()).getTime();
+      var startDate = (new Date(item.startTime)).getTime();
+      var endDate = (new Date(item.endTime)).getTime();
+      var progress = (currentDate-startDate)/(endDate - startDate) * 100;
+      console.log(progress);
         return (
           <View style={styles.liveThumbnailContainer}>
-              <VideoThumbnail showProgress={true} progress="80%" imageUrl={image}/>
+              <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
@@ -157,7 +160,7 @@ export default class Home extends Component {
         }
         return (
             <View style={styles.liveThumbnailContainer}>
-              <VideoThumbnail showProgress={false} imageUrl={image}/>
+              <VideoThumbnail showProgress={false} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
@@ -166,7 +169,7 @@ export default class Home extends Component {
 
   _renderCategoryItem = ({item}) => (
     <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={false} textCenter={item.name} />
+      <VideoThumbnail showProgress={false} textCenter={item.name} marginHorizontal={10}/>
     </View>
   )
 
@@ -233,12 +236,24 @@ export default class Home extends Component {
         const {banner, channel, live, vod, ads, category, news} = this.props;
         if (!banner.data || banner.isFetching ||
           !channel.data || channel.isFetching ||
-                !ads.data || ads.isFetching ||
+                ads.isFetching ||
                 !vod.data || vod.isFetching ||
                 !category.data || category.isFetching ||
-                !news.data || news.isFetching ||
+                news.isFetching ||
                 !live.data || live.isFetching)
             return null;
+        var adsSection = {data:[], showHeader: false, renderItem: this._renderAds};
+        if (ads.data != null) {
+            adsSection.data = [ads.data]
+        }
+
+        var newsSection = {data:[], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter};
+        if (news.data != null) {
+            newsSection.data = [news.data];
+        }
+
+        var channelData = channel.data.filter(item => item.favorite == 1);
+
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
             <SectionList
@@ -252,12 +267,12 @@ export default class Home extends Component {
               bounces={false}
               sections={[
                   {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
-                  {data:[channel.data], showHeader: false, renderItem: this._renderChannelList},
-                  {data:[ads.data], showHeader: false, renderItem: this._renderAds},
-                  // {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                  {data:[channelData], showHeader: false, renderItem: this._renderChannelList},
+                  adsSection,
+                  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
                   {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                  {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
+                  newsSection
                 ]}
             />
           </View>
@@ -306,7 +321,10 @@ const styles = StyleSheet.create({
     bannerSubtitle: {
         marginTop: 5,
         fontSize: 12,
-        color: colors.bannerSubtitleColor
+        color: colors.bannerSubtitleColor,
+        width: '90%',
+        flexWrap: "wrap",
+        textAlign: 'right'
     },
     slotMachineImage: {
         width: '100%',

@@ -2,26 +2,29 @@ import gql from "graphql-tag";
 
 
 const channelQuery = gql`
-query queryChannel($limit: Int){
+query queryChannel($serviceIDs: [Float]!){
   viewer{
-    channelMany(limit: $limit) {
+    channelMany(filter:{
+      _operators: {
+        serviceId: {
+          in: $serviceIDs
+        }
+      }
+    }) {
       serviceId
       lcn
+      title
+      longDescription
+      shortDescription
+      createdAt
+      updatedAt
       originalImages {
         height
         width
         url
         name
         fileName
-        scaledImage {
-          height
-          width
-          url
-        }
       }
-      title
-      longDescription
-      shortDescription
     }
   }
 }`;
@@ -132,15 +135,15 @@ query{
 `;
 
 const liveQuery = gql`
-query {
+query getLiveEPG($currentTime: Date){
   viewer{
     epgMany(filter: {
       _operators:{
         startTime: {
-          lte: "2018-03-15T07:10:00.000Z"
+          lte: $currentTime
         },
         endTime:{
-          gte: "2018-03-15T07:10:00.000Z"
+          gte: $currentTime
         }
       }
     }) {
@@ -166,7 +169,7 @@ query {
 const epgQuery = gql`
 query {
   viewer{
-      channelById(_id : "5aa9e1788248e3381bc82356") {
+      channelById(_id : "5abe09087928db4dde77cfe6") {
         title
         longDescription
         shortDescription

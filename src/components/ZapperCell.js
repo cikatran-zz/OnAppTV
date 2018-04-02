@@ -19,7 +19,7 @@ class ZapperCell extends React.Component{
 const styles = StyleSheet.create({
     icon: {
         overflow: "hidden",
-        borderRadius: (Platform.OS === 'ios') ? 22 : 44,
+        borderRadius: 22,
         resizeMode: 'stretch',
         width: '100%',
         height: '100%',

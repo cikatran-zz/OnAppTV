@@ -4,6 +4,7 @@ import VideoControlModal from './screens/VideoControlModal'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import BottomTabbar from './components/BottomTabbar'
 import Zappers from "./screens/Zappers";
+import Settings from "./screens/Settings";
 import STBConnection from  './screens/STBConnection'
 import Bookmark from './screens/Bookmarks/Bookmark'
 import RecordList from './screens/Bookmarks/RecordList'
@@ -27,7 +28,13 @@ const TabNav = TabNavigator({
     navigationOptions: ({navigation}) => ({
       header: null
     })
-  }
+  },
+    Setting: {
+        screen: Settings,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        })
+    }
 }, {
   tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
   tabBarPosition: 'bottom',
