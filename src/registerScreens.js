@@ -7,6 +7,13 @@ import Zappers from "./screens/Zappers";
 import Settings from "./screens/Settings";
 import STBConnection from  './screens/STBConnection'
 import Book from './screens/Bookmarks/Book'
+import AudioLanguage from './screens/Settings/AudioLanguage'
+import Messages from './screens/Settings/Messages'
+import MySubscription from './screens/Settings/MySubscription'
+import ParentalControlLock from './screens/Settings/ParentalControlLock'
+import ParentalControl from './screens/Settings/ParentalControl'
+import PersonalInformation from './screens/Settings/PersionalInformations'
+import SignIn from './screens/Settings/SignIn'
 
 const TabNav = TabNavigator({
   Home: {
@@ -42,9 +49,6 @@ const TabNav = TabNavigator({
 
 export const ScreenStack = StackNavigator({
   Root: {
-    screen: STBConnection
-  },
-  Home: {
     screen: TabNav,
     navigationOptions: ({navigation}) => ({
       header: null
@@ -52,6 +56,27 @@ export const ScreenStack = StackNavigator({
   },
   VideoControlModal: {
     screen: VideoControlModal
+  },
+  AudioLanguage: {
+    screen: AudioLanguage
+  },
+  Messages: {
+    screen: Messages
+  },
+  MySubscription: {
+    screen: MySubscription
+  },
+  ParentalControlLock: {
+    screen: ParentalControlLock
+  },
+  ParentalControl: {
+    screen: ParentalControl
+  },
+  PersonalInformation: {
+    screen: PersonalInformation
+  },
+  SignIn: {
+    screen: SignIn
   }
 
 }, {
