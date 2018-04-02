@@ -169,7 +169,7 @@ query getLiveEPG($currentTime: Date){
 const epgQuery = gql`
 query {
   viewer{
-      channelById(_id : "5aa9e1788248e3381bc82356") {
+      channelById(_id : "5abe09087928db4dde77cfe6") {
         title
         longDescription
         shortDescription
