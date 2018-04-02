@@ -49,6 +49,9 @@ const TabNav = TabNavigator({
 
 export const ScreenStack = StackNavigator({
   Root: {
+    screen: STBConnection
+  },
+  Home: {
     screen: TabNav,
     navigationOptions: ({navigation}) => ({
       header: null
