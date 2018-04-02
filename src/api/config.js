@@ -167,9 +167,9 @@ query getLiveEPG($currentTime: Date){
 `;
 
 const epgQuery = gql`
-query {
+query getEPGByChannel($channelId: MongoID!){
   viewer{
-      channelById(_id : "5abe09087928db4dde77cfe6") {
+      channelById(_id : $channelId) {
         title
         longDescription
         shortDescription
