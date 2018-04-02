@@ -72,11 +72,11 @@ const styles = StyleSheet.create({
 
 const fakeData = [{
   title: 'English',
-  value: false
+  value: true
 },
   {
     title: 'French',
-    value: true
+    value: false
   },
   {
     title: 'Spanish',

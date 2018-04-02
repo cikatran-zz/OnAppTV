@@ -102,8 +102,8 @@ export default class MySubscription extends React.PureComponent {
 
   _renderValidate = () => {
     return (
-      <TouchableOpacity style={styles.validateButton}>
-        <PinkRoundedLabel text={'Validate'}/>
+      <TouchableOpacity>
+        <PinkRoundedLabel text={'Validate'} style={styles.validateButton}/>
       </TouchableOpacity>
     )
   }
@@ -218,9 +218,10 @@ const styles = StyleSheet.create({
   },
   validateButton: {
     width: 232,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
+    textAlign: 'center',
+    alignSelf: 'center',
+    fontSize: 17,
+    marginBottom: 68
   },
   headerSection: {
     width: '100%',

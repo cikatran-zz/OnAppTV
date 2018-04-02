@@ -56,15 +56,27 @@ const fakeData = {
   title: "ON TV",
   list: [
     {
-      name: "Test",
-      value: "Value"
+      name: "First Name",
+      value: "Jean"
     },
     {
-      name: "Test",
-      value: "Value"
+      name: "Last Name",
+      value: "Camus"
     },
     {
-      name: "Test",
-      value: "Value"
+      name: "Date of Birth",
+      value: "05/10/1985"
+    },
+    {
+      name: 'Account Number',
+      value: '06X223YT-2017'
+    },
+    {
+      name: 'Billing Address 1',
+      value: '35 Avenue Rap'
+    },
+    {
+      name: 'Billing Address 2',
+      value: '75007 Paris'
     }]
 }
