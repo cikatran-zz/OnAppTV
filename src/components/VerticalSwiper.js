@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { BackHandler, StyleSheet, Animated, View, PanResponder, Dimensions } from 'react-native';
 
 const screenHeight = Dimensions.get("window").height;
@@ -30,7 +30,7 @@ type State = {
   isOpen: boolean,
   position: Object,
 }
-export default class VerticalSwipe extends React.Component<DefaultProps, Props, State> {
+export default class VerticalSwipe extends PureComponent<DefaultProps, Props, State> {
   _panResponder = null;
   _movable = null;
 

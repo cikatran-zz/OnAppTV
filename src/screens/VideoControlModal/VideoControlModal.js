@@ -158,7 +158,7 @@ export default class VideoControlModal extends React.PureComponent {
                   showsVerticalScrollIndicator={false}
                   bounces={false}
                   sections={[
-                    {data:["Video Detail"], showHeader: false, renderItem: this._renderLowerPage},
+                    {data:["Video Detail"], showHeader: false, renderItem: this._renderUpperPage},
                   ]}
                 />
             )}>
