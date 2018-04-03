@@ -13,11 +13,11 @@
  */
 typedef NS_ENUM(NSInteger, HIG_LNBType)
 {
-//    LNB Type类型为C
+    //    LNB Type类型为C
     HIG_LNBTYPE_C    ,
-//    LNB Type类型为KU
+    //    LNB Type类型为KU
     HIG_LNBTYPE_KU   ,
-//    LNB Type类型为2LOF
+    //    LNB Type类型为2LOF
     HIG_LNBTYPE_2LOF ,
 };
 /**
@@ -25,17 +25,17 @@ typedef NS_ENUM(NSInteger, HIG_LNBType)
  */
 typedef NS_ENUM(NSInteger, HIG_LNBPower)
 {
-//    LNB Power为OFF
+    //    LNB Power为OFF
     HIG_LNBPOWER_OFF ,
-//    LNB Power为13V
+    //    LNB Power为13V
     HIG_LNBPOWER_13V ,
-//    LNB Power为18V
+    //    LNB Power为18V
     HIG_LNBPOWER_18V ,
-//    LNB Power为14V
+    //    LNB Power为14V
     HIG_LNBPOWER_14V ,
-//    LNB Power为19V
+    //    LNB Power为19V
     HIG_LNBPOWER_19V ,
-//    LNB Power为Auto
+    //    LNB Power为Auto
     HIG_LNBPOWER_AUTO
 };
 /**
@@ -43,17 +43,17 @@ typedef NS_ENUM(NSInteger, HIG_LNBPower)
  */
 typedef NS_ENUM(NSInteger, HIG_DiSEqCLevel)
 {
-//    DiSEqC为OFF
+    //    DiSEqC为OFF
     HIG_LDISEQCLevel_OFF ,
-//    DiSEqC为1.0
+    //    DiSEqC为1.0
     HIG_LDISEQCLevel_DISEQC10 ,
-//    DiSEqC为1.1
+    //    DiSEqC为1.1
     HIG_LDISEQCLevel_DISEQC11 ,
-//    DiSEqC为1.2
+    //    DiSEqC为1.2
     HIG_LDISEQCLevel_DISEQC12 ,
-//    DiSEqC为USALS
+    //    DiSEqC为USALS
     HIG_LDISEQCLevel_USALS ,
-//    DiSEqC为MULTI
+    //    DiSEqC为MULTI
     HIG_LDISEQCLevel_MULTI
 };
 /**
@@ -61,15 +61,15 @@ typedef NS_ENUM(NSInteger, HIG_DiSEqCLevel)
  */
 typedef NS_ENUM(NSInteger, HIG_DiSEqC10)
 {
-//    DiSEqC1.0端口为OFF
+    //    DiSEqC1.0端口为OFF
     HIG_DISEQC10_OFF ,
-//    DiSEqC1.0端口为1
+    //    DiSEqC1.0端口为1
     HIG_DISEQC10_PORT1 ,
-//    DiSEqC1.0端口为2
+    //    DiSEqC1.0端口为2
     HIG_DISEQC10_PORT2 ,
-//    DiSEqC1.0端口为3
+    //    DiSEqC1.0端口为3
     HIG_DISEQC10_PORT3 ,
-//    DiSEqC1.0端口为4
+    //    DiSEqC1.0端口为4
     HIG_DISEQC10_PORT4
 };
 /**
@@ -77,39 +77,39 @@ typedef NS_ENUM(NSInteger, HIG_DiSEqC10)
  */
 typedef NS_ENUM(NSInteger, HIG_DiSEqC11)
 {
-//    DiSEqC1.1端口为OFF
+    //    DiSEqC1.1端口为OFF
     HIG_DISEQC11_OFF  ,
-//    DiSEqC1.1端口为1
+    //    DiSEqC1.1端口为1
     HIG_DISEQC11_PORT1 ,
-//    DiSEqC1.1端口为2
+    //    DiSEqC1.1端口为2
     HIG_DISEQC11_PORT2 ,
-//    DiSEqC1.1端口为3
+    //    DiSEqC1.1端口为3
     HIG_DISEQC11_PORT3 ,
-//    DiSEqC1.1端口为4
+    //    DiSEqC1.1端口为4
     HIG_DISEQC11_PORT4 ,
-//    DiSEqC1.1端口为5
+    //    DiSEqC1.1端口为5
     HIG_DISEQC11_PORT5 ,
-//    DiSEqC1.1端口为6
+    //    DiSEqC1.1端口为6
     HIG_DISEQC11_PORT6 ,
-//    DiSEqC1.1端口为7
+    //    DiSEqC1.1端口为7
     HIG_DISEQC11_PORT7 ,
-//    DiSEqC1.1端口为8
+    //    DiSEqC1.1端口为8
     HIG_DISEQC11_PORT8 ,
-//    DiSEqC1.1端口为9
+    //    DiSEqC1.1端口为9
     HIG_DISEQC11_PORT9 ,
-//    DiSEqC1.1端口为10
+    //    DiSEqC1.1端口为10
     HIG_DISEQC11_PORT10,
-//    DiSEqC1.1端口为11
+    //    DiSEqC1.1端口为11
     HIG_DISEQC11_LPORT11,
-//    DiSEqC1.1端口为12
+    //    DiSEqC1.1端口为12
     HIG_DISEQC11_PORT12,
-//    DiSEqC1.1端口为13
+    //    DiSEqC1.1端口为13
     HIG_DISEQC11_PORT13,
-//    DiSEqC1.1端口为14
+    //    DiSEqC1.1端口为14
     HIG_DISEQC11_PORT14,
-//    DiSEqC1.1端口为15
+    //    DiSEqC1.1端口为15
     HIG_DISEQC11_PORT15,
-//    DiSEqC1.1端口为16
+    //    DiSEqC1.1端口为16
     HIG_DISEQC11_PORT16,
 };
 /**
@@ -117,7 +117,7 @@ typedef NS_ENUM(NSInteger, HIG_DiSEqC11)
  */
 typedef NS_ENUM(NSInteger, HIG_DiSEqC12)
 {
-//    DiSEqC1.2端口为Default
+    //    DiSEqC1.2端口为Default
     HIG_DISEQC12_DEFAULT
 };
 /**
@@ -125,7 +125,7 @@ typedef NS_ENUM(NSInteger, HIG_DiSEqC12)
  */
 typedef NS_ENUM(NSInteger, HIG_USALS)
 {
-//    USALS端口为Default
+    //    USALS端口为Default
     HIG_USALS_DEFAULT
 };
 /**
@@ -133,11 +133,11 @@ typedef NS_ENUM(NSInteger, HIG_USALS)
  */
 typedef NS_ENUM(NSInteger, HIG_ToneBurst)
 {
-//    Tone Burst为OFF
+    //    Tone Burst为OFF
     HIG_TONEBURST_OFF   ,
-//    Tone Burst为Burst A
+    //    Tone Burst为Burst A
     HIG_TONEBURST_BURSTA,
-//    Tone Burst为Burst B
+    //    Tone Burst为Burst B
     HIG_TONEBURST_BURSTB
 };
 /**
@@ -145,11 +145,11 @@ typedef NS_ENUM(NSInteger, HIG_ToneBurst)
  */
 typedef NS_ENUM(NSInteger, HIG_LNBValue)
 {
-//    22kHz为OFF
+    //    22kHz为OFF
     HIG_LNBVAlUE_OFF ,
-//    22kHz为ON
+    //    22kHz为ON
     HIG_LNBVAlUE_ON  ,
-//    22kHz为AUTO
+    //    22kHz为AUTO
     HIG_LTLNBVAlUE_AUTO
 };
 /**
@@ -157,13 +157,13 @@ typedef NS_ENUM(NSInteger, HIG_LNBValue)
  */
 typedef NS_ENUM(NSInteger, HIG_Polarization)
 {
-//    Polarization为HORIZONTAL
+    //    Polarization为HORIZONTAL
     HIG_POlARIZATION_HORIZONTAL ,
-//    Polarization为VERTICAL
+    //    Polarization为VERTICAL
     HIG_POlARIZATION_VERTICAL   ,
-//    Polarization为LEFT
+    //    Polarization为LEFT
     HIG_POlARIZATION_LEFT       ,
-//    Polarization为RIGHT
+    //    Polarization为RIGHT
     HIG_POlARIZATION_RIGHT
 };
 /**
@@ -171,21 +171,21 @@ typedef NS_ENUM(NSInteger, HIG_Polarization)
  */
 typedef NS_ENUM(NSInteger, HIG_ServiceType)
 {
-//    Service Type为TV
+    //    Service Type为TV
     HIG_SERVICETYPE_TV         = 0x01,
-//    Service Type为Radio
+    //    Service Type为Radio
     HIG_SERVICETYPE_RADIO      = 0x02,
-//    Service Type为AVC Digital Radio
+    //    Service Type为AVC Digital Radio
     HIG_SERVICETYPE_AVCRADIO   = 0x0A,
-//    Service Type为MPEG-2 HD TV
+    //    Service Type为MPEG-2 HD TV
     HIG_SERVICETYPE_MPEG2HDTV  = 0x11,
-//    Service Type为AAC Audio
+    //    Service Type为AAC Audio
     HIG_SERVICETYPE_AACAUDIO   = 0x14,
-//    Service Type为AAC V2 Audio
+    //    Service Type为AAC V2 Audio
     HIG_SERVICETYPE_AACV2AUDIO = 0x15,
-//    Service Type为AVC SD TV
+    //    Service Type为AVC SD TV
     HIG_SERVICETYPE_AVCSDTV    = 0x16,
-//    Service Type为AVC HD TV
+    //    Service Type为AVC HD TV
     HIG_SERVICETYPE_AVCHDTV    = 0x19
 };
 /**
@@ -193,17 +193,17 @@ typedef NS_ENUM(NSInteger, HIG_ServiceType)
  */
 typedef NS_ENUM(NSInteger, HIG_AspectRatio)
 {
-//    Aspect Ratio为4:3的Letter Box
+    //    Aspect Ratio为4:3的Letter Box
     HIG_ASPECTRATIO_43LETTERBOX    ,
-//    Aspect Ratio为4:3的Center Cut Out (Pan&Scan)
+    //    Aspect Ratio为4:3的Center Cut Out (Pan&Scan)
     HIG_ASPECTRATIO_43CENTERCUTOUT ,
-//    Aspect Ratio为4:3的Extended
+    //    Aspect Ratio为4:3的Extended
     HIG_ASPECTRATIO_43EXTENDED     ,
-//    Aspect Ratio为16:9的Pillar Box
+    //    Aspect Ratio为16:9的Pillar Box
     HIG_ASPECTRATIO_169PILLARBOX   ,
-//    Aspect Ratio为16:9的Full Screen
+    //    Aspect Ratio为16:9的Full Screen
     HIG_ASPECTRATIO_169FULLSCREEN  ,
-//    Aspect Ratio为16:9的Extended
+    //    Aspect Ratio为16:9的Extended
     HIG_ASPECTRATIO_169EXTENDED
 };
 /**
@@ -211,15 +211,15 @@ typedef NS_ENUM(NSInteger, HIG_AspectRatio)
  */
 typedef NS_ENUM(NSInteger, HIG_Resolution)
 {
-//    Resolution为1080P
+    //    Resolution为1080P
     HIG_RESOLUTION_1080P ,
-//    Resolution为1080I
+    //    Resolution为1080I
     HIG_RESOLUTION_1080I ,
-//    Resolution为720P
+    //    Resolution为720P
     HIG_RESOLUTION_720P  ,
-//    Resolution为576P
+    //    Resolution为576P
     HIG_RESOLUTION_576P  ,
-//    Resolution为576I
+    //    Resolution为576I
     HIG_RESOLUTION_576I
 };
 /**
@@ -227,13 +227,13 @@ typedef NS_ENUM(NSInteger, HIG_Resolution)
  */
 typedef NS_ENUM(NSInteger, HIG_VideoStandard)
 {
-//    Video Standard为PAL
+    //    Video Standard为PAL
     HIG_VIDEOSTANDARD_PAL   ,
-//    Video Standard为NTSC
+    //    Video Standard为NTSC
     HIG_VIDEOSTANDARD_NTSC  ,
-//    Video Standard为SECAM
+    //    Video Standard为SECAM
     HIG_VIDEOSTANDARD_SECAM ,
-//    Video Standard为SVHS
+    //    Video Standard为SVHS
     HIG_VIDEOSTANDARD_SVHS
 };
 /**
@@ -241,11 +241,11 @@ typedef NS_ENUM(NSInteger, HIG_VideoStandard)
  */
 typedef NS_ENUM(NSInteger, HIG_DigitalAudio)
 {
-//    Digital Audio类型为PCM
+    //    Digital Audio类型为PCM
     HIG_DIGITALAUDIOD_PCM         ,
-//    Digital Audio类型为Encoded
+    //    Digital Audio类型为Encoded
     HIG_DIGITALAUDIOD_ENCODED     ,
-//    Digital Audio类型为Pass Through
+    //    Digital Audio类型为Pass Through
     HIG_DIGITALAUDIOD_PASSTHROUGH
 };
 /**
@@ -253,13 +253,13 @@ typedef NS_ENUM(NSInteger, HIG_DigitalAudio)
  */
 typedef NS_ENUM(NSInteger, HIG_Subtitle_Type)
 {
-//    Subtitle_type类型为DVB Normal
+    //    Subtitle_type类型为DVB Normal
     HIG_SUBTITLE_TYPE_DVBNORMAL          ,
-//    Subtitle_type类型为DVB Hearing Impaired
+    //    Subtitle_type类型为DVB Hearing Impaired
     HIG_SUBTITLE_TYPE_DVBHEARINGIMPAIRED ,
-//    Subtitle_type类型为EBU Normal
+    //    Subtitle_type类型为EBU Normal
     HIG_SUBTITLE_TYPE_EBUNORMAL          ,
-//    Subtitle_type类型为EBU Hearing Impaired
+    //    Subtitle_type类型为EBU Hearing Impaired
     HIG_SUBTITLE_TYPE_EBUHEARINGIMPAIREDL
 };
 /**
@@ -267,13 +267,13 @@ typedef NS_ENUM(NSInteger, HIG_Subtitle_Type)
  */
 typedef NS_ENUM(NSInteger, HIG_Audio_type)
 {
-//    Audio_type类型为Undefined
+    //    Audio_type类型为Undefined
     HIG_AUDIO_TYPE_UNDEFINED       ,
-//    Audio_type类型为Clean Effects
+    //    Audio_type类型为Clean Effects
     HIG_AUDIO_TYPE_CLEANEFFECTS    ,
-//    Audio_type类型为Hearing Impaired
+    //    Audio_type类型为Hearing Impaired
     HIG_AUDIO_TYPE_HEARINGIMPAIRED ,
-//    Audio_type类型为Audio Description
+    //    Audio_type类型为Audio Description
     HIG_AUDIO_TYPE_AUDIODESCRIPTION
 };
 /**
@@ -281,139 +281,139 @@ typedef NS_ENUM(NSInteger, HIG_Audio_type)
  */
 typedef NS_ENUM(NSInteger, HIG_Es_type)
 {
-//    Es_type类型为MPEG1 Video
+    //    Es_type类型为MPEG1 Video
     HIG_ES_TYPE_MPEG1VIDEO             = 0X01 ,
-//    Es_type类型为MPEG2 Video
+    //    Es_type类型为MPEG2 Video
     HIG_ES_TYPE_MPEG2VIDEO             = 0X02 ,
-//    Es_type类型为MPEG4 Video
+    //    Es_type类型为MPEG4 Video
     HIG_ES_TYPE_MPEG4VIDEO             = 0X10 ,
-//    Es_type类型为AVCH264 Video
+    //    Es_type类型为AVCH264 Video
     HIG_ES_TYPE_AVCH264VIDEO           = 0X1B ,
-//    Es_type类型为HEVC Video
+    //    Es_type类型为HEVC Video
     HIG_ES_TYPE_HEVCVIDEO              = 0X24 ,
-//    Es_type类型为AVS Video
+    //    Es_type类型为AVS Video
     HIG_ES_TYPE_AVSVIDEO               = 0X42 ,
-//    Es_type类型为MPEG1 Audio
+    //    Es_type类型为MPEG1 Audio
     HIG_ES_TYPE_MPEG1AUDIO             = 0X03 ,
-//    Es_type类型为MPEG2 Audio
+    //    Es_type类型为MPEG2 Audio
     HIG_ES_TYPE_MPEG2AUDIO             = 0X04 ,
-//    Es_type类型为AAC Audio
+    //    Es_type类型为AAC Audio
     HIG_ES_TYPE_AACAUDIO               = 0X0F ,
-//    Es_type类型为HEAAC Audio
+    //    Es_type类型为HEAAC Audio
     HIG_ES_TYPE_HEAACAUDIO             = 0X11 ,
-//    Es_type类型为DDPLUS Audio
+    //    Es_type类型为DDPLUS Audio
     HIG_ES_TYPE_DDPLUSAUDIO            = 0X12 ,
-//    Es_type类型为AVS Audio
+    //    Es_type类型为AVS Audio
     HIG_ES_TYPE_AVSAUDIO               = 0X43 ,
-//    Es_type类型为AC3 Audio
+    //    Es_type类型为AC3 Audio
     HIG_ES_TYPE_AC3AUDIO               = 0X81 ,
-//    Es_type类型为MPEG1 Audio Description
+    //    Es_type类型为MPEG1 Audio Description
     HIG_ES_TYPE_MPEG1AUDIODESCRIPTION  = 0XE5 ,
-//    Es_type类型为MPEG2 Audio Description
+    //    Es_type类型为MPEG2 Audio Description
     HIG_ES_TYPE_MPEG2AUDIODESCRIPTION  = 0XE6 ,
-//    Es_type类型为AC3 Audio Description
+    //    Es_type类型为AC3 Audio Description
     HIG_ES_TYPE_AC3AUDIODESCRIPTION    = 0XE7 ,
-//    Es_type类型为DDPLUS Audio Description
+    //    Es_type类型为DDPLUS Audio Description
     HIG_ES_TYPE_DDPLUSAUDIODESCRIPTION = 0XE8 ,
-//    Es_type类型为AAC Audio Description
+    //    Es_type类型为AAC Audio Description
     HIG_ES_TYPE_AACAUDIODESCRIPTION    = 0XE9 ,
-//    Es_type类型为HEAAC Audio Description
+    //    Es_type类型为HEAAC Audio Description
     HIG_ES_TYPE_HEAACAUDIODESCRIPTION  = 0XEA
 };
 typedef NS_ENUM(NSInteger, HIG_Soundtrack)
 {
-//    Soundtrack类型为LEFT
+    //    Soundtrack类型为LEFT
     HIG_SOUNDTRACK_LEFT ,
-//    Soundtrack类型为RIGHT
+    //    Soundtrack类型为RIGHT
     HIG_SOUNDTRACK_RIGHT ,
-//    Soundtrack类型为STEREO
+    //    Soundtrack类型为STEREO
     HIG_SOUNDTRACK_STEREO ,
-//    Soundtrack类型为MONO
+    //    Soundtrack类型为MONO
     HIG_SOUNDTRACK_MONO
 };
 typedef NS_ENUM(NSInteger, HIG_File_system_type)
 {
-//    File_system_type类型为FAT16
+    //    File_system_type类型为FAT16
     HIG_FILE_SYSTEM_TYPE_FAT16 ,
-//    File_system_type类型为FAT32
+    //    File_system_type类型为FAT32
     HIG_FILE_SYSTEM_TYPE_FAT32 ,
-//    File_system_type类型为NTFS
+    //    File_system_type类型为NTFS
     HIG_FILE_SYSTEM_TYPE_NTFS  ,
-//    File_system_type类型为EXT2
+    //    File_system_type类型为EXT2
     HIG_FILE_SYSTEM_TYPE_EXT2  ,
-//    File_system_type类型为EXT3
+    //    File_system_type类型为EXT3
     HIG_FILE_SYSTEM_TYPE_EXT3  ,
-//    File_system_type类型为EXT4
+    //    File_system_type类型为EXT4
     HIG_FILE_SYSTEM_TYPE_EXT4
 };
 typedef NS_ENUM(NSInteger, HIG_File_type)
 {
-//    File_type为Directory
+    //    File_type为Directory
     HIG_FILE_DIRECTORY ,
-//    File_type为File
+    //    File_type为File
     HIG_FILE_FILE
 };
 typedef NS_ENUM(NSInteger, HIG_Notify_event)
 {
-//    Notify_event类型为USB Plug
+    //    Notify_event类型为USB Plug
     HIG_NOTIFY_EVENT_USB_PLUG        ,
-//    Notify_event类型为USB Unplug
+    //    Notify_event类型为USB Unplug
     HIG_NOTIFY_EVENT_USB_UNPLUG      ,
-//    Notify_event类型为Signal Lock
+    //    Notify_event类型为Signal Lock
     HIG_NOTIFY_EVENT_SIGNAL_LOCK     ,
-//    Notify_event类型为Signal Lost
+    //    Notify_event类型为Signal Lost
     HIG_NOTIFY_EVENT_SIGNAL_LOST     ,
-//    Notify_event类型为Parental Rating
+    //    Notify_event类型为Parental Rating
     HIG_NOTIFY_EVENT_PARENTAL_RATING ,
-//    Notify_event类型为Maturity
+    //    Notify_event类型为Maturity
     HIG_NOTIFY_EVENT_MATURITY        ,
-//    Notify_event类型为Record Start
+    //    Notify_event类型为Record Start
     HIG_NOTIFY_EVENT_RECORD_START    ,
-//    Notify_event类型为Record Stop
+    //    Notify_event类型为Record Stop
     HIG_NOTIFY_EVENT_RECORD_STOP     ,
-//    Notify_event类型为Play Start
+    //    Notify_event类型为Play Start
     HIG_NOTIFY_EVENT_PLAY_START      ,
-//    Notify_event类型为Play Stop
+    //    Notify_event类型为Play Stop
     HIG_NOTIFY_EVENT_PLAY_STOP
 };
 typedef NS_ENUM(NSInteger, HIG_Notify_event_Record_Stop)
 {
-//    Notify_event的Record Stop的类型为Normal Stop
+    //    Notify_event的Record Stop的类型为Normal Stop
     HIG_NOTIFY_EVENT_RECORD_STOP_NORMALSTOP  ,
-//    Notify_event的Record Stop的类型为Disk Full
+    //    Notify_event的Record Stop的类型为Disk Full
     HIG_NOTIFY_EVENT_RECORD_STOP_DISKFULL    ,
-//    Notify_event的Record Stop的类型为Record Error
+    //    Notify_event的Record Stop的类型为Record Error
     HIG_NOTIFY_EVENT_RECORD_STOP_RECORDERROR
 };
 typedef NS_ENUM(NSInteger, HIG_Notify_event_Play_Stop)
 {
-//    Notify_event的Play Stop的类型为Normal Stop
+    //    Notify_event的Play Stop的类型为Normal Stop
     HIG_NOTIFY_EVENT_PLAY_STOP_NORMALSTOP        ,
-//    Notify_event的Play Stop的类型为Unsupported stream
+    //    Notify_event的Play Stop的类型为Unsupported stream
     HIG_NOTIFY_EVENT_PLAY_STOP_UNSUPPORTEDSTREAM ,
-//    Notify_event的Play Stop的类型为Play Error
+    //    Notify_event的Play Stop的类型为Play Error
     HIG_NOTIFY_EVENT_PLAY_STOP_PLAYERROR
 };
 typedef NS_ENUM(NSInteger, HIG_STB_Status)
 {
-//    机顶盒状态为播放Media
+    //    机顶盒状态为播放Media
     HIG_STB_STATUS_PLAY_MEDIA   ,
-//    机顶盒状态为播放LCN
+    //    机顶盒状态为播放LCN
     HIG_STB_STATUS_PLAY_DVB     ,
-//    机顶盒状态为录制
+    //    机顶盒状态为录制
     HIG_STB_STATUS_PVR_RECORD   ,
-//    机顶盒状态为回放
+    //    机顶盒状态为回放
     HIG_STB_STATUS_PVR_PLAYBACK ,
-//    机顶盒状态为暂停
+    //    机顶盒状态为暂停
     HIG_STB_STATUS_PLAY_PAUSE
 };
 typedef NS_ENUM(NSInteger, HIG_Record_Mode)
 {
-//    录制模式为只有一次
+    //    录制模式为只有一次
     HIG_RECORD_MODE_ONCE   ,
-//    录制模式为每日一次
+    //    录制模式为每日一次
     HIG_RECORD_MODE_DAILY  ,
-//    录制模式为每周一次
+    //    录制模式为每周一次
     HIG_RECORD_MODE_WEEKLY
 };
 //Error类型Block
@@ -441,11 +441,6 @@ typedef void (^TypeIsSuccessCallbackBlock)(BOOL isSuccess,NSString *error);
  @param error 错误码
  */
 typedef void (^TypeIsSuccessNSStringCallbackBlock)(BOOL isSuccess,NSString *string,NSString *error);
-/**
- 返回XML数据Block
- @param model Database模型
- */
-typedef void (^TypeXMLCallbackBlock)(DatabaseModel *model);
 /**
  返回Database模型Block
  @param model Database模型
@@ -612,7 +607,7 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
  @param path 地址
  @param callback 解析完成后回调
  */
-- (void)hIG_ParseXMLWithPath:(NSString *)path callback:(TypeXMLCallbackBlock)callback;
+- (void)hIG_ParseXMLWithPath:(NSString *)path callback:(TypeDatabaseCallbackBlock)callback;
 /**
  根据地址解析XML
  @param path 地址

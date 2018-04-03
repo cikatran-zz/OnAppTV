@@ -32,19 +32,27 @@ class UserKitIdentityModule: NSObject {
         module.signOut()
     }
     
-    @objc func signUp(email: String, password: String, customProperties: [String: Any], successBlock: @escaping ([String: Any]?) -> Void, errorBlock: @escaping ([String: Any]?)->Void) {
+    @objc func signUp(email: String, password: String, customProperties: [String: Any], successBlock: @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
         module.signUp(email, password: password, customProperties: customProperties, successBlock: { (authenModel) in
-            successBlock(authenModel?.toJson())
+            successBlock(authenModel?.toString())
         }) { (error) in
-            errorBlock(error?.toJson())
+            errorBlock(error?.toString())
         }
     }
     
-    @objc func loginWithFacebookAccount(_ facebookAuthToken: String, setUserToken: Bool, successBlock:  @escaping ([String: Any]?) -> Void, errorBlock: @escaping ([String: Any]?)->Void) {
-        module.loginWithFacebookAccount(facebookAuthToken, setUserToken: setUserToken, successBlock: { (authenModel) in
-            successBlock(authenModel?.toJson())
+    @objc func signInWithFacebookAccount(_ facebookAuthToken: String, successBlock:  @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
+        module.loginWithFacebookAccount(facebookAuthToken, successBlock: { (authenModel) in
+            successBlock(authenModel?.toString())
         }) { (error) in
-            errorBlock(error?.toJson())
+            errorBlock(error?.toString())
+        }
+    }
+    
+    @objc func signInWithEmail(_ email: String, password: String, successBlock: @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
+        module.loginWithEmailPassword(email, password: password, successBlock: { (authenModel) in
+            successBlock(authenModel?.toString())
+        }) { (error) in
+            errorBlock(error?.toString())
         }
     }
 }

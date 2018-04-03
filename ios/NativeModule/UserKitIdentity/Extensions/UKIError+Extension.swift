@@ -17,4 +17,14 @@ public extension UKIError {
             "error_code": errorCode as Any
         ]
     }
+    
+    public func toString() -> String? {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self.toJson(), options: [])
+            return String(data: jsonData!, encoding: .utf8)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return nil
+    }
 }

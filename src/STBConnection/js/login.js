@@ -6,7 +6,7 @@ $(function() {
 	//			$("#picID").attr("src", "TROPICALISLAND_4.gif");
 	//		}, 100);
 	//	}, 11300);
-	mui(".mui-scroll,.menu,.evaluating").on('tap', 'p', function() {
+	mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
 		document.location.href = this.href;
 	});
 	//slide
@@ -28,32 +28,3 @@ $(function() {
 		observeParents: true, //修改swiper的父元素时，自动初始化swiper
 	})
 })
-
-function setupWebViewJavascriptBridge(callback) {
-    if(window.WebViewJavascriptBridge) {
-        return callback(WebViewJavascriptBridge);
-    }
-    if(window.WVJBCallbacks) {
-        return window.WVJBCallbacks.push(callback);
-    }
-    window.WVJBCallbacks = [callback];
-    var WVJBIframe = document.createElement('iframe');
-    WVJBIframe.style.display = 'none';
-    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
-    document.documentElement.appendChild(WVJBIframe);
-    setTimeout(function() {
-               document.documentElement.removeChild(WVJBIframe)
-               }, 0)
-}
-
-$(document).ready(function() {
-    $("#Agreed").click(function(e) {
-        window.WebViewJavascriptBridge.callHandler('HIG_AllowNotification', '');
-    });
-});
-
-setupWebViewJavascriptBridge(function(bridge) {
-//    bridge.callHandler('HIG_AllowNotification', {'key':'value'}, function responseCallback(responseData) {
-//            console.log("JS received response:", responseData)
-//    })
-});

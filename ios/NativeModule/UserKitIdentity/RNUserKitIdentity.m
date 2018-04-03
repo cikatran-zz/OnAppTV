@@ -23,27 +23,42 @@ RCT_EXPORT_METHOD(signUpWithEmail: (NSString *)email
                   callback: (RCTResponseSenderBlock)callback) {
     
     [[UserKitIdentityModule sharedInstance] signUpWithEmail:email
-                                                   password:email
+                                                   password:password
                                            customProperties:customProperties
-                                               successBlock:^(NSDictionary<NSString *,id> * authenModel) {
+                                               successBlock:^(NSString* authenModel) {
                                                    callback(@[[NSNull null], authenModel]);
-                                               } errorBlock:^(NSDictionary<NSString *,id> * error) {
+                                               } errorBlock:^(NSString* error) {
                                                    callback(@[error]);
                                                }];
 }
 
-RCT_EXPORT_METHOD(logInWithFacebookAccount:(NSString *)facebookAuthToken
+RCT_EXPORT_METHOD(signInWithFacebookAccount:(NSString *)facebookAuthToken
                   setUserToken:(BOOL)setUserToken
                   callback: (RCTResponseSenderBlock)callback) {
     
-    [[UserKitIdentityModule sharedInstance] loginWithFacebookAccount:facebookAuthToken
-                                                        setUserToken:setUserToken
-                                                        successBlock:^(NSDictionary<NSString *,id> * authenModel) {
+    [[UserKitIdentityModule sharedInstance] signInWithFacebookAccount:facebookAuthToken
+                                                        successBlock:^(NSString* authenModel) {
                                                             callback(@[[NSNull null], authenModel]);
-                                                        } errorBlock:^(NSDictionary<NSString *,id> * error) {
+                                                        } errorBlock:^(NSString* error) {
                                                             callback(@[error]);
                                                         }];
 }
+
+RCT_EXPORT_METHOD(signInWithEmail: (NSString *)email
+                  password: (NSString *)password
+                  customProperties: (NSDictionary *)customProperties
+                  callback: (RCTResponseSenderBlock)callback) {
+    
+    [[UserKitIdentityModule sharedInstance] signInWithEmail:email
+                                                   password:password
+                                               successBlock:^(NSString* authenModel) {
+                                                   callback(@[[NSNull null], authenModel]);
+                                               } errorBlock:^(NSString* error) {
+                                                   callback(@[error]);
+                                               }];
+}
+
+
 
 
 

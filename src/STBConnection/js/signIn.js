@@ -130,7 +130,6 @@ $(".imgbg").css({
 				"height": foot,
 				"background-size":"100% auto"
 			});
-               
 		} else {
 			$(this).css({
 				"height": Height,
@@ -183,8 +182,6 @@ $(".imgbg").css({
 				"height": footerheight,
 				"background-size":"100% auto"
 			});
-               
-
 }
 //返回到登录界面
 //function dismissModal() {
