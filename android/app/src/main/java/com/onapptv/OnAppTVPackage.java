@@ -21,6 +21,8 @@ public class OnAppTVPackage implements ReactPackage {
     List<NativeModule> modules = new ArrayList<>();
 
     modules.add(new AndroidSTBFramework(reactContext));
+    modules.add(new AndroidUserKitFramework(reactContext));
+    modules.add(new AndroidUserKitIdentityFramework(reactContext));
 
     return modules;
   }
