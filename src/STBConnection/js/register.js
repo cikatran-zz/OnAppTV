@@ -1,5 +1,16 @@
 var optSex;
 	var nums = "First";
+
+function validateInput(elementID) {
+    if (!document.getElementById(elementID).checkValidity()) {
+        $("#"+elementID).css("border", "1px solid #ff0000")
+		$("#errorMessage").text(document.getElementById(elementID).validationMessage);
+        return false;
+    }
+    $("#errorMessage").text("")
+    $("#"+elementID).css("border", "1px solid rgba(222, 222, 222, 1)")
+    return true;
+}
 $(function() {
 	$("#RegisterModal").css({
 		"width":"100%",
@@ -7,8 +18,18 @@ $(function() {
 	});
 
  mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
- 	var tt = this.id;
-	document.location.href = "Revolution.html?nums="+nums;
+ 	// var id = this.id;
+	// document.location.href = "Revolution.html?nums="+nums;
+	 if (this.id == "Validate") {
+
+         if (!validateInput("Email") || !validateInput("name") || !validateInput("firstName") || !validateInput("age")) {
+         	return;
+		 }
+         var email = $("#Email").val();
+         var name = $("#name").val();
+         var firstName = $("#firstName").val();
+         var age = $("#age").val();
+	 }
 	});
 	//移除遮罩效果
 	$(".modal-backdrop").remove();
@@ -73,11 +94,43 @@ $(function() {
    
    //验证输入的有效性
    $("#Validate").click(function(){
-   	var email = $("#Email").val();
-   	var name = $("#name").val();
-   	var firstName = $("#firstName").val();
-   	var age = $("#age").val();
+
 //// 		window.location.href = "Revolution.html?nums="+nums;
 // 		this.href = "Revolution.html?nums="+nums;
    })
+})
+
+$(document).ready(function(){
+    $("div#spinner").hide();
+});
+
+function setupWebViewJavascriptBridge(callback) {
+    if(window.WebViewJavascriptBridge) {
+        return callback(WebViewJavascriptBridge);
+    }
+    if(window.WVJBCallbacks) {
+        return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+        document.documentElement.removeChild(WVJBIframe)
+    }, 0)
+}
+
+setupWebViewJavascriptBridge(function(bridge) {
+    bridge.registerHandler('HIG_SignUpCallback', function(data, responseCallback) {
+        $("div#spinner").hide();
+        var feedback = JSON.parse(data);
+        if (!feedback.success) {
+            $("p#errorMessage").text(feedback.error);
+            $("input#email").css("border", "1px solid #ff0000");
+            $("input#password").css("border", "1px solid #ff0000");
+        } else {
+            document.location.href = "Revolution.html";
+        }
+    });
 })

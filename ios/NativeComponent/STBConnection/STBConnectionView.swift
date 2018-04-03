@@ -51,6 +51,18 @@ class STBConnectionView: UIView {
         setupJavascriptBridge()
     }
     
+    func dictToJsonString(dict: [String: Any])-> String {
+        var dataString = ""
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
+            dataString = String(data: jsonData, encoding: .utf8) ?? ""
+        } catch {
+            
+        }
+        
+        return dataString
+    }
+    
     func setupJavascriptBridge() {
         
         //        Whether it's the first time to start an APP
@@ -90,6 +102,26 @@ class STBConnectionView: UIView {
         self.bridge.registerHandler("HIG_RequestNotiPermission") { (_, _) in
             OANotificationCenter.sharedInstance.requestPermission {
                 self.bridge.callHandler("HIG_GoToLoginScreen", data: "");
+            }
+        }
+        
+        self.bridge.registerHandler("HIG_LogInWithEmailPassword") { (data, _) in
+            let str = data as! String;
+            let jsonData = str.data(using: String.Encoding.utf8)!
+            let jsonDict = try!JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! NSMutableDictionary
+            if let email = jsonDict["email"] as? String, let password = jsonDict["password"] as? String {
+                UserKitIdentity.mainInstance().loginWithEmailPassword(email, password: password, successBlock: { (authenModel) in
+                    var isNewAccount = false
+                    if let _ = authenModel?.listProfiles?.first?.customProperties?["personal_email"] as? String {
+                        isNewAccount = true
+                    }
+                    self.bridge.callHandler("HIG_LoginCallback", data:self.dictToJsonString(dict: ["success": true, "is_new":isNewAccount]))
+                }, failureBlock: { (error) in
+                    self.bridge.callHandler("HIG_LoginCallback", data:self.dictToJsonString(dict: ["success": false, "error": error?.message ?? ""]))
+                })
+            } else {
+                
+                self.bridge.callHandler("HIG_LoginCallback", data:self.dictToJsonString(dict: ["success": false, "error": "unknown"]))
             }
         }
         

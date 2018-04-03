@@ -7,12 +7,14 @@ $(function() {
 	Height = $(window).height();
 	mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
 		var thisID = this.id;
-		if(thisID == "dismiss")
-		{
-			document.location.href = "Login.html";
-		}else if(thisID == "loginButton"){
-			document.location.href = "Register.html";
-		}
+        if(thisID == "dismiss")
+        {
+            document.location.href = "Revolution.html";
+        } else if (thisID == "loginButton") {
+            var jsonObj = {"email": $("input#email").val(), "password": $("input#password").val()}
+            window.WebViewJavascriptBridge.callHandler('HIG_LogInWithEmailPassword', JSON.stringify(jsonObj));
+            $("div#spinner").show();
+        }
 		
 	});
 	//footer height
@@ -183,7 +185,55 @@ $(".imgbg").css({
 				"background-size":"100% auto"
 			});
 }
-//返回到登录界面
-//function dismissModal() {
-//	document.location.href = "Login.html";
-//}
+
+function wantToSignUp() {
+    document.location.href = "Register.html"
+}
+
+$(document).ready(function(){
+    $("input#email").focus(function(){
+        $("input#email").css("border", "1px solid rgba(222, 222, 222, 1)");
+        $("p#errorMessage").text("");
+    });
+                  
+    $("input#email").focus(function(){
+       $("input#password").css("border", "1px solid rgba(222, 222, 222, 1)");
+       $("p#errorMessage").text("");
+    });
+    $("div#spinner").hide();
+});
+
+function setupWebViewJavascriptBridge(callback) {
+    if(window.WebViewJavascriptBridge) {
+        return callback(WebViewJavascriptBridge);
+    }
+    if(window.WVJBCallbacks) {
+        return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+        document.documentElement.removeChild(WVJBIframe)
+    }, 0)
+}
+
+setupWebViewJavascriptBridge(function(bridge) {
+    bridge.registerHandler('HIG_LoginCallback', function(data, responseCallback) {
+        $("div#spinner").hide();
+        var feedback = JSON.parse(data);
+        if (!feedback.success) {
+            $("p#errorMessage").text(feedback.error);
+            $("input#email").css("border", "1px solid #ff0000");
+            $("input#password").css("border", "1px solid #ff0000");
+        } else {
+           	if (feedback.is_new) {
+                document.location.href = "Register.html";
+                return
+           	}
+           	document.location.href = "Revolution.html";
+        }
+    });
+})
