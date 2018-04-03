@@ -2,14 +2,18 @@ import React from 'react'
 import Swiper from 'react-native-swiper'
 import { Text, View, SectionList, TextInput, StyleSheet, FlatList } from 'react-native'
 import { colors } from '../../utils/themeConfig'
-import Bookmark from './Bookmark/Bookmark'
-import RecordList from './RecordList/RecordList'
+import Bookmark from '../Bookmark/Bookmark'
+import RecordList from '../RecordList/RecordList'
 import { rootViewTopPadding } from '../../utils/rootViewTopPadding'
 
-export default class Book extends React.PureComponent {
+export default class Book extends React.Component {
 
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    this.props.getList()
   }
 
   _keyExtractor = (item, index) => index
