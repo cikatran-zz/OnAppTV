@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import { BackHandler, StyleSheet, Animated, View, PanResponder, Dimensions } from 'react-native';
-
+import {colors} from '../utils/themeConfig'
 const screenHeight = Dimensions.get("window").height;
 
 type Props = {
@@ -71,8 +71,8 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
    * Initialize the component
    */
   initialize = () => {
-    this._closedPosition = Math.floor(this.props.bottomPosition - this.props.openSwipeOffset);
-    this._openPosition = this.props.offsetTop - this.props.openSwipeOffset;
+    this._closedPosition = Math.floor(this.props.bottomPosition + 2);
+    this._openPosition = 0;
     this._closeMaximumY = this.props.offsetTop + this.props.closeSwipeOffset;
 
     this.state = {
@@ -86,10 +86,9 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
         flex: 1,
       },
       swiper: {
-        // hack : We put a transparent background color because otherwise, moving doesn't work
-        backgroundColor: "rgba(0, 0, 0, 0)",
         width: "100%",
         // Totally forgot where does this magic constant comes from
+        backgroundColor:colors.whitePrimary,
         height: this.props.bottomPosition + 75 - this.props.offsetTop,
         position: "absolute",
         left: 0,
@@ -107,6 +106,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
    * @param position
    */
   setPosition = (position) => {
+    console.log("Position", position)
     this._movable.setNativeProps({
       style: [this.stylesheets.swiper, {
         top: position,
@@ -115,6 +115,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
   };
 
   onStartShouldSetPanResponder = (evt) => {
+    console.log("Start Set PanRes")
     if(this.state.isAnimating === true)
       return false;
 
@@ -125,6 +126,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
   };
 
   onPanResponderMove = (evt, gestureState) => {
+    console.log("Move PanRes")
     if(this.state.isAnimating === true)
       return;
 
@@ -158,6 +160,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
   };
 
   onPanResponderRelease = (evt, gestureState) => {
+    console.log("Release PanRes")
     if(this._hasActivatedThreshold){
       if(this.state.isOpen === false){
         this.state.position.setValue(this.props.bottomPosition - this.props.openSwipeOffset + gestureState.dy);
@@ -179,6 +182,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
    * Open the swipe
    */
   open = () => {
+    console.log("Open")
     if(this.state.isAnimating)
       return;
 
@@ -202,6 +206,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
    * Closes the swipe
    */
   close = () => {
+    console.log("Close");
     if(this.state.isAnimating)
       return;
 
@@ -246,17 +251,15 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
   render() {
     return (
       <View style={this.stylesheets.container}>
-        <View style={this.props.style}>
+        <View style={this.props.style}
+              {...this._panResponder.panHandlers}>
           {this.props.children}
         </View>
         <Animated.View
           style={this.getMovableStyle()}
           ref={this.setMovableRef}
-          {...this._panResponder.panHandlers}
-        >
-          <View style={this.stylesheets.contentContainer}>
+          {...this._panResponder.panHandlers}>
             {this.props.content}
-          </View>
         </Animated.View>
       </View>
     );
