@@ -18,7 +18,7 @@ export default class Settings extends React.PureComponent {
   _renderSettingItem = ({item}) => {
     const {navigation} = this.props
 
-    return (<SettingItem showIcon={true} onPress={() => navigation.navigate('MySubscription', {})} item={item}/>)
+    return (<SettingItem showIcon={true} onPress={() => navigation.navigate(item.raw, {})} item={item}/>)
   }
 
   _renderSection = ({item}) => {
@@ -61,10 +61,7 @@ export default class Settings extends React.PureComponent {
           renderSectionHeader={this._renderSectionHeader}
           showsVerticalScrollIndicator={false}
           sections={[
-            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
-            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
-            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
-            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection},
+            {data: [fakeData],showHeader: true, title: "ON TV", renderItem: this._renderSection}
           ]}
         />
       </View>
@@ -97,15 +94,33 @@ const fakeData = {
   title: "ON TV",
   list: [
     {
-      name: "Test",
-      value: "Value"
+      name: "Audio Language",
+      value: "English",
+      raw: 'AudioLanguage'
     },
     {
-      name: "Test",
-      value: "Value"
+      name: "Parental Control",
+      value: "",
+      raw: 'ParentalControlLock'
     },
     {
-      name: "Test",
-      value: "Value"
+      name: "Personal Information",
+      value: "",
+      raw: 'PersonalInformation'
+    },
+    {
+      name: 'My Messages',
+      value: '',
+      raw: 'Messages'
+    },
+    {
+      name: 'My Subscription',
+      value: '',
+      raw: 'MySubscription'
+    },
+    {
+      name: 'Sign In',
+      value: '',
+      raw: 'SignIn'
     }]
 }
