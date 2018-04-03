@@ -44,6 +44,18 @@ const get = (endpoints) => {
     });
 };
 
+getPvrBookList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrBookListInJson((error, events) => {
+            if (error)
+                reject(error)
+            else {
+                resolve(JSON.parse(events[0]))
+            }
+        })
+    })
+}
+
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
         resolve([
@@ -220,6 +232,14 @@ getSTBChannel = () => {
         // });
     });
 };
+
+export const getBookList = () => {
+    let bookList = null;
+    return getPvrBookList()
+      .then((value) => {
+          console.log(value)
+      })
+}
 
 export const getChannel = (limit) => {
     var zapList = null;
