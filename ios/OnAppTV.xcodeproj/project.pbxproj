@@ -53,6 +53,13 @@
 		690EEFE5205791350099484A /* UserKitModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE4205791350099484A /* UserKitModule.swift */; };
 		690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE62057915E0099484A /* UserKitIdentityModule.swift */; };
 		690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFF62057B75F0099484A /* NotificationCenter.swift */; };
+		6931BE36207329C1007DA182 /* agents.html in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE0B207329C0007DA182 /* agents.html */; };
+		6931BE37207329C1007DA182 /* Load_1.html in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE34207329C0007DA182 /* Load_1.html */; };
+		6931BE38207329C1007DA182 /* main.html in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE35207329C1007DA182 /* main.html */; };
+		6931BE3D207329F2007DA182 /* css in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE39207329F1007DA182 /* css */; };
+		6931BE3E207329F2007DA182 /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE3A207329F1007DA182 /* bootstrap */; };
+		6931BE3F207329F2007DA182 /* js in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE3B207329F1007DA182 /* js */; };
+		6931BE40207329F2007DA182 /* img in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE3C207329F2007DA182 /* img */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
 		6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE4C204C29E400470C97 /* CustomControlsView.swift */; };
@@ -78,11 +85,9 @@
 		69D21EBF20525DE600DFA90A /* SelectSTB.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9E20525DE300DFA90A /* SelectSTB.html */; };
 		69D21EC020525DE600DFA90A /* WifiPassword.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E9F20525DE400DFA90A /* WifiPassword.html */; };
 		69D21EC120525DE600DFA90A /* 无声.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA020525DE400DFA90A /* 无声.mp3 */; };
-		69D21EC220525DE600DFA90A /* css in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA120525DE400DFA90A /* css */; };
 		69D21EC320525DE600DFA90A /* TROPICALISLAND_4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA220525DE400DFA90A /* TROPICALISLAND_4.gif */; };
 		69D21EC420525DE600DFA90A /* download_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA320525DE400DFA90A /* download_list.json */; };
 		69D21EC520525DE600DFA90A /* WifiConnectionList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA420525DE400DFA90A /* WifiConnectionList.html */; };
-		69D21EC620525DE600DFA90A /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA520525DE400DFA90A /* bootstrap */; };
 		69D21EC720525DE600DFA90A /* TROPICALISLAND_42.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA620525DE400DFA90A /* TROPICALISLAND_42.gif */; };
 		69D21EC820525DE600DFA90A /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA720525DE400DFA90A /* Load.html */; };
 		69D21EC920525DE600DFA90A /* spinner.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EA820525DE400DFA90A /* spinner.html */; };
@@ -93,12 +98,10 @@
 		69D21ECE20525DE600DFA90A /* TROPICALISLAND_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAD20525DE500DFA90A /* TROPICALISLAND_4.png */; };
 		69D21ECF20525DE600DFA90A /* ConnectLoad.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAE20525DE500DFA90A /* ConnectLoad.html */; };
 		69D21ED020525DE600DFA90A /* Parental.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EAF20525DE500DFA90A /* Parental.html */; };
-		69D21ED120525DE600DFA90A /* js in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB020525DE500DFA90A /* js */; };
 		69D21ED220525DE600DFA90A /* SelectDecoder.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB120525DE500DFA90A /* SelectDecoder.html */; };
 		69D21ED320525DE600DFA90A /* ChannelList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB220525DE500DFA90A /* ChannelList.html */; };
 		69D21ED420525DE600DFA90A /* Antional.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB320525DE500DFA90A /* Antional.html */; };
 		69D21ED520525DE600DFA90A /* SignIn.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB420525DE500DFA90A /* SignIn.html */; };
-		69D21ED620525DE600DFA90A /* img in Resources */ = {isa = PBXBuildFile; fileRef = 69D21EB520525DE500DFA90A /* img */; };
 		69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */; };
 		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
 		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
@@ -459,6 +462,13 @@
 		690EEFE4205791350099484A /* UserKitModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitModule.swift; sourceTree = "<group>"; };
 		690EEFE62057915E0099484A /* UserKitIdentityModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitIdentityModule.swift; sourceTree = "<group>"; };
 		690EEFF62057B75F0099484A /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
+		6931BE0B207329C0007DA182 /* agents.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = agents.html; path = ../src/STBConnection/agents.html; sourceTree = "<group>"; };
+		6931BE34207329C0007DA182 /* Load_1.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load_1.html; path = ../src/STBConnection/Load_1.html; sourceTree = "<group>"; };
+		6931BE35207329C1007DA182 /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = main.html; path = ../src/STBConnection/main.html; sourceTree = "<group>"; };
+		6931BE39207329F1007DA182 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../src/STBConnection/css; sourceTree = "<group>"; };
+		6931BE3A207329F1007DA182 /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../src/STBConnection/bootstrap; sourceTree = "<group>"; };
+		6931BE3B207329F1007DA182 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = ../src/STBConnection/js; sourceTree = "<group>"; };
+		6931BE3C207329F2007DA182 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = ../src/STBConnection/img; sourceTree = "<group>"; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
 		6969BE4B204C29E400470C97 /* OnAppTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnAppTV-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -486,11 +496,9 @@
 		69D21E9E20525DE300DFA90A /* SelectSTB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectSTB.html; path = ../src/STBConnection/SelectSTB.html; sourceTree = "<group>"; };
 		69D21E9F20525DE400DFA90A /* WifiPassword.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiPassword.html; path = ../src/STBConnection/WifiPassword.html; sourceTree = "<group>"; };
 		69D21EA020525DE400DFA90A /* 无声.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "无声.mp3"; path = "../src/STBConnection/无声.mp3"; sourceTree = "<group>"; };
-		69D21EA120525DE400DFA90A /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = ../src/STBConnection/css; sourceTree = "<group>"; };
 		69D21EA220525DE400DFA90A /* TROPICALISLAND_4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TROPICALISLAND_4.gif; path = ../src/STBConnection/TROPICALISLAND_4.gif; sourceTree = "<group>"; };
 		69D21EA320525DE400DFA90A /* download_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = download_list.json; path = ../src/STBConnection/download_list.json; sourceTree = "<group>"; };
 		69D21EA420525DE400DFA90A /* WifiConnectionList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnectionList.html; path = ../src/STBConnection/WifiConnectionList.html; sourceTree = "<group>"; };
-		69D21EA520525DE400DFA90A /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../src/STBConnection/bootstrap; sourceTree = "<group>"; };
 		69D21EA620525DE400DFA90A /* TROPICALISLAND_42.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TROPICALISLAND_42.gif; path = ../src/STBConnection/TROPICALISLAND_42.gif; sourceTree = "<group>"; };
 		69D21EA720525DE400DFA90A /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = ../src/STBConnection/Load.html; sourceTree = "<group>"; };
 		69D21EA820525DE400DFA90A /* spinner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = spinner.html; path = ../src/STBConnection/spinner.html; sourceTree = "<group>"; };
@@ -501,12 +509,10 @@
 		69D21EAD20525DE500DFA90A /* TROPICALISLAND_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TROPICALISLAND_4.png; path = ../src/STBConnection/TROPICALISLAND_4.png; sourceTree = "<group>"; };
 		69D21EAE20525DE500DFA90A /* ConnectLoad.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ConnectLoad.html; path = ../src/STBConnection/ConnectLoad.html; sourceTree = "<group>"; };
 		69D21EAF20525DE500DFA90A /* Parental.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Parental.html; path = ../src/STBConnection/Parental.html; sourceTree = "<group>"; };
-		69D21EB020525DE500DFA90A /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = ../src/STBConnection/js; sourceTree = "<group>"; };
 		69D21EB120525DE500DFA90A /* SelectDecoder.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectDecoder.html; path = ../src/STBConnection/SelectDecoder.html; sourceTree = "<group>"; };
 		69D21EB220525DE500DFA90A /* ChannelList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ChannelList.html; path = ../src/STBConnection/ChannelList.html; sourceTree = "<group>"; };
 		69D21EB320525DE500DFA90A /* Antional.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Antional.html; path = ../src/STBConnection/Antional.html; sourceTree = "<group>"; };
 		69D21EB420525DE500DFA90A /* SignIn.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SignIn.html; path = ../src/STBConnection/SignIn.html; sourceTree = "<group>"; };
-		69D21EB520525DE500DFA90A /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = ../src/STBConnection/img; sourceTree = "<group>"; };
 		69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSTBConnectionViewManager.h; sourceTree = "<group>"; };
 		69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSTBConnectionViewManager.m; sourceTree = "<group>"; };
 		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
@@ -868,18 +874,21 @@
 		69D21E9420525DC300DFA90A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6931BE3A207329F1007DA182 /* bootstrap */,
+				6931BE39207329F1007DA182 /* css */,
+				6931BE3C207329F2007DA182 /* img */,
+				6931BE3B207329F1007DA182 /* js */,
+				6931BE0B207329C0007DA182 /* agents.html */,
+				6931BE34207329C0007DA182 /* Load_1.html */,
+				6931BE35207329C1007DA182 /* main.html */,
 				69D21EB320525DE500DFA90A /* Antional.html */,
-				69D21EA520525DE400DFA90A /* bootstrap */,
 				69D21EB220525DE500DFA90A /* ChannelList.html */,
 				69D21EAE20525DE500DFA90A /* ConnectLoad.html */,
-				69D21EA120525DE400DFA90A /* css */,
 				69D21E9C20525DE300DFA90A /* database _IBC_2017-2.xml */,
 				69D21E9820525DE300DFA90A /* database _IBC_2017.xml */,
 				69D21E9920525DE300DFA90A /* database 2.xml */,
 				69D21E9520525DE300DFA90A /* database-test.xml */,
 				69D21EA320525DE400DFA90A /* download_list.json */,
-				69D21EB520525DE500DFA90A /* img */,
-				69D21EB020525DE500DFA90A /* js */,
 				69D21EA720525DE400DFA90A /* Load.html */,
 				69D21E9B20525DE300DFA90A /* Login.html */,
 				69D21E9D20525DE300DFA90A /* On.html */,
@@ -1525,8 +1534,12 @@
 				69D21EBD20525DE600DFA90A /* database _IBC_2017-2.xml in Resources */,
 				69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */,
 				69D21EC820525DE600DFA90A /* Load.html in Resources */,
+				6931BE36207329C1007DA182 /* agents.html in Resources */,
 				69D21EC920525DE600DFA90A /* spinner.html in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				6931BE38207329C1007DA182 /* main.html in Resources */,
+				6931BE3D207329F2007DA182 /* css in Resources */,
+				6931BE3E207329F2007DA182 /* bootstrap in Resources */,
 				9D2C60BC2BB342CE83B123C7 /* Entypo.ttf in Resources */,
 				69D21ECE20525DE600DFA90A /* TROPICALISLAND_4.png in Resources */,
 				330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */,
@@ -1542,12 +1555,12 @@
 				69D21ED220525DE600DFA90A /* SelectDecoder.html in Resources */,
 				69D21EBC20525DE600DFA90A /* Login.html in Resources */,
 				69D21ED520525DE600DFA90A /* SignIn.html in Resources */,
-				69D21ED620525DE600DFA90A /* img in Resources */,
 				2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */,
 				CC40F05A00924368B7051154 /* FontAwesome.ttf in Resources */,
 				69D21ECB20525DE600DFA90A /* WifiConnection.html in Resources */,
 				1D185041E25D442E86B5B882 /* Foundation.ttf in Resources */,
 				69D21EC720525DE600DFA90A /* TROPICALISLAND_42.gif in Resources */,
+				6931BE37207329C1007DA182 /* Load_1.html in Resources */,
 				69D21ECF20525DE600DFA90A /* ConnectLoad.html in Resources */,
 				69D21ED320525DE600DFA90A /* ChannelList.html in Resources */,
 				69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */,
@@ -1555,19 +1568,18 @@
 				69D21EC520525DE600DFA90A /* WifiConnectionList.html in Resources */,
 				48D3EB7181F444FA878162B3 /* Ionicons.ttf in Resources */,
 				C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */,
+				6931BE40207329F2007DA182 /* img in Resources */,
 				69D21ECD20525DE600DFA90A /* Register.html in Resources */,
 				69D21ED420525DE600DFA90A /* Antional.html in Resources */,
 				69D21EC320525DE600DFA90A /* TROPICALISLAND_4.gif in Resources */,
+				6931BE3F207329F2007DA182 /* js in Resources */,
 				69D21ECC20525DE600DFA90A /* STB.html in Resources */,
 				69D21EBB20525DE600DFA90A /* STB-PIN.html in Resources */,
 				69D21EBA20525DE600DFA90A /* database 2.xml in Resources */,
 				B40B0805BE5A4CCCA084F1F4 /* MaterialIcons.ttf in Resources */,
 				1EE00015034747ECB3577192 /* Octicons.ttf in Resources */,
-				69D21ED120525DE600DFA90A /* js in Resources */,
 				CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */,
-				69D21EC220525DE600DFA90A /* css in Resources */,
 				5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */,
-				69D21EC620525DE600DFA90A /* bootstrap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

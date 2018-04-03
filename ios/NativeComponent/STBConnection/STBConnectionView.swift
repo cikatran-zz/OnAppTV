@@ -75,6 +75,26 @@ class STBConnectionView: UIView {
         self.bridge = WebViewJavascriptBridge(forWebView: self.webView)
         self.bridge.setWebViewDelegate(self);
         
+        // MARK: - New methods
+        
+        self.bridge.registerHandler("HIG_CheckNotiPermission") { (_, _) in
+            OANotificationCenter.sharedInstance.checkGranted(callback: { (isGranted) in
+                if isGranted {
+                    self.bridge.callHandler("HIG_GoToLoginScreen", data: "");
+                } else {
+                    self.bridge.callHandler("HIG_ShowNotiModal", data: "");
+                }
+            })
+        }
+        
+        self.bridge.registerHandler("HIG_RequestNotiPermission") { (_, _) in
+            OANotificationCenter.sharedInstance.requestPermission {
+                self.bridge.callHandler("HIG_GoToLoginScreen", data: "");
+            }
+        }
+        
+        // ---------------
+        
         self.bridge.registerHandler("HIG_GetSTBList") { (data, responseCallback) in
             Api.shared().hIG_GetMobileWifiInfo({ (dic) in
                 if (dic?.keys.contains("SSID"))! {

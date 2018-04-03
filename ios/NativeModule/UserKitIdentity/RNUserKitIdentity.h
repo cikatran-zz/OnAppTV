@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <React/RCTBridgeModule.h>
 
-@interface RNUserKitIdentity : NSObject
+@interface RNUserKitIdentity : NSObject<RCTBridgeModule>
 
 @end

@@ -12,7 +12,9 @@
 @implementation RNNotificationCenter
 
 RCT_EXPORT_METHOD(requestPermission) {
-    [[OANotificationCenter sharedInstance] requestPermission];
+    [[OANotificationCenter sharedInstance] requestPermissionWithCallback:^{
+        
+    }];
 }
 
 @end

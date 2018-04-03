@@ -27,7 +27,7 @@ public extension AutheticationModel {
     public func toString() -> String? {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: self.toJson(), options: [])
-            return String(data: jsonData!, encoding: .utf8)
+            return String(data: jsonData, encoding: .utf8)
         } catch {
             print(error.localizedDescription)
         }
