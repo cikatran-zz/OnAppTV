@@ -6,7 +6,7 @@ import getLiveEpic from './liveRequestEpic'
 import getVODEpic from  './vodRequestEpic'
 import getAdsEpic from "./adsRequestEpic";
 import getNewsEpic from "./newsRequestEpic";
-import epgsRequestEpic from './epgsRequestEpic'
+import {epgsRequestEpic, epgWithGenre, epgWithSeriesId } from './epgsRequestEpic'
 import getBookingEpic from './bookingRequestEpic'
 
 const rootEpic = combineEpics(
@@ -18,6 +18,8 @@ const rootEpic = combineEpics(
     getAdsEpic,
     getNewsEpic,
     epgsRequestEpic,
+    epgWithGenre,
+    epgWithSeriesId,
     getBookingEpic
 );
 
