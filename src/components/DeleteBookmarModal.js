@@ -10,6 +10,7 @@ import {
   from 'react-native'
 import { colors } from '../utils/themeConfig'
 import BlurView from './BlurView'
+import { getBlurRadius } from '../utils/blurRadius'
 
 export default class DeleteBookmarkModal extends React.PureComponent {
 
@@ -65,7 +66,7 @@ export default class DeleteBookmarkModal extends React.PureComponent {
       <Modal animationType={this.props.animationType} transparent={this.props.transparent}
       visible={this.props.visible} onRequestClose={() => console.log('Modal close')}>
         <View style={styles.modal}>
-          <BlurView blurRadius={30} style={styles.blurView} overlayColor={0}/>
+          <BlurView blurRadius={getBlurRadius(30)} style={styles.blurView} overlayColor={1}/>
           <TouchableOpacity style={styles.close} onPress={this.props.onClosePress}>
             <Image source={require('../assets/ic_modal_close.png')} />
           </TouchableOpacity>
