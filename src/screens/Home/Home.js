@@ -5,7 +5,10 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions} from 'react-native';
+import {
+  FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions,
+  TouchableOpacity
+} from 'react-native'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
@@ -143,7 +146,17 @@ export default class Home extends Component {
       )
   }
 
+  _onVideoPress = (item) => {
+      const {navigation} = this.props;
+
+      navigation.navigate('VideoControlModal', {
+        item: item
+      })
+  }
+
   _renderVODItem = ({item}) => {
+
+
         let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
         if (item.originalImages != null && item.originalImages.length > 0) {
             image = item.originalImages[0].url;
@@ -159,12 +172,12 @@ export default class Home extends Component {
             })
         }
         return (
-            <View style={styles.liveThumbnailContainer}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item)}>
               <VideoThumbnail showProgress={false} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
-            </View>)
+            </TouchableOpacity>)
     };
 
   _renderCategoryItem = ({item}) => (
