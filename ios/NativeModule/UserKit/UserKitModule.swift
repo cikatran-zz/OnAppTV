@@ -39,4 +39,36 @@ class UserKitModule: NSObject {
     @objc public func addDeviceToken(_ token: Data) {
         module.deviceToken = token
     }
+    
+    @objc public func storeProperty(key: String, value: [String: Any], successBlock: @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
+        module.profile.set(properties: [key: value], successBlock: { (results) in
+            if let resultsDict = results as? [String: Any] {
+                successBlock(asJSONString(resultsDict))
+            } else {
+                errorBlock(asJSONString(["message": "Unknown error"]))
+            }
+        }) { (error) in
+            if let errorM = error as? ErrorModel {
+                errorBlock(errorM.toString())
+            } else {
+                errorBlock(error as? String)
+            }
+        }
+    }
+    
+    @objc public func getProperty(key: String, successBlock: @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
+        module.profile.getProperty(key, successBlock: { (results) in
+            if let resultsDict = results as? [String: Any] {
+                successBlock(asJSONString(resultsDict))
+            } else {
+                errorBlock(asJSONString(["message": "Unknown error"]))
+            }
+        }) { (error) in
+            if let errorM = error as? ErrorModel {
+                errorBlock(errorM.toString())
+            } else {
+                errorBlock(error as? String)
+            }
+        }
+    }
 }

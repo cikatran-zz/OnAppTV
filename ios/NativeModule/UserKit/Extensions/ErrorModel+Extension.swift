@@ -1,15 +1,16 @@
 //
-//  UKIError+Extension.swift
+//  ErrorModel+Extension.swift
 //  OnAppTV
 //
-//  Created by Chuong Huynh on 4/2/18.
+//  Created by Chuong Huynh on 4/4/18.
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
 import Foundation
-import UserKitIdentity
+import UserKit
 
-public extension UKIError {
+extension ErrorModel {
+    
     public func toJson() -> [String: Any] {
         return [
             "message": message as Any,
@@ -19,6 +20,6 @@ public extension UKIError {
     }
     
     public func toString() -> String? {
-       return asJSONString(self.toJson())
+        return asJSONString(self.toJson())
     }
 }

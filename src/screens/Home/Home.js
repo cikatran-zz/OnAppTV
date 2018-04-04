@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions, NativeModules} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
@@ -21,6 +21,20 @@ export default class Home extends Component {
 
     componentWillMount() {
         //Orientation.lockToPortrait();
+        NativeModules.RNUserKitIdentity.checkSignIn((error, results)=>{
+            let result = JSON.parse(results[0]);
+            if (result.is_sign_in) {
+                console.log("Already logged in");
+            } else {
+                NativeModules.RNUserKitIdentity.signInWithEmail("chuong@gmail.com", "00000000",{}, (error, results)=> {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        console.log("Sign in success",results[0]);
+                    }
+                })
+            }
+        });
     }
 
     componentDidMount() {
@@ -31,6 +45,7 @@ export default class Home extends Component {
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
+
     };
 
     _renderChannelListItem = ({item}) => {

@@ -55,4 +55,9 @@ class UserKitIdentityModule: NSObject {
             errorBlock(error?.toString())
         }
     }
+    
+    @objc func isLoggedIn() -> String {
+        
+        return asJSONString(["is_sign_in": module.accountManager.isLoggedIn()]) ?? ""
+    }
 }

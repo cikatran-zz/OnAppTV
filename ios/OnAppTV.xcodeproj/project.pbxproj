@@ -60,6 +60,8 @@
 		6931BE3E207329F2007DA182 /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE3A207329F1007DA182 /* bootstrap */; };
 		6931BE3F207329F2007DA182 /* js in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE3B207329F1007DA182 /* js */; };
 		6931BE40207329F2007DA182 /* img in Resources */ = {isa = PBXBuildFile; fileRef = 6931BE3C207329F2007DA182 /* img */; };
+		6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */; };
+		6931BE8A2074AFA5007DA182 /* JSONObjectToString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE892074AFA5007DA182 /* JSONObjectToString.swift */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
 		6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE4C204C29E400470C97 /* CustomControlsView.swift */; };
@@ -469,6 +471,8 @@
 		6931BE3A207329F1007DA182 /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../src/STBConnection/bootstrap; sourceTree = "<group>"; };
 		6931BE3B207329F1007DA182 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = ../src/STBConnection/js; sourceTree = "<group>"; };
 		6931BE3C207329F2007DA182 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = ../src/STBConnection/img; sourceTree = "<group>"; };
+		6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ErrorModel+Extension.swift"; sourceTree = "<group>"; };
+		6931BE892074AFA5007DA182 /* JSONObjectToString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONObjectToString.swift; sourceTree = "<group>"; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
 		6969BE4B204C29E400470C97 /* OnAppTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnAppTV-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -676,6 +680,7 @@
 		13B07FAE1A68108700A75B9A /* OnAppTV */ = {
 			isa = PBXGroup;
 			children = (
+				6931BE882074AF74007DA182 /* Utilities */,
 				690EEFE1205790F80099484A /* NativeModule */,
 				69D21E9420525DC300DFA90A /* Resources */,
 				69F9A4BC2024166600832440 /* NativeComponent */,
@@ -789,6 +794,7 @@
 		690EEFE2205790F80099484A /* UserKit */ = {
 			isa = PBXGroup;
 			children = (
+				6931BE5D2074AE68007DA182 /* Extensions */,
 				690EEFE4205791350099484A /* UserKitModule.swift */,
 				69025A8F2071E90600F66EBE /* RNUserKit.h */,
 				69025A902071E90600F66EBE /* RNUserKit.m */,
@@ -805,6 +811,22 @@
 				69025ABB2071EECE00F66EBE /* RNUserKitIdentity.m */,
 			);
 			path = UserKitIdentity;
+			sourceTree = "<group>";
+		};
+		6931BE5D2074AE68007DA182 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6931BE882074AF74007DA182 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6931BE892074AFA5007DA182 /* JSONObjectToString.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		69399A4D2049165B005EA1B8 /* VolumeView */ = {
@@ -1754,8 +1776,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6931BE8A2074AFA5007DA182 /* JSONObjectToString.swift in Sources */,
 				69025A912071E90600F66EBE /* RNUserKit.m in Sources */,
 				6969BE7B204C32CD00470C97 /* BrightcovePlayer.swift in Sources */,
+				6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */,
 				69025AC32071F4C200F66EBE /* ImageUpload+Extension.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				69025ABC2071EECE00F66EBE /* RNUserKitIdentity.m in Sources */,

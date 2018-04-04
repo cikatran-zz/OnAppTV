@@ -26,9 +26,9 @@ RCT_EXPORT_METHOD(signUpWithEmail: (NSString *)email
                                                    password:password
                                            customProperties:customProperties
                                                successBlock:^(NSString* authenModel) {
-                                                   callback(@[[NSNull null], authenModel]);
+                                                   callback(@[[NSNull null], @[authenModel]]);
                                                } errorBlock:^(NSString* error) {
-                                                   callback(@[error]);
+                                                   callback(@[error, [NSNull null]]);
                                                }];
 }
 
@@ -38,9 +38,9 @@ RCT_EXPORT_METHOD(signInWithFacebookAccount:(NSString *)facebookAuthToken
     
     [[UserKitIdentityModule sharedInstance] signInWithFacebookAccount:facebookAuthToken
                                                         successBlock:^(NSString* authenModel) {
-                                                            callback(@[[NSNull null], authenModel]);
+                                                            callback(@[[NSNull null], @[authenModel]]);
                                                         } errorBlock:^(NSString* error) {
-                                                            callback(@[error]);
+                                                            callback(@[error, [NSNull null]]);
                                                         }];
 }
 
@@ -52,13 +52,15 @@ RCT_EXPORT_METHOD(signInWithEmail: (NSString *)email
     [[UserKitIdentityModule sharedInstance] signInWithEmail:email
                                                    password:password
                                                successBlock:^(NSString* authenModel) {
-                                                   callback(@[[NSNull null], authenModel]);
+                                                   callback(@[[NSNull null], @[authenModel]]);
                                                } errorBlock:^(NSString* error) {
-                                                   callback(@[error]);
+                                                   callback(@[error, [NSNull null]]);
                                                }];
 }
 
-
+RCT_EXPORT_METHOD(checkSignIn: (RCTResponseSenderBlock)callback) {
+    callback(@[[NSNull null], @[[[UserKitIdentityModule sharedInstance] isLoggedIn]]]);
+}
 
 
 
