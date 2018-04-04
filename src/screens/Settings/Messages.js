@@ -50,7 +50,7 @@ export default class Messages extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <SettingHeader text={'Messages'} backButton={true}/>
+        <SettingHeader text={'Messages'} backButton={true} navigation={this.props.navigation}/>
         <FlatList
           style={styles.listMess}
           horizontal={false}

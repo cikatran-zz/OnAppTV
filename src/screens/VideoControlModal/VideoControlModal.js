@@ -28,8 +28,11 @@ export default class VideoControlModal extends React.PureComponent {
   }
 
   componentDidMount() {
+    const {channelId} = this.props
+
     Orientation.addOrientationListener(this._orientationDidChange);
-    this.props.getEpgs("putChannelIdHere")
+    // PUT YOUR CHANNEL ID HERE
+    this.props.getEpgs("5ac20aaa4ac42c344ab36d13")
   }
 
   _orientationDidChange = (orientation) => {
@@ -144,22 +147,7 @@ export default class VideoControlModal extends React.PureComponent {
           style={{flex: 1}}>
           <VerticalSwiper
             style={styles.dragContainer}
-            // content={(
-            //     <SectionList
-            //       style={{flex: 1, flexDirection: "column"}}
-            //       keyExtractor={this._keyExtractor}
-            //       stickySectionHeadersEnabled={false}
-            //       scrollEventThrottle={1}
-            //       onEndReachedThreshold={20}
-            //       onScroll={ this._handleViewableChanged}
-            //       showsVerticalScrollIndicator={false}
-            //       bounces={false}
-            //       sections={[
-            //         {data:["Video Detail"], showHeader: false, renderItem: this._renderLowerPage},
-            //       ]}
-            //     />
-            // )}>
-            content={this._renderUpperPage()}>
+            content={this._renderLowerPage()}>
             {this._renderUpperPage()}
           </VerticalSwiper>
         </View>

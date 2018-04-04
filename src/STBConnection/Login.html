@@ -89,7 +89,7 @@
 					<div class="HIGContent-footer">
 						<div class="HIG_button">
 							<!--<button onclick="SkipTo()">Login</button>-->
-							<button data-toggle="modal" href="#ConsentModal" tabindex="-1">Log In</button>
+							<button tabindex="-1" onclick="checkNotiPermission()">Log In</button>
 						</div>
 						<div class="line-top"></div>
 						<div class="footer-line">
@@ -116,7 +116,7 @@
 					</p>
 				</div>
 				<div class="modal-footer menu" style="border-top: 0px;">
-					<a class="modal-a" id="Agreed" href="SignIn.html">Allow</a>
+					<a class="modal-a" id="Agreed" onclick="requestNoti()">Allow</a>
 					<a class="modal-a dismissModal" id="Disagree" href="SignIn.html">Don’t Allow</a>
 				</div>
 			</div>
