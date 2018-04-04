@@ -6,9 +6,14 @@ import BottomTabbar from './components/BottomTabbar'
 import Zappers from "./screens/Zappers";
 import Settings from "./screens/Settings";
 import STBConnection from  './screens/STBConnection'
-import Bookmark from './screens/Bookmarks/Bookmark'
-import RecordList from './screens/Bookmarks/RecordList'
 import Book from './screens/Bookmarks/Book'
+import AudioLanguage from './screens/Settings/AudioLanguage'
+import Messages from './screens/Settings/Messages'
+import MySubscription from './screens/Settings/MySubscription'
+import ParentalControlLock from './screens/Settings/ParentalControlLock'
+import ParentalControl from './screens/Settings/ParentalControl'
+import PersonalInformation from './screens/Settings/PersionalInformations'
+import SignIn from './screens/Settings/SignIn'
 
 const TabNav = TabNavigator({
   Home: {
@@ -39,7 +44,6 @@ const TabNav = TabNavigator({
   tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
   tabBarPosition: 'bottom',
   swipeEnabled: false,
-  lazyload: true,
   animationEnabled: false
 })
 
@@ -56,14 +60,26 @@ export const ScreenStack = StackNavigator({
   VideoControlModal: {
     screen: VideoControlModal
   },
-  Bookmark: {
-    screen: Bookmark
+  AudioLanguage: {
+    screen: AudioLanguage
   },
-  Book: {
-    screen: Book
+  Messages: {
+    screen: Messages
   },
-  RecordList: {
-    screen: RecordList
+  MySubscription: {
+    screen: MySubscription
+  },
+  ParentalControlLock: {
+    screen: ParentalControlLock
+  },
+  ParentalControl: {
+    screen: ParentalControl
+  },
+  PersonalInformation: {
+    screen: PersonalInformation
+  },
+  SignIn: {
+    screen: SignIn
   }
 
 }, {

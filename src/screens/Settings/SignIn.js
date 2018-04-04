@@ -17,12 +17,12 @@ export default class SignIn extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <SettingHeader text={'Sign in'} backButton={true}/>
+        <SettingHeader text={'Sign in'} backButton={true} navigation={this.props.navigation}/>
         <Text style={styles.descriptionText}>Sign to validate your new subscription</Text>
         <TextInput style={styles.textInput} placeholder={'E-mail'} placeholderTextColor={'black'}/>
         <TextInput style={styles.textInput} placeholder={'Mot de passe'} placeholderTextColor={'black'}/>
         <Text style={styles.forgotPassText}>Mot de passe oublié ?</Text>
-        <PinkRoundedLabel text={'Confirm'}/>
+        <PinkRoundedLabel text={'Confirm'} style={styles.confirmButton}/>
         <Text style={styles.connectionIssue}>Connection issue</Text>
         <Image style={styles.adsContainer} source={{uri: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}}/>
       </View>
@@ -64,9 +64,10 @@ const styles = StyleSheet.create({
     marginBottom: 22
   },
   confirmButton: {
-    alignSelf: 'center',
+    textAlign: 'center',
     width: 232,
     height: 33,
+    fontSize: 17
   },
   connectionIssue: {
     alignSelf: 'center',
