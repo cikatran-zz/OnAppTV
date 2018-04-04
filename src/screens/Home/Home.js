@@ -21,6 +21,16 @@ export default class Home extends Component {
 
     componentWillMount() {
         //Orientation.lockToPortrait();
+    }
+
+    componentDidMount() {
+        this.props.getBanner();
+        this.props.getChannel(-1);
+        this.props.getAds();
+        this.props.getLive(new Date());
+        this.props.getVOD(1, 10);
+        this.props.getCategory();
+        this.props.getNews();
         NativeModules.RNUserKitIdentity.checkSignIn((error, results)=>{
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
@@ -35,17 +45,6 @@ export default class Home extends Component {
                 })
             }
         });
-    }
-
-    componentDidMount() {
-        this.props.getBanner();
-        this.props.getChannel(-1);
-        this.props.getAds();
-        this.props.getLive(new Date());
-        this.props.getVOD(1, 10);
-        this.props.getCategory();
-        this.props.getNews();
-
     };
 
     _renderChannelListItem = ({item}) => {

@@ -12,10 +12,10 @@ import UserKitIdentity
 public extension ImageUpload {
     public func toJson() -> [String: Any] {
         return [
-            "url": self.urlString as Any,
-            "width": self.width as Any,
-            "height": self.height as Any,
-            "style": self.style as Any
+            "url": (self.urlString ?? "") as Any,
+            "width": (self.width ?? 0) as Any,
+            "height": (self.height ?? 0) as Any,
+            "style": (self.style ?? "") as Any
         ]
     }
 }

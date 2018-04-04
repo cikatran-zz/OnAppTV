@@ -12,9 +12,9 @@ import UserKitIdentity
 public extension UKIError {
     public func toJson() -> [String: Any] {
         return [
-            "message": message as Any,
-            "http_code": httpCode as Any,
-            "error_code": errorCode as Any
+            "message": (message ?? "") as Any,
+            "http_code": (httpCode ?? -1) as Any,
+            "error_code": (errorCode ?? -1) as Any
         ]
     }
     

@@ -9,11 +9,12 @@
 import Foundation
 
 func asJSONString(_ json: [String: Any]) -> String? {
-    do {
-        let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-        return String(data: jsonData, encoding: .utf8)
-    } catch {
-        print(error.localizedDescription)
+    if (!JSONSerialization.isValidJSONObject(json)) {
+        return nil
+    }
+    let jsonData = try? JSONSerialization.data(withJSONObject: json, options: [])
+    if let _ = jsonData {
+        return String(data: jsonData!, encoding: .utf8)
     }
     return nil
 }
