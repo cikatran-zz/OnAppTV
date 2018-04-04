@@ -46,7 +46,7 @@
 							<div class="radio_group" id="radios">
 								<div class="opt">
 									<input class="magic-radio" type="radio" name="sex" value="Mrs" />
-									<label name="Mrs" for="Mrs">Mrs</label>
+									<label name="Mrs" for="Mrs">Mrs.</label>
 								</div>
 								<div class="opt">
 									<input class="magic-radio" type="radio" name="sex" value="Mr." checked="checked" />
@@ -55,13 +55,14 @@
 
 							</div>
 							<div class="text-group">
-								<input type="email" id="Email" placeholder="E-mail (personnel)" />
-								<input type="text" id="name" placeholder="Name" />
-								<input type="text" id="firstName" placeholder="First name" />
-								<select id="age">
+								<input type="email" id="Email" placeholder="E-mail (personal)" required/>
+								<input type="text" id="name" placeholder="Name" required/>
+								<input type="text" id="firstName" placeholder="First name" required/>
+								<select id="age" required>
 									<option value="" selected="selected">Age</option>
 								</select>
 							</div>
+							<p id="errorMessage" style="color: #ff0000; padding-top: 10pt"></p>
 						</div>
 					</div>
 				</div>
@@ -89,5 +90,10 @@
 				</div>
 			</div>
 	</body>
+	<div class="spinner" id="spinner">
+		<div class="bounce1"></div>
+		<div class="bounce2"></div>
+		<div class="bounce3"></div>
+	</div>
 
 </html>

@@ -15,6 +15,7 @@
 		<!--swiper-->
 		<!--<link rel="stylesheet" type="text/css" href="css/swiper.min.css" />
 		<script type="text/javascript" src="js/swiper.min.js"></script>-->
+<!--        <link type="text/css" rel="stylesheet" href="css/config.css" />-->
 		<title>SignIn</title>
 	</head>
 	<body onresize="document.querySelector('.modal-body').scrollIntoView(true);">
@@ -33,16 +34,16 @@
 				<div class="modal-body">
 					<div class="modal-form">
 						<p>Identify yourself with your subscriber code</p>
+                        <p id="errorMessage" style="color: #ff0000"></p>
 						<div class="LoginForm">
-							<input type="text" class="" placeholder="E-mail" />
-							<input type="password" class="" placeholder="Passord" />
+							<input id="email" type="text" class="" placeholder="E-mail" style="user-select:text" />
+							<input id="password" type="password" class="" placeholder="Password" style="user-select:text"/>
 						</div>
 						<div class="ForgotMessage">
-							<p>Forget your password ?</p>
+							<p>Forget your password?</p>
 						</div>
 						<div class="modal-button menu">
 							<a class="button-a" id="loginButton">Log In</a>
-							<p id="">A connection problem ?</p>
 						</div>
 					</div>
 				</div>
@@ -65,6 +66,11 @@
 			</div>
 		</div>
 		<script></script>
+        <div class="spinner" id="spinner" >
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
 	</body>
 
 </html>
