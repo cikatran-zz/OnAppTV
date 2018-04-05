@@ -107,7 +107,7 @@ export default class Zappers extends Component {
         }
         this.state.allChannels[index].favorite = isFavorite ? 1 : 0;
 
-        NativeModules.STBManager.setServiceListWithJsonString(JSON.stringify(this.state.allChannels[index]), (error, events)=>{});
+        NativeModules.STBManager.setServiceWithJsonString(JSON.stringify(this.state.allChannels[index]), (error, events)=>{});
 
         for (var i = 0; i < this.state.channelData.length; i++) {
             if (this.state.channelData[i].serviceID == serviceId) {
