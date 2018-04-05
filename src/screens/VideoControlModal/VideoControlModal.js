@@ -192,7 +192,11 @@ export default class VideoControlModal extends React.Component {
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          {this._renderLowerPage(epg, item)}
+          <VerticalSwiper
+            style={styles.dragContainer}
+            content={this._renderLowerPage(epg, item)}>
+            {this._renderUpperPage(epg, item)}
+          </VerticalSwiper>
         </View>
 
       );

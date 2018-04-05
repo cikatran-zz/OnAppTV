@@ -13,7 +13,7 @@ export default class Book extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getList()
+    // this.props.getList()
   }
 
   _keyExtractor = (item, index) => index
