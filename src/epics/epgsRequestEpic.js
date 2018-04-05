@@ -10,7 +10,7 @@ import {Observable} from 'rxjs/Observable'
 export const epgsRequestEpic = (action$) =>
     action$.ofType(actionTypes.FETCHING_EPGS)
         .mergeMap(action =>
-            Observable.from(getEpgs(action.channelId))
+            Observable.from(getEpgs(action.serviceId))
               .map(response => getEpgsSuccess(response.data))
               .catch(error => Observable.of(getEpgsFailure(error)))
         );

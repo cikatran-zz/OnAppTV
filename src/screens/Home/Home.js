@@ -45,7 +45,7 @@ export default class Home extends Component {
             imageUrl = item.image;
         }
       return (
-        <View style={styles.itemContainer}>
+        <TouchableOpacity style={styles.itemContainer} onPress={() => this._onChannelPress(item)}>
             <View style={styles.itemImageContainer}>
                 <Image
                   style={styles.itemImage}
@@ -55,7 +55,7 @@ export default class Home extends Component {
             <Text
               numberOfLines={1}
               style={styles.itemLabel}>{item.serviceName == null ? "" : item.serviceName.toString().toUpperCase()}</Text>
-        </View>
+        </TouchableOpacity>
     )}
 
     _renderChannelListItemSeparator = () => (
@@ -170,6 +170,14 @@ export default class Home extends Component {
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
           </View>
       )
+  }
+
+  _onChannelPress = (item) => {
+      const {navigation} = this.props;
+
+      navigation.navigate('VideoControlModal', {
+        item: item
+      })
   }
 
   _onVideoPress = (item) => {

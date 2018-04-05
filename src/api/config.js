@@ -168,23 +168,19 @@ query getLiveEPG($currentTime: Date){
 `;
 
 const epgQuery = gql`
-query getEPGByChannel($channelId: MongoID!){
+query getEPGByChannel($id: [Float]){
   viewer{
-      channelById(_id : $channelId) {
-        title
-        longDescription
-        shortDescription
-        createdAt
-        updatedAt
-        originalImages {
-              height
-              width
-              url
-              name
-              fileName
-        }
-        epgsData {
-          videoId
+      channelMany (filter: {
+       	_operators: {
+          serviceId: {
+            in: $id
+          }
+       	 }
+      	}
+      ) {
+      _id
+      epgsData {
+        videoId
           channelId
           startTime
           endTime
@@ -195,6 +191,9 @@ query getEPGByChannel($channelId: MongoID!){
               url
               name
               fileName
+            }
+            genresData {
+              name
             }
             contentId
             durationInSeconds
@@ -212,8 +211,8 @@ query getEPGByChannel($channelId: MongoID!){
             createdAt
             updatedAt
           }
-        }
-      }  
+      }
+    }
     }
 }
 `;

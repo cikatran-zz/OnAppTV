@@ -1,16 +1,16 @@
 import * as actionTypes from './actionTypes'
 
-export function getEpgs(channelId) {
+export function getEpgs(serviceId) {
     return {
         type: actionTypes.FETCHING_EPGS,
-        channelId: channelId
+        serviceId: serviceId
     }
 }
 
 export function getEpgsSuccess(data) {
     return {
         type: actionTypes.FETCH_EPGS_SUCCESS,
-        data: data.viewer.channelById
+        data: data.viewer.channelMany[0].epgsData
     }
 }
 
