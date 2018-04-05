@@ -172,6 +172,10 @@ android {
 
 }
 
+ext{
+    userkitVersion = "2.2.49"
+}
+
 dependencies {
     implementation project(':react-native-orientation')
     implementation project(':react-native-vector-icons')
@@ -184,8 +188,8 @@ dependencies {
     implementation 'com.facebook.react:react-native:+'
 
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.mstage.userkit:sdk:2.2.48.10'
-    implementation 'com.mstage.userkit:identity:2.2.48.10'
+    implementation "com.mstage.userkit:sdk:${userkitVersion}"
+    implementation "com.mstage.userkit:identity:${userkitVersion}"
     // From node_modules
     implementation project(':android-stb-connect')
     implementation project(':android-stb-connect-lib')
