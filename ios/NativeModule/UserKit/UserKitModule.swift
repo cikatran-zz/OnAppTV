@@ -59,7 +59,11 @@ class UserKitModule: NSObject {
     @objc public func getProperty(key: String, successBlock: @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
         module.profile.getProperty(key, successBlock: { (results) in
             if let resultsDict = results as? [String: Any] {
-                successBlock(asJSONString(resultsDict))
+                var finalResults = resultsDict
+                if resultsDict[key].debugDescription == "Optional(<null>)" {
+                    finalResults[key] = [String:Any]()
+                }
+                successBlock(asJSONString(finalResults[key] as! [String: Any]))
             } else {
                 errorBlock(asJSONString(["message": "Unknown error"]))
             }

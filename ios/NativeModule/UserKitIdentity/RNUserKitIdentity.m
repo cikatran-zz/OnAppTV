@@ -46,7 +46,6 @@ RCT_EXPORT_METHOD(signInWithFacebookAccount:(NSString *)facebookAuthToken
 
 RCT_EXPORT_METHOD(signInWithEmail: (NSString *)email
                   password: (NSString *)password
-                  customProperties: (NSDictionary *)customProperties
                   callback: (RCTResponseSenderBlock)callback) {
     
     [[UserKitIdentityModule sharedInstance] signInWithEmail:email

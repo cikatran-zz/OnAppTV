@@ -5,11 +5,14 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions, NativeModules} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions, NativeModules, TouchableOpacity} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
-import {colors, textDarkDefault, textLightDefault, borderedImageDefault} from '../../utils/themeConfig';
+import {
+    colors, textDarkDefault, textLightDefault, borderedImageDefault,
+    textWhiteDefault
+} from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
 
@@ -17,6 +20,10 @@ export default class Home extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            favoriteCategories: null,
+            category: null
+        }
     };
 
     componentWillMount() {
@@ -32,11 +39,12 @@ export default class Home extends Component {
         this.props.getCategory();
         this.props.getNews();
         NativeModules.RNUserKitIdentity.checkSignIn((error, results)=>{
+            console.log(results)
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 console.log("Already logged in");
             } else {
-                NativeModules.RNUserKitIdentity.signInWithEmail("chuong@gmail.com", "00000000",{}, (error, results)=> {
+                NativeModules.RNUserKitIdentity.signInWithEmail("chuong@gmail.com", "00000000", (error, results)=> {
                     if (error) {
                         console.log(error)
                     } else {
@@ -73,6 +81,13 @@ export default class Home extends Component {
     _keyExtractor = (item, index) => index;
 
     _renderBanner = ({item}) => {
+        if (item == null) {
+            return (
+                <View style={styles.slotMachineContainer}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
         let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
@@ -102,6 +117,13 @@ export default class Home extends Component {
     )}
 
     _renderFooter = ({item}) => {
+        if (item == null) {
+            return (
+                <View style={styles.notificationContainer}>
+                    <Text style={styles.noInternetConnection}>No notification found.</Text>
+                </View>
+            )
+        }
         var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
@@ -115,7 +137,15 @@ export default class Home extends Component {
         )
     };
 
-    _renderChannelList = ({item}) => (
+    _renderChannelList = ({item}) => {
+        if (item == null || item[0] == null) {
+            return (
+                <View style={styles.listHorizontal}>
+                    <Text style={styles.noInternetConnection}>No favorite channels</Text>
+                </View>
+            )
+        }
+        return (
           <FlatList
             style={styles.listHorizontal}
             horizontal={true}
@@ -124,7 +154,8 @@ export default class Home extends Component {
             data={item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderChannelListItem} />
-    )
+        )
+    }
 
   _renderOnLiveItem = ({item}) => {
       let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
@@ -140,18 +171,18 @@ export default class Home extends Component {
               genres = genres.concat(genre.name.toString());
           })
       }
-      var timeInfo = item.channelData.title + ' ' + timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+      var timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
       var currentDate = (new Date()).getTime();
       var startDate = (new Date(item.startTime)).getTime();
       var endDate = (new Date(item.endTime)).getTime();
       var progress = (currentDate-startDate)/(endDate - startDate) * 100;
-      console.log(progress);
         return (
           <View style={styles.liveThumbnailContainer}>
               <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
           </View>
       )
@@ -181,53 +212,97 @@ export default class Home extends Component {
             </View>)
     };
 
-  _renderCategoryItem = ({item}) => (
-    <View style={styles.liveThumbnailContainer}>
-      <VideoThumbnail showProgress={false} textCenter={item.name} marginHorizontal={10}/>
-    </View>
-  )
+    _navigateToMyCategories = ()=> {
+        const { navigate } = this.props.navigation;
+        console.log("NAVI ",this.state.category);
+        navigate('MyCategories', {data: this.state.category, updateFavorite: this._updateFavoriteCategories});
+    };
+  _renderCategoryItem = ({item}) => {
+      if (item.name == "_ADD") {
+
+          return (
+              <TouchableOpacity onPress={()=>this._navigateToMyCategories()}>
+                  <View style={styles.liveThumbnailContainer}>
+                      <View style={styles.addMoreCategoryContainer}>
+                          <Text style={styles.textCenter}>ADD</Text>
+                      </View>
+                  </View>
+              </TouchableOpacity>
+          )
+      }
+      return (
+          <View style={styles.liveThumbnailContainer}>
+              <VideoThumbnail showProgress={false} textCenter={item.name} marginHorizontal={10}/>
+          </View>
+      )
+  };
 
     _renderAds = ({item}) => {
+        if (item == null) {
+            return (
+                <View style={styles.adsContainer}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
         let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
         if (item.originalImages != null && item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
-      return (<ImageBackground style={styles.adsContainer} source={{uri: image}}>
+        return (<ImageBackground style={styles.adsContainer} source={{uri: image}}>
           <View style={styles.adsLabelContainer}>
               <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
           </View>
-      </ImageBackground>)
-    }
+        </ImageBackground>)
+    };
 
-    _renderOnLiveList = ({item}) => (
-        <FlatList
+    _renderOnLiveList = ({item}) => {
+        if (item == null || item[0] == null) {
+            return (
+                <View style={{flex: 1}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
+        return (<FlatList
           style={{flex: 1}}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           data={item}
           keyExtractor={this._keyExtractor}
-          renderItem={this._renderOnLiveItem} />
-    )
+          renderItem={this._renderOnLiveItem} />)
+    };
 
-    _renderVODList = ({item}) => (
-      <FlatList
-        style={{flex: 1}}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        data={item}
-        keyExtractor={this._keyExtractor}
-        renderItem={this._renderVODItem} />
-    )
+    _renderVODList = ({item}) => {
+        if (item == null || item[0] == null) {
+            return (
+                <View style={{flex: 1}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
+        return (
+            <FlatList
+                style={{flex: 1}}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                data={item}
+                keyExtractor={this._keyExtractor}
+                renderItem={this._renderVODItem} />
+        )
+    }
 
-    _renderCategoryList = ({item}) => (
-      <FlatList
-        style={{flex: 1}}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        data={item}
-        keyExtractor={this._keyExtractor}
-        renderItem={this._renderCategoryItem} />
-    )
+    _renderCategoryList = ({item}) => {
+        return (
+            <FlatList
+                style={{flex: 1}}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                data={item}
+                keyExtractor={this._keyExtractor}
+                renderItem={this._renderCategoryItem} />
+        )
+    };
 
     _renderSectionHeader = ({section}) => {
       if (section.showHeader) {
@@ -245,28 +320,45 @@ export default class Home extends Component {
       <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
     )
 
+    _updateFavoriteCategories = (favorites) => {
+        favorites.push({"name": "_ADD"});
+        var data = this.state.category;
+        for (var i=0; i< data.length; i++) {
+            data[i].favorite = 0;
+            for (var j=0; j< favorites.length; j++) {
+                if (data[i].name == favorites[j].name) {
+                    data[i].favorite = 1;
+                }
+            }
+        }
+        this.state.category = data;
+        console.log("AFTER UPDATE",data);
+        this.setState({favoriteCategories: favorites});
+    };
+
 
     render() {
         const {banner, channel, live, vod, ads, category, news} = this.props;
-        if (!banner.data || banner.isFetching ||
-          !channel.data || channel.isFetching ||
-                ads.isFetching ||
-                !vod.data || vod.isFetching ||
-                !category.data || category.isFetching ||
-                news.isFetching ||
-                !live.data || live.isFetching)
+        if (!banner.fetched || banner.isFetching ||
+            !channel.fetched || channel.isFetching ||
+            !ads.fetched || ads.isFetching ||
+            !vod.fetched || vod.isFetching ||
+            !category.fetched || category.isFetching ||
+            !news.fetched || news.isFetching ||
+            !live.fetched || live.isFetching)
             return null;
-        var adsSection = {data:[], showHeader: false, renderItem: this._renderAds};
-        if (ads.data != null) {
-            adsSection.data = [ads.data]
-        }
-
-        var newsSection = {data:[], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter};
-        if (news.data != null) {
-            newsSection.data = [news.data];
-        }
 
         var channelData = channel.data.filter(item => item.favorite == 1);
+        if (channelData.length == 0) {
+            channelData = [null];
+        }
+
+        if (this.state.favoriteCategories == null) {
+            var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
+            this.state.category = category.data;
+            categoryData.push({"name": "_ADD"});
+            this.state.favoriteCategories = categoryData;
+        }
 
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
@@ -282,11 +374,11 @@ export default class Home extends Component {
               sections={[
                   {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
                   {data:[channelData], showHeader: false, renderItem: this._renderChannelList},
-                  adsSection,
+                  {data:[ads.data], showHeader: false, renderItem: this._renderAds},
                   {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
-                  {data:[category.data], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                  newsSection
+                  {data:[this.state.favoriteCategories], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+                  {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
                 ]}
             />
           </View>
@@ -412,9 +504,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textLiveVideoTitle: {
-      ...textDarkDefault,
-      width: 150,
-      textAlign:'center',
+        ...textDarkDefault,
+        marginTop: 21,
+        width: 150,
+        textAlign:'center',
     },
     textLiveVideoInfo: {
       ...textLightDefault,
@@ -437,12 +530,34 @@ const styles = StyleSheet.create({
     notificationSubTitle: {
       ...textLightDefault
     },
-  blurview: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right:0,
-    top: 0,
-    borderRadius: 50,
-  },
+    blurview: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right:0,
+        top: 0,
+        borderRadius: 50,
+    },
+    noInternetConnection: {
+        color: colors.greyDescriptionText,
+        textAlign: 'center',
+        flexWrap: "wrap",
+    },
+    addMoreCategoryContainer: {
+        borderRadius: 4,
+        borderWidth: 2,
+        overflow: 'hidden',
+        borderColor: "#95989A",
+        width: 150,
+        height: 75,
+        marginVertical: 5,
+        marginHorizontal: 10,
+        justifyContent: 'center'
+    },
+    textCenter: {
+        ...textDarkDefault,
+        textAlign: 'center',
+        alignSelf: 'center',
+        width: 150
+    }
 });

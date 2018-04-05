@@ -3,7 +3,7 @@ import {
   Text, Switch, View, StyleSheet, FlatList, StatusBar
 } from 'react-native'
 import { colors } from '../../utils/themeConfig'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 import SettingItem from '../../components/SettingItem'
 
 export default class PersonalInformation extends React.PureComponent {
@@ -24,7 +24,6 @@ export default class PersonalInformation extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <SettingHeader text={'Personal Informations'} backButton={true} navigation={navigation}/>
           <FlatList
             style={styles.listContainer}
             horizontal={false}

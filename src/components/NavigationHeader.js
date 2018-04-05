@@ -2,30 +2,19 @@ import React from 'react'
 import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { colors } from '../utils/themeConfig'
 
-export default class SettingHeader extends React.PureComponent {
+export default class NavigationHeader extends React.PureComponent {
 
   constructor(props) {
     super(props)
-  }
-
-  _renderBack = () => {
-    const {backButton, navigation} = this.props
-
-    if (backButton) {
-      return (
-        <TouchableOpacity onPress={() => {if (navigation) navigation.goBack()}} style={styles.backIcon}>
-          <Image source={require('../assets/ic_left_arrow.png')} />
-        </TouchableOpacity>
-      )
-    }
-    else return null
   }
 
   render() {
 
     return (
       <View style={styles.headerContainer}>
-        {this._renderBack()}
+          <TouchableOpacity onPress={() => {this.props.onPress()}} style={styles.backIcon}>
+              <Image source={require('../assets/ic_left_arrow.png')} />
+          </TouchableOpacity>
         <Text style={styles.headerLabel}>{this.props.text}</Text>
       </View>
     )

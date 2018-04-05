@@ -284,6 +284,24 @@ export const getVOD = (page, itemPerPage) => {
 export const getCategory = () => {
     return client.query({
         query: config.queries.CATEGORY
+    }).then((response)=>{
+        return new Promise((resolve,reject) => {
+            NativeModules.RNUserKit.getProperty("favorite_categories", (error, results) => {
+                if (error) {
+                    reject(JSON.parse(error));
+                } else {
+                    var categories = response.data.viewer.genreMany;
+                    var favoriteCategories = JSON.parse(results[0]);
+                    console.log(favoriteCategories);
+                    var categoriesResults=[];
+                    for (var i = 0; i< categories.length; i++) {
+                        var name = categories[i].name;
+                        categoriesResults.push({name: name,favorite:(favoriteCategories[name] == null) ? false : favoriteCategories[name]});
+                    }
+                    resolve(categoriesResults);
+                }
+            });
+        });
     });
 };
 
