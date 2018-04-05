@@ -11,8 +11,11 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -39,6 +42,18 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
     @ReactMethod
     public void signOut() {
         UserKitIdentity.getInstance().getAccountManager().logout();
+    }
+
+    @ReactMethod
+    public void checkSignIn(Callback callback) {
+        boolean isSignIn = UserKitIdentity.getInstance().getAccountManager().isLoggedIn();
+        if (isSignIn) {
+            WritableNativeArray array = new WritableNativeArray();
+            array.pushString("{\"is_sign_in\":true}");
+            callback.invoke(array, null);
+        } else {
+            callback.invoke(null, null);
+        }
     }
 
     @SuppressLint("CheckResult")
