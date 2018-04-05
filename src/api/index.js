@@ -44,6 +44,21 @@ const get = (endpoints) => {
     });
 };
 
+getPvrBookList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrBookListInJson((error, events) => {
+            console.log('getPvrBookListInJson')
+            console.log(error)
+            console.log(events)
+            if (error)
+                reject(error)
+            else {
+                resolve(JSON.parse(events[0]))
+            }
+        })
+    })
+}
+
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
         resolve([
@@ -221,6 +236,15 @@ getSTBChannel = () => {
     });
 };
 
+export const getBookList = () => {
+  console.log("getPvrBookList")
+    let bookList = null;
+    return getPvrBookList()
+      .then((value) => {
+          console.log(value)
+      })
+}
+
 export const getChannel = (limit) => {
     var zapList = null;
     return getSTBChannel()
@@ -297,6 +321,21 @@ export const getEpgs = (channelId) => {
   return client.query({
     query: config.queries.EPG,
     variables: {channelId: channelId}
+  })
+}
+
+export const getEpgWithGenres = (genresIds) => {
+  console.log(genresIds)
+  return client.query({
+    query: config.queries.EPG_WITH_GENRES,
+    variables: {genreIds: genresIds}
+  })
+}
+
+export const getEpgWithSeriesId = (seriesId) => {
+  return client.query({
+    query: config.queries.EPG_WITH_SERIES,
+    variables: {id: seriesId}
   })
 }
 

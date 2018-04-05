@@ -10,7 +10,7 @@ import VerticalSwiper from '../../components/VerticalSwiper';
 
 
 const { width, height } = Dimensions.get("window")
-export default class VideoControlModal extends React.PureComponent {
+export default class VideoControlModal extends React.Component {
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
     if (width > height) {
@@ -24,20 +24,34 @@ export default class VideoControlModal extends React.PureComponent {
     super(props);
     this.state = {
       showBrightcove: false,
+      recordEnabled: false,
+      favoriteEnabled: false
     }
   }
 
   componentDidMount() {
-    const {channelId} = this.props
-    console.log("Refs",this.child)
+    const {item} = this.props.navigation.state.params
+
+    switch (item.type) {
+      case 'Standalone': {
+        // Find video with related genre
+        this.props.getEpgWithGenre(item.genreIds)
+        break;
+      }
+      case 'Episode': {
+        this.props.getEpgWithSeriesId([item.seriesId])
+        break;
+      }
+      default: {
+        this.props.getEpgs(this.props.channelId ? this.props.channelId : '5ac20aaa4ac42c344ab36d13')
+      }
+    }
 
     Orientation.addOrientationListener(this._orientationDidChange);
     // PUT YOUR CHANNEL ID HERE
-    this.props.getEpgs("5ac20aaa4ac42c344ab36d13")
   }
 
   _orientationDidChange = (orientation) => {
-    console.log(orientation);
     if (orientation === 'LANDSCAPE' || (width > height)) {
       this.setState({showBrightcove: true})
     } else {
@@ -45,13 +59,39 @@ export default class VideoControlModal extends React.PureComponent {
     }
   };
 
-  _renderPlaybackController = () => {
+  _formatGenresText = (genresData) => {
+    let returnText = ''
+    genresData.forEach(genres => {
+      returnText += genres.name + " "
+    })
+    return returnText
+  }
+
+  _onRecordPress = () => {
+    const {recordEnabled} = this.state
+
+    this.setState({
+      recordEnabled: !recordEnabled
+    })
+  }
+
+  _onFavouritePress = () => {
+    const {favoriteEnabled} = this.state
+
+    this.setState({
+      favoriteEnabled: !favoriteEnabled
+    })
+  }
+
+  _renderPlaybackController = (item) => {
+    const {recordEnabled, favoriteEnabled} = this.state
+
     return (<View style={styles.playbackContainer}>
       <View style={styles.topButtonsContainer}>
-        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
-          <Image source={require('../../assets/ic_record.png')} style={{alignSelf: 'center'}}/>
+        <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
+          <Image source={require('../../assets/ic_record.png')} style={{alignSelf: 'center', width: '100%', height: '100%'}}/>
         </TouchableOpacity>
-        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
+        <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
           <Image source={require('../../assets/ic_heart_with_border.png')} style={{alignSelf: 'center'}}/>
         </TouchableOpacity>
         <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
@@ -65,8 +105,8 @@ export default class VideoControlModal extends React.PureComponent {
         </TouchableOpacity>
       </View>
       <View style={styles.mediaInfoContainer}>
-        <Text style={styles.titleText}>At Frida Kahlo's</Text>
-        <Text style={styles.typeText}>Documentary</Text>
+        <Text style={styles.titleText}>{item.title}</Text>
+        <Text style={styles.typeText}>{this._formatGenresText(item.genresData)}</Text>
       </View>
       <View style={styles.playbackButtons}>
         <TouchableOpacity style={styles.rewindButton}>
@@ -83,7 +123,7 @@ export default class VideoControlModal extends React.PureComponent {
         <TouchableOpacity style={styles.volumeLessIcon}>
           <Image source={require('../../assets/ic_quieter.png')}/>
         </TouchableOpacity>
-        <VolumeSeeker width={270} thumbSize={16} maxValue={100}/>
+        <VolumeSeeker width={260} thumbSize={16} maxValue={100}/>
         <TouchableOpacity style={styles.volumeMoreIcon}>
           <Image source={require('../../assets/ic_louder.png')}/>
         </TouchableOpacity>
@@ -91,36 +131,38 @@ export default class VideoControlModal extends React.PureComponent {
     </View>)
   }
 
-  _renderLowerPage = () => {
-    const {epg} = this.props
+  _renderLowerPage = (epg, item) => {
+
     if (!epg.data) {
-      return (<LowerPagerComponent ref={ref => (this.child = ref)}/>)
+      return (<LowerPagerComponent/>)
     }
-    let listData = epg.data.epgsData
-    // PUT HERE CURRENT PLAYING VIDEO
-    // CURRENTLY SET THIS TO FIRST VIDEO OF CHANNEL
-    // CHANGE LOGIC HERE FOR ANOTHER VIDEO LIKE STANDALONE
+    let listData = epg.data
+    // use this variable when navigating from channel list
     let video = listData[0]
 
     return(
-      <LowerPagerComponent ref={ref => (this.child = ref)} videoType="channel" listData={epg.data} video={video}/>
+      <LowerPagerComponent videoType={item.type} listData={listData} video={item}/>
     )
   }
 
-  _renderUpperPage = () => (<View style={{width: '100%', height: height}}>
-    <View style={styles.topContainer}>
-      <ImageBackground style={styles.topVideoControl}
-                       resizeMode="cover"
-                       source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}}/>
-    </View>
-    <View style={styles.bottomContainer}>
-      <ImageBackground style={styles.bottomVideoControl}
-                       resizeMode="cover"
-                       blurRadius={10}
-                       source={{uri: 'http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg'}} />
-      {this._renderPlaybackController()}
-    </View>
-  </View>)
+  _renderUpperPage = (item) => {
+
+    return (
+      <View style={{width: '100%', height: height}}>
+        <View style={styles.topContainer}>
+          <ImageBackground style={styles.topVideoControl}
+                           resizeMode="cover"
+                           source={{uri: item.originalImages[0].url}}/>
+        </View>
+        <View style={styles.bottomContainer}>
+          <ImageBackground style={styles.bottomVideoControl}
+                           resizeMode="cover"
+                           blurRadius={10}
+                           source={{uri: item.originalImages[0].url}}/>
+          {this._renderPlaybackController(item)}
+        </View>
+      </View>)
+  }
 
   _keyExtractor = (item, index) => index;
 
@@ -133,6 +175,9 @@ export default class VideoControlModal extends React.PureComponent {
     ])
   }
   _renderModal = () => {
+    const {item} = this.props.navigation.state.params;
+    const {epg} = this.props
+
     if (this.state.showBrightcove) {
       return (
         <BrightcovePlayer
@@ -147,7 +192,7 @@ export default class VideoControlModal extends React.PureComponent {
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-            {this._renderLowerPage()}
+          {this._renderLowerPage(epg, item)}
         </View>
 
       );
@@ -288,6 +333,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  buttonStyle: {
+    width: 46,
+    height: 46,
+    marginRight: 12,
+    borderRadius: 23
+  }
 })
 
 const fakeBannerInfoData = {

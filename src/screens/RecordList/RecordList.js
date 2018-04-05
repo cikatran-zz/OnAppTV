@@ -3,10 +3,10 @@ import {
   Text, View, SectionList, TextInput, StyleSheet, FlatList, TouchableOpacity, Platform,
   Image, Dimensions
 } from 'react-native'
-import HorizontalVideoThumbnail from '../../../components/HorizontalVideoThumbnail'
-import PinkRoundedLabel  from '../../../components/PinkRoundedLabel'
-import { colors } from '../../../utils/themeConfig'
-import Modal from '../../../components/DeleteBookmarModal'
+import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
+import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
+import { colors } from '../../utils/themeConfig'
+import Modal from '../../components/DeleteBookmarModal'
 
 export default class RecordList extends React.PureComponent {
   constructor(props) {
@@ -36,7 +36,7 @@ export default class RecordList extends React.PureComponent {
       <View style={styles.itemContainer}>
         <HorizontalVideoThumbnail item={item}/>
         <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
-          <Image source={require('../../../assets/three_dot.png')}/>
+          <Image source={require('../../assets/three_dot.png')}/>
         </TouchableOpacity>
       </View>
     )

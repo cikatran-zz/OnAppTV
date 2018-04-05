@@ -6,7 +6,7 @@ import BottomTabbar from './components/BottomTabbar'
 import Zappers from "./screens/Zappers";
 import Settings from "./screens/Settings";
 import STBConnection from  './screens/STBConnection'
-import Book from './screens/Bookmarks/Book'
+import Book from './screens/Book'
 import AudioLanguage from './screens/Settings/AudioLanguage'
 import Messages from './screens/Settings/Messages'
 import MySubscription from './screens/Settings/MySubscription'

@@ -49,7 +49,7 @@ export default class LowerPageComponent extends PureComponent {
       }
   }
 
-  _renderLogoChannel = ({urlArray}) => {
+  _renderLogoChannel = (urlArray) => {
     const {videoType} = this.props;
     // let logoUrl = url ? url : '../assets/arte.png'
     let logoUrl = require('../assets/arte.png')
@@ -63,25 +63,44 @@ export default class LowerPageComponent extends PureComponent {
 
   _renderList = (data) => {
     // data is list of epgs
-    return (
-      <View>
-        <View style={styles.listHeader}>
-          <View style={styles.nextButtonContainer}>
-            {this._renderPinkIndicatorButton()}
+    if (this.props.videoType === 'channel') {
+      return (
+        <View>
+          <View style={styles.listHeader}>
+            <View style={styles.nextButtonContainer}>
+              {this._renderPinkIndicatorButton()}
+            </View>
+            <View style={styles.logoContainer}>
+              {/*// TODO: Logo*/}
+              {this._renderLogoChannel(data.item.originalImages)}
+            </View>
           </View>
-          <View style={styles.logoContainer}>
-            {/*// TODO: Logo*/}
-            {this._renderLogoChannel(data.item.originalImages)}
-          </View>
+          <FlatList
+            style={styles.list}
+            horizontal={false}
+            data={data.item.epgsData}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderListVideoItem}/>
         </View>
-        <FlatList
-        style={styles.list}
-        horizontal={false}
-        data={data.item.epgsData}
-        keyExtractor={this._keyExtractor}
-        renderItem={this._renderListVideoItem}/>
-      </View>
-    )
+      )
+    }
+    else {
+      return (
+        <View>
+          <View style={styles.listHeader}>
+            <View style={styles.nextButtonContainer}>
+              {this._renderPinkIndicatorButton()}
+            </View>
+          </View>
+          <FlatList
+            style={styles.list}
+            horizontal={false}
+            data={data.item}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderListVideoItem}/>
+        </View>
+      )
+    }
   }
 
   _timeFormatter(time) {
@@ -92,9 +111,9 @@ export default class LowerPageComponent extends PureComponent {
   }
 
   _renderListVideoItem = ({item}) => {
-    console.log("RENDER_LIST_ITEM")
     console.log(item)
-    let videoData = item.videoData
+
+    let videoData = this.props.videoTypeText === 'channel' ? item.videoData : item
     return (
       <View style={styles.itemContainer}>
         <Image
@@ -126,8 +145,6 @@ export default class LowerPageComponent extends PureComponent {
 
     if (!listData || !video)
       return null;
-
-    console.log(listData)
 
     let videoModel
     if (videoType === 'channel'){

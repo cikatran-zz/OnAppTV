@@ -225,7 +225,7 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setServiceWithJsonString(String string, Callback callback) {
-        Api_Implementation.sharedManager().hIG_SetServiceList(string, new Api.OnStringCallbackBlock() {
+        Api_Implementation.sharedManager().hIG_SetService(string, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
                 WritableNativeArray array = new WritableNativeArray();

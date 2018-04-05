@@ -3,11 +3,11 @@ import {
   Text, View, SectionList, Button, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Platform,
   Dimensions
 } from 'react-native'
-import HorizontalVideoThumbnail from '../../../components/HorizontalVideoThumbnail'
-import PinkRoundedLabel  from '../../../components/PinkRoundedLabel'
-import VideoThumbnail from '../../../components/VideoThumbnail'
-import { colors } from '../../../utils/themeConfig'
-import Modal from '../../../components/DeleteBookmarModal'
+import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
+import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
+import VideoThumbnail from '../../components/VideoThumbnail'
+import { colors } from '../../utils/themeConfig'
+import Modal from '../../components/DeleteBookmarModal'
 
 export default class Bookmark extends React.PureComponent {
   constructor(props) {
@@ -16,6 +16,10 @@ export default class Bookmark extends React.PureComponent {
       openModal: false,
       data: {}
     }
+  }
+
+  componentDidMount() {
+    //this.props.getList();
   }
 
   _toggleModal = (data) => {
@@ -42,7 +46,7 @@ export default class Bookmark extends React.PureComponent {
           <PinkRoundedLabel text="BOOKMARK" style={styles.bookingHeaderLabel}/>
           <View style={styles.textInputContainer}>
             <TextInput placeholder={'Emissions'} style={styles.textInput} underlineColorAndroid='rgba(0,0,0,0)' inlineImageLeft='ic_search' inlineImagePadding={8}/>
-            <Image source={require('../../../assets/ic_close.png')} style={{position: 'absolute', right: 10, top: 0}}/>
+            <Image source={require('../../assets/ic_close.png')} style={{position: 'absolute', right: 10, top: 0}}/>
           </View>
         </View>
         <FlatList
@@ -75,7 +79,7 @@ export default class Bookmark extends React.PureComponent {
         <Text style={styles.textType}>{item.videoData.type}</Text>
         <Text style={styles.textTime}>15/07 - 15h30 to 17h15</Text>
         <TouchableOpacity style={styles.closeIcon}>
-          <Image source={require('../../../assets/ic_close.png')}/>
+          <Image source={require('../../assets/ic_close.png')}/>
         </TouchableOpacity>
       </View>
     )
@@ -97,8 +101,12 @@ export default class Bookmark extends React.PureComponent {
   }
 
   render() {
+    const {bookList} = this.props;
 
-    console.log('render bookmark')
+    if (bookList) {
+      console.log('booklist')
+      console.log(bookList)
+    }
     return (
       <View style={styles.container}>
         <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'bookmark'} onClosePress={() => this._toggleModal({})} data={this.state.data}/>

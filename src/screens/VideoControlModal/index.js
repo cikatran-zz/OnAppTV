@@ -12,7 +12,9 @@ function mapStateToProps (state) {
 function mapDispatchToProps(dispatch) {
   return {
     showVideoModal: (willShow) => dispatch(actions.videoModalAction.showVideoModal(willShow)),
-    getEpgs: (channelId) => dispatch(actions.getEpgs.getEpgs(channelId))
+    getEpgs: (serviceId) => dispatch(actions.getEpgs.getEpgs(serviceId)),
+    getEpgWithGenre: (genresIds) => dispatch(actions.getEpgs.getEpgWithGenres(genresIds)),
+    getEpgWithSeriesId: (seriesId) => dispatch(actions.getEpgs.getEpgWithSeriesId(seriesId))
   }
 }
 
