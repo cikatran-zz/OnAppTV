@@ -21,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import userkit.sdk.UserKit;
 import userkit.sdk.identity.UserKitIdentity;
+import userkit.sdk.identity.exception.IdentityException;
 import userkit.sdk.identity.model.AccountProfile;
 import userkit.sdk.identity.model.ProfileProperties;
 
@@ -64,7 +65,7 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     callback.invoke(null, array);
                 }, throwable -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(throwable.toString());
+                    array.pushString(((IdentityException) throwable).toJsonString());
                     callback.invoke(array, null);
                 });
     }
@@ -81,7 +82,7 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     callback.invoke(null, array);
                 }, throwable -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(throwable.toString());
+                    array.pushString(((IdentityException) throwable).toJsonString());
                     callback.invoke(array, null);
                 });
     }
@@ -98,7 +99,7 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     callback.invoke(null, array);
                 }, throwable -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(throwable.toString());
+                    array.pushString(((IdentityException) throwable).toJsonString());
                     callback.invoke(array, null);
                 });
 

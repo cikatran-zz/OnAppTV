@@ -173,7 +173,7 @@ android {
 }
 
 ext{
-    userkitVersion = "2.2.49"
+    userkitVersion = "2.2.49.1"
 }
 
 dependencies {
