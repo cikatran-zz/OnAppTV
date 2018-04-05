@@ -47,13 +47,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
     @ReactMethod
     public void checkSignIn(Callback callback) {
         boolean isSignIn = UserKitIdentity.getInstance().getAccountManager().isLoggedIn();
-        if (isSignIn) {
-            WritableNativeArray array = new WritableNativeArray();
-            array.pushString("{\"is_sign_in\":true}");
-            callback.invoke(array, null);
-        } else {
-            callback.invoke(null, null);
-        }
+        WritableNativeArray array = new WritableNativeArray();
+        array.pushString("{\"is_sign_in\":" + isSignIn + "}");
+        callback.invoke(null, array);
     }
 
     @SuppressLint("CheckResult")
