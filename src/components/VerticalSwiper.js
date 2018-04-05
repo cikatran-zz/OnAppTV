@@ -139,7 +139,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
       // Handling the case when opening
       if(gestureState.vy < 0 && this._hasActivatedThreshold === false){
         this._hasActivatedThreshold = true;
-      } else if(gestureState.vy > 0 && this._hasActivatedThreshold === true){
+      } else if(gestureState.vy >= 0 && this._hasActivatedThreshold === true){
         this._hasActivatedThreshold = false;
       }
 
@@ -149,13 +149,13 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
       if(this._openPosition > this.props.offsetTop - this.props.closeSwipeOffset + gestureState.dy)
         return;
 
-      if(gestureState.dy > this.props.closeSwipeThreshold && this._hasActivatedThreshold === false){
+      if(gestureState.vy > 0 && this._hasActivatedThreshold === false){
         this._hasActivatedThreshold = true;
-      } else if(gestureState.dy <= this.props.closeSwipeThreshold && this._hasActivatedThreshold === true){
+      } else if(gestureState.vy <= 0 && this._hasActivatedThreshold === true){
         this._hasActivatedThreshold = false;
       }
 
-      this.setPosition(this.props.offsetTop - this.props.closeSwipeOffset + gestureState.dy);
+      this.setPosition(this.props.offsetTop + gestureState.dy);
     }
   };
 
@@ -166,7 +166,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
         this.state.position.setValue(this.props.bottomPosition + gestureState.dy);
         this.open();
       } else {
-        this.state.position.setValue(this.props.offsetTop - gestureState.dy);
+        this.state.position.setValue(this.props.offsetTop + gestureState.dy);
         this.close();
       }
     } else {
@@ -174,7 +174,8 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
         this.state.position.setValue(this.props.bottomPosition +  gestureState.dy);
         this.close();
       } else {
-        this.setPosition(this._openPosition);
+        this.state.position.setValue(this.props.offsetTop + gestureState.dy);
+        this.open();
       }
     }
   };
