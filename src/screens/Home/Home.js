@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions, NativeModules} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions, NativeModules, TouchableOpacity} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
@@ -20,6 +20,10 @@ export default class Home extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            favoriteCategories: null,
+            category: null
+        }
     };
 
     componentWillMount() {
@@ -208,14 +212,22 @@ export default class Home extends Component {
             </View>)
     };
 
+    _navigateToMyCategories = ()=> {
+        const { navigate } = this.props.navigation;
+        console.log("NAVI ",this.state.category);
+        navigate('MyCategories', {data: this.state.category, updateFavorite: this._updateFavoriteCategories});
+    };
   _renderCategoryItem = ({item}) => {
       if (item.name == "_ADD") {
+
           return (
-              <View style={styles.liveThumbnailContainer}>
-                  <View style={styles.addMoreCategoryContainer}>
-                      <Text style={styles.textCenter}>ADD</Text>
+              <TouchableOpacity onPress={()=>this._navigateToMyCategories()}>
+                  <View style={styles.liveThumbnailContainer}>
+                      <View style={styles.addMoreCategoryContainer}>
+                          <Text style={styles.textCenter}>ADD</Text>
+                      </View>
                   </View>
-              </View>
+              </TouchableOpacity>
           )
       }
       return (
@@ -308,6 +320,22 @@ export default class Home extends Component {
       <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
     )
 
+    _updateFavoriteCategories = (favorites) => {
+        favorites.push({"name": "_ADD"});
+        var data = this.state.category;
+        for (var i=0; i< data.length; i++) {
+            data[i].favorite = 0;
+            for (var j=0; j< favorites.length; j++) {
+                if (data[i].name == favorites[j].name) {
+                    data[i].favorite = 1;
+                }
+            }
+        }
+        this.state.category = data;
+        console.log("AFTER UPDATE",data);
+        this.setState({favoriteCategories: favorites});
+    };
+
 
     render() {
         const {banner, channel, live, vod, ads, category, news} = this.props;
@@ -325,8 +353,12 @@ export default class Home extends Component {
             channelData = [null];
         }
 
-        var categoryData = category.data.map(cate => ({"name": cate.name}));
-        categoryData.push({"name": "_ADD"});
+        if (this.state.favoriteCategories == null) {
+            var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
+            this.state.category = category.data;
+            categoryData.push({"name": "_ADD"});
+            this.state.favoriteCategories = categoryData;
+        }
 
         return (
           <View style={{flex: 1, flexDirection: 'column'}}>
@@ -345,7 +377,7 @@ export default class Home extends Component {
                   {data:[ads.data], showHeader: false, renderItem: this._renderAds},
                   {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                   {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
-                  {data:[categoryData], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
+                  {data:[this.state.favoriteCategories], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
                   {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
                 ]}
             />
