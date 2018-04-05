@@ -5,7 +5,7 @@ import {
 import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 
 export default class SignIn extends React.PureComponent {
 
@@ -17,7 +17,6 @@ export default class SignIn extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <SettingHeader text={'Sign in'} backButton={true} navigation={this.props.navigation}/>
         <Text style={styles.descriptionText}>Sign to validate your new subscription</Text>
         <TextInput style={styles.textInput} placeholder={'E-mail'} placeholderTextColor={'black'}/>
         <TextInput style={styles.textInput} placeholder={'Mot de passe'} placeholderTextColor={'black'}/>

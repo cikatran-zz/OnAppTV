@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  Text, Switch, View, StyleSheet, FlatList, StatusBar
+  Text, Switch, View, StyleSheet, FlatList, StatusBar, Platform
 } from 'react-native'
 import { colors } from '../../utils/themeConfig'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 
 export default class AudioLanguage extends React.PureComponent {
 
@@ -11,11 +11,21 @@ export default class AudioLanguage extends React.PureComponent {
     super(props)
   }
 
+  _renderSwitch(item) {
+      if (Platform.OS == "ios") {
+          return (<Switch value={item.value} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>)
+      }
+      return (<Switch value={item.value} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'} thumbTintColor={'#ffffff'}/>)
+  }
+
   _renderListItem = ({item}) => {
     return (
       <View style={styles.listItemContainer}>
         <Text>{item.title}</Text>
-        <Switch value={item.value} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>
+          {
+              this._renderSwitch(item)
+          }
+
       </View>
     )
   }
@@ -28,13 +38,13 @@ export default class AudioLanguage extends React.PureComponent {
     return (
       <View style={styles.container}>
         <StatusBar/>
-        <SettingHeader text={'Audio Language'} backButton={true} navigation={navigation}/>
         <FlatList
           style={styles.listContainer}
           keyExtractor={this._keyExtractor}
           horizontal={false}
           renderItem={this._renderListItem}
           data={fakeData}
+          ItemSeparatorComponent={ () => <View style={{ width: "90%", height: 1, backgroundColor: 'red'}}/> }
         />
       </View>
     )
@@ -46,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'transparent'
+    backgroundColor: '#ffffff'
   },
   listContainer: {
     marginTop: 46,
@@ -56,10 +66,11 @@ const styles = StyleSheet.create({
   listItemContainer: {
     height: 43,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+      backgroundColor: "#ffffff"
   },
   toggleButton: {
-    width: 40,
+    width: 45,
     height: 26,
     marginLeft: 'auto',
     marginRight: 17
