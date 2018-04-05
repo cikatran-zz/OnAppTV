@@ -1,5 +1,8 @@
 import React from 'react'
-import {View,Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity, SectionList, Animated} from 'react-native'
+import {
+  View, Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity, SectionList, Animated,
+  Modal
+} from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
@@ -7,6 +10,8 @@ import CircleButton from "../../components/CircleButton"
 import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../../components/LowerPageComponent"
 import VerticalSwiper from '../../components/VerticalSwiper';
+import BlurView from '../../components/BlurView'
+import { getBlurRadius } from '../../utils/blurRadius'
 
 
 const { width, height } = Dimensions.get("window")
@@ -25,7 +30,8 @@ export default class VideoControlModal extends React.Component {
     this.state = {
       showBrightcove: false,
       recordEnabled: false,
-      favoriteEnabled: false
+      favoriteEnabled: false,
+      modalVisibility: false
     }
   }
 
@@ -43,7 +49,7 @@ export default class VideoControlModal extends React.Component {
         break;
       }
       default: {
-        this.props.getEpgs(this.props.channelId ? this.props.channelId : '5ac20aaa4ac42c344ab36d13')
+        this.props.getEpgs([item.serviceID])
       }
     }
 
@@ -68,19 +74,14 @@ export default class VideoControlModal extends React.Component {
   }
 
   _onRecordPress = () => {
-    const {recordEnabled} = this.state
 
-    this.setState({
-      recordEnabled: !recordEnabled
-    })
+    this._toggleModal('record')
   }
 
   _onFavouritePress = () => {
-    const {favoriteEnabled} = this.state
 
-    this.setState({
-      favoriteEnabled: !favoriteEnabled
-    })
+    this._toggleModal('favorite')
+
   }
 
   _renderPlaybackController = (item) => {
@@ -137,29 +138,41 @@ export default class VideoControlModal extends React.Component {
       return (<LowerPagerComponent/>)
     }
     let listData = epg.data
+    console.log('listData')
+    console.log(listData)
     // use this variable when navigating from channel list
     let video = listData[0]
 
     return(
-      <LowerPagerComponent videoType={item.type} listData={listData} video={item}/>
+      <LowerPagerComponent toggleModal={this._toggleModal} videoType={item.serviceID ? 'channel' : item.type} listData={listData} video={item.serviceID ? video : item}/>
     )
   }
 
-  _renderUpperPage = (item) => {
+  _renderUpperPage = (epg, item) => {
+    let data = item
+
+    if (item.serviceID) {
+      if (!epg.data) {
+        return null
+      }
+      data = epg.data[0].videoData
+    }
+    console.log('upperpage 166')
+    console.log(data)
 
     return (
       <View style={{width: '100%', height: height}}>
         <View style={styles.topContainer}>
           <ImageBackground style={styles.topVideoControl}
                            resizeMode="cover"
-                           source={{uri: item.originalImages[0].url}}/>
+                           source={{uri: data.originalImages[0].url}}/>
         </View>
         <View style={styles.bottomContainer}>
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={{uri: item.originalImages[0].url}}/>
-          {this._renderPlaybackController(item)}
+                           source={{uri: data.originalImages[0].url}}/>
+          {this._renderPlaybackController(data)}
         </View>
       </View>)
   }
@@ -203,13 +216,82 @@ export default class VideoControlModal extends React.Component {
     }
   }
 
+  _toggleModal = (actionType) => {
+    const {item} = this.props.navigation.state.params
+
+    if (item.type === 'Episode') {
+      this.setState({
+        modalVisibility: !this.state.modalVisibility,
+        modalContent: actionType
+      })
+    }
+    else {
+      const {recordEnabled, favoriteEnabled} = this.state
+
+      if (actionType === 'record') {
+        this.setState({
+          recordEnabled: !recordEnabled
+        })
+      }
+      else {
+        this.setState({
+          favoriteEnabled: !favoriteEnabled
+        })
+      }
+    }
+  }
+
+  _onModalButtonPress = (actionType) => {
+    const {recordEnabled, favoriteEnabled} = this.state
+
+    if (actionType === 'record') {
+      this.setState({
+        recordEnabled: !recordEnabled
+      })
+    }
+    else {
+      this.setState({
+        favoriteEnabled: !favoriteEnabled
+      })
+    }
+  }
+
+  _renderRecordModal = () => {
+    let img = this.state.modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
+
+    return (
+      <Modal animationType={'fade'} transparent={true}
+              visible={this.state.modalVisibility} onRequestClose={() => console.log('close')}>
+        <View style={styles.modal}>
+          <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
+          <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
+            <Image source={require('../../assets/ic_modal_close.png')} />
+          </TouchableOpacity>
+          <View style={styles.modalInsideContainer}>
+            <Image source={{uri: 'http://hs.sbcounty.gov/CN/Photo%20Gallery/Sample%20Picture%20-%20Koala.jpg?Mobile=1&Source=%2FCN%2F_layouts%2Fmobile%2Fdispform%2Easpx%3FList%3D1720b750%252D8275%252D4398%252Da0b8%252D6c84221f704f%26View%3Dffcf12f7%252D5df8%252D4de0%252Da991%252D79340a805821%26ID%3D1%26CurrentPage%3D1'}} style={styles.modalImage}/>
+            <Text style={styles.modalTitleText}>Ma pire angoise</Text>
+            <Text style={styles.modalShortDes}>Short des</Text>
+            <Text style={styles.modalLongDes}>Long des</Text>
+            <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
+              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent)}>
+                <Image source={img} style={{width: 40, height: 40, marginRight: 7}}/>
+                <Text>Sample 1</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent)}>
+                <Image source={img} style={{width: 40, height: 40, marginRight: 7}}/>
+                <Text>Sample 2</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
   render() {
     return(
       <View style={styles.container}>
-        <StatusBar
-          translucent={true}
-          backgroundColor='#00000000'
-          barStyle='light-content' />
+        {this._renderRecordModal()}
         {this._renderModal()}
 
       </View>
@@ -225,6 +307,63 @@ const styles = StyleSheet.create({
   topContainer: {
     height: '40%',
     width: '100%',
+  },
+  modal: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%'
+  },
+  modalBlurView: {
+    width: '100%',
+    height: '100%'
+  },
+  close: {
+    position: 'absolute',
+    top: 6,
+    right: 20
+  },
+  modalButtonText: {
+    fontSize: 12,
+    color: colors.greyParentalControl
+  },
+  modalInsideContainer: {
+    position: 'absolute',
+    width: '75%',
+    height: '60%',
+    backgroundColor: colors.whitePrimary,
+    top: '17.5%',
+    left: '12.5%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderRadius: 13
+  },
+  modalImage: {
+    marginTop: 50,
+    width: '55%',
+    height: '19%',
+    alignSelf: 'center',
+    borderRadius: 4
+  },
+  modalTitleText: {
+    marginTop: 15,
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center'
+  },
+  modalShortDes: {
+    fontSize: 12,
+    color: colors.greyParentalControl,
+    textAlign: 'center',
+    marginTop: 4
+  },
+  modalLongDes: {
+    fontSize: 12,
+    color: colors.greyParentalControl,
+    textAlign: 'center',
+    marginTop: 11
   },
   bottomContainer: {
     height: '60%',

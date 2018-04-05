@@ -1,7 +1,11 @@
 import React, {PureComponent} from 'react'
-import {SectionList, FlatList,Text, View, Image, ImageBackground, StyleSheet, StatusBar, Platform, Dimensions} from 'react-native'
+import {
+  SectionList, FlatList, Text, View, Image, ImageBackground, StyleSheet, StatusBar, Platform, Dimensions,
+  TouchableOpacity
+} from 'react-native'
 import {colors} from '../utils/themeConfig'
 import PinkRoundedLabel from './PinkRoundedLabel'
+import {secondFormatter, timeFormatter} from '../utils/timeUtils'
 
 export default class LowerPageComponent extends PureComponent {
 
@@ -27,9 +31,15 @@ export default class LowerPageComponent extends PureComponent {
             <Text style={styles.videoTypeText}>{item.type}</Text>
           </View>
           <View style={styles.bannerButtonsContainer}>
-            <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.videoPlayButton}/>
-            <Image source={require('../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
-            <Image source={require('../assets/share.png')} style={styles.videoShareButton}/>
+            <TouchableOpacity>
+              <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.videoPlayButton}/>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image source={require('../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image source={require('../assets/share.png')} style={styles.videoShareButton}/>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.videoDescriptionContainer}>
@@ -50,11 +60,10 @@ export default class LowerPageComponent extends PureComponent {
   }
 
   _renderLogoChannel = (urlArray) => {
-    const {videoType} = this.props;
     // let logoUrl = url ? url : '../assets/arte.png'
     let logoUrl = require('../assets/arte.png')
     if (urlArray && urlArray.length > 0) logoUrl = {uri :urlArray[0].url}
-    if (videoType === 'channel') {
+    if (this._isFromChannel()) {
         return (<Image source={logoUrl}/>)
     }
   }
@@ -63,7 +72,7 @@ export default class LowerPageComponent extends PureComponent {
 
   _renderList = (data) => {
     // data is list of epgs
-    if (this.props.videoType === 'channel') {
+    if (this._isFromChannel()) {
       return (
         <View>
           <View style={styles.listHeader}>
@@ -78,7 +87,7 @@ export default class LowerPageComponent extends PureComponent {
           <FlatList
             style={styles.list}
             horizontal={false}
-            data={data.item.epgsData}
+            data={data.item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderListVideoItem}/>
         </View>
@@ -103,31 +112,32 @@ export default class LowerPageComponent extends PureComponent {
     }
   }
 
-  _timeFormatter(time) {
-    let date = new Date(time)
-    let hours = date.getHours()
-    let minutes = date.getMinutes()
-    return ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes))
-  }
+  _isFromChannel = () => this.props.videoType === 'channel'
 
   _renderListVideoItem = ({item}) => {
+    console.log(this._isFromChannel())
     console.log(item)
 
-    let videoData = this.props.videoTypeText === 'channel' ? item.videoData : item
+    let videoData = this._isFromChannel() ? item.videoData : item
+    console.log('lowerpage 118')
+    console.log(videoData)
     return (
       <View style={styles.itemContainer}>
         <Image
           style={styles.videoThumnbail}
-          source={{uri: videoData.originalImages.length > 0 ? videoData.originalImages[0].url : fakeBannerData.url}}
-        />
+          source={{uri: videoData.originalImages.length > 0 ? videoData.originalImages[0].url : fakeBannerData.url}}/>
         <View style={styles.itemInformationContainer}>
           <Text style={styles.itemTitle}>{videoData.title}</Text>
           <Text style={styles.itemType}>{videoData.type}</Text>
-          <Text style={styles.itemTime}>{this._timeFormatter(item.startTime)} - {this._timeFormatter(item.endTime)}</Text>
+          <Text style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
         </View>
         <View style={styles.itemActionsContainer}>
-          <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.itemPlayButton}/>
-          <Image source={require('../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
+          <TouchableOpacity>
+            <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.itemPlayButton}/>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={require('../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -139,7 +149,7 @@ export default class LowerPageComponent extends PureComponent {
 
   render() {
     // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-    const {listData, video, videoType} = this.props;
+    const {listData, video} = this.props;
 
     console.log("RENDER_LOWERPAGE" )
 
@@ -147,7 +157,7 @@ export default class LowerPageComponent extends PureComponent {
       return null;
 
     let videoModel
-    if (videoType === 'channel'){
+    if (this._isFromChannel()){
       videoModel = video.videoData
     } else {
       videoModel = video
