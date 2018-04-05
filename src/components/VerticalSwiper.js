@@ -45,7 +45,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
   static defaultProps = {
     closeSwipeOffset: 100,
     openSwipeOffset: 65,
-    openSwipeThreshold: 50,
+    openSwipeThreshold: 100,
     closeSwipeThreshold: 50,
     offsetTop: 0,
     bottomPosition: screenHeight,
@@ -126,7 +126,7 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
   };
 
   onPanResponderMove = (evt, gestureState) => {
-    console.log("Move PanRes")
+    console.log("Move PanRes", gestureState.vy)
     if(this.state.isAnimating === true)
       return;
 
@@ -137,13 +137,13 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
       }
 
       // Handling the case when opening
-      if(gestureState.dy < -(this.props.openSwipeThreshold) && this._hasActivatedThreshold === false){
+      if(gestureState.vy < 0 && this._hasActivatedThreshold === false){
         this._hasActivatedThreshold = true;
-      } else if(gestureState.dy >= -(this.props.openSwipeThreshold) && this._hasActivatedThreshold === true){
+      } else if(gestureState.vy > 0 && this._hasActivatedThreshold === true){
         this._hasActivatedThreshold = false;
       }
 
-      this.setPosition(this.props.bottomPosition - this.props.openSwipeOffset + gestureState.dy);
+      this.setPosition(this.props.bottomPosition + gestureState.dy);
     } else {
       // We cannot go over the minimum position
       if(this._openPosition > this.props.offsetTop - this.props.closeSwipeOffset + gestureState.dy)
@@ -163,15 +163,16 @@ export default class VerticalSwipe extends PureComponent<DefaultProps, Props, St
     console.log("Release PanRes")
     if(this._hasActivatedThreshold){
       if(this.state.isOpen === false){
-        this.state.position.setValue(this.props.bottomPosition - this.props.openSwipeOffset + gestureState.dy);
+        this.state.position.setValue(this.props.bottomPosition + gestureState.dy);
         this.open();
       } else {
-        this.state.position.setValue(this.props.offsetTop - this.props.closeSwipeOffset + gestureState.dy);
+        this.state.position.setValue(this.props.offsetTop - gestureState.dy);
         this.close();
       }
     } else {
       if(this.state.isOpen === false){
-        this.setPosition(this._closedPosition);
+        this.state.position.setValue(this.props.bottomPosition +  gestureState.dy);
+        this.close();
       } else {
         this.setPosition(this._openPosition);
       }
