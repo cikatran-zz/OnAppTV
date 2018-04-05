@@ -29,6 +29,7 @@ export default class VideoControlModal extends React.PureComponent {
 
   componentDidMount() {
     const {channelId} = this.props
+    console.log("Refs",this.child)
 
     Orientation.addOrientationListener(this._orientationDidChange);
     // PUT YOUR CHANNEL ID HERE
@@ -93,7 +94,7 @@ export default class VideoControlModal extends React.PureComponent {
   _renderLowerPage = () => {
     const {epg} = this.props
     if (!epg.data) {
-      return (<LowerPagerComponent/>)
+      return (<LowerPagerComponent ref={ref => (this.child = ref)}/>)
     }
     let listData = epg.data.epgsData
     // PUT HERE CURRENT PLAYING VIDEO
@@ -102,7 +103,7 @@ export default class VideoControlModal extends React.PureComponent {
     let video = listData[0]
 
     return(
-      <LowerPagerComponent videoType="channel" listData={epg.data} video={video}/>
+      <LowerPagerComponent ref={ref => (this.child = ref)} videoType="channel" listData={epg.data} video={video}/>
     )
   }
 
@@ -141,15 +142,12 @@ export default class VideoControlModal extends React.PureComponent {
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
+
       return (
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          <VerticalSwiper
-            style={styles.dragContainer}
-            content={this._renderLowerPage()}>
-            {this._renderUpperPage()}
-          </VerticalSwiper>
+            {this._renderLowerPage()}
         </View>
 
       );

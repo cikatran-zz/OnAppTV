@@ -1,15 +1,13 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import {SectionList, FlatList,Text, View, Image, ImageBackground, StyleSheet, StatusBar, Platform, Dimensions} from 'react-native'
 import {colors} from '../utils/themeConfig'
 import PinkRoundedLabel from './PinkRoundedLabel'
 
-export default class LowerPageComponent extends React.PureComponent {
+export default class LowerPageComponent extends PureComponent {
 
   constructor(props) {
     super(props);
   }
-
-
   _renderBanner = ({item}) => {
       return (
         <View style={styles.topContainer}>
@@ -116,6 +114,10 @@ export default class LowerPageComponent extends React.PureComponent {
     )
   }
 
+  componentDidMount() {
+
+  }
+
   render() {
     // EPGs is EPG array, video is an EPG or videoModel depend on videoType
     const {listData, video, videoType} = this.props;
@@ -141,6 +143,16 @@ export default class LowerPageComponent extends React.PureComponent {
           backgroundColor='#00000000'
           barStyle='light-content' />
         <SectionList
+          ref={(ref) => {
+            // Tell ListView not to give up the gesture so easy
+            Object.assign(ref.getScrollResponder(), {
+              scrollResponderHandleStartShouldSetResponder: () => true,
+              scrollResponderHandleTerminationRequest: () => {
+                // Release the gesture if scroll content is at the top
+                return ref.scrollProperties.offset < 1
+              },
+            });
+          }}
           style={styles.container}
           keyExtractor={this._keyExtractor}
           stickySectionHeadersEnabled={false}
