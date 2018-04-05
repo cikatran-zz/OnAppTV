@@ -35,6 +35,7 @@ export default class Home extends Component {
         this.props.getCategory();
         this.props.getNews();
         NativeModules.RNUserKitIdentity.checkSignIn((error, results)=>{
+            console.log(results)
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 console.log("Already logged in");
@@ -471,9 +472,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textLiveVideoTitle: {
-      ...textDarkDefault,
-      width: 150,
-      textAlign:'center',
+        ...textDarkDefault,
+        marginTop: 21,
+        width: 150,
+        textAlign:'center',
     },
     textLiveVideoInfo: {
       ...textLightDefault,

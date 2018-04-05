@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
   redLine: {
     position: 'absolute',
     backgroundColor: colors.mainPink,
-    height: 25,
-    width: 1,
+    height: 16,
+    width: 1.5,
     left: '0%',
-    bottom: -15
+    bottom: -8
   },
   textCenter: {
     ...textWhiteDefault,
