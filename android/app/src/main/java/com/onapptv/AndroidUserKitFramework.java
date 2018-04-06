@@ -50,7 +50,7 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
     @SuppressLint("CheckResult")
     @ReactMethod
     public void storeProperty(String key, ReadableMap value, Callback callback) {
-        UserKit.getInstance().getProfileManager().append(key, value.toHashMap())
+        UserKit.getInstance().getProfileManager().set(key, value.toHashMap())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
