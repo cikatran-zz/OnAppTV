@@ -107,6 +107,7 @@ const categoryQuery = gql`
 query{
   viewer{
     genreMany {
+      _id
       name
   	}
 	}
@@ -217,25 +218,30 @@ query getEPGByChannel($id: [Float]){
 }
 `;
 
-const relatedEpgQuery = gql`
-query getRelated($genreIds: [MongoID]){
+const genresVOD = gql`
+query genresVOD($genresId: [MongoID]){
   viewer{
     videoMany(filter: {
       _operators: {
         genreIds: {
-          in: $genreIds
+          in: $genresId
         }
       }
-    })  {
-      _id
+    }, sort: FEATURE_DESC) {
       contentId
       durationInSeconds
-      publishDate
-      genreIds
+      title
+      feature
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      state
       genresData {
         name
       }
-      title
+      durationInSeconds
       originalImages {
         height
         width
@@ -243,62 +249,47 @@ query getRelated($genreIds: [MongoID]){
         name
         fileName
       }
-      genreIds
-      longDescription
-      shortDescription
-      feature
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      updatedAt
-      createdAt
     }
   }
 }
-`
-const seriesEpgQuery = gql`
-query getSeriesEpg($id: [MongoID]){
-    viewer{
-  
-    videoMany(filter: {
-      _operators: {
-        seriesId: {
-          in: $id
+`;
+
+const genresEPGs = gql`
+query genresEPGs($currentTime: Date, $genresId: [MongoID]){
+  viewer{
+    epgMany(filter: {
+      _operators:{
+        startTime: {
+          lte: $currentTime
+        },
+        endTime:{
+          gte: $currentTime
+        },
+        genreIds: {
+          in: $genresId
         }
       }
+    
     }) {
-      _id
-      contentId
-      durationInSeconds
-      publishDate
+      channelData {
+        title
+      }
+      videoData {
+        title
+        originalImages {
+          url
+        }
+        genresData {
+          name
+        }
+      }
+      startTime
+      endTime
       genreIds
-      genresData {
-        name
-      }
-      title
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      }
-      longDescription
-      shortDescription
-      feature
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      updatedAt
-      createdAt
     }
   }
 }
-`
+`;
 
 export default {
     serverURL: 'http://13.250.57.10:3000/graphql',
@@ -311,8 +302,8 @@ export default {
         VOD: vodQuery,
         NEWS: newsQuery,
         EPG: epgQuery,
-        EPG_WITH_GENRES: relatedEpgQuery,
-        EPG_WITH_SERIES: seriesEpgQuery
+        GENRES_VOD: genresVOD,
+        GENRES_EPG: genresEPGs
     }
 };
 

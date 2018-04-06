@@ -1,16 +1,16 @@
 import Category from './Category'
 import {connect} from 'react-redux';
-import {getCategory} from "../../actions/getCategory";
+import {getGenresContent} from "../../actions/getGenresContent";
 
 function mapStateToProps(state) {
     return {
-        category: state.categoryReducer
+        genresContent: state.genresContentReducer
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getCategory: ()=> dispatch(getCategory())
+        getGenresContent: (genresIds)=> dispatch(getGenresContent(genresIds))
     }
 }
 

@@ -14,7 +14,8 @@ target 'OnAppTV' do
   pod 'Brightcove-Player-Core/dynamic'
   pod 'lottie-ios'
   pod 'WebViewJavascriptBridge', '~> 6.0'
-
+  pod 'UserKit', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
+  pod 'UserKitIdentity', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
 
 
   target 'OnAppTVTests' do
@@ -22,6 +23,20 @@ target 'OnAppTV' do
     # Pods for testing
   end
 
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations
+        if target.name.start_with? 'UserKit'
+            target.build_configurations.each do |config|
+                if config.name == 'Debug'
+                    config.build_settings['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = ['DEBUG', 'STAGING_SERVER']
+                    puts "Using STAGING_SERVER for #{target.name} #{config.name} builds"
+                end
+            end
+        end
+    end
 end
 
 #target 'OnAppTV-tvOS' do

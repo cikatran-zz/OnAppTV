@@ -308,6 +308,24 @@ export const getVOD = (page, itemPerPage) => {
 export const getCategory = () => {
     return client.query({
         query: config.queries.CATEGORY
+    }).then((response)=>{
+        return new Promise((resolve,reject) => {
+            NativeModules.RNUserKit.getProperty("favorite_categories", (error, results) => {
+                if (error) {
+                    reject(JSON.parse(error));
+                } else {
+                    var categories = response.data.viewer.genreMany;
+                    var favoriteCategories = JSON.parse(results[0]);
+                    console.log(favoriteCategories);
+                    var categoriesResults=[];
+                    for (var i = 0; i< categories.length; i++) {
+                        var name = categories[i].name;
+                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] == null) ? false : favoriteCategories[name]});
+                    }
+                    resolve(categoriesResults);
+                }
+            });
+        });
     });
 };
 
@@ -322,7 +340,52 @@ export const getEpgs = (channelId) => {
     query: config.queries.EPG,
     variables: {channelId: channelId}
   })
-}
+};
+
+export const getGenresContent = (genresIds) => {
+    var promises = [];
+
+    genresIds.forEach((genresId)=> {
+        promises.push(client.query({
+            query: config.queries.GENRES_VOD,
+            variables: {genresId: [genresId]}
+        }));
+    });
+
+    promises.push(client.query({
+        query: config.queries.GENRES_EPG,
+        variables: {genresId: genresIds, currentTime: new Date()}
+    }));
+
+    return new Promise((resolve, reject) => {
+        Promise.all(promises).then((values)=> {
+            var results = {};
+            for (var i=0; i<values.length-1; i++) {
+                results[genresIds[i]] = {features: [], VOD: [], EPGs: []};
+                values[i].data.viewer.videoMany.forEach((content)=>{
+                    if (content.feature) {
+                        results[genresIds[i]].features.push(content)
+                    } else {
+                        results[genresIds[i]].VOD.push(content)
+                    }
+                });
+            }
+
+            // Get EPGs
+            values[values.length-1].data.viewer.epgMany.forEach((epg)=> {
+                console.log(epg);
+                epg.genreIds.forEach((genre)=> {
+                    if (genresIds.indexOf(genre) > -1) {
+                        results[genre].EPGs.push(epg);
+                    }
+                });
+            });
+            resolve(results);
+        }).catch((error)=>{
+            reject(error)
+        });
+    });
+};
 
 export const getEpgWithGenres = (genresIds) => {
   console.log(genresIds)

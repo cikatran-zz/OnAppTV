@@ -1,18 +1,41 @@
 PODS:
   - Brightcove-Player-Core/dynamic (6.2.2)
   - lottie-ios (2.5.0)
+  - UserKit (0.19.10)
+  - UserKitIdentity (0.19.10):
+    - UserKit
   - WebViewJavascriptBridge (6.0.3)
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
   - lottie-ios
+  - UserKit (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
+  - UserKitIdentity (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
   - WebViewJavascriptBridge (~> 6.0)
+
+EXTERNAL SOURCES:
+  UserKit:
+    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
+    :tag: 0.19.10
+  UserKitIdentity:
+    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
+    :tag: 0.19.10
+
+CHECKOUT OPTIONS:
+  UserKit:
+    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
+    :tag: 0.19.10
+  UserKitIdentity:
+    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
+    :tag: 0.19.10
 
 SPEC CHECKSUMS:
   Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
+  UserKit: f55d1a8b5f485d33e0f809cf53665c5f9fe62dd2
+  UserKitIdentity: 92784613ae918091b3d29628639414bbed2895a2
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: 545b66571afc417080646bb39876de4e9fda02f7
+PODFILE CHECKSUM: fb306a7a562492041295ff8cd54d70d189060564
 
 COCOAPODS: 1.4.0

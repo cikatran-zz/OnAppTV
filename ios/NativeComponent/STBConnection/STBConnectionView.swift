@@ -9,6 +9,7 @@
 import UIKit
 import STBAPI
 import WebViewJavascriptBridge
+import UserKitIdentity
 
 class STBConnectionView: UIView {
     
@@ -50,28 +51,81 @@ class STBConnectionView: UIView {
         setupJavascriptBridge()
     }
     
+    func dictToJsonString(dict: [String: Any])-> String {
+        var dataString = ""
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
+            dataString = String(data: jsonData, encoding: .utf8) ?? ""
+        } catch {
+            
+        }
+        
+        return dataString
+    }
+    
     func setupJavascriptBridge() {
         
         //        Whether it's the first time to start an APP
-        let isStarted = UserDefaults.standard.bool(forKey: "isStarted");
+        let isStarted = true
+        
         //        The HTML file name of the webView
         var webViewName = "" ;
         //        Determine whether the APP is first started
-        if isStarted == true{
+        if UserKitIdentity.mainInstance().accountManager.isLoggedIn() {
             //            Not for the first time
             webViewName = "Revolution";
         }else {
             //            Start the APP for the first time
-            UserDefaults.standard.set(true, forKey: "isStarted");
+//            UserDefaults.standard.set(true, forKey: "isStarted");
             webViewName = "Login";
         }
         //        Antional\Login\WifiConnection\SignIn\ChannelList\Revolution
-        self.webView.loadRequest(NSURLRequest.init(url: URL.init(fileURLWithPath: Bundle.main.path(forResource: webViewName, ofType: "html")!)) as URLRequest);
+        
         self.webView.scrollView.showsVerticalScrollIndicator = false;
         self.webView.scrollView.showsHorizontalScrollIndicator = false;
         self.webView.scrollView.bounces = false;
         self.bridge = WebViewJavascriptBridge(forWebView: self.webView)
         self.bridge.setWebViewDelegate(self);
+        
+        // MARK: - New methods
+        
+        self.bridge.registerHandler("HIG_CheckNotiPermission") { (_, _) in
+            OANotificationCenter.sharedInstance.checkGranted(callback: { (isGranted) in
+                if isGranted {
+                    self.bridge.callHandler("HIG_GoToLoginScreen", data: "");
+                } else {
+                    self.bridge.callHandler("HIG_ShowNotiModal", data: "");
+                }
+            })
+        }
+        
+        self.bridge.registerHandler("HIG_RequestNotiPermission") { (_, _) in
+            OANotificationCenter.sharedInstance.requestPermission {
+                self.bridge.callHandler("HIG_GoToLoginScreen", data: "");
+            }
+        }
+        
+        self.bridge.registerHandler("HIG_LogInWithEmailPassword") { (data, _) in
+            let str = data as! String;
+            let jsonData = str.data(using: String.Encoding.utf8)!
+            let jsonDict = try!JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! NSMutableDictionary
+            if let email = jsonDict["email"] as? String, let password = jsonDict["password"] as? String {
+                UserKitIdentity.mainInstance().loginWithEmailPassword(email, password: password, successBlock: { (authenModel) in
+                    var isNewAccount = false
+                    if let _ = authenModel?.listProfiles?.first?.customProperties?["personal_email"] as? String {
+                        isNewAccount = true
+                    }
+                    self.bridge.callHandler("HIG_LoginCallback", data:self.dictToJsonString(dict: ["success": true, "is_new":isNewAccount]))
+                }, failureBlock: { (error) in
+                    self.bridge.callHandler("HIG_LoginCallback", data:self.dictToJsonString(dict: ["success": false, "error": error?.message ?? ""]))
+                })
+            } else {
+                
+                self.bridge.callHandler("HIG_LoginCallback", data:self.dictToJsonString(dict: ["success": false, "error": "unknown"]))
+            }
+        }
+        
+        // ---------------
         
         self.bridge.registerHandler("HIG_GetSTBList") { (data, responseCallback) in
             Api.shared().hIG_GetMobileWifiInfo({ (dic) in
@@ -89,6 +143,8 @@ class STBConnectionView: UIView {
                 }
             })
         };
+        
+        
         self.bridge.registerHandler("HIG_ConnectSTB") { (data, responseCallback) in
             let str = data as! String;
             //json文件
@@ -186,6 +242,13 @@ class STBConnectionView: UIView {
                 self.bridge.callHandler("HIG_STBWlanAP",data:jsonString)
             })
         }
+        
+        // Additional javascript bridge
+        self.bridge.registerHandler("HIG_AllowNotification") { (data, callback) in
+            NotificationCenter.shared.requestPermission(successBlock: nil, errorBlock: nil)
+        }
+        
+        self.webView.loadRequest(NSURLRequest.init(url: URL.init(fileURLWithPath: Bundle.main.path(forResource: webViewName, ofType: "html")!)) as URLRequest);
     }
 }
 

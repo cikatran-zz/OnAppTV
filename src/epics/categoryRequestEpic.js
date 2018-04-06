@@ -8,7 +8,7 @@ const getCategoryEpic = (action$) =>
     action$.ofType(actionTypes.FETCHING_CATEGORY)
         .mergeMap(action =>
             Observable.from(getCategory())
-                .map(response => getCategorySuccess(response.data))
+                .map(response => getCategorySuccess(response))
                 .catch(error => Observable.of(getCategoryFailure(error)))
         );
 

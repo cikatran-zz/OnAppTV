@@ -5,7 +5,7 @@ import {
 import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 
 export default class Settings extends React.PureComponent {
 
@@ -52,7 +52,6 @@ export default class Settings extends React.PureComponent {
     return (
       <View style={styles.container}>
         <StatusBar/>
-        <SettingHeader text={'Settings'}/>
         <SectionList
           style={styles.sectionListContainer}
           keyExtractor={this._keyExtractor}
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'transparent'
+    backgroundColor: '#ffffff'
   },
   sectionListContainer: {
     marginLeft: 15,

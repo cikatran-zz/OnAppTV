@@ -8,8 +8,8 @@ import vodReducer from './vodReducer'
 import videoModalReducer from './videoModalReducer'
 import adsReducer from "./adsReducer";
 import newsReducer from "./newsReducer";
-import epgsReducer from './epgsReducer';
-import bookListReducer from './bookListReducer'
+import epgsReducer from './epgsReducer'
+import genresContentReducer from './genresContentReducer'
 
 export default combineReducers({
     nav,
@@ -22,5 +22,5 @@ export default combineReducers({
     adsReducer,
     newsReducer,
     epgsReducer,
-    bookListReducer,
+    genresContentReducer
 });

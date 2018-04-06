@@ -9,7 +9,7 @@ export function getCategory() {
 export function getCategorySuccess(data) {
     return {
         type: actionTypes.FETCH_CATEGORY_SUCCESS,
-        data: data.viewer.genreMany
+        data: data
     }
 }
 
