@@ -10,5 +10,5 @@ export function rootViewTopPadding() {
             return 24;
         }
     }
-    return 0;
+    return 24;
 }

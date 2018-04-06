@@ -230,10 +230,7 @@ query genresVOD($genresId: [MongoID]){
     }, sort: FEATURE_DESC) {
       contentId
       durationInSeconds
-      publishDate
       title
-      longDescription
-      shortDescription
       feature
       seriesId
       seasonIndex
@@ -241,9 +238,10 @@ query genresVOD($genresId: [MongoID]){
       type
       impression
       state
-      createdAt
-      updatedAt
-      genreIds
+      genresData {
+        name
+      }
+      durationInSeconds
       originalImages {
         height
         width

@@ -6,6 +6,8 @@ import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeCon
 import {connect} from "react-redux";
 import VideoThumbnail from '../../../components/VideoThumbnail'
 import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
+import {secondFormatter} from "../../../utils/timeUtils";
+import {rootViewTopPadding} from "../../../utils/rootViewTopPadding";
 
 class HeaderLabel extends React.PureComponent{
     constructor(props){
@@ -14,15 +16,15 @@ class HeaderLabel extends React.PureComponent{
     render(){
         if (this.props.position == 'end') {
             return (
-                <Text style={styles.endHeaderLabelStyle}>{this.props.text}</Text>
+                <Text style={styles.endHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
             )
         } else if (this.props.position == 'inside') {
             return (
-                <Text style={styles.insideHeaderLabelStyle}>{this.props.text}</Text>
+                <Text style={styles.insideHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
             )
         } else if (this.props.position == 'begin') {
             return (
-                <Text style={styles.beginHeaderLabelStyle}>{this.props.text}</Text>
+                <Text style={styles.beginHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
             )
         } else {
             return (
@@ -70,18 +72,29 @@ class CategoryPageView extends React.PureComponent{
         </View>
     )
 
-    _renderVODItem = ({item}) => (
-        <View style={styles.vodThumbnailContainer}>
-            <View>
-                <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+    _renderVODItem = ({item}) => {
+        let genres = '';
+        if (item.genresData != null) {
+            item.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        return (
+            <View style={styles.vodThumbnailContainer}>
+                <View>
+                    <VideoThumbnail showProgress={false} imageUrl={this._getImage(item)} marginHorizontal={20}/>
+                </View>
+                <View style={{alignSelf: 'stretch', flex: 1, alignItems: 'center', justifyContent:'center'}}>
+                    <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
+                    <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>
+                    <Text numberOfLines={1} style={styles.textVODInfo}>{secondFormatter(item.durationInSeconds)}</Text>
+                </View>
             </View>
-            <View style={{alignSelf: 'stretch', flex: 1, alignItems: 'center', justifyContent:'center'}}>
-                <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
-                <Text numberOfLines={1} style={styles.textVODInfo}>{item.category}</Text>
-                <Text numberOfLines={1} style={styles.textVODInfo}>{item.time}</Text>
-            </View>
-        </View>
-    )
+        )
+    }
     _renderOnLiveList = ({item}) => (
         <FlatList
             style={{flex: 1}}
@@ -136,7 +149,7 @@ class CategoryPageView extends React.PureComponent{
                     sections={[
                         {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
                         {data:[], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
-                        {data:[], title: "VOD", showHeader: true, renderItem: this._renderVODList}
+                        {data:[this.props.vod], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
                 />
             </View>
@@ -149,6 +162,7 @@ export default CategoryPageView;
 const styles = StyleSheet.create({
 
     rootView: {
+        marginTop: rootViewTopPadding(),
         width: '100%',
         height: '100%',
         backgroundColor: colors.screenBackground,
@@ -177,7 +191,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         left: '50%',
         borderRadius: 15,
-        padding: 8,
+        paddingTop: 8,
+        paddingHorizontal: 8,
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary
@@ -189,7 +204,8 @@ const styles = StyleSheet.create({
         left: '-10%',
         borderRadius: 15,
         textAlign: 'right',
-        padding: 8,
+        paddingTop: 8,
+        paddingHorizontal: 8,
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary
@@ -199,7 +215,8 @@ const styles = StyleSheet.create({
         height: 30,
         left: 0,
         textAlign: 'center',
-        padding: 8,
+        paddingTop: 8,
+        paddingHorizontal: 8,
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary

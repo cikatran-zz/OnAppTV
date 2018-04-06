@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {StyleSheet,} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import {colors} from '../../utils/themeConfig'
-import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import CategoryPageView from "./CategoryPageView";
 
 export default class Category extends Component {
@@ -10,12 +9,14 @@ export default class Category extends Component {
     constructor(props) {
         super(props);
         this.names = {}
+        this.startCategory = ""
     };
 
     componentDidMount() {
-        const {data} = this.props.navigation.state.params;
+        const {data, fromItem} = this.props.navigation.state.params;
         var ids = [];
-        data.forEach((item)=>{
+        this.startCategory = fromItem;
+        data.forEach((item) => {
             ids.push(item.id);
             this.names[item.id] = item.name;
         });
@@ -40,21 +41,36 @@ export default class Category extends Component {
         }
         _keyExtractor = (item, index) => item.id + index;
         let keys = Object.keys(genresContent.data);
-        console.log(keys);
+        var startIndex = 0;
+        keys.forEach((key, index) => {
+            if (this.names[key] == this.startCategory) {
+                startIndex = index;
+            }
+        });
         return (
-            <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
-                { keys.map((key, index)=> {
-                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, keys.length) } header={this.names[key]} slotMachines={genresContent.data[key].features} key={"category"+index}  />)
-                })}
-            </Swiper>
+            <View style={{width: '100%', height: '100%'}}>
+                <StatusBar
+                    translucent={true}
+                    backgroundColor='#00000000'
+                    barStyle='dark-content'/>
+                <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false} index={startIndex}>
+                    {keys.map((key, index) => {
+                        return (<CategoryPageView pagePosition={this._getPagePosition(index, keys.length)}
+                                                  header={this.names[key]}
+                                                  slotMachines={genresContent.data[key].features}
+                                                  vod={genresContent.data[key].VOD}
+                                                  key={"category" + index}/>)
+                    })}
+                </Swiper>
+            </View>
         );
     }
 }
 
 
 const styles = StyleSheet.create({
+
     pageViewStyle: {
-        paddingTop: rootViewTopPadding(),
         backgroundColor: colors.screenBackground
     }
 });

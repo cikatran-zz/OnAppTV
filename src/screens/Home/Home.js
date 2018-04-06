@@ -232,10 +232,10 @@ export default class Home extends Component {
         navigate('MyCategories', {data: this.state.category, updateFavorite: this._updateFavoriteCategories});
     };
 
-    _navigateToCategory = () => {
+    _navigateToCategory = (cate) => {
         const {navigate} = this.props.navigation;
 
-        navigate('Category', {data: this.state.category.filter((cate)=>cate.favorite==1)});
+        navigate('Category', {data: this.state.category.filter((cate)=>cate.favorite==1), fromItem: cate});
     };
 
     _renderCategoryItem = ({item}) => {
@@ -252,7 +252,7 @@ export default class Home extends Component {
             )
         }
         return (
-            <TouchableOpacity onPress={() => this._navigateToCategory()}>
+            <TouchableOpacity onPress={() => this._navigateToCategory(item.name)}>
                 <View style={styles.liveThumbnailContainer}>
                     <VideoThumbnail showProgress={false} textCenter={item.name} marginHorizontal={10}/>
                 </View>
