@@ -132,10 +132,14 @@ export default class VideoControlModal extends React.Component {
     </View>)
   }
 
+  _onLowerPageScroll = (y) => {
+    console.log("ScrollY", y)
+  }
+
   _renderLowerPage = (epg, item) => {
 
     if (!epg.data) {
-      return (<LowerPagerComponent/>)
+      return (<LowerPagerComponent listScrollOffsetY={this._onLowerPageScroll}/>)
     }
     let listData = epg.data
     console.log('listData')
@@ -144,7 +148,10 @@ export default class VideoControlModal extends React.Component {
     let video = listData[0]
 
     return(
-      <LowerPagerComponent toggleModal={this._toggleModal} videoType={item.serviceID ? 'channel' : item.type} listData={listData} video={item.serviceID ? video : item}/>
+      <LowerPagerComponent toggleModal={this._toggleModal}
+                           videoType={item.serviceID ? 'channel' : item.type}
+                           listScrollOffsetY={this._onLowerPageScroll}
+                           listData={listData} video={item.serviceID ? video : item}/>
     )
   }
 

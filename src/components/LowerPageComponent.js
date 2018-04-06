@@ -143,8 +143,8 @@ export default class LowerPageComponent extends PureComponent {
     )
   }
 
-  componentDidMount() {
-
+  _onScroll(e) {
+    this.props.listScrollOffsetY(e.nativeEvent.contentOffset.y)
   }
 
   render() {
@@ -170,19 +170,10 @@ export default class LowerPageComponent extends PureComponent {
           backgroundColor='#00000000'
           barStyle='light-content' />
         <SectionList
-          ref={(ref) => {
-            // Tell ListView not to give up the gesture so easy
-            Object.assign(ref.getScrollResponder(), {
-              scrollResponderHandleStartShouldSetResponder: () => true,
-              scrollResponderHandleTerminationRequest: () => {
-                // Release the gesture if scroll content is at the top
-                return ref.scrollProperties.offset < 1
-              },
-            });
-          }}
           style={styles.container}
           keyExtractor={this._keyExtractor}
           stickySectionHeadersEnabled={false}
+          onScroll={(e) => this._onScroll(e)}
           sections={[
             {data: [videoModel],showHeader: false, renderItem: this._renderBanner},
             {data: [videoModel], renderItem: this._renderBannerInfo},
