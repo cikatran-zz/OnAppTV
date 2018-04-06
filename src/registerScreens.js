@@ -59,7 +59,8 @@ const HomeStack = StackNavigator({
     Home: {
         screen: Home,
         navigationOptions: ({navigation}) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false
         }),
     },
     MyCategories: {

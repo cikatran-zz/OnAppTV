@@ -296,7 +296,7 @@ export const getCategory = () => {
                     var categoriesResults=[];
                     for (var i = 0; i< categories.length; i++) {
                         var name = categories[i].name;
-                        categoriesResults.push({name: name,favorite:(favoriteCategories[name] == null) ? false : favoriteCategories[name]});
+                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] == null) ? false : favoriteCategories[name]});
                     }
                     resolve(categoriesResults);
                 }

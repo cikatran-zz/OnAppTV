@@ -106,6 +106,7 @@ const categoryQuery = gql`
 query{
   viewer{
     genreMany {
+      _id
       name
   	}
 	}

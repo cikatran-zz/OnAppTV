@@ -57,4 +57,8 @@
     [[UserKitModule sharedInstance] addDeviceToken:deviceToken];
 }
 
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return [Orientation getOrientation];
+}
+
 @end
