@@ -218,6 +218,44 @@ query getEPGByChannel($channelId: MongoID!){
 }
 `;
 
+const genresVOD = gql`
+query genresVOD($genresId: [MongoID]){
+  viewer{
+    videoMany(filter: {
+      _operators: {
+        genreIds: {
+          in: $genresId
+        }
+      }
+    }, sort: FEATURE_DESC) {
+      contentId
+      durationInSeconds
+      publishDate
+      title
+      longDescription
+      shortDescription
+      feature
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      state
+      createdAt
+      updatedAt
+      genreIds
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+    }
+  }
+}
+`;
+
 export default {
     serverURL: 'http://13.250.57.10:3000/graphql',
     queries: {
@@ -228,6 +266,7 @@ export default {
         LIVE: liveQuery,
         VOD: vodQuery,
         NEWS: newsQuery,
-        EPG: epgQuery
+        EPG: epgQuery,
+        GENRES_VOD: genresVOD
     }
 };

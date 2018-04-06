@@ -11,10 +11,17 @@ export default class Category extends Component {
 
     constructor(props) {
         super(props);
+        this.names = {}
     };
 
     componentDidMount() {
-        this.props.getCategory();
+        const {data} = this.props.navigation.state.params;
+        var ids = [];
+        data.forEach((item)=>{
+            ids.push(item.id);
+            this.names[item.id] = item.name;
+        });
+        this.props.getGenresContent(ids);
     };
 
     _getPagePosition = (index, length) => {
@@ -29,15 +36,17 @@ export default class Category extends Component {
 
 
     render() {
-        const {category} = this.props;
-        if (!category.data || category.isFetching) {
+        const {genresContent} = this.props;
+        if (!genresContent.fetched || genresContent.isFetching) {
             return null;
         }
         _keyExtractor = (item, index) => item.id + index;
+        let keys = Object.keys(genresContent.data);
+        console.log(keys);
         return (
             <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
-                { category.data.map((prop, index)=> {
-                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} slotMachines={prop.slot_machines} key={"category"+index}  />)
+                { keys.map((key, index)=> {
+                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, keys.length) } header={this.names[key]} slotMachines={genresContent.data[key].features} key={"category"+index}  />)
                 })}
             </Swiper>
         );

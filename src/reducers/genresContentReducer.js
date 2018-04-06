@@ -7,22 +7,22 @@ const initialState = {
     error: false,
 };
 
-export default function epgsReducer(state = initialState, action) {
+export default function genresContentReducer(state = initialState, action) {
     switch (action.type) {
-        case actionTypes.FETCHING_EPGS:
+        case actionTypes.FETCHING_GENRES_CONTENT:
             return {
                 ...state,
                 data: action.data,
                 isFetching: true
             };
-        case actionTypes.FETCH_EPGS_SUCCESS:
+        case actionTypes.FETCH_GENRES_CONTENT_SUCCESS:
             return {
                 ...state,
                 data: action.data,
                 isFetching: false,
                 fetched: true
             };
-        case actionTypes.FETCH_EPGS_FAILURE:
+        case actionTypes.FETCH_GENRES_CONTENT_FAILTURE:
             return {
                 ...state,
                 isFetching: false,

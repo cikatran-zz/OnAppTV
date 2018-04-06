@@ -26,9 +26,9 @@ export default class MyCategories extends Component {
 
     _renderSwitch(item) {
         if (Platform.OS == "ios") {
-            return (<Switch value={this.state.toggleState[item.name]} onValueChange={(value)=> this._changeFavorite(item.name, value)} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>)
+            return (<Switch value={this.state.toggleState[item.name] == 1} onValueChange={(value)=> this._changeFavorite(item.name, value)} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>)
         }
-        return (<Switch value={item.favorite} onValueChange={(value)=> this._changeFavorite(item.name, value)} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'} thumbTintColor={'#ffffff'}/>)
+        return (<Switch value={this.state.toggleState[item.name] == 1} onValueChange={(value)=> this._changeFavorite(item.name, value)} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'} thumbTintColor={'#ffffff'}/>)
     }
 
     _renderListItem = ({item}) => {

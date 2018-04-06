@@ -37,18 +37,25 @@ class CategoryPageView extends React.PureComponent{
         super(props);
     }
     componentDidMount() {
-        this.props.getLive();
-        this.props.getVOD();
     };
     _keyExtractor = (item, index) => item.id;
+
+    _getImage(item) {
+        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+        return image;
+    }
     _renderSlotMachines = ({item}) => {
         return (
             <View style={styles.slotMachineContainer}>
             { item.map((it, index)=> {
+                let image = this._getImage(it);
                 return (<Image
-                    key={ it.cover_image + index}
+                    key={ image + index}
                     style={styles.slotMachineImage}
-                    source={{uri: it.cover_image}}/>
+                    source={{uri: image}}/>
                 )
             })}
             </View>
@@ -104,12 +111,17 @@ class CategoryPageView extends React.PureComponent{
             data={item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderVODItem} />
-    )
+    );
+
+    _renderListFooter = () => (
+        <View style={{
+            width: '100%',
+            height: Dimensions.get("window").height * 0.08 + 20,
+            backgroundColor: 'transparent'
+        }}/>
+    );
 
     render(){
-        const {live, vod} = this.props;
-        if (!live.data || live.isFetching || !vod.data || vod.isFetching)
-            return null;
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
                 <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor}/>
@@ -120,10 +132,11 @@ class CategoryPageView extends React.PureComponent{
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
+                    ListFooterComponent={this._renderListFooter}
                     sections={[
                         {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
-                        {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
-                        {data:[vod.data], title: "VOD", showHeader: true, renderItem: this._renderVODList}
+                        {data:[], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                        {data:[], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
                 />
             </View>

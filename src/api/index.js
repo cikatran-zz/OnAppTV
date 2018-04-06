@@ -316,5 +316,33 @@ export const getEpgs = (channelId) => {
     query: config.queries.EPG,
     variables: {channelId: channelId}
   })
-}
+};
+
+export const getGenresContent = (genresIds) => {
+    var promises = [];
+    genresIds.forEach((genresId)=> {
+        promises.push(client.query({
+            query: config.queries.GENRES_VOD,
+            variables: {genresId: [genresId]}
+        }));
+    });
+    return new Promise((resolve, reject) => {
+        Promise.all(promises).then((values)=> {
+            var results = {};
+            for (var i=0; i<values.length; i++) {
+                results[genresIds[i]] = {features: [], VOD: []}
+                values[i].data.viewer.videoMany.forEach((content)=>{
+                    if (content.feature) {
+                        results[genresIds[i]].features.push(content)
+                    } else {
+                        results[genresIds[i]].VOD.push(content)
+                    }
+                });
+            }
+            resolve(results);
+        }).catch((error)=>{
+            reject(error)
+        });
+    });
+};
 
