@@ -4,6 +4,7 @@ import {getCategory} from "../../actions/getCategory";
 
 function mapStateToProps(state) {
     return {
+
     }
 }
 

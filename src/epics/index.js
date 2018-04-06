@@ -7,6 +7,7 @@ import getVODEpic from  './vodRequestEpic'
 import getAdsEpic from "./adsRequestEpic";
 import getNewsEpic from "./newsRequestEpic";
 import epgsRequestEpic from './epgsRequestEpic'
+import getGenresContentEpic from "./genresContentRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -16,7 +17,8 @@ const rootEpic = combineEpics(
     getVODEpic,
     getAdsEpic,
     getNewsEpic,
-    epgsRequestEpic
+    epgsRequestEpic,
+    getGenresContentEpic
 );
 
 export default rootEpic;

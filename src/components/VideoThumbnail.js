@@ -37,7 +37,7 @@ class VideoThumbnail extends React.PureComponent{
       source = {uri: this.props.imageUrl};
     }
     return (
-      <View style={[styles.container, {marginHorizontal: marginHorizontal ? marginHorizontal * 0.5 : 0}]}>
+      <View style={[styles.container]}>
         <ImageBackground imageStyle={{ borderRadius: 3 }} style={styles.imageContainer} source={source}>
           <View style={[styles.progressView, this._runProgressView()]}/>
           <Text style={styles.textCenter}>{this.props.textCenter}</Text>

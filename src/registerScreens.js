@@ -17,8 +17,7 @@ import SignIn from './screens/Settings/SignIn'
 import {colors} from "./utils/themeConfig";
 import {Image, TouchableOpacity} from "react-native";
 import MyCategories from "./screens/MyCategories";
-
-
+import Category from "./screens/Category";
 
 const defaultNavigationOptions =  (title, navigation, canBack=false)=> {
   var backButton = {
@@ -67,6 +66,13 @@ const HomeStack = StackNavigator({
         screen: MyCategories,
         navigationOptions:({navigation}) => ({
             ...defaultNavigationOptions("My Categories", navigation, true)
+        })
+    },
+    Category: {
+        screen: Category,
+        navigationOptions:({navigation}) => ({
+            header: null,
+            gesturesEnabled: false
         })
     }
 });

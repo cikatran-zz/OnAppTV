@@ -5,15 +5,11 @@ import {getVOD} from "../../../actions/getVOD";
 
 function mapStateToProps(state) {
     return {
-        live: state.liveReducer,
-        vod: state.vodReducer
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getLive: ()=> dispatch(getLive()),
-        getVOD: ()=>dispatch(getVOD())
     }
 }
 
