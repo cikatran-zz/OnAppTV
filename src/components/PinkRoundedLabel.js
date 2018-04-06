@@ -19,10 +19,7 @@ class PinkRoundedButton extends React.PureComponent{
 const styles = StyleSheet.create({
   labelStyle: {
     borderRadius: (Platform.OS === 'ios') ? 15 : 30,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 14,
-    paddingRight: 14,
+    padding: 9,
     backgroundColor: colors.mainPink,
     fontSize: 10,
     color: colors.textWhitePrimary,
