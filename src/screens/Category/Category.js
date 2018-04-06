@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {
-    FlatList, Image, StyleSheet, Text, View, ScrollView, ImageBackground,
-} from 'react-native';
+import {StyleSheet,} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import CategoryPageView from "./CategoryPageView";
@@ -36,8 +34,10 @@ export default class Category extends Component {
         _keyExtractor = (item, index) => item.id + index;
         return (
             <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false}>
-                { category.data.map((prop, index)=> {
-                    return (<CategoryPageView pagePosition={ this._getPagePosition(index, category.data.length) } header={prop.header} slotMachines={prop.slot_machines} key={"category"+index}  />)
+                {category.data.map((prop, index) => {
+                    return (<CategoryPageView pagePosition={this._getPagePosition(index, category.data.length)}
+                                              header={prop.header} slotMachines={prop.slot_machines}
+                                              key={"category" + index}/>)
                 })}
             </Swiper>
         );
