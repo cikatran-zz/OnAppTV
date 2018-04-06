@@ -1,17 +1,23 @@
 import React from 'react'
 import {
-  View, Text, Image, ImageBackground, StyleSheet, StatusBar, Dimensions, TouchableOpacity, SectionList, Animated,
-  Modal
+    Animated,
+    Dimensions,
+    Image,
+    ImageBackground,
+    Modal,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
-import CircleButton from "../../components/CircleButton"
 import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../../components/LowerPageComponent"
 import VerticalSwiper from '../../components/VerticalSwiper';
 import BlurView from '../../components/BlurView'
-import { getBlurRadius } from '../../utils/blurRadius'
+import {getBlurRadius} from '../../utils/blurRadius'
 
 
 const { width, height } = Dimensions.get("window")

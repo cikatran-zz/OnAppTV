@@ -1,12 +1,21 @@
 import React from 'react'
 import {
-  Text, View, SectionList, Button, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Platform,
-  Dimensions, StatusBar
+    Dimensions,
+    FlatList,
+    Image,
+    Platform,
+    SectionList,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native'
 import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
-import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
+import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import VideoThumbnail from '../../components/VideoThumbnail'
-import { colors } from '../../utils/themeConfig'
+import {colors} from '../../utils/themeConfig'
 import Modal from '../../components/DeleteBookmarModal'
 import {timeFormatter} from '../../utils/timeUtils'
 

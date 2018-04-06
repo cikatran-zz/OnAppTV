@@ -1,16 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import {
-  Modal,
-  Text,
-  TouchableHighlight,
-  View,
-  StyleSheet, Image, TouchableOpacity, Switch, WebView
-}
-  from 'react-native'
-import { colors } from '../utils/themeConfig'
+import {Image, Modal, StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native'
+import {colors} from '../utils/themeConfig'
 import BlurView from './BlurView'
-import { getBlurRadius } from '../utils/blurRadius'
+import {getBlurRadius} from '../utils/blurRadius'
 
 export default class DeleteBookmarkModal extends React.PureComponent {
 

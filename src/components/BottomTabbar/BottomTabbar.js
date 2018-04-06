@@ -1,11 +1,9 @@
 import React from 'react'
-import {
-  StyleSheet, Text, View, TouchableOpacity
-} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import PropTypes from 'prop-types'
-import {colors, textWhiteDefault} from '../../utils/themeConfig'
+import {colors} from '../../utils/themeConfig'
 import BlurView from '../BlurView'
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
 const tabs = [
   'Home',

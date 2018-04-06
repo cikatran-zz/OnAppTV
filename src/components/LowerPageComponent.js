@@ -1,7 +1,15 @@
 import React, {PureComponent} from 'react'
 import {
-  SectionList, FlatList, Text, View, Image, ImageBackground, StyleSheet, StatusBar, Platform, Dimensions,
-  TouchableOpacity
+    Dimensions,
+    FlatList,
+    Image,
+    Platform,
+    SectionList,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native'
 import {colors} from '../utils/themeConfig'
 import PinkRoundedLabel from './PinkRoundedLabel'

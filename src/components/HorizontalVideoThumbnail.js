@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Image, StyleSheet, Platform} from 'react-native'
+import {Image, Platform, StyleSheet, Text, View} from 'react-native'
 import {colors} from '../utils/themeConfig'
 import {timeFormatter} from '../utils/StringUtils'
 

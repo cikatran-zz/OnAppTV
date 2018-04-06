@@ -1,7 +1,6 @@
 import Book from './Book'
 import {connect} from "react-redux";
 import getBookList from '../../actions/getBookList'
-import bookListReducer from '../../reducers/bookListReducer'
 
 function mapStateToProps(state) {
   return {

@@ -1,11 +1,7 @@
 import React from 'react'
-import {
-  Text, View, SectionList, TextInput, StyleSheet, FlatList, TouchableOpacity, Platform,
-  Image, Dimensions
-} from 'react-native'
+import {Dimensions, FlatList, Image, StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
 import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
-import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
-import { colors } from '../../utils/themeConfig'
+import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import Modal from '../../components/DeleteBookmarModal'
 
 export default class RecordList extends React.PureComponent {

@@ -1,8 +1,7 @@
 import React from 'react'
-import {
-  StyleSheet, Text, Platform
-} from 'react-native'
+import {Platform, StyleSheet, Text} from 'react-native'
 import {colors} from '../utils/themeConfig'
+
 class PinkRoundedButton extends React.PureComponent{
   constructor(props){
     super(props);
