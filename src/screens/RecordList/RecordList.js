@@ -19,14 +19,31 @@ export default class RecordList extends React.PureComponent {
   };
 
   _toggleModal = (data) => {
-    const {openModal} = this.state
+    console.log('data')
+    console.log(data)
 
-    console.log('Toggle ' + data)
+    if (data || data === -1) {
+      // Open modal & close modal normally
+      this.setState({
+        openModal: !this.state.openModal,
+        data: data
+      })
+    }
+    else {
+      // Delete
+      const {listData, data} = this.state
+      let newArray = listData.slice()
+      let index = newArray.indexOf(data)
+      newArray.splice(index, 1)
+      console.log('Delete')
+      console.log(newArray)
 
-    this.setState({
-      openModal: !openModal,
-      data: data
-    })
+      this.setState({
+        openModal: !this.state.openModal,
+        data: {},
+        listData: newArray
+      })
+    }
   }
 
   _keyExtractor = (item, index) => index
@@ -34,7 +51,7 @@ export default class RecordList extends React.PureComponent {
   _renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>
-        <HorizontalVideoThumbnail item={item}/>
+        <HorizontalVideoThumbnail item={item.metaData}/>
         <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
           <Image source={require('../../assets/three_dot.png')}/>
         </TouchableOpacity>
@@ -59,17 +76,22 @@ export default class RecordList extends React.PureComponent {
   }
 
   render() {
-    const {header} = this.props;
+    const {header, books} = this.props;
+    if (books.data) {
+      if (!this.state.listData || books.data.length < this.state.listData.length) {
+        this.setState({
+          listData: books.data
+        })
+      }
+    }
 
     return (
       <View style={styles.container}>
-        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'record'} onClosePress={() => this._toggleModal({})} data={this.state.data}/>
+        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'record'} onClosePress={this._toggleModal} data={this.state.data}/>
         <PinkRoundedLabel text={header} style={styles.headerLabel}/>
         <TextInput style={[styles.textInput, { textAlign: this.state.textAlign }]}
                    placeholder={'Search'}
                    underlineColorAndroid='rgba(0,0,0,0)'
-                   inlineImageLeft='ic_search'
-                   inlineImagePadding={0}
                    onFocus={this._inputOnFocus}
                     onBlur={this._onBlurInput}
         />
@@ -77,7 +99,7 @@ export default class RecordList extends React.PureComponent {
           style={styles.list}
           horizontal={false}
           keyExtractor={this._keyExtractor}
-          data={fakeList}
+          data={books.data}
           renderItem={this._renderItem}
           ListFooterComponent={this._renderListFooter}
         />
@@ -95,6 +117,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   textInput: {
+    height: 29,
     marginLeft: 13,
     marginRight: 13,
     marginTop: 27,
