@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {
-    FlatList, Image, StyleSheet, Text, View, ScrollView, ImageBackground,
-} from 'react-native';
+import {StyleSheet,} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import CategoryPageView from "./CategoryPageView";
