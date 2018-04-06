@@ -5,7 +5,7 @@ import {
 import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 import BlurView from '../../components/BlurView'
 
 export default class MySubscription extends React.PureComponent {
@@ -111,7 +111,6 @@ export default class MySubscription extends React.PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <SettingHeader text={'My Subscription'} backButton={true} navigation={this.props.navigation}/>
         <SectionList
           style={{position: 'relative', flex: 1}}
           keyExtractor={this._keyExtractor}

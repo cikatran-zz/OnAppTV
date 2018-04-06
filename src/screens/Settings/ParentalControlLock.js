@@ -59,11 +59,6 @@ export default class ParentalControlLock extends React.PureComponent {
     return (
       <View style={styles.container}>
         <StatusBar/>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIcon}>
-            <Image source={require('../../assets/ic_left_arrow.png')} />
-          </TouchableOpacity>
-        </View>
         <View style={styles.pinCodeContainer}>
           <View style={styles.pinCodeBackground}/>
           <View style={styles.pinCodeInputSection}>

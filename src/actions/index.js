@@ -4,12 +4,14 @@ import * as getLive from './getLive'
 import * as videoModalAction from './videoModalAction'
 import * as getNews from "./getNews";
 import * as getEpgs from "./getEPG";
+import * as getGenresContent from "./getGenresContent"
 
 export default actions = {
-  getBanner,
-  getCategory,
-  getLive,
-  videoModalAction,
-  getNews,
-  getEpgs
+    getBanner,
+    getCategory,
+    getLive,
+    videoModalAction,
+    getNews,
+    getEpgs,
+    getGenresContent
 };

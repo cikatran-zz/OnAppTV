@@ -186,7 +186,6 @@ $(function() {
 					}
 					StateModal[nameList[i]] = index;
 					$(channelLable).html(listArray[i][index]);
-					StateModal[nameList[i]] = listArray[i][index];
 				}
 			}
 		}

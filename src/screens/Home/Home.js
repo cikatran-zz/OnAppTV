@@ -6,27 +6,40 @@
 
 import React, {Component} from 'react';
 import {
-  FlatList, Image, StyleSheet, Text, View, SectionList, ImageBackground, Platform, Dimensions,
-  TouchableOpacity
-} from 'react-native'
+    FlatList,
+    Image,
+    StyleSheet,
+    Text,
+    View,
+    SectionList,
+    ImageBackground,
+    Platform,
+    Dimensions,
+    NativeModules,
+    TouchableOpacity
+} from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
 import {
-    colors, textDarkDefault, textLightDefault, borderedImageDefault,
-    textWhiteDefault
+    colors, textDarkDefault, textLightDefault, borderedImageDefault
 } from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
+import Orientation from 'react-native-orientation';
 
 export default class Home extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            favoriteCategories: null,
+            category: null
+        }
     };
 
     componentWillMount() {
-        //Orientation.lockToPortrait();
+        Orientation.lockToPortrait();
     }
 
     componentDidMount() {
@@ -37,6 +50,21 @@ export default class Home extends Component {
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
+        NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+            console.log(results)
+            let result = JSON.parse(results[0]);
+            if (result.is_sign_in) {
+                console.log("Already logged in");
+            } else {
+                NativeModules.RNUserKitIdentity.signInWithEmail("chuong@gmail.com", "00000000", (error, results) => {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        console.log("Sign in success", results[0]);
+                    }
+                })
+            }
+        });
     };
 
     _renderChannelListItem = ({item}) => {
@@ -59,7 +87,7 @@ export default class Home extends Component {
     )}
 
     _renderChannelListItemSeparator = () => (
-      <View style={styles.itemContainerSeparator}/>
+        <View style={styles.itemContainerSeparator}/>
     )
 
     _keyExtractor = (item, index) => index;
@@ -214,22 +242,38 @@ export default class Home extends Component {
             </TouchableOpacity>)
     };
 
-  _renderCategoryItem = ({item}) => {
-      if (item.name == "_ADD") {
-          return (
-              <View style={styles.liveThumbnailContainer}>
-                  <View style={styles.addMoreCategoryContainer}>
-                      <Text style={styles.textCenter}>ADD</Text>
-                  </View>
-              </View>
-          )
-      }
-      return (
-          <View style={styles.liveThumbnailContainer}>
-              <VideoThumbnail showProgress={false} textCenter={item.name} marginHorizontal={10}/>
-          </View>
-      )
-  };
+    _navigateToMyCategories = () => {
+        const {navigate} = this.props.navigation;
+        navigate('MyCategories', {data: this.state.category, updateFavorite: this._updateFavoriteCategories});
+    };
+
+    _navigateToCategory = (cate) => {
+        const {navigate} = this.props.navigation;
+
+        navigate('Category', {data: this.state.category.filter((cate)=>cate.favorite==1), fromItem: cate});
+    };
+
+    _renderCategoryItem = ({item}) => {
+        if (item.name == "_ADD") {
+
+            return (
+                <TouchableOpacity onPress={() => this._navigateToMyCategories()}>
+                    <View style={styles.liveThumbnailContainer}>
+                        <View style={styles.addMoreCategoryContainer}>
+                            <Text style={styles.textCenter}>ADD</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            )
+        }
+        return (
+            <TouchableOpacity onPress={() => this._navigateToCategory(item.name)}>
+                <View style={styles.liveThumbnailContainer}>
+                    <VideoThumbnail showProgress={false} textCenter={item.name} marginHorizontal={10}/>
+                </View>
+            </TouchableOpacity>
+        )
+    };
 
     _renderAds = ({item}) => {
         if (item == null) {
@@ -244,9 +288,9 @@ export default class Home extends Component {
             image = item.originalImages[0].url;
         }
         return (<ImageBackground style={styles.adsContainer} source={{uri: image}}>
-          <View style={styles.adsLabelContainer}>
-              <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
-          </View>
+            <View style={styles.adsLabelContainer}>
+                <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
+            </View>
         </ImageBackground>)
     };
 
@@ -294,25 +338,46 @@ export default class Home extends Component {
                 showsHorizontalScrollIndicator={false}
                 data={item}
                 keyExtractor={this._keyExtractor}
-                renderItem={this._renderCategoryItem} />
+                renderItem={this._renderCategoryItem}/>
         )
     };
 
     _renderSectionHeader = ({section}) => {
-      if (section.showHeader) {
-      return (
-        <View style={styles.headerSection}>
-          <PinkRoundedLabel text={section.title} style={{fontSize: 10, color: colors.whitePrimary}}/>
-        </View>
-      )} else {
-        return null
-      }
+        if (section.showHeader) {
+            return (
+                <View style={styles.headerSection}>
+                    <PinkRoundedLabel text={section.title} style={{fontSize: 10, color: colors.whitePrimary}}/>
+                </View>
+            )
+        } else {
+            return null
+        }
     }
 
     //Fix bottom tabbar overlay the List
     _renderListFooter = () => (
-      <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
+        <View style={{
+            width: '100%',
+            height: Dimensions.get("window").height * 0.08 + 20,
+            backgroundColor: 'transparent'
+        }}/>
     )
+
+    _updateFavoriteCategories = (favorites) => {
+        favorites.push({"name": "_ADD"});
+        var data = this.state.category;
+        for (var i = 0; i < data.length; i++) {
+            data[i].favorite = 0;
+            for (var j = 0; j < favorites.length; j++) {
+                if (data[i].name == favorites[j].name) {
+                    data[i].favorite = 1;
+                }
+            }
+        }
+        this.state.category = data;
+        console.log("AFTER UPDATE", favorites);
+        this.setState({favoriteCategories: favorites});
+    };
 
 
     render() {
@@ -331,31 +396,40 @@ export default class Home extends Component {
             channelData = [null];
         }
 
-        var categoryData = category.data.map(cate => ({"name": cate.name}));
-        categoryData.push({"name": "_ADD"});
+        if (this.state.favoriteCategories == null) {
+            var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
+            this.state.category = category.data;
+            categoryData.push({"name": "_ADD"});
+            this.state.favoriteCategories = categoryData;
+        }
 
         return (
-          <View style={{flex: 1, flexDirection: 'column'}}>
-            <SectionList
-              style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
-              keyExtractor={this._keyExtractor}
-              stickySectionHeadersEnabled={false}
-              onEndReachedThreshold={20}
-              ListFooterComponent={ this._renderListFooter }
-              renderSectionHeader={this._renderSectionHeader}
-              showsVerticalScrollIndicator={false}
-              bounces={false}
-              sections={[
-                  {data:[banner.data], showHeader: false, renderItem: this._renderBanner},
-                  {data:[channelData], showHeader: false, renderItem: this._renderChannelList},
-                  {data:[ads.data], showHeader: false, renderItem: this._renderAds},
-                  {data:[live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
-                  {data:[vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
-                  {data:[categoryData], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList},
-                  {data:[news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
-                ]}
-            />
-          </View>
+            <View style={{flex: 1, flexDirection: 'column'}}>
+                <SectionList
+                    style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
+                    keyExtractor={this._keyExtractor}
+                    stickySectionHeadersEnabled={false}
+                    onEndReachedThreshold={20}
+                    ListFooterComponent={this._renderListFooter}
+                    renderSectionHeader={this._renderSectionHeader}
+                    showsVerticalScrollIndicator={false}
+                    bounces={false}
+                    sections={[
+                        {data: [banner.data], showHeader: false, renderItem: this._renderBanner},
+                        {data: [channelData], showHeader: false, renderItem: this._renderChannelList},
+                        {data: [ads.data], showHeader: false, renderItem: this._renderAds},
+                        {data: [live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
+                        {data: [vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList},
+                        {
+                            data: [this.state.favoriteCategories],
+                            title: "BY CATEGORY",
+                            showHeader: true,
+                            renderItem: this._renderCategoryList
+                        },
+                        {data: [news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter}
+                    ]}
+                />
+            </View>
         );
     }
 }
@@ -428,9 +502,9 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         position: 'absolute',
-      backgroundColor: 'transparent',
-      width: '100%',
-      height: '100%'
+        backgroundColor: 'transparent',
+        width: '100%',
+        height: '100%'
     },
     listHorizontal: {
         marginVertical: 30,
@@ -455,7 +529,7 @@ const styles = StyleSheet.create({
     },
     itemImageContainer: {
         justifyContent: 'center',
-        alignItems:'center',
+        alignItems: 'center',
         borderRadius: 10,
         backgroundColor: colors.mainLightGrey,
         width: 80,
@@ -478,36 +552,37 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textLiveVideoTitle: {
-      ...textDarkDefault,
-      width: 150,
-      textAlign:'center',
+        ...textDarkDefault,
+        marginTop: 21,
+        width: 150,
+        textAlign: 'center',
     },
     textLiveVideoInfo: {
-      ...textLightDefault,
-      width: 150,
-      textAlign:'center',
+        ...textLightDefault,
+        width: 150,
+        textAlign: 'center',
     },
     notificationContainer: {
-      flexDirection: 'column',
-      marginHorizontal: 10
+        flexDirection: 'column',
+        marginHorizontal: 10
     },
     notificationImage: {
-      ...borderedImageDefault,
-      width: '100%',
-      aspectRatio: 2.5
+        ...borderedImageDefault,
+        width: '100%',
+        aspectRatio: 2.5
     },
     notificationTitle: {
-      ...textDarkDefault,
-      marginVertical: 5
+        ...textDarkDefault,
+        marginVertical: 5
     },
     notificationSubTitle: {
-      ...textLightDefault
+        ...textLightDefault
     },
     blurview: {
         position: 'absolute',
         bottom: 0,
         left: 0,
-        right:0,
+        right: 0,
         top: 0,
         borderRadius: 50,
     },
@@ -522,7 +597,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderColor: "#95989A",
         width: 150,
-        height: "100%",
+        height: 75,
         marginVertical: 5,
         marginHorizontal: 10,
         justifyContent: 'center'

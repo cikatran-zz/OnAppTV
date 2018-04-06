@@ -6,6 +6,8 @@ import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeCon
 import {connect} from "react-redux";
 import VideoThumbnail from '../../../components/VideoThumbnail'
 import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
+import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
+import {rootViewTopPadding} from "../../../utils/rootViewTopPadding";
 
 class HeaderLabel extends React.PureComponent{
     constructor(props){
@@ -14,15 +16,15 @@ class HeaderLabel extends React.PureComponent{
     render(){
         if (this.props.position == 'end') {
             return (
-                <Text style={styles.endHeaderLabelStyle}>{this.props.text}</Text>
+                <Text style={styles.endHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
             )
         } else if (this.props.position == 'inside') {
             return (
-                <Text style={styles.insideHeaderLabelStyle}>{this.props.text}</Text>
+                <Text style={styles.insideHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
             )
         } else if (this.props.position == 'begin') {
             return (
-                <Text style={styles.beginHeaderLabelStyle}>{this.props.text}</Text>
+                <Text style={styles.beginHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
             )
         } else {
             return (
@@ -37,53 +39,100 @@ class CategoryPageView extends React.PureComponent{
         super(props);
     }
     componentDidMount() {
-        this.props.getLive();
-        this.props.getVOD();
     };
     _keyExtractor = (item, index) => item.id;
+
+    _getImage(item) {
+        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+        return image;
+    }
     _renderSlotMachines = ({item}) => {
         return (
             <View style={styles.slotMachineContainer}>
             { item.map((it, index)=> {
+                let image = this._getImage(it);
                 return (<Image
-                    key={ it.cover_image + index}
+                    key={ image + index}
                     style={styles.slotMachineImage}
-                    source={{uri: it.cover_image}}/>
+                    source={{uri: image}}/>
                 )
             })}
             </View>
         )
     }
-    _renderOnLiveItem = ({item}) => (
-        <View style={styles.liveThumbnailContainer}>
-            <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-            <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-            <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
-            <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
-        </View>
-    )
+    _renderOnLiveItem = ({item}) => {
+        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.videoData.originalImages.length > 0) {
+            image = item.videoData.originalImages[0].url;
+        }
+        let genres = '';
+        if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
+            item.videoData.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        var timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
-    _renderVODItem = ({item}) => (
-        <View style={styles.vodThumbnailContainer}>
-            <View>
-                <VideoThumbnail showProgress={false} imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
+        var currentDate = (new Date()).getTime();
+        var startDate = (new Date(item.startTime)).getTime();
+        var endDate = (new Date(item.endTime)).getTime();
+        var progress = (currentDate - startDate) / (endDate - startDate) * 100;
+        return (
+            <View style={styles.liveThumbnailContainer}>
+                <VideoThumbnail showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
             </View>
-            <View style={{alignSelf: 'stretch', flex: 1, alignItems: 'center', justifyContent:'center'}}>
-                <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
-                <Text numberOfLines={1} style={styles.textVODInfo}>{item.category}</Text>
-                <Text numberOfLines={1} style={styles.textVODInfo}>{item.time}</Text>
+        )
+    };
+
+    _renderVODItem = ({item}) => {
+        let genres = '';
+        if (item.genresData != null) {
+            item.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        return (
+            <View style={styles.vodThumbnailContainer}>
+                <View>
+                    <VideoThumbnail showProgress={false} imageUrl={this._getImage(item)} marginHorizontal={20}/>
+                </View>
+                <View style={{alignSelf: 'stretch', flex: 1, alignItems: 'center', justifyContent:'center'}}>
+                    <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
+                    <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>
+                    <Text numberOfLines={1} style={styles.textVODInfo}>{secondFormatter(item.durationInSeconds)}</Text>
+                </View>
             </View>
-        </View>
-    )
-    _renderOnLiveList = ({item}) => (
-        <FlatList
+        )
+    }
+    _renderOnLiveList = ({item}) => {
+        if (item == null || item[0] == null) {
+            return (
+                <View style={{flex: 1}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
+        return (<FlatList
             style={{flex: 1}}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={item}
             keyExtractor={this._keyExtractor}
-            renderItem={this._renderOnLiveItem} />
-    )
+            renderItem={this._renderOnLiveItem}/>)
+    };
 
 
     _renderSectionHeader = ({section}) => {
@@ -104,12 +153,17 @@ class CategoryPageView extends React.PureComponent{
             data={item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderVODItem} />
-    )
+    );
+
+    _renderListFooter = () => (
+        <View style={{
+            width: '100%',
+            height: Dimensions.get("window").height * 0.08 + 20,
+            backgroundColor: 'transparent'
+        }}/>
+    );
 
     render(){
-        const {live, vod} = this.props;
-        if (!live.data || live.isFetching || !vod.data || vod.isFetching)
-            return null;
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
                 <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor}/>
@@ -120,10 +174,11 @@ class CategoryPageView extends React.PureComponent{
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
+                    ListFooterComponent={this._renderListFooter}
                     sections={[
                         {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
-                        {data:[live.data], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
-                        {data:[vod.data], title: "VOD", showHeader: true, renderItem: this._renderVODList}
+                        {data:[this.props.epgs], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                        {data:[this.props.vod], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
                 />
             </View>
@@ -136,6 +191,7 @@ export default CategoryPageView;
 const styles = StyleSheet.create({
 
     rootView: {
+        marginTop: rootViewTopPadding(),
         width: '100%',
         height: '100%',
         backgroundColor: colors.screenBackground,
@@ -164,7 +220,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         left: '50%',
         borderRadius: 15,
-        padding: 8,
+        paddingTop: 8,
+        paddingHorizontal: 8,
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary
@@ -176,7 +233,8 @@ const styles = StyleSheet.create({
         left: '-10%',
         borderRadius: 15,
         textAlign: 'right',
-        padding: 8,
+        paddingTop: 8,
+        paddingHorizontal: 8,
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary
@@ -186,7 +244,8 @@ const styles = StyleSheet.create({
         height: 30,
         left: 0,
         textAlign: 'center',
-        padding: 8,
+        paddingTop: 8,
+        paddingHorizontal: 8,
         backgroundColor: colors.mainPink,
         fontSize: 13,
         color: colors.textWhitePrimary
@@ -198,13 +257,14 @@ const styles = StyleSheet.create({
     },
     textLiveVideoTitle: {
         ...textDarkDefault,
+        marginTop: 21,
         width: 150,
-        textAlign:'center',
+        textAlign: 'center',
     },
     textLiveVideoInfo: {
         ...textLightDefault,
         width: 150,
-        textAlign:'center',
+        textAlign: 'center',
     },
     textVODTitle: {
         ...textDarkDefault,
@@ -225,5 +285,10 @@ const styles = StyleSheet.create({
     vodThumbnailContainer: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    noInternetConnection: {
+        color: colors.greyDescriptionText,
+        textAlign: 'center',
+        flexWrap: "wrap",
     },
 });

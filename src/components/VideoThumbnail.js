@@ -37,7 +37,7 @@ class VideoThumbnail extends React.PureComponent{
       source = {uri: this.props.imageUrl};
     }
     return (
-      <View style={[styles.container, {marginHorizontal: marginHorizontal ? marginHorizontal * 0.5 : 0}]}>
+      <View style={[styles.container]}>
         <ImageBackground imageStyle={{ borderRadius: 3 }} style={styles.imageContainer} source={source}>
           <View style={[styles.progressView, this._runProgressView()]}/>
           <Text style={styles.textCenter}>{this.props.textCenter}</Text>
@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
   redLine: {
     position: 'absolute',
     backgroundColor: colors.mainPink,
-    height: 25,
-    width: 1,
+    height: 16,
+    width: 1.5,
     left: '0%',
-    bottom: -15
+    bottom: -8
   },
   textCenter: {
     ...textWhiteDefault,

@@ -122,6 +122,8 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
         controlsView.rewindAnimationBlock = {
             self.playAnimationInRect(animationView: self.rewindAnimationView, region: CGRect(x: -self.playerView!.controlsContainerView.frame.height - 200, y: -500, width: self.playerView!.controlsContainerView.frame.height + 600, height: self.playerView!.controlsContainerView.frame.height + 1000) )
         }
+        
+        
     }
 }
 
@@ -215,6 +217,7 @@ extension BrightcovePlayer: WKUIDelegate {
         spinnerWebView.backgroundColor = .clear
         spinnerWebView.isOpaque = false
         spinnerWebView.scrollView.backgroundColor = .clear
+        spinnerWebView.isUserInteractionEnabled = false
         playerView?.controlsContainerView.addSubview(spinnerWebView)
         playerView?.controlsContainerView.addConstraint(NSLayoutConstraint(item: spinnerWebView,
                                                                            attribute: .centerX,

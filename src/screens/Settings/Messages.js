@@ -5,7 +5,7 @@ import {
 import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 
 export default class Messages extends React.PureComponent {
 
@@ -50,7 +50,6 @@ export default class Messages extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <SettingHeader text={'Messages'} backButton={true} navigation={this.props.navigation}/>
         <FlatList
           style={styles.listMess}
           horizontal={false}

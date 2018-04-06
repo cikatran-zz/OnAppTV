@@ -6,9 +6,9 @@ $(function() {
 	//			$("#picID").attr("src", "TROPICALISLAND_4.gif");
 	//		}, 100);
 	//	}, 11300);
-	mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
-		document.location.href = this.href;
-	});
+//    mui(".mui-scroll,.menu,.evaluating").on('tap','a', function() {
+//        document.location.href = this.href;
+//    });
 	//slide
 	var mySwiper = new Swiper('.swiper-container', {
 		direction: "horizontal",
@@ -27,4 +27,38 @@ $(function() {
 		observer: true, //修改swiper自己或子元素时，自动初始化swiper
 		observeParents: true, //修改swiper的父元素时，自动初始化swiper
 	})
+})
+
+function checkNotiPermission() {
+    window.WebViewJavascriptBridge.callHandler('HIG_CheckNotiPermission', "");
+}
+
+function requestNoti() {
+    window.WebViewJavascriptBridge.callHandler('HIG_RequestNotiPermission', "");
+}
+
+function setupWebViewJavascriptBridge(callback) {
+    if(window.WebViewJavascriptBridge) {
+        return callback(WebViewJavascriptBridge);
+    }
+    if(window.WVJBCallbacks) {
+        return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+               document.documentElement.removeChild(WVJBIframe)
+               }, 0)
+}
+
+setupWebViewJavascriptBridge(function(bridge) {
+    bridge.registerHandler('HIG_ShowNotiModal', function(data, responseCallback) {
+        $("#ConsentModal").modal("show");
+    });
+    bridge.registerHandler('HIG_GoToLoginScreen', function(data, responseCallback) {
+        document.location.href = "SignIn.html";
+    });
 })

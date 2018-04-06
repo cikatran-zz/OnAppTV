@@ -14,10 +14,123 @@ import ParentalControlLock from './screens/Settings/ParentalControlLock'
 import ParentalControl from './screens/Settings/ParentalControl'
 import PersonalInformation from './screens/Settings/PersionalInformations'
 import SignIn from './screens/Settings/SignIn'
+import {colors} from "./utils/themeConfig";
+import {Image, TouchableOpacity} from "react-native";
+import MyCategories from "./screens/MyCategories";
+import Category from "./screens/Category";
+
+const defaultNavigationOptions =  (title, navigation, canBack=false)=> {
+  var backButton = {
+      headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 18}} >
+          <Image source={require('./assets/ic_left_arrow.png')} />
+      </TouchableOpacity>
+  };
+  if (!canBack) {
+    backButton = {};
+  }
+  return {
+      title: title,
+      headerStyle: {
+          backgroundColor: '#ffffff',
+          shadowOpacity: 0,
+          shadowOffset: {
+              height: 0,
+              width: 0
+          },
+          shadowColor: '#ffffff',
+          shadowRadius: 0,
+          elevation: 0,
+          borderBottomWidth: 0
+      },
+      headerTitleStyle: {
+          color: colors.greySettingLabel,
+          textAlign: 'center',
+          justifyContent: 'space-between',
+          fontSize: 17,
+          alignSelf: 'center',
+          fontWeight: "normal"
+      },
+      ...backButton
+  }
+};
+
+const HomeStack = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) => ({
+            header: null,
+            gesturesEnabled: false
+        }),
+    },
+    MyCategories: {
+        screen: MyCategories,
+        navigationOptions:({navigation}) => ({
+            ...defaultNavigationOptions("My Categories", navigation, true)
+        })
+    },
+    Category: {
+        screen: Category,
+        navigationOptions:({navigation}) => ({
+            header: null,
+            gesturesEnabled: false
+        })
+    }
+});
+
+const SettingsStack = StackNavigator({
+    Setting: {
+        screen: Settings,
+        navigationOptions:({navigation}) => ({
+            ...defaultNavigationOptions("Settings", navigation)
+        })
+    },
+    AudioLanguage: {
+        screen: AudioLanguage,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Audio Language", navigation, true)
+        })
+    },
+    Messages: {
+        screen: Messages,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Messages", navigation, true)
+        })
+    },
+    MySubscription: {
+        screen: MySubscription,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("My Subscription", navigation, true)
+        })
+    },
+    ParentalControlLock: {
+        screen: ParentalControlLock,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("", navigation, true)
+        })
+    },
+    ParentalControl: {
+        screen: ParentalControl,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Parental Control", navigation, true)
+        })
+    },
+    PersonalInformation: {
+        screen: PersonalInformation,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Personal informations", navigation, true)
+        })
+    },
+    SignIn: {
+        screen: SignIn,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Sign in", navigation, true)
+        })
+    }
+});
 
 const TabNav = TabNavigator({
   Home: {
-    screen: Home,
+    screen: HomeStack,
     navigationOptions: ({navigation}) => ({
       header: null
     }),
@@ -35,7 +148,7 @@ const TabNav = TabNavigator({
     })
   },
     Setting: {
-        screen: Settings,
+        screen: SettingsStack,
         navigationOptions: ({navigation}) => ({
             header: null
         })
@@ -45,7 +158,7 @@ const TabNav = TabNavigator({
   tabBarPosition: 'bottom',
   swipeEnabled: false,
   animationEnabled: false
-})
+});
 
 export const ScreenStack = StackNavigator({
   Root: {
@@ -60,28 +173,6 @@ export const ScreenStack = StackNavigator({
   VideoControlModal: {
     screen: VideoControlModal
   },
-  AudioLanguage: {
-    screen: AudioLanguage
-  },
-  Messages: {
-    screen: Messages
-  },
-  MySubscription: {
-    screen: MySubscription
-  },
-  ParentalControlLock: {
-    screen: ParentalControlLock
-  },
-  ParentalControl: {
-    screen: ParentalControl
-  },
-  PersonalInformation: {
-    screen: PersonalInformation
-  },
-  SignIn: {
-    screen: SignIn
-  }
-
 }, {
   mode: 'modal',
   headerMode: 'none'

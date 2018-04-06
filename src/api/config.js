@@ -107,6 +107,7 @@ const categoryQuery = gql`
 query{
   viewer{
     genreMany {
+      _id
       name
   	}
 	}
@@ -168,19 +169,23 @@ query getLiveEPG($currentTime: Date){
 `;
 
 const epgQuery = gql`
-query getEPGByChannel($id: [Float]){
+query getEPGByChannel($channelId: MongoID!){
   viewer{
-      channelMany (filter: {
-       	_operators: {
-          serviceId: {
-            in: $id
-          }
-       	 }
-      	}
-      ) {
-      _id
-      epgsData {
-        videoId
+      channelById(_id : $channelId) {
+        title
+        longDescription
+        shortDescription
+        createdAt
+        updatedAt
+        originalImages {
+              height
+              width
+              url
+              name
+              fileName
+        }
+        epgsData {
+          videoId
           channelId
           startTime
           endTime
@@ -211,8 +216,8 @@ query getEPGByChannel($id: [Float]){
             createdAt
             updatedAt
           }
-      }
-    }
+        }
+      }  
     }
 }
 `;
@@ -300,6 +305,79 @@ query getSeriesEpg($id: [MongoID]){
 }
 `
 
+const genresVOD = gql`
+query genresVOD($genresId: [MongoID]){
+  viewer{
+    videoMany(filter: {
+      _operators: {
+        genreIds: {
+          in: $genresId
+        }
+      }
+    }, sort: FEATURE_DESC) {
+      contentId
+      durationInSeconds
+      title
+      feature
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      state
+      genresData {
+        name
+      }
+      durationInSeconds
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+    }
+  }
+}
+`;
+
+const genresEPGs = gql`
+query genresEPGs($currentTime: Date, $genresId: [MongoID]){
+  viewer{
+    epgMany(filter: {
+      _operators:{
+        startTime: {
+          lte: $currentTime
+        },
+        endTime:{
+          gte: $currentTime
+        },
+        genreIds: {
+          in: $genresId
+        }
+      }
+    
+    }) {
+      channelData {
+        title
+      }
+      videoData {
+        title
+        originalImages {
+          url
+        }
+        genresData {
+          name
+        }
+      }
+      startTime
+      endTime
+      genreIds
+    }
+  }
+}
+`;
+
 export default {
     serverURL: 'http://13.250.57.10:3000/graphql',
     queries: {
@@ -311,8 +389,9 @@ export default {
         VOD: vodQuery,
         NEWS: newsQuery,
         EPG: epgQuery,
+        GENRES_VOD: genresVOD,
+        GENRES_EPG: genresEPGs
         EPG_WITH_GENRES: relatedEpgQuery,
         EPG_WITH_SERIES: seriesEpgQuery
     }
 };
-

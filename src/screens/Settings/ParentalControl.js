@@ -4,7 +4,7 @@ import {
   FlatList
 } from 'react-native'
 import { colors } from '../../utils/themeConfig'
-import SettingHeader from '../../components/SettingHeader'
+import SettingHeader from '../../components/NavigationHeader'
 
 export default class ParentalControl extends React.PureComponent {
 
@@ -40,7 +40,6 @@ export default class ParentalControl extends React.PureComponent {
     return (
       <View style={styles.container}>
         <StatusBar/>
-        <SettingHeader text={'Parental Control'} backButton={true} navigation={navigation}/>
         <View style={styles.mainContainer}>
           <View style={styles.switchContainer}>
             <Text style={styles.switchHeaderText}>Parental Control</Text>
