@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {NativeModules, Platform, StyleSheet, Switch, FlatList, View, StatusBar, Text, TouchableOpacity} from "react-native";
+import {
+    FlatList,
+    NativeModules,
+    Platform,
+    StatusBar,
+    StyleSheet,
+    Switch,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 import {colors} from "../../utils/themeConfig";
 
 export default class MyCategories extends Component {
@@ -26,9 +36,14 @@ export default class MyCategories extends Component {
 
     _renderSwitch(item) {
         if (Platform.OS == "ios") {
-            return (<Switch value={this.state.toggleState[item.name]} onValueChange={(value)=> this._changeFavorite(item.name, value)} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>)
+            return (<Switch value={this.state.toggleState[item.name]}
+                            onValueChange={(value) => this._changeFavorite(item.name, value)}
+                            style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>)
         }
-        return (<Switch value={item.favorite} onValueChange={(value)=> this._changeFavorite(item.name, value)} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'} thumbTintColor={'#ffffff'}/>)
+        return (<Switch value={this.state.toggleState[item.name] == 1}
+                        onValueChange={(value) => this._changeFavorite(item.name, value)}
+                        style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}
+                        thumbTintColor={'#ffffff'}/>)
     }
 
     _renderListItem = ({item}) => {
@@ -45,17 +60,17 @@ export default class MyCategories extends Component {
 
     _keyExtractor = (item, index) => index;
 
-    _onUpdateFavoriteCategories = ()=> {
+    _onUpdateFavoriteCategories = () => {
         const {updateFavorite} = this.props.navigation.state.params;
         let keys = Object.keys(this.state.toggleState);
         var favorites = []
-        for(var i=0; i<keys.length; i++) {
+        for (var i = 0; i < keys.length; i++) {
             if (this.state.toggleState[keys[i]]) {
                 favorites.push({name: keys[i], favorite: true});
             }
         }
         updateFavorite(favorites);
-        NativeModules.RNUserKit.storeProperty("favorite_categories", this.state.toggleState, (error, results)=> {
+        NativeModules.RNUserKit.storeProperty("favorite_categories", this.state.toggleState, (error, results) => {
             if (error) {
                 console.log(error);
             } else {
@@ -74,21 +89,22 @@ export default class MyCategories extends Component {
             this.state.toggleState = toggles;
             console.log(toggles);
         }
-        return(
+        return (
             <View style={styles.container}>
-            <StatusBar/>
-            <FlatList
-                style={styles.listContainer}
-                keyExtractor={this._keyExtractor}
-                horizontal={false}
-                renderItem={this._renderListItem}
-                data={data}
-                ItemSeparatorComponent={ () => <View style={{ width: "100%", height: 1, backgroundColor: '#DADADE'}}/> }
-            />
-            <TouchableOpacity onPress={()=> this._onUpdateFavoriteCategories()}>
-            <Text style={styles.validateButton}>Validate</Text>
-            </TouchableOpacity>
-        </View>)
+                <StatusBar/>
+                <FlatList
+                    style={styles.listContainer}
+                    keyExtractor={this._keyExtractor}
+                    horizontal={false}
+                    renderItem={this._renderListItem}
+                    data={data}
+                    ItemSeparatorComponent={() => <View
+                        style={{width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
+                />
+                <TouchableOpacity onPress={() => this._onUpdateFavoriteCategories()}>
+                    <Text style={styles.validateButton}>Validate</Text>
+                </TouchableOpacity>
+            </View>)
     }
 }
 

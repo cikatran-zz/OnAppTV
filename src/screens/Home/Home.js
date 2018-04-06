@@ -10,11 +10,11 @@ import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
 import {
-    colors, textDarkDefault, textLightDefault, borderedImageDefault,
-    textWhiteDefault
+    colors, textDarkDefault, textLightDefault, borderedImageDefault
 } from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
+import Orientation from 'react-native-orientation';
 
 export default class Home extends Component {
 
@@ -27,7 +27,7 @@ export default class Home extends Component {
     };
 
     componentWillMount() {
-        //Orientation.lockToPortrait();
+        Orientation.lockToPortrait();
     }
 
     componentDidMount() {
