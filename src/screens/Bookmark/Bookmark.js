@@ -1,36 +1,51 @@
 import React from 'react'
 import {
   Text, View, SectionList, Button, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Platform,
-  Dimensions
+  Dimensions, StatusBar
 } from 'react-native'
 import HorizontalVideoThumbnail from '../../components/HorizontalVideoThumbnail'
 import PinkRoundedLabel  from '../../components/PinkRoundedLabel'
 import VideoThumbnail from '../../components/VideoThumbnail'
 import { colors } from '../../utils/themeConfig'
 import Modal from '../../components/DeleteBookmarModal'
+import {timeFormatter} from '../../utils/timeUtils'
 
-export default class Bookmark extends React.PureComponent {
+export default class Bookmark extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       openModal: false,
-      data: {}
+      data: {},
     }
   }
 
-  componentDidMount() {
-    //this.props.getList();
-  }
-
   _toggleModal = (data) => {
-    const {openModal} = this.state
+    console.log('data')
+    console.log(data)
 
-    console.log('Toggle ' + data)
+    if (data || data === -1) {
+      // Open modal & close modal normally
+      this.setState({
+        openModal: !this.state.openModal,
+        data: data
+      })
+    }
+    else {
+      // Delete
+      const {listData, data} = this.state
+      let newArray = listData.slice()
+      let index = newArray.indexOf(data)
+      newArray.splice(index, 1)
+      console.log('Delete')
+      console.log(newArray)
 
-    this.setState({
-      openModal: !openModal,
-      data: data
-    })
+      this.setState({
+        openModal: !this.state.openModal,
+        data: {},
+        listData: newArray
+      })
+    }
+
   }
 
   _renderListFooter = () => (
@@ -39,20 +54,21 @@ export default class Bookmark extends React.PureComponent {
 
   _keyExtractor = (item, index) => index
 
-  _renderListBookmarks = ({data}) => {
+  _renderListBookmarks = ({item}) => {
+
     return (
       <View style={styles.bookmarkSection}>
         <View style={styles.bookmarkLabelContainer}>
           <PinkRoundedLabel text="BOOKMARK" style={styles.bookingHeaderLabel}/>
           <View style={styles.textInputContainer}>
-            <TextInput placeholder={'Emissions'} style={styles.textInput} underlineColorAndroid='rgba(0,0,0,0)' inlineImageLeft='ic_search' inlineImagePadding={8}/>
+            <TextInput placeholder={'Emissions'} style={styles.textInput} underlineColorAndroid='rgba(0,0,0,0)'/>
             <Image source={require('../../assets/ic_close.png')} style={{position: 'absolute', right: 10, top: 0}}/>
           </View>
         </View>
         <FlatList
           style={styles.listBookmarks}
           horizontal={false}
-          data={fakeList}
+          data={item}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderBookmarkItem}/>
       </View>
@@ -62,7 +78,7 @@ export default class Bookmark extends React.PureComponent {
   _renderBookmarkItem = ({item}) => {
     return (
       <View>
-        <HorizontalVideoThumbnail item={item}/>
+        <HorizontalVideoThumbnail item={item.metaData}/>
         <TouchableOpacity style={styles.deleteButton} onPress={() => this._toggleModal(item)}>
           <Text style={styles.deleteTextStyle}>Delete</Text>
         </TouchableOpacity>
@@ -74,10 +90,10 @@ export default class Bookmark extends React.PureComponent {
   _renderScheduledItem = ({item}) => {
     return (
       <View style={styles.horizontalItemContainer}>
-        <VideoThumbnail imageUrl={item.videoData.originalImages[0].url} marginHorizontal={17}/>
-        <Text style={styles.textTitle}>{item.videoData.title}</Text>
-        <Text style={styles.textType}>{item.videoData.type}</Text>
-        <Text style={styles.textTime}>15/07 - 15h30 to 17h15</Text>
+        <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
+        <Text style={styles.textTitle}>{item.metaData.title}</Text>
+        <Text style={styles.textType}>{item.metaData.subTitle}</Text>
+        <Text style={styles.textTime}>{timeFormatter(item.record.startTime)}</Text>
         <TouchableOpacity style={styles.closeIcon}>
           <Image source={require('../../assets/ic_close.png')}/>
         </TouchableOpacity>
@@ -85,14 +101,14 @@ export default class Bookmark extends React.PureComponent {
     )
   }
 
-  _renderListScheduledRecords = ({data}) => {
+  _renderListScheduledRecords = ({item}) => {
       return(
         <View style={{flexDirection: 'column'}}>
           <PinkRoundedLabel text="MY SCHEDULED RECORD" style={styles.myScheduledRecordLabel}/>
           <FlatList
             style={styles.listScheduledRecord}
             horizontal={true}
-            data={fakeList}
+            data={item}
             keyExtractor={this._keyExtractor}
             showsHorizontalScrollIndicator={false}
             renderItem={this._renderScheduledItem}/>
@@ -101,15 +117,21 @@ export default class Bookmark extends React.PureComponent {
   }
 
   render() {
-    const {bookList} = this.props;
-
-    if (bookList) {
-      console.log('booklist')
-      console.log(bookList)
+    const {books} = this.props;
+    if (books.data) {
+        if (!this.state.listData || books.data.length < this.state.listData.length) {
+            this.setState({
+              listData: books.data
+            })
+        }
     }
+
     return (
       <View style={styles.container}>
-        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'bookmark'} onClosePress={() => this._toggleModal({})} data={this.state.data}/>
+        <StatusBar translucent={true}
+                   backgroundColor='#00000000'
+                   barStyle='dark-content'/>
+        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'bookmark'} onClosePress={this._toggleModal} data={this.state.data}/>
         <SectionList
           style={styles.container}
           keyExtractor={this._keyExtractor}
@@ -117,8 +139,8 @@ export default class Bookmark extends React.PureComponent {
           onEndReachedThreshold={20}
           ListFooterComponent={this._renderListFooter}
           sections={[
-            {data: [fakeList], renderItem: this._renderListScheduledRecords},
-            {data: [fakeList], renderItem: this._renderListBookmarks}
+            {data: [this.state.listData], renderItem: this._renderListScheduledRecords},
+            {data: [this.state.listData], renderItem: this._renderListBookmarks}
           ]}
         />
       </View>
@@ -130,10 +152,12 @@ export default class Bookmark extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    width: '100%',
+    height: '100%'
   },
   myScheduledRecordLabel: {
     width: 479,
-    marginLeft: 143,
+    marginLeft: '38%',
     marginTop: 21,
     paddingLeft: 15,
     fontSize: 10
@@ -155,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textTitle: {
-    marginTop: 18,
+    marginTop: 15,
     color: colors.textMainBlack,
     fontSize: 15
   },
