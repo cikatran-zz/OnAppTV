@@ -55,12 +55,11 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(value.toString());
+                    Object valueJson = JsonHelper.toJSON(value.toHashMap());
+                    array.pushString(valueJson.toString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(throwable.toString());
-                    callback.invoke(array, null);
+                    callback.invoke(throwable.toString(), null);
                 });
     }
 
@@ -72,12 +71,11 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(value -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(value.get().toString());
+                    Object valueJson = JsonHelper.toJSON(value.get());
+                    array.pushString(valueJson.toString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(throwable.toString());
-                    callback.invoke(array, null);
+                    callback.invoke(throwable.toString(), null);
                 });
     }
 }
