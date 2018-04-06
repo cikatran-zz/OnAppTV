@@ -1,6 +1,6 @@
 import React from 'react'
 import Swiper from 'react-native-swiper'
-import { Text, View, SectionList, TextInput, StyleSheet, FlatList } from 'react-native'
+import { Text, View, SectionList, TextInput, StyleSheet, FlatList, NativeModules, StatusBar } from 'react-native'
 import { colors } from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
@@ -19,20 +19,25 @@ export default class Book extends React.Component {
   _keyExtractor = (item, index) => index
 
   render() {
+    const {books} = this.props
+    console.log(books)
 
     return (
-      <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
-        <Bookmark />
-        <RecordList header={"MY RECORDS"}/>
-        <RecordList header={"MY DOWNLOADS"}/>
-      </Swiper>
+      <View style={{width: '100%', height: '100%'}}>
+
+        <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
+          <Bookmark books={books}/>
+          <RecordList header={"MY RECORDS"} books={books}/>
+          <RecordList header={"MY DOWNLOADS"} books={books}/>
+        </Swiper>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
   pageViewStyle: {
-    height: '100%',
+    paddingTop: rootViewTopPadding(),
     backgroundColor: colors.screenBackground
   },
   slide1: {

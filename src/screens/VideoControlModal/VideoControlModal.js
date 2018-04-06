@@ -31,6 +31,7 @@ export default class VideoControlModal extends React.Component {
       showBrightcove: false,
       recordEnabled: false,
       favoriteEnabled: false,
+      isPlaying: true,
       modalVisibility: false
     }
   }
@@ -117,8 +118,8 @@ export default class VideoControlModal extends React.Component {
         <TouchableOpacity style={styles.rewindButton}>
           <Image source={require('../../assets/ic_rewind.png')}/>
         </TouchableOpacity>
-        <TouchableOpacity style={{ width: 75, height: 75}}>
-          <Image source={require('../../assets/ic_play_with_border.png')} style={{alignSelf: 'center'}}/>
+        <TouchableOpacity style={{ width: 75, height: 75}} onPress={() => this.setState({isPlaying: !this.state.isPlaying})}>
+          <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={{alignSelf: 'center'}}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.fastForwardButton}>
           <Image source={require('../../assets/ic_fastforward.png')}/>

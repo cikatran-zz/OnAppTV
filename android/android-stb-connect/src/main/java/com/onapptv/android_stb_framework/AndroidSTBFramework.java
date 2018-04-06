@@ -39,19 +39,26 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void isStbConnected(Callback callback) {
+        WritableNativeArray array = new WritableNativeArray();
+        if (Api_Implementation.sharedManager().getCurrentSTBInfo() != null) {
+            array.pushBoolean(true);
+        }
+        else array.pushBoolean(false);
+        callback.invoke(null, array);
+    }
+
+    @ReactMethod
     public void udpOperation() {
         Api_Implementation.sharedManager().hIG_UdpOperation();
     }
 
     @ReactMethod
     public void udpReceiveMessageInJson(Callback callback) {
-        Api_Implementation.sharedManager().hIG_UdpReceiveMessageInJson(new Api.OnStringCallbackBlock() {
-            @Override
-            public void OnStringCallback(String s) {
-                WritableNativeArray array = new WritableNativeArray();
-                array.pushString(s);
-                callback.invoke(null, array);
-            }
+        Api_Implementation.sharedManager().hIG_UdpReceiveMessageInJson(s -> {
+            WritableNativeArray array = new WritableNativeArray();
+            array.pushString(s);
+            callback.invoke(null, array);
         });
     }
 

@@ -13,16 +13,15 @@ export default class HorizontalVideoThumbnail extends React.PureComponent {
     if (!item)
       return null
 
-    let videoData = item.videoData
     return (
       <View style={styles.itemContainer}>
         <Image
           style={styles.videoThumbnail}
-          source={{uri: (item.url ? item.url : fakeBannerData.url)}}
+          source={{uri: (item.image ? item.image : fakeBannerData.url)}}
         />
         <View style={styles.itemInformationContainer}>
-          <Text style={styles.itemTitle}>{videoData.title}</Text>
-          <Text style={styles.itemType}>{videoData.type}</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
+          <Text style={styles.itemType}>{item.subTitle}</Text>
         </View>
       </View>
     )
