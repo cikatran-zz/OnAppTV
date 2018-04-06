@@ -6,7 +6,7 @@ import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeCon
 import {connect} from "react-redux";
 import VideoThumbnail from '../../../components/VideoThumbnail'
 import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
-import {secondFormatter} from "../../../utils/timeUtils";
+import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewTopPadding";
 
 class HeaderLabel extends React.PureComponent{
@@ -63,14 +63,36 @@ class CategoryPageView extends React.PureComponent{
             </View>
         )
     }
-    _renderOnLiveItem = ({item}) => (
-        <View style={styles.liveThumbnailContainer}>
-            <VideoThumbnail showProgress={true} progress="80%" imageUrl='https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'/>
-            <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-            <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.category}</Text>
-            <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.time}</Text>
-        </View>
-    )
+    _renderOnLiveItem = ({item}) => {
+        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.videoData.originalImages.length > 0) {
+            image = item.videoData.originalImages[0].url;
+        }
+        let genres = '';
+        if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
+            item.videoData.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        var timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+
+        var currentDate = (new Date()).getTime();
+        var startDate = (new Date(item.startTime)).getTime();
+        var endDate = (new Date(item.endTime)).getTime();
+        var progress = (currentDate - startDate) / (endDate - startDate) * 100;
+        return (
+            <View style={styles.liveThumbnailContainer}>
+                <VideoThumbnail showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
+            </View>
+        )
+    };
 
     _renderVODItem = ({item}) => {
         let genres = '';
@@ -95,15 +117,22 @@ class CategoryPageView extends React.PureComponent{
             </View>
         )
     }
-    _renderOnLiveList = ({item}) => (
-        <FlatList
+    _renderOnLiveList = ({item}) => {
+        if (item == null || item[0] == null) {
+            return (
+                <View style={{flex: 1}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
+        return (<FlatList
             style={{flex: 1}}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={item}
             keyExtractor={this._keyExtractor}
-            renderItem={this._renderOnLiveItem} />
-    )
+            renderItem={this._renderOnLiveItem}/>)
+    };
 
 
     _renderSectionHeader = ({section}) => {
@@ -148,7 +177,7 @@ class CategoryPageView extends React.PureComponent{
                     ListFooterComponent={this._renderListFooter}
                     sections={[
                         {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
-                        {data:[], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                        {data:[this.props.epgs], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
                         {data:[this.props.vod], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
                 />
@@ -228,13 +257,14 @@ const styles = StyleSheet.create({
     },
     textLiveVideoTitle: {
         ...textDarkDefault,
+        marginTop: 21,
         width: 150,
-        textAlign:'center',
+        textAlign: 'center',
     },
     textLiveVideoInfo: {
         ...textLightDefault,
         width: 150,
-        textAlign:'center',
+        textAlign: 'center',
     },
     textVODTitle: {
         ...textDarkDefault,
@@ -255,5 +285,10 @@ const styles = StyleSheet.create({
     vodThumbnailContainer: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    noInternetConnection: {
+        color: colors.greyDescriptionText,
+        textAlign: 'center',
+        flexWrap: "wrap",
     },
 });

@@ -59,6 +59,7 @@ export default class Category extends Component {
                                                   header={this.names[key]}
                                                   slotMachines={genresContent.data[key].features}
                                                   vod={genresContent.data[key].VOD}
+                                                  epgs={genresContent.data[key].EPGs}
                                                   key={"category" + index}/>)
                     })}
                 </Swiper>
