@@ -390,7 +390,7 @@ export default {
         NEWS: newsQuery,
         EPG: epgQuery,
         GENRES_VOD: genresVOD,
-        GENRES_EPG: genresEPGs
+        GENRES_EPG: genresEPGs,
         EPG_WITH_GENRES: relatedEpgQuery,
         EPG_WITH_SERIES: seriesEpgQuery
     }

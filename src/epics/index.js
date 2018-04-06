@@ -21,7 +21,7 @@ const rootEpic = combineEpics(
     epgsRequestEpic,
     epgWithGenre,
     epgWithSeriesId,
-    getBookingEpic
+    getBookingEpic,
     getGenresContentEpic
 );
 
