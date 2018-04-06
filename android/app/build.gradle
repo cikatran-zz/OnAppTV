@@ -95,7 +95,6 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.onapptv"
@@ -172,8 +171,9 @@ android {
 
 }
 
-ext{
+ext {
     userkitVersion = "2.2.49.1"
+    userkitVersionStaging = "2.2.49.1-staging"
 }
 
 dependencies {
@@ -183,13 +183,56 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:support-v4:27.1.0'
+    implementation "com.android.support:recyclerview-v7:27.1.0"
+    implementation "com.android.support:support-annotations:27.1.0"
+
     implementation 'com.github.mmin18:realtimeblurview:1.1.0'
     implementation 'com.brightcove.player:exoplayer2:6.0.2'
     implementation 'com.facebook.react:react-native:+'
+    /** Google cloud message and Firebase database **/
+    implementation "com.google.android.gms:play-services-gcm:11.8.0"
+    implementation "com.google.firebase:firebase-auth:11.8.0"
+    implementation "com.google.firebase:firebase-database:11.8.0"
+
+    implementation 'com.mstage.userkit:interaction:0.0.8'
+    /** Logging **/
+    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+    /** Networking libraries: retrofit2, okHttpClient3 and Gson converter for json mapping **/
+    implementation('com.squareup.retrofit2:retrofit:2.2.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation('com.squareup.retrofit2:converter-gson:2.2.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation('com.squareup.retrofit2:adapter-rxjava2:2.2.0') {
+        exclude group: 'io.reactivex.rxjava2'
+    }
+    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+
+    /** SQLite assert helper. todo: remove this dependency **/
+    implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
+
+    /** ReactiveX Java 2 **/
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'nl.littlerobots.rxlint:rxlint:1.2'
+
 
     implementation 'com.android.support:multidex:1.0.3'
-    implementation "com.mstage.userkit:sdk:${userkitVersion}"
-    implementation "com.mstage.userkit:identity:${userkitVersion}"
+    releaseImplementation("com.mstage.userkit:sdk:${userkitVersion}") {
+        transitive = false
+    }
+    releaseImplementation("com.mstage.userkit:identity:${userkitVersion}") {
+        transitive = false
+    }
+    debugImplementation("com.mstage.userkit:sdk:${userkitVersionStaging}") {
+        transitive = false
+    }
+    debugImplementation("com.mstage.userkit:identity:${userkitVersionStaging}") {
+        transitive = false
+    }
     // From node_modules
     implementation project(':android-stb-connect')
     implementation project(':android-stb-connect-lib')
@@ -201,3 +244,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+

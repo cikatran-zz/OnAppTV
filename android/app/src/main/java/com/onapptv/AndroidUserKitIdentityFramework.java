@@ -64,9 +64,7 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     array.pushString(accountInfo.toJsonString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(((IdentityException) throwable).toJsonString());
-                    callback.invoke(array, null);
+                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
                 });
     }
 
@@ -81,9 +79,7 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     array.pushString(accountInfo.toJsonString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(((IdentityException) throwable).toJsonString());
-                    callback.invoke(array, null);
+                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
                 });
     }
 
@@ -98,11 +94,8 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     array.pushString(accountInfo.toJsonString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(((IdentityException) throwable).toJsonString());
-                    callback.invoke(array, null);
+                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
                 });
-
     }
 
 }
