@@ -193,7 +193,7 @@ export default class Home extends Component {
           <View style={styles.liveThumbnailContainer}>
               <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
           </View>
