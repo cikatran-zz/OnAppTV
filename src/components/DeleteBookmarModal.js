@@ -5,7 +5,7 @@ import {
   Text,
   TouchableHighlight,
   View,
-  StyleSheet, Image, TouchableOpacity, Switch
+  StyleSheet, Image, TouchableOpacity, Switch, WebView
 }
   from 'react-native'
 import { colors } from '../utils/themeConfig'
@@ -16,38 +16,64 @@ export default class DeleteBookmarkModal extends React.PureComponent {
 
   constructor(props) {
     super(props)
+    this.state = {
+      deleteSwitch: false,
+      editTitle: false
+    }
   }
 
-  _renderBookmarkContent = (data) => {
 
-    if (data.videoData)
+
+  _renderBookmarkContent = (data) => {
+    if (!data) return null
+
+    let metaData = data.metaData
+    console.log(data)
+
+    if (metaData)
       return (
         <View style={styles.contentContainer}>
-          <Image source={{uri: data.url}} style={styles.banner}/>
-          <Text style={styles.title}>{data.videoData.title}</Text>
+          <Image source={{uri: metaData.image}} style={styles.banner}/>
+          <Text style={styles.title}>{metaData.title}</Text>
           <View style={styles.deleteBookmarkContainer}>
             <Text style={styles.deleteText}>Delete this bookmark</Text>
-            <Switch style={styles.switchToggle}/>
+            <Switch style={styles.switchToggle} value={this.state.deleteSwitch} onValueChange={(value) => { this.setState({deleteSwitch: value}) }}/>
           </View>
         </View>
       )
     else return null
   }
 
-  _renderRecordContent = (data) => {
+  _renderDeleteScreen = () => {
+      setTimeout(() => {
+        this.setState({
+            deleteSwitch: false
+        })
+        this.props.onClosePress()
+      }, 2000)
+      console.log('delete screen')
+      return (
+        <Text style={{top: '45%', left: '45%', position: 'absolute', fontSize: 15, color: '#9F9F9F'}}>Deleting</Text>
+      )
+  }
 
-    if (data.videoData)
+  _renderRecordContent = (data) => {
+    if (!data) return null
+
+    let metaData = data.metaData
+
+    if (metaData)
       return (
         <View style={styles.contentContainer}>
-          <Image source={{uri: data.url}} style={styles.banner}/>
-          <Text style={styles.title}>{data.videoData.title}</Text>
+          <Image source={{uri: metaData.image}} style={styles.banner}/>
+          <Text style={styles.title}>{metaData.title}</Text>
           <View style={styles.deleteRecordContainer}>
             <Text style={styles.deleteText}>Edit the title</Text>
-            <Switch style={styles.switchToggle}/>
+            <Switch style={styles.switchToggle} value={this.state.editTitle} onValueChange={(value) => { console.log(value) }}/>
           </View>
           <View style={styles.deleteRecordContainer}>
             <Text style={styles.deleteText}>Delete</Text>
-            <Switch style={styles.switchToggle}/>
+            <Switch style={styles.switchToggle} value={this.state.deleteSwitch} onValueChange={(value) => { this.setState({deleteSwitch: value}) }}/>
           </View>
         </View>
       )
@@ -55,7 +81,10 @@ export default class DeleteBookmarkModal extends React.PureComponent {
   }
 
   _renderContent = () => {
-    if (this.props.type === 'bookmark')
+    if (this.state.deleteSwitch === true) {
+      return this._renderDeleteScreen()
+    }
+    else if (this.props.type === 'bookmark')
       return this._renderBookmarkContent(this.props.data)
     else return this._renderRecordContent(this.props.data)
   }
@@ -67,7 +96,7 @@ export default class DeleteBookmarkModal extends React.PureComponent {
       visible={this.props.visible} onRequestClose={() => console.log('Modal close')}>
         <View style={styles.modal}>
           <BlurView blurRadius={getBlurRadius(30)} style={styles.blurView} overlayColor={1}/>
-          <TouchableOpacity style={styles.close} onPress={this.props.onClosePress}>
+          <TouchableOpacity style={styles.close} onPress={() => this.props.onClosePress(-1)}>
             <Image source={require('../assets/ic_modal_close.png')} />
           </TouchableOpacity>
           {this._renderContent()}
@@ -93,6 +122,11 @@ const styles = StyleSheet.create ({
   blurView: {
     width: '100%',
     height: '100%'
+  },
+  close: {
+    position: 'absolute',
+    top: 30,
+    right: 30
   },
   contentContainer: {
     flexDirection: 'column',
