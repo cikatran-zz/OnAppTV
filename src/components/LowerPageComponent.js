@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    height: h
+    height: h,
   },
   topContainer: {
     flexDirection: 'row',
@@ -203,7 +203,8 @@ const styles = StyleSheet.create({
     borderRadius: (Platform.OS === 'ios') ? 4 : 8
   },
   list: {
-    width: '100%'
+    width: '100%',
+    paddingBottom: 90
   },
   itemContainer: {
     flexDirection: 'row',

@@ -6,6 +6,7 @@ import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
 import SettingHeader from '../../components/SettingHeader'
+import { rootViewTopPadding } from '../../utils/rootViewTopPadding'
 
 export default class Settings extends React.PureComponent {
 
@@ -74,7 +75,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    paddingTop: rootViewTopPadding()
   },
   sectionListContainer: {
     marginLeft: 15,

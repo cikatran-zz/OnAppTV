@@ -10,7 +10,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getList: () => dispatch(getBookList())
+    getBookList: () => dispatch(getBookList())
   }
 }
 
