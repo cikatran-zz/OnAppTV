@@ -51,7 +51,10 @@ export default class Settings extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <StatusBar/>
+          <StatusBar
+              translucent={true}
+              backgroundColor='#00000000'
+              barStyle='dark-content' />
         <SectionList
           style={styles.sectionListContainer}
           keyExtractor={this._keyExtractor}

@@ -86,7 +86,7 @@ export default class MyCategories extends Component {
         }
         return (
             <View style={styles.container}>
-                <StatusBar/>
+                <StatusBar />
                 <FlatList
                     style={styles.listContainer}
                     keyExtractor={this._keyExtractor}

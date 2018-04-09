@@ -3,31 +3,12 @@ import {
   Text, Switch, View, StyleSheet, FlatList, StatusBar, Platform
 } from 'react-native'
 import { colors } from '../../utils/themeConfig'
-import SettingHeader from '../../components/NavigationHeader'
+import ChoosingScreen from '../../components/ChoosingScreen'
 
 export default class AudioLanguage extends React.PureComponent {
 
   constructor(props) {
     super(props)
-  }
-
-  _renderSwitch(item) {
-      if (Platform.OS == "ios") {
-          return (<Switch value={item.value} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'}/>)
-      }
-      return (<Switch value={item.value} style={styles.toggleButton} onTintColor={colors.mainPink} tintColor={'#E2E2E2'} thumbTintColor={'#ffffff'}/>)
-  }
-
-  _renderListItem = ({item}) => {
-    return (
-      <View style={styles.listItemContainer}>
-        <Text>{item.title}</Text>
-          {
-              this._renderSwitch(item)
-          }
-
-      </View>
-    )
   }
 
   _keyExtractor = (item, index) => index
@@ -37,15 +18,18 @@ export default class AudioLanguage extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <StatusBar/>
-        <FlatList
-          style={styles.listContainer}
-          keyExtractor={this._keyExtractor}
-          horizontal={false}
-          renderItem={this._renderListItem}
-          data={fakeData}
-          ItemSeparatorComponent={ () => <View style={{ width: "90%", height: 1, backgroundColor: 'red'}}/> }
-        />
+          <StatusBar
+              translucent={true}
+              backgroundColor='#00000000'
+              barStyle='dark-content' />
+          <FlatList
+            style={styles.listContainer}
+            keyExtractor={this._keyExtractor}
+            horizontal={false}
+            renderItem={this._renderListItem}
+            data={fakeData}
+            ItemSeparatorComponent={ () => <View style={{ width: "90%", height: 1, backgroundColor: 'red'}}/> }
+          />
       </View>
     )
   }
@@ -79,17 +63,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textMainBlack,
   }
-})
-
-const fakeData = [{
-  title: 'English',
-  value: true
-},
-  {
-    title: 'French',
-    value: false
-  },
-  {
-    title: 'Spanish',
-    value: false
-  }]
+});
