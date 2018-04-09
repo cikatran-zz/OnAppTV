@@ -398,7 +398,7 @@ export default class Home extends Component {
             !live.fetched || live.isFetching)
             return null;
         var channelData = []
-        if (channelData.data != null) {
+        if (channel.data != null) {
             channelData = channel.data.filter(item => item.favorite == 1);
         }
         if (channelData.length == 0) {

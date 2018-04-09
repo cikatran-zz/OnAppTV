@@ -7,6 +7,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
 import Orientation from 'react-native-orientation';
+import _ from 'lodash';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import ZapperCell from '../../components/ZapperCell'
 import ChannelModal from "./ChannelModal/ChannelModal";
@@ -37,7 +38,7 @@ export default class Zappers extends Component {
     };
 
     componentWillMount() {
-        //Orientation.lockToPortrait();
+        Orientation.lockToPortrait();
     };
 
     componentDidMount() {
@@ -98,24 +99,20 @@ export default class Zappers extends Component {
     };
 
     _favoriteItem = (serviceId, isFavorite) => {
-        var index = 0;
-        for (var i = 0; i < this.state.allChannels.length; i++) {
-            if (this.state.allChannels[i].serviceID == serviceId) {
-                index = i;
-                break;
-            }
-        }
-        this.state.allChannels[index].favorite = isFavorite ? 1 : 0;
+        let index = _.findIndex(this.state.allChannels, {'serviceID': serviceId});
+        let newFavorite = _.cloneDeep(this.state.allChannels[index]);
+        newFavorite.favorite = isFavorite ? 1 : 0;
+        let newAllChannels = _.cloneDeep(this.state.allChannels);
+        newAllChannels.splice(index, 1, newFavorite);
+        this.state.allChannels = newAllChannels;
 
-        NativeModules.STBManager.setServiceWithJsonString(JSON.stringify(this.state.allChannels[index]), (error, events)=>{});
+        NativeModules.RNUserKit.storeProperty("favorite_channels", {data: this.state.allChannels}, (error, events)=>{});
 
-        for (var i = 0; i < this.state.channelData.length; i++) {
-            if (this.state.channelData[i].serviceID == serviceId) {
-                index = i;
-                break;
-            }
-        }
-        this.state.channelData[i].favorite = isFavorite ? 1 : 0;
+        index = _.findIndex(this.state.channelData, {'serviceID': serviceId});
+        let newChannelData = _.cloneDeep(this.state.channelData);
+        newChannelData.splice(index, 1, newFavorite);
+        this.state.channelData = newChannelData
+
         this._filterFavoriteChannel();
 
 
@@ -143,7 +140,6 @@ export default class Zappers extends Component {
             newData = this.state.favoriteChannels;
         }
         this.setState({showAllChannels: !this.state.showAllChannels, channelData: newData});
-        // TODO: Change datasource
     };
 
     _filterFavoriteChannel = () => {
@@ -156,8 +152,8 @@ export default class Zappers extends Component {
             if (!channel.data || channel.isFetching) {
                 return null;
             }
-            this.state.channelData = channel.data;
-            this.state.allChannels = channel.data;
+            this.state.channelData = _.cloneDeep(channel.data);
+            this.state.allChannels = _.cloneDeep(channel.data);
             this._filterFavoriteChannel();
             this.isFetch = true;
         }

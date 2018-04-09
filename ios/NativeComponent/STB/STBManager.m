@@ -17,6 +17,14 @@ RCT_EXPORT_METHOD(udpOperation) {
     [Api.sharedApi hIG_UdpOperation];
 }
 
+RCT_EXPORT_METHOD(isConnect: (RCTResponseSenderBlock)callback) {
+    NSMutableString *isConnected = [[NSMutableString alloc] initWithString: @"{\"is_connected\": false}"];
+    if ([Api.sharedApi hIG_IsConnect]) {
+        [isConnected setString:@"{\"is_connected\": true}"];
+    }
+    callback(@[isConnected]);
+}
+
 RCT_EXPORT_METHOD(udpReceiveMessageInJson: (RCTResponseSenderBlock)callback) {
     [Api.sharedApi hIG_UdpReceiveMessageInJson:^(NSString *string) {
         NSArray *events = [[NSArray alloc] initWithObjects: string, nil];
