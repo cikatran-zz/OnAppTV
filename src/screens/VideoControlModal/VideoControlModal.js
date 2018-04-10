@@ -122,6 +122,7 @@ export default class VideoControlModal extends React.Component {
           <Text style={styles.typeText}>{this._formatGenresText(item.genresData)}</Text>
         </View>
         <View style={styles.playbackButtons}>
+          <!-- TODO: Detect is live or not to change fastforward and backward background-->
           <TouchableOpacity style={styles.rewindButton}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>

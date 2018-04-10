@@ -66,7 +66,7 @@ export default class Bookmark extends React.Component {
           <PinkRoundedLabel text="BOOKING" style={styles.bookingHeaderLabel}/>
           <View style={styles.textInputContainer}>
             <TextInput placeholder={'Emissions'} onChangeText={text => this.setState({inputText: text})} value={this.state.inputText ?  this.state.inputText : ''} style={styles.textInput} inlineImageLeft='ic_search' inlineImagePadding={8} underlineColorAndroid='rgba(0,0,0,0)'/>
-            <TouchableOpacity onPress={() => this.setState({inputText: ''})} style={{position: 'absolute', right: 0, top: 0, paddingRight: 7, height: '100%', width: '8%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => this.setState({inputText: ''})} style={{position: 'absolute', right: 0, top: 0, paddingRight: 7, height: '100%', width: '10%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
               <Image source={require('../../assets/ic_close.png')} />
             </TouchableOpacity>
           </View>
@@ -86,7 +86,7 @@ export default class Bookmark extends React.Component {
       <View style={{flexDirection: 'row'}}>
         <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
         <View style={{flexDirection: 'column', marginRight: 60}}>
-          <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.metaData.title}</Text>
+          <Text style={styles.itemTitle}>{item.metaData.title}</Text>
           <Text style={styles.itemType}>{item.metaData.subTitle}</Text>
           <Text style={styles.itemTime}>{timeFormatter(item.record.startTime)}</Text>
         </View>
