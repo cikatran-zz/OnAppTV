@@ -16,7 +16,8 @@ import {
     Platform,
     Dimensions,
     NativeModules,
-    TouchableOpacity
+    TouchableOpacity,
+    StatusBar
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -414,6 +415,10 @@ export default class Home extends Component {
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
+                <StatusBar
+                    translucent={true}
+                    backgroundColor='#00000000'
+                    barStyle='light-content'/>
                 <SectionList
                     style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
                     keyExtractor={this._keyExtractor}

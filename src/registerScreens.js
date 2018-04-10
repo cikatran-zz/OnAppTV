@@ -8,6 +8,9 @@ import Settings from "./screens/Settings";
 import STBConnection from  './screens/STBConnection'
 import Book from './screens/Book'
 import AudioLanguage from './screens/Settings/AudioLanguage'
+import Subtitles from './screens/Settings/Subtitles'
+import Resolution from './screens/Settings/Resolution'
+import VideoFormat from "./screens/Settings/VideoFormat";
 import Messages from './screens/Settings/Messages'
 import MySubscription from './screens/Settings/MySubscription'
 import ParentalControlLock from './screens/Settings/ParentalControlLock'
@@ -19,10 +22,11 @@ import {Image, TouchableOpacity} from "react-native";
 import MyCategories from "./screens/MyCategories";
 import Category from "./screens/Category";
 
+
 const defaultNavigationOptions =  (title, navigation, canBack=false)=> {
   var backButton = {
-      headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 18}} >
-          <Image source={require('./assets/ic_left_arrow.png')} />
+      headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 18, paddingVertical: 10, paddingHorizontal: 10}} >
+          <Image source={require('./assets/ic_left_arrow.png')}/>
       </TouchableOpacity>
   };
   if (!canBack) {
@@ -81,13 +85,32 @@ const SettingsStack = StackNavigator({
     Setting: {
         screen: Settings,
         navigationOptions:({navigation}) => ({
-            ...defaultNavigationOptions("Settings", navigation)
+            ...defaultNavigationOptions("Settings", navigation),
+            gesturesEnabled: false
         })
     },
     AudioLanguage: {
         screen: AudioLanguage,
         navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("Audio Language", navigation, true)
+        })
+    },
+    Subtitles: {
+        screen: Subtitles,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Subtitles", navigation, true)
+        })
+    },
+    Resolution: {
+        screen: Resolution,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Resolution", navigation, true)
+        })
+    },
+    VideoFormat: {
+        screen: VideoFormat,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Video Format", navigation, true)
         })
     },
     Messages: {

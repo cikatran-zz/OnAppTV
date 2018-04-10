@@ -9,6 +9,11 @@ import getNewsEpic from "./newsRequestEpic";
 import {epgsRequestEpic, epgWithGenre, epgWithSeriesId } from './epgsRequestEpic'
 import getBookingEpic from './bookingRequestEpic'
 import getGenresContentEpic from "./genresContentRequestEpic";
+import getAudioLanguageEpic from "./audioLanguageRequestEpic";
+import getSettingsEpic from "./settingsRequestEpic";
+import getSubtitlesEpic from "./subtitlesRequestEpic";
+import getResolutionEpic from "./resolutionRequestEpic";
+import getVideoFormatEpic from "./videoFormatRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -22,7 +27,12 @@ const rootEpic = combineEpics(
     epgWithGenre,
     epgWithSeriesId,
     getBookingEpic,
-    getGenresContentEpic
+    getGenresContentEpic,
+    getAudioLanguageEpic,
+    getSettingsEpic,
+    getSubtitlesEpic,
+    getResolutionEpic,
+    getVideoFormatEpic
 );
 
 export default rootEpic;

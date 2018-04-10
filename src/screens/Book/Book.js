@@ -1,6 +1,6 @@
 import React from 'react'
 import Swiper from 'react-native-swiper'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, StatusBar} from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
@@ -24,7 +24,10 @@ export default class Book extends React.Component {
 
     return (
       <View style={{width: '100%', height: '100%'}}>
-
+          <StatusBar
+              translucent={true}
+              backgroundColor='#00000000'
+              barStyle='dark-content'/>
         <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
           <Bookmark books={books}/>
           <RecordList header={"MY RECORDS"} books={books}/>

@@ -549,5 +549,114 @@ export const getEpgWithSeriesId = (seriesId) => {
     query: config.queries.EPG_WITH_SERIES,
     variables: {id: seriesId}
   })
-}
+};
+
+
+// Settings screen
+
+// Audio language
+export const getAudioLanguage = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getPreferAudioLanguageInJson((error, results)=> {
+                    let audioLanguage = JSON.parse(results[0]).audioLanguageCode;
+                    resolve(audioLanguage);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+// Subtitles
+export const getSubtitles = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getPreferSubtitleLanguageInJson((error, results)=> {
+                    let subLanguage = JSON.parse(results[0]).subtitleLanguageCode;
+                    resolve(subLanguage);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+// Resolution
+export const getResolution = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getResolutionInJson((error, results)=> {
+                    let resolution = JSON.parse(results[0]).resolution;
+                    resolve(resolution);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+export const getVideoFormat = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getAspectRatioInJson((error, results)=> {
+                    let aspectRatio = JSON.parse(results[0]).aspectRatio;
+                    resolve(aspectRatio);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+export const getSettings = () => {
+    let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
+    let languageShort = ["eng", "fre", "spa", "ita", "chi", "000"];
+    let resolutions = ["1080P","1080I","720P","576P","576I"];
+    let aspectRatio = ["4:3 Letter Box","4:3 Center Cut Out","4:3 Extended","16:9 Pillar Box","16:9 Full Screen","16:9 Extended"];
+    return new Promise((resolve, reject) => {
+        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat()]).then((values)=> {
+            // Audio lang
+            let indexLang = languageShort.indexOf(values[0]);
+            if (indexLang == -1) {
+                indexLang = 0;
+            }
+            let audioLanguage = languageFull[indexLang];
+
+            // Subtitles lang
+            indexLang = languageShort.indexOf(values[1]);
+            if (indexLang == -1) {
+                indexLang = 0;
+            }
+            let subLanguage = languageFull[indexLang];
+
+            // Resolution
+            let resolution = resolutions[values[2]];
+
+            // Video format
+            let ratio = aspectRatio[values[3]];
+
+            resolve({
+                AudioLanguage: audioLanguage,
+                Subtitles: subLanguage,
+                Resolution: resolution,
+                VideoFormat: ratio
+            });
+        }).catch((error)=> {
+            reject(error);
+        })
+    });
+};
 
