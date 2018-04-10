@@ -22,7 +22,7 @@ export default class ChannelModal extends React.Component {
     toggleModal = () => {
 
         // Show animation view
-        if (this.state.isShow == false) {
+        if (!this.state.isShow) {
             Animated.timing(
                 this.animationY,
                 {

@@ -33,7 +33,6 @@ export default class Zappers extends Component {
         };
         this.channelModal = null;
         this.stbManager = NativeModules.STBManager;
-        this.isFetch = false;
     };
 
     componentWillMount() {
@@ -46,7 +45,7 @@ export default class Zappers extends Component {
 
     _imageUri(item) {
         var image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
-        if (item.image != undefined) {
+        if (item.image !== undefined) {
             image = item.image;
         }
         return image;
@@ -55,7 +54,7 @@ export default class Zappers extends Component {
     _showChannelModal = (item) => {
         var index = 0;
         for (var i = 0; i < this.state.channelData.length; i++) {
-            if (this.state.channelData[i].serviceID == item.serviceID) {
+            if (this.state.channelData[i].serviceID === item.serviceID) {
                 index = i;
                 break;
             }
@@ -63,26 +62,26 @@ export default class Zappers extends Component {
         this.channelModal.state.currentIndex = index;
         this.channelModal.state.currentTitle = this.state.channelData[index].serviceName;
         this.channelModal.state.currentDescription = this.state.channelData[index].shortDescription;
-        this.channelModal.state.currentFavorite = (this.state.channelData[index].favorite == 0) ? "Favorite" : "Unfavorite";
+        this.channelModal.state.currentFavorite = (this.state.channelData[index].favorite === 0) ? "Favorite" : "Unfavorite";
         this.channelModal.toggleModal();
     };
 
-    _zapChannel = (lcn) => {
-        console.log("Zap", lcn);
-        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(JSON.parse(events[0]))
-            }
-        } )
+    _zapChannel = (item) => {
+        // NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
+        //     if (error) {
+        //         console.log(error);
+        //     } else {
+        //         console.log(JSON.parse(events[0]))
+        //     }
+        // } )
+        this.props.navigation.navigate("ZapperContent", {serviceId: item.serviceID})
     };
 
     _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
                                                style={styles.item}
-                                               onPress={()=>this._zapChannel(item.item.lCN)}>
-                                    <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
-                            </TouchableOpacity>);
+                                               onPress={()=>this._zapChannel(item.item)}>
+        <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
+    </TouchableOpacity>);
     _renderListFooter = () => (
         <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 50, backgroundColor:'transparent'}}/>
     )
@@ -100,7 +99,7 @@ export default class Zappers extends Component {
     _favoriteItem = (serviceId, isFavorite) => {
         var index = 0;
         for (var i = 0; i < this.state.allChannels.length; i++) {
-            if (this.state.allChannels[i].serviceID == serviceId) {
+            if (this.state.allChannels[i].serviceID === serviceId) {
                 index = i;
                 break;
             }
@@ -110,7 +109,7 @@ export default class Zappers extends Component {
         NativeModules.STBManager.setServiceWithJsonString(JSON.stringify(this.state.allChannels[index]), (error, events)=>{});
 
         for (var i = 0; i < this.state.channelData.length; i++) {
-            if (this.state.channelData[i].serviceID == serviceId) {
+            if (this.state.channelData[i].serviceID === serviceId) {
                 index = i;
                 break;
             }
@@ -123,14 +122,14 @@ export default class Zappers extends Component {
         if (!this.state.showAllChannels) {
             newData = this.state.favoriteChannels;
             this.channelModal.setState({currentFavorite: "Unfavorite"});
-            if (newData.length == 1) {
+            if (newData.length === 1) {
                 this.channelModal.setState({currentIndex: 0});
             }
         } else {
-            this.channelModal.setState({currentFavorite: this.channelModal.state.currentFavorite == "Favorite" ? "Unfavorite" : "Favorite"});
+            this.channelModal.setState({currentFavorite: this.channelModal.state.currentFavorite === "Favorite" ? "Unfavorite" : "Favorite"});
         }
 
-        if (newData == null || newData.length == 0) {
+        if (newData === null || newData.length === 0) {
             this.channelModal.setState({isShow: false});
         }
 
@@ -138,7 +137,7 @@ export default class Zappers extends Component {
     };
 
     _onSwitchPress = () => {
-        var newData = this.state.allChannels;
+        let newData = this.state.allChannels;
         if (this.state.showAllChannels) {
             newData = this.state.favoriteChannels;
         }
@@ -147,20 +146,17 @@ export default class Zappers extends Component {
     };
 
     _filterFavoriteChannel = () => {
-        this.state.favoriteChannels = this.state.allChannels.filter(channel => channel.favorite == 1);
+        this.state.favoriteChannels = this.state.allChannels.filter(channel => channel.favorite === 1);
     };
 
     render() {
-        if (this.isFetch == false) {
-            const {channel} = this.props;
-            if (!channel.data || channel.isFetching) {
-                return null;
-            }
-            this.state.channelData = channel.data;
-            this.state.allChannels = channel.data;
-            this._filterFavoriteChannel();
-            this.isFetch = true;
+        const {channel} = this.props;
+        if (!channel.data || channel.isFetching) {
+            return null;
         }
+        this.state.channelData = channel.data;
+        this.state.allChannels = channel.data;
+        this._filterFavoriteChannel();
         return (
             <View style={styles.root}>
                 <StatusBar

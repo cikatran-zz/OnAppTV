@@ -18,41 +18,57 @@ import {colors} from "./utils/themeConfig";
 import {Image, TouchableOpacity} from "react-native";
 import MyCategories from "./screens/MyCategories";
 import Category from "./screens/Category";
+import ZapperContent from "./screens/Zappers/ZapperContent"
 
 const defaultNavigationOptions =  (title, navigation, canBack=false)=> {
-  var backButton = {
-      headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 18}} >
-          <Image source={require('./assets/ic_left_arrow.png')} />
-      </TouchableOpacity>
-  };
-  if (!canBack) {
-    backButton = {};
-  }
-  return {
-      title: title,
-      headerStyle: {
-          backgroundColor: '#ffffff',
-          shadowOpacity: 0,
-          shadowOffset: {
-              height: 0,
-              width: 0
-          },
-          shadowColor: '#ffffff',
-          shadowRadius: 0,
-          elevation: 0,
-          borderBottomWidth: 0
-      },
-      headerTitleStyle: {
-          color: colors.greySettingLabel,
-          textAlign: 'center',
-          justifyContent: 'space-between',
-          fontSize: 17,
-          alignSelf: 'center',
-          fontWeight: "normal"
-      },
-      ...backButton
-  }
+    let backButton = {
+        headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 18}} >
+            <Image source={require('./assets/ic_left_arrow.png')} />
+        </TouchableOpacity>
+    };
+    if (!canBack) {
+        backButton = {};
+    }
+    return {
+        title: title,
+        headerStyle: {
+            backgroundColor: '#ffffff',
+            shadowOpacity: 0,
+            shadowOffset: {
+                height: 0,
+                width: 0
+            },
+            shadowColor: '#ffffff',
+            shadowRadius: 0,
+            elevation: 0,
+            borderBottomWidth: 0
+        },
+        headerTitleStyle: {
+            color: colors.greySettingLabel,
+            textAlign: 'center',
+            justifyContent: 'space-between',
+            fontSize: 17,
+            alignSelf: 'center',
+            fontWeight: "normal"
+        },
+        ...backButton
+    }
 };
+
+const ZapperStack = StackNavigator({
+    Zappers: {
+        screen: Zappers,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        }),
+    },
+    ZapperContent: {
+        screen: ZapperContent,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        }),
+    }
+});
 
 const HomeStack = StackNavigator({
     Home: {
@@ -129,24 +145,24 @@ const SettingsStack = StackNavigator({
 });
 
 const TabNav = TabNavigator({
-  Home: {
-    screen: HomeStack,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    }),
-  },
-    Zappers: {
-        screen: Zappers,
+    Home: {
+        screen: HomeStack,
         navigationOptions: ({navigation}) => ({
             header: null
         }),
     },
-  Book: {
-    screen: Book,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  },
+    Zapper: {
+        screen: ZapperStack,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        }),
+    },
+    Book: {
+        screen: Book,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        })
+    },
     Setting: {
         screen: SettingsStack,
         navigationOptions: ({navigation}) => ({
@@ -154,26 +170,27 @@ const TabNav = TabNavigator({
         })
     }
 }, {
-  tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
-  tabBarPosition: 'bottom',
-  swipeEnabled: false,
-  animationEnabled: false
+    tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
+    tabBarPosition: 'bottom',
+    swipeEnabled: false,
+    animationEnabled: false
 });
 
+
 export const ScreenStack = StackNavigator({
-  Root: {
-    screen: STBConnection
-  },
-  Home: {
-    screen: TabNav,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    }),
-  },
-  VideoControlModal: {
-    screen: VideoControlModal
-  },
+    Root: {
+        screen: STBConnection
+    },
+    Home: {
+        screen: TabNav,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        }),
+    },
+    VideoControlModal: {
+        screen: VideoControlModal
+    },
 }, {
-  mode: 'modal',
-  headerMode: 'none'
+    mode: 'modal',
+    headerMode: 'none'
 });

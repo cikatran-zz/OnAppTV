@@ -29,6 +29,34 @@ query queryChannel($serviceIDs: [Float]!){
   }
 }`;
 
+const zapperContentQuery = gql`
+query queryChannelById($serviceId: Float!){
+  viewer{
+    channelOne(filter:{
+        serviceId: $serviceId
+    }) {
+      serviceId
+      lcn
+      epgsData(today: true) {
+        videoId
+        channelId
+        startTime
+        endTime
+        videoData {
+          originalImages {
+            height
+            width
+            url
+            name
+            fileName
+          }
+        }
+      }
+    }
+  }
+}
+`
+
 const bannerQuery = gql`
 query{
   viewer{
@@ -392,6 +420,7 @@ export default {
         GENRES_VOD: genresVOD,
         GENRES_EPG: genresEPGs,
         EPG_WITH_GENRES: relatedEpgQuery,
-        EPG_WITH_SERIES: seriesEpgQuery
+        EPG_WITH_SERIES: seriesEpgQuery,
+        ZAPPER_CONTENT: zapperContentQuery
     }
 };

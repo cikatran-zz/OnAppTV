@@ -9,6 +9,7 @@ import getNewsEpic from "./newsRequestEpic";
 import {epgsRequestEpic, epgWithGenre, epgWithSeriesId } from './epgsRequestEpic'
 import getBookingEpic from './bookingRequestEpic'
 import getGenresContentEpic from "./genresContentRequestEpic";
+import getZapperContentRequestEpic from './zapperContentRequestEpic'
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -22,7 +23,8 @@ const rootEpic = combineEpics(
     epgWithGenre,
     epgWithSeriesId,
     getBookingEpic,
-    getGenresContentEpic
+    getGenresContentEpic,
+    getZapperContentRequestEpic
 );
 
 export default rootEpic;

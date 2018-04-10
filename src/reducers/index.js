@@ -10,7 +10,8 @@ import adsReducer from "./adsReducer";
 import newsReducer from "./newsReducer";
 import epgsReducer from './epgsReducer';
 import bookListReducer from './bookListReducer'
-import genresContentReducer from './genresContentReducer'
+import genresContentReducer from './genresContentReducer';
+import zapperContentReducer from './zapperContentReducer'
 
 export default combineReducers({
     nav,
@@ -24,5 +25,6 @@ export default combineReducers({
     newsReducer,
     epgsReducer,
     bookListReducer,
-    genresContentReducer
+    genresContentReducer,
+    zapperContentReducer
 });
