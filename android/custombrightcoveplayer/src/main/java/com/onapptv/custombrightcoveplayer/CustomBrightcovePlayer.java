@@ -87,17 +87,28 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         this.videoId = id;
         playVideoWithReactParams();
     }
-    public String getVideoKey() { return videoId; }
+
+    public String getVideoKey() {
+        return videoId;
+    }
+
     public void setAccountId(String id) {
         this.accountId = id;
         playVideoWithReactParams();
     }
-    public String getAccountId() { return accountId; }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
     public void setPolicyKey(String id) {
         this.policyKey = id;
         playVideoWithReactParams();
     }
-    public String getPolicyKey() { return policyKey; }
+
+    public String getPolicyKey() {
+        return policyKey;
+    }
 
     private void playVideoWithReactParams() {
         if (videoId != null && accountId != null && policyKey != null) {
@@ -115,8 +126,9 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         }
     }
 
-    /** AbstractComponent function **/
-
+    /**
+     * AbstractComponent function
+     **/
     public void addListener(String eventType, EventListener listener) {
         this.listenerTokens.put(eventType, this.eventEmitter.on(eventType, listener));
     }
@@ -126,7 +138,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     }
 
     public void removeListener(String eventType) {
-        if(this.listenerTokens.containsKey(eventType)) {
+        if (this.listenerTokens.containsKey(eventType)) {
             this.eventEmitter.off(eventType, this.listenerTokens.get(eventType));
         }
 
@@ -135,8 +147,8 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     public void removeListeners() {
         Iterator var1 = this.listenerTokens.keySet().iterator();
 
-        while(var1.hasNext()) {
-            String key = (String)var1.next();
+        while (var1.hasNext()) {
+            String key = (String) var1.next();
             this.eventEmitter.off(key, this.listenerTokens.get(key));
         }
 
@@ -147,18 +159,20 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         return this.eventEmitter;
     }
 
-    /** Init function **/
-
+    /**
+     * Init function
+     **/
     private void initAbstractComponent() {
         this.eventEmitter = mPlayerVideoView.getEventEmitter();
         this.listenerTokens = new HashMap();
-        if(eventEmitter == null) {
+        if (eventEmitter == null) {
             throw new IllegalArgumentException(ErrorUtil.getMessage("eventEmitterRequired"));
         }
     }
 
     private void initLayout() {
-        inflate(mContext, R.layout.custom_brightcove, this);
+        View view =  inflate(mContext, R.layout.custom_brightcove, this);
+        view.setLongClickable(true);
         mPlayerVideoView = findViewById(R.id.player);
         mControlBar = findViewById(R.id.brightcove_control);
         mCurrTime = findViewById(R.id.current_time);
@@ -214,8 +228,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         this.addListener("didSetVideo", playPauseHandler);
         this.addListener("stop", playPauseHandler);
         this.addListener("activityResumed", playPauseHandler);
-        this.addListener("completed", playPauseHandler);
-        this.addListener("bufferedUpdate",new BufferedUpdateHandler());
+        this.addListener("bufferedUpdate", new BufferedUpdateHandler());
     }
 
     private void initSubtitle() {
@@ -248,8 +261,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 resetFadeOutCallback();
                 if (mPlayerVideoView.isPlaying()) {
                     mPlayerVideoView.pause();
-                }
-                else {
+                } else {
                     mPlayerVideoView.start();
                 }
             }
@@ -280,18 +292,12 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         mSubtitleToggle.setOnClickListener(new CaptionsDialogLauncher());
     }
 
-    /** Constructor **/
+    /**
+     * Constructor
+     **/
 
     public CustomBrightcovePlayer(Context context) {
-        super(context);
-        mContext = context;
-        mAccessibilityManager = (AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
-
-        initLayout();
-        initAbstractComponent();
-        initPlayer();
-        initButtons();
-        initDoubleTapForwardAnimation();
+        this(context, null);
     }
 
     public CustomBrightcovePlayer(Context context, AttributeSet attrs) {
@@ -312,7 +318,9 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         return doubleTapDetector.onTouchEvent(event);
     }
 
-    public void show() { show(sDefaultTimeout); }
+    public void show() {
+        show(sDefaultTimeout);
+    }
 
     public void show(int timeout) {
         if (!isShowing) {
@@ -348,11 +356,12 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private int getDoubleTapDirection(MotionEvent event, View v) {
         if (event.getX() < v.getWidth() / 2) {
             return BACKWARD;
-        }
-        else return FORWARD;
+        } else return FORWARD;
     }
 
-    /** Handler **/
+    /**
+     * Handler
+     **/
 
     private class VideoDurationChangedHandler implements EventListener {
         private VideoDurationChangedHandler() {
@@ -372,20 +381,20 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
 
         @Default
         public void processEvent(Event event) {
-            if(!isDragging) {
+            if (!isDragging) {
 
                 int position = event.getIntegerProperty("playheadPosition");
-                if(mCurrTime != null) {
-                    mCurrTime.setText(StringUtil.stringForTime((long)position));
+                if (mCurrTime != null) {
+                    mCurrTime.setText(StringUtil.stringForTime((long) position));
                     currentTimeInMs = (long) position;
                 }
 
                 int duration = event.getIntegerProperty("duration");
-                if(!mPlayerVideoView.getVideoDisplay().isLive() && mEndTime != null) {
+                if (!mPlayerVideoView.getVideoDisplay().isLive() && mEndTime != null) {
                     int etr = duration - position;
                     mEndTime.setText(StringUtil.stringForTime((long) etr));
                 }
-                mProgressBar.setProgress((int) ((float) (position * 100/ duration)));
+                mProgressBar.setProgress((int) ((float) (position * 100 / duration)));
 
             } else {
                 Log.d(TAG, "The seek bar is being dragged.  No progress updates are being applied.");
@@ -403,26 +412,27 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
             isDragging = false;
             bufferLoading();
             int position;
-            if(event.properties.containsKey("originalSeekPosition")) {
+            if (event.properties.containsKey("originalSeekPosition")) {
                 position = event.getIntegerProperty("originalSeekPosition");
             } else {
                 position = event.getIntegerProperty("seekPosition");
             }
 
-            if(mCurrTime != null) {
-                mCurrTime.setText(StringUtil.stringForTime((long)position));
+            if (mCurrTime != null) {
+                mCurrTime.setText(StringUtil.stringForTime((long) position));
             }
 
         }
     }
 
     private class BufferedUpdateHandler implements EventListener {
-        private BufferedUpdateHandler(){ }
+        private BufferedUpdateHandler() {
+        }
 
         @Override
         public void processEvent(Event event) {
             int percentComplete = event.getIntegerProperty("percentComplete");
-            if ((mWebview.getVisibility() != VISIBLE) && (percentComplete < (currentTimeInMs * 100.0f / endTime) + 5) ) {
+            if ((mWebview.getVisibility() != VISIBLE) && (percentComplete < (currentTimeInMs * 100.0f / endTime) + 5)) {
                 bufferLoading();
             }
         }
@@ -434,7 +444,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
 
         public void onClick(View view) {
             Log.d(TAG, "Showing the captions dialog.");
-            if(mPlayerVideoView.isPlaying()) {
+            if (mPlayerVideoView.isPlaying()) {
                 mPlayerVideoView.pause();
                 CustomBrightcovePlayer.this.captionsDialogOkToken = CustomBrightcovePlayer.this.eventEmitter.once("captionsDialogOk", new EventListener() {
                     public void processEvent(Event event) {
@@ -480,7 +490,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                     postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (!mPlayerVideoView.isPlaying() && isDragging) {
+                            if (!mPlayerVideoView.isPlaying() && !isDragging) {
                                 mPlayerVideoView.start();
                             }
                         }
@@ -503,7 +513,9 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         }
     }
 
-    /** Double tap gesture **/
+    /**
+     * Double tap gesture
+     **/
     private final GestureDetector doubleTapDetector = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
 
         @Override
@@ -519,8 +531,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 mBackwardAnimation.setVisibility(INVISIBLE);
                 mForwardAnimation.setVisibility(VISIBLE);
                 mForwardAnimation.startAnimation(animationSet);
-            }
-            else {
+            } else {
                 mForwardAnimation.clearAnimation();
                 mForwardAnimation.setVisibility(INVISIBLE);
                 mBackwardAnimation.setVisibility(VISIBLE);
@@ -529,16 +540,20 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
             return false;
         }
 
+        public void updateThumbnailsPosition(int progress){
+            Log.d(TAG, String.valueOf(progress));
+        }
+
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2,
                                 float distanceX, float distanceY) {
             int deviceWith = mContext.getResources().getDisplayMetrics().widthPixels;
-            if (!isDragging) {
-                // Start dragging
-                resetFadeOutCallback();
-                int startProgressCoordinate = (int) (e1.getX() * 100 / deviceWith);
-                distanceDragging = mProgressBar.getProgress() - startProgressCoordinate;
-            }
+//            if (!isDragging) {
+//                // Start dragging
+//                resetFadeOutCallback();
+//                int startProgressCoordinate = (int) (e1.getX() * 100 / deviceWith);
+//                distanceDragging = mProgressBar.getProgress() - startProgressCoordinate;
+//            }
 
             isDragging = true;
             if (mPlayerVideoView.isPlaying()) mPlayerVideoView.pause();
@@ -546,11 +561,11 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
             removeCallbacks(mFadeOut);
 
             int progress = (int) ((e2.getX() * 100 / deviceWith) + distanceDragging);
-
+            updateThumbnailsPosition(progress);
             float msec = (progress / 100.0f) * endTime;
             mProgressBar.setProgress(progress);
             if (mCurrTime != null) {
-                mCurrTime.setText(StringUtil.stringForTime((long)msec));
+                mCurrTime.setText(StringUtil.stringForTime((long) msec));
                 mEndTime.setText(StringUtil.stringForTime((long) (endTime - msec)));
             }
 
@@ -592,7 +607,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.v(TAG, "onSingleTapConfirmed");
-            if (e.getAction() == 0) {
+            if (e.getAction() == e.ACTION_DOWN) {
                 if (isShowing) {
                     if (isSeekClick(e, mProgressBar)) {
                         int deviceWith = mContext.getResources().getDisplayMetrics().widthPixels;
@@ -600,12 +615,10 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
 
                         float msec = (progress / 100.0f) * endTime;
                         mPlayerVideoView.seekTo((int) msec);
-                    }
-                    else {
+                    } else {
                         hide();
                     }
-                }
-                else {
+                } else {
                     show();
                 }
             }
@@ -621,10 +634,18 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     });
 
 
-    /** Public function **/
+    /**
+     * Public function
+     **/
 
-    public BrightcoveExoPlayerVideoView getPlayerVideoView() { return mPlayerVideoView; }
-    public View getControlBar() { return mControlBar; }
+    public BrightcoveExoPlayerVideoView getPlayerVideoView() {
+        return mPlayerVideoView;
+    }
+
+    public View getControlBar() {
+        return mControlBar;
+    }
+
     public void resetFadeOutCallback() {
         removeCallbacks(mFadeOut);
         postDelayed(mFadeOut, sDefaultTimeout);
