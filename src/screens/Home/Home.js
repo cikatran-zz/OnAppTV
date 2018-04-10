@@ -491,7 +491,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 35,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     bannerPlayIconBackground: {
         width: '100%',
@@ -499,12 +499,12 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     bannerPlayIcon: {
-        top: 0,
-        left: 0,
+        top: -1,
+        left: -1,
         position: 'absolute',
         backgroundColor: 'transparent',
-        width: '100%',
-        height: '100%'
+        width: 72,
+        height: 72
     },
     listHorizontal: {
         marginVertical: 30,
