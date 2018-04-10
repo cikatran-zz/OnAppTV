@@ -3,7 +3,6 @@ let monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "June",
 
 export const timeFormatter = (time) => {
     let date = new Date(time);
-    console.log(date)
     let hours = date.getHours();
     let minutes = date.getMinutes();
     let day = date.getDate()

@@ -23,7 +23,7 @@ export default class Bookmark extends React.Component {
     super(props)
     this.state = {
       openModal: false,
-      data: {},
+      data: {}
     }
   }
 
@@ -65,8 +65,10 @@ export default class Bookmark extends React.Component {
         <View style={styles.bookmarkLabelContainer}>
           <PinkRoundedLabel text="BOOKING" style={styles.bookingHeaderLabel}/>
           <View style={styles.textInputContainer}>
-            <TextInput placeholder={'Emissions'} style={styles.textInput} inlineImageLeft='ic_search' inlineImagePadding={8} underlineColorAndroid='rgba(0,0,0,0)'/>
-            <Image source={require('../../assets/ic_close.png')} style={{position: 'absolute', right: 10, top: 0}}/>
+            <TextInput placeholder={'Emissions'} onChangeText={text => this.setState({inputText: text})} value={this.state.inputText ?  this.state.inputText : ''} style={styles.textInput} inlineImageLeft='ic_search' inlineImagePadding={8} underlineColorAndroid='rgba(0,0,0,0)'/>
+            <TouchableOpacity onPress={() => this.setState({inputText: ''})} style={{position: 'absolute', right: 0, top: 0, paddingRight: 7, height: '100%', width: '8%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
+              <Image source={require('../../assets/ic_close.png')} />
+            </TouchableOpacity>
           </View>
         </View>
         <FlatList

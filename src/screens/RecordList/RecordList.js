@@ -51,7 +51,7 @@ export default class RecordList extends React.PureComponent {
           <Text style={styles.itemTime}>{timeFormatter(item.record.startTime)}</Text>
         </View>
         <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
-          <Image source={require('../../assets/three_dot.png')}/>
+          <Image source={require('../../assets/ic_three_dots.png')}/>
         </TouchableOpacity>
       </View>
     )
