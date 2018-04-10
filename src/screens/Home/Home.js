@@ -391,12 +391,12 @@ export default class Home extends Component {
             !live.fetched || live.isFetching)
             return null;
 
-        var channelData = channel.data.filter(item => item.favorite == 1);
+        var channelData = channel.data ? channel.data.filter(item => item.favorite == 1) : [];
         if (channelData.length == 0) {
             channelData = [null];
         }
 
-        if (this.state.favoriteCategories == null) {
+        if (this.state.favoriteCategories == null && category.data) {
             var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
             this.state.category = category.data;
             categoryData.push({"name": "_ADD"});
