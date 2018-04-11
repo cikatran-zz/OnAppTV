@@ -248,7 +248,6 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         this.addListener("play", new PlayControllerImp());
         this.addListener("stop", new StopControllerImp());
         this.addListener("pause", new PauseControllerImp());
-        this.addListener("seekTo", new SeekControllerImp());
         this.addListener("error", new ErrorControllerImp());
         // end play controller state
     }
@@ -293,21 +292,6 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                     position = event.getIntegerProperty("playheadPosition");
                 }
                 mPlaybackRecorder.recordPlayerState(PlayerState.PAUSE, position / 1000.0);
-            } catch (Exception e) {
-                Log.d(TAG, e.toString());
-            }
-        }
-    }
-
-    private class SeekControllerImp implements EventListener {
-        @Override
-        public void processEvent(Event event) {
-            try {
-                int position = -1;
-                if (event.properties.containsKey("seekPosition")) {
-                    position = event.getIntegerProperty("seekPosition");
-                }
-                mPlaybackRecorder.recordPlayerState(PlayerState.SEEK, position / 1000.0);
             } catch (Exception e) {
                 Log.d(TAG, e.toString());
             }
@@ -527,6 +511,12 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
 
             if (mCurrTime != null) {
                 mCurrTime.setText(StringUtil.stringForTime((long) position));
+            }
+
+            try {
+                mPlaybackRecorder.recordPlayerState(PlayerState.SEEK, position / 1000.0);
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
             }
 
         }
