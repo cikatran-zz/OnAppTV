@@ -43,7 +43,18 @@ class BottomTabbar extends React.PureComponent {
       return (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate(tab);
+            console.log("STATE", navigation.state);
+            let tabIndex = tabs.indexOf(tab);
+            if (tabIndex > 2) {
+              tabIndex -= 1;
+            }
+            console.log("CURRENT", tabIndex);
+
+            if (navigation.state.index != tabIndex) {
+                navigation.navigate(tab);
+            } else {
+              navigation.popToTop();
+            }
           }}
           style={styles.tab}
           key={tab}

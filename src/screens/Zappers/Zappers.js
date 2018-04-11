@@ -5,7 +5,10 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
+import {
+    StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList,
+    TouchableOpacity, NativeModules, Platform
+} from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
@@ -43,7 +46,15 @@ export default class Zappers extends Component {
 
     componentDidMount() {
         this.props.getChannel(-1);
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     };
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
 
     _imageUri(item) {
         var image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'

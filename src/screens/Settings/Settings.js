@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Text, View, StyleSheet, FlatList, SectionList, StatusBar
+    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -57,6 +57,14 @@ export default class Settings extends React.PureComponent {
 
     componentDidMount() {
         this.props.getSettings();
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     _keyExtractor = (item, index) => index;

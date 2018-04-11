@@ -1,6 +1,6 @@
 import React from 'react'
 import Swiper from 'react-native-swiper'
-import {StyleSheet, View, StatusBar} from 'react-native'
+import {StyleSheet, View, StatusBar, Platform} from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
@@ -13,7 +13,15 @@ export default class Book extends React.Component {
   }
 
   componentDidMount() {
-     this.props.getList()
+     this.props.getList();
+      this._navListener = this.props.navigation.addListener('didFocus', () => {
+          StatusBar.setBarStyle('dark-content');
+          (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+      });
+  }
+
+  componentWillUnmount() {
+      this._navListener.remove();
   }
 
   _keyExtractor = (item, index) => index

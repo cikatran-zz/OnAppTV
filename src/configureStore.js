@@ -5,13 +5,21 @@ import devTools from 'remote-redux-devtools';
 import { createEpicMiddleware } from 'redux-observable';
 import rootEpic from './epics';
 import { createLogger } from 'redux-logger';
+import {createReactNavigationReduxMiddleware} from "react-navigation-redux-helpers";
 
-const epicMiddleware = createEpicMiddleware(rootEpic)
-let applyMiddlewares = applyMiddleware(epicMiddleware)
+const navMiddleware = createReactNavigationReduxMiddleware(
+    "root",
+    state => state.nav,
+);
+
+const epicMiddleware = createEpicMiddleware(rootEpic);
+let applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware);
+
+
 
 if (__DEV__) {
   const logger = createLogger({ collapsed: true });
-  applyMiddlewares = applyMiddleware(epicMiddleware, logger);
+  applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware, logger);
 }
 
 const enhancer = compose(

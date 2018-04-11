@@ -5,7 +5,7 @@ import {StackNavigator, TabNavigator} from 'react-navigation'
 import BottomTabbar from './components/BottomTabbar'
 import Zappers from "./screens/Zappers";
 import Settings from "./screens/Settings";
-import STBConnection from  './screens/STBConnection'
+import STBConnection from './screens/STBConnection'
 import Book from './screens/Book'
 import AudioLanguage from './screens/Settings/AudioLanguage'
 import Subtitles from './screens/Settings/Subtitles'
@@ -23,39 +23,44 @@ import MyCategories from "./screens/MyCategories";
 import Category from "./screens/Category";
 
 
-const defaultNavigationOptions =  (title, navigation, canBack=false)=> {
-  var backButton = {
-      headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 18, paddingVertical: 10, paddingHorizontal: 10}} >
-          <Image source={require('./assets/ic_left_arrow.png')}/>
-      </TouchableOpacity>
-  };
-  if (!canBack) {
-    backButton = {};
-  }
-  return {
-      title: title,
-      headerStyle: {
-          backgroundColor: '#ffffff',
-          shadowOpacity: 0,
-          shadowOffset: {
-              height: 0,
-              width: 0
-          },
-          shadowColor: '#ffffff',
-          shadowRadius: 0,
-          elevation: 0,
-          borderBottomWidth: 0
-      },
-      headerTitleStyle: {
-          color: colors.greySettingLabel,
-          textAlign: 'center',
-          justifyContent: 'space-between',
-          fontSize: 17,
-          alignSelf: 'center',
-          fontWeight: "normal"
-      },
-      ...backButton
-  }
+const defaultNavigationOptions = (title, navigation, canBack = false) => {
+    var backButton = {
+        headerLeft: <TouchableOpacity onPress={() => navigation.goBack(null)}
+                                      style={{marginLeft: 18, paddingVertical: 10, paddingHorizontal: 10}}>
+            <Image source={require('./assets/ic_left_arrow.png')}/>
+        </TouchableOpacity>
+    };
+    if (!canBack) {
+        backButton = {};
+    }
+    return {
+        title: title,
+        headerStyle: {
+            backgroundColor: '#ffffff',
+            shadowOpacity: 0,
+            shadowOffset: {
+                height: 0,
+                width: 0
+            },
+            shadowColor: '#ffffff',
+            shadowRadius: 0,
+            elevation: 0,
+            borderBottomWidth: 0
+        },
+        headerTitleStyle: {
+            color: colors.greySettingLabel,
+            textAlign: 'center',
+            justifyContent: 'space-between',
+            fontSize: 17,
+            alignSelf: 'center',
+            fontWeight: "normal"
+        },
+        tabBarOnPress: (scene, jumpToIndex) => {
+            console.log('onPress:', scene.route);
+            jumpToIndex(scene.index);
+        },
+        ...backButton
+    }
 };
 
 const HomeStack = StackNavigator({
@@ -63,18 +68,18 @@ const HomeStack = StackNavigator({
         screen: Home,
         navigationOptions: ({navigation}) => ({
             header: null,
-            gesturesEnabled: false
+            gesturesEnabled: false,
         }),
     },
     MyCategories: {
         screen: MyCategories,
-        navigationOptions:({navigation}) => ({
+        navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("My Categories", navigation, true)
         })
     },
     Category: {
         screen: Category,
-        navigationOptions:({navigation}) => ({
+        navigationOptions: ({navigation}) => ({
             header: null,
             gesturesEnabled: false
         })
@@ -84,7 +89,7 @@ const HomeStack = StackNavigator({
 const SettingsStack = StackNavigator({
     Setting: {
         screen: Settings,
-        navigationOptions:({navigation}) => ({
+        navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("Settings", navigation),
             gesturesEnabled: false
         })
@@ -151,25 +156,45 @@ const SettingsStack = StackNavigator({
     }
 });
 
-const TabNav = TabNavigator({
-  Home: {
-    screen: HomeStack,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    }),
-  },
+const ZappersStack = StackNavigator({
     Zappers: {
         screen: Zappers,
         navigationOptions: ({navigation}) => ({
-            header: null
+            header: null,
+            gesturesEnabled: false,
+        }),
+    }
+});
+
+const BookStack = StackNavigator({
+    Book: {
+        screen: Book,
+        navigationOptions: ({navigation}) => ({
+            header: null,
+            gesturesEnabled: false,
+        }),
+    }
+});
+
+const TabNav = TabNavigator({
+    Home: {
+        screen: HomeStack,
+        navigationOptions: ({navigation}) => ({
+            header: null,
         }),
     },
-  Book: {
-    screen: Book,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  },
+    Zappers: {
+        screen: ZappersStack,
+        navigationOptions: ({navigation}) => ({
+            header: null,
+        }),
+    },
+    Book: {
+        screen: BookStack,
+        navigationOptions: ({navigation}) => ({
+            header: null
+        })
+    },
     Setting: {
         screen: SettingsStack,
         navigationOptions: ({navigation}) => ({
@@ -177,26 +202,23 @@ const TabNav = TabNavigator({
         })
     }
 }, {
-  tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
-  tabBarPosition: 'bottom',
-  swipeEnabled: false,
-  animationEnabled: false
+    tabBarComponent: ({navigation}) => <BottomTabbar navigation={navigation}/>,
+    tabBarPosition: 'bottom',
+    swipeEnabled: false,
+    animationEnabled: false,
 });
 
 export const ScreenStack = StackNavigator({
-  Root: {
-    screen: STBConnection
-  },
-  Home: {
-    screen: TabNav,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    }),
-  },
-  VideoControlModal: {
-    screen: VideoControlModal
-  },
+    Root: {
+        screen: STBConnection
+    },
+    Home: {
+        screen: TabNav,
+    },
+    VideoControlModal: {
+        screen: VideoControlModal
+    },
 }, {
-  mode: 'modal',
-  headerMode: 'none'
+    mode: 'modal',
+    headerMode: 'none'
 });
