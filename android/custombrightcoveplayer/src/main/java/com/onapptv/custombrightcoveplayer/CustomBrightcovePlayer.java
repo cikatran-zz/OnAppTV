@@ -37,13 +37,20 @@ import com.brightcove.player.util.StringUtil;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import userkit.sdk.OnDemandPlaybackEventRecorder;
 import userkit.sdk.PlayerState;
+import userkit.sdk.UserKit;
+import userkit.sdk.model.RemoveQueryCommand;
 
 /**
  * Created by oldmen on 3/1/18.
@@ -91,6 +98,11 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private Map<String, Object> metadata = new HashMap<>();
     OnDemandPlaybackEventRecorder mPlaybackRecorder = null;
 
+    private String CONTINUE_WATCHING = "continue_watching";
+    private String STOP_POSITION = "stop_position";
+    private String ID = "id";
+
+
     public void setVideoKey(String id) {
         this.videoId = id;
         playVideoWithReactParams();
@@ -130,6 +142,23 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
             catalog.findVideoByID(videoId, new VideoListener() {
                 @Override
                 public void onVideo(Video video) {
+
+                    UserKit.getInstance().getProfileManager().searchChildInArray(CONTINUE_WATCHING,
+                            RemoveQueryCommand.eq(ID, video.getId()),
+                            JSONObject.class).map(data -> {
+                        if (data.size() > 0)
+                            return (int) ((Map) data.get(0)).get(STOP_POSITION);
+                        else
+                            return 0;
+                    }).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(stopPosition -> {
+                                mPlayerVideoView.seekTo(stopPosition * 1000);
+                                if (!mPlayerVideoView.isPlaying())
+                                    mPlayerVideoView.start();
+                            }, error -> Log.d(TAG, error.toString()));
+
+
                     mPlaybackRecorder = new OnDemandPlaybackEventRecorder(TrackUserkit.createItemFromBrightcove(metadata));
                     mPlayerVideoView.add(video);
                     mPlayerVideoView.start();
@@ -250,6 +279,8 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         this.addListener("pause", new PauseControllerImp());
         this.addListener("error", new ErrorControllerImp());
         // end play controller state
+
+        this.addListener("storeBrightCove", new StoreBrightCoveImp());
     }
 
     private class PlayControllerImp implements EventListener {
@@ -606,6 +637,39 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+    private Completable storeVideo(double videoLength, double currentSeconds) {
+        if (currentSeconds < videoLength - 30) {
+            return UserKit.getInstance().getProfileManager().removeChildInArray(CONTINUE_WATCHING, RemoveQueryCommand.eq(ID, getVideoKey()))
+                    .doOnComplete(() -> {
+                        HashMap<String, Object> movieJson = new HashMap<>();
+                        movieJson.put(STOP_POSITION, currentSeconds);
+                        movieJson.put(ID, getVideoKey());
+//                            movieJson.put(UserKitKeys.POSTER, mVideo?.properties?.get(Video.Fields.STILL_IMAGE_URI))
+                        movieJson.putAll(metadata);
+                        UserKit.getInstance().getProfileManager().append(CONTINUE_WATCHING, movieJson);
+                    }).doOnError(error -> Log.d(TAG, error.toString()));
+        } else {
+            return UserKit.getInstance().getProfileManager().removeChildInArray(CONTINUE_WATCHING, RemoveQueryCommand.eq(ID, getVideoKey()))
+                    .doOnComplete(() -> {
+                    })
+                    .doOnError(error -> Log.d(TAG, error.toString()));
+        }
+    }
+
+    private class StoreBrightCoveImp implements EventListener {
+        @Override
+        public void processEvent(Event event) {
+            if (mPlayerVideoView != null) {
+                storeVideo(mPlayerVideoView.getDuration() / 1000.0, mPlayerVideoView.getCurrentPosition() / 1000.0)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            mPlayerVideoView.stopPlayback();
+                            mPlayerVideoView.clear();
+                        });
             }
         }
     }
