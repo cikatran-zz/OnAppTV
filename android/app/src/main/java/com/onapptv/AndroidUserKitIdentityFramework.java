@@ -21,6 +21,7 @@ import userkit.sdk.identity.model.ProfileProperties;
  */
 public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule {
     public static final String REACT_MODULE = "RNUserKitIdentity";
+    Gson gson = new Gson();
 
     public AndroidUserKitIdentityFramework(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -52,12 +53,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountInfo -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    Gson gson = new Gson();
                     array.pushString(gson.toJson(accountInfo));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
-                });
+                }, throwable -> callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
     @SuppressLint("CheckResult")
@@ -68,12 +66,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountInfo -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    Gson gson = new Gson();
                     array.pushString(gson.toJson(accountInfo));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
-                });
+                }, throwable -> callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
     @SuppressLint("CheckResult")
@@ -84,12 +79,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountInfo -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    Gson gson = new Gson();
                     array.pushString(gson.toJson(accountInfo));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
-                });
+                }, throwable -> callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
 }
