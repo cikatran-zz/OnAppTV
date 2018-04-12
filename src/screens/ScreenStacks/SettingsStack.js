@@ -56,12 +56,6 @@ export default SettingsStack = StackNavigator({
             ...defaultNavigationOptions("My Subscription", navigation, true)
         })
     },
-    ParentalControlLock: {
-        screen: ParentalControlLock,
-        navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("", navigation, true)
-        })
-    },
     ParentalControl: {
         screen: ParentalControl,
         navigationOptions: ({navigation}) => ({

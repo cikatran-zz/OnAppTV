@@ -47,6 +47,14 @@ export default class Settings extends React.PureComponent {
                         screen: 'VideoFormat',
                         needSTB: true,
                         icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Parental Control",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'ParentalControl',
+                        needSTB: true,
+                        icon: require('../../assets/ic_wifi.png')
                     }]
             }
         ];
