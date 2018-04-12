@@ -5,12 +5,16 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
+import {
+    StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList,
+    TouchableOpacity, NativeModules, Platform
+} from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
 import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
 import ZapperCell from '../../components/ZapperCell'
 import ChannelModal from "./ChannelModal/ChannelModal";
+import {colors} from "../../utils/themeConfig";
 
 const favoriteImg = require('../../assets/ic_favorite.png');
 const allImg = require('../../assets/ic_all.png');
@@ -43,7 +47,15 @@ export default class Zappers extends Component {
 
     componentDidMount() {
         this.props.getChannel(-1);
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     };
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
 
     _imageUri(item) {
         var image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
@@ -70,22 +82,26 @@ export default class Zappers extends Component {
 
     _zapChannel = (lcn) => {
         console.log("Zap", lcn);
-        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
+        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN: lcn}), (error, events) => {
             if (error) {
                 console.log(error);
             } else {
                 console.log(JSON.parse(events[0]))
             }
-        } )
+        })
     };
 
     _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
                                                style={styles.item}
-                                               onPress={()=>this._zapChannel(item.item.lCN)}>
-                                    <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
-                            </TouchableOpacity>);
+                                               onPress={() => this._zapChannel(item.item.lCN)}>
+        <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
+    </TouchableOpacity>);
     _renderListFooter = () => (
-        <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 50, backgroundColor:'transparent'}}/>
+        <View style={{
+            width: '100%',
+            height: Dimensions.get("window").height * 0.08 + 50,
+            backgroundColor: 'transparent'
+        }}/>
     )
 
     _renderSwitchImage = () => {
@@ -106,7 +122,8 @@ export default class Zappers extends Component {
         newAllChannels.splice(index, 1, newFavorite);
         this.state.allChannels = newAllChannels;
 
-        NativeModules.RNUserKit.storeProperty("favorite_channels", {data: this.state.allChannels}, (error, events)=>{});
+        NativeModules.RNUserKit.storeProperty("favorite_channels", {data: this.state.allChannels}, (error, events) => {
+        });
 
         index = _.findIndex(this.state.channelData, {'serviceID': serviceId});
         let newChannelData = _.cloneDeep(this.state.channelData);
@@ -150,7 +167,13 @@ export default class Zappers extends Component {
         if (this.isFetch == false) {
             const {channel} = this.props;
             if (!channel.data || channel.isFetching) {
-                return null;
+                return (<View style={styles.root}>
+                    <ImageBackground style={styles.image}
+                                     source={require('../../assets/conn_bg.png')}
+                                     blurRadius={30}>
+                        <Text style={styles.errorMessage}>You must connect to STB first</Text>
+                    </ImageBackground>
+                </View>)
             }
             this.state.channelData = _.cloneDeep(channel.data);
             this.state.allChannels = _.cloneDeep(channel.data);
@@ -162,8 +185,9 @@ export default class Zappers extends Component {
                 <StatusBar
                     translucent={true}
                     backgroundColor='#00000000'
-                    barStyle='light-content' />
-                <ChannelModal ref={(modal) => this.channelModal = modal} channels={this.state.channelData} onFavoriteItem={this._favoriteItem}/>
+                    barStyle='light-content'/>
+                <ChannelModal ref={(modal) => this.channelModal = modal} channels={this.state.channelData}
+                              onFavoriteItem={this._favoriteItem}/>
                 <ImageBackground style={styles.image}
                                  source={require('../../assets/conn_bg.png')}
                                  blurRadius={30}>
@@ -189,11 +213,19 @@ export default class Zappers extends Component {
 }
 
 calculateItemSize = (contentWidth, maxItemSize, minimumItem) => {
-    return {width: (contentWidth-60)/3, margin: 10}
+    return {width: (contentWidth - 60) / 3, margin: 10}
 
 };
 
 const styles = StyleSheet.create({
+    errorMessage: {
+        marginTop: 100,
+        color: colors.whiteBackground,
+        fontSize: 20,
+        width: '100%',
+        paddingHorizontal: 40,
+        textAlign: 'center'
+    },
     root: {
         flexDirection: 'column',
         flex: 1,

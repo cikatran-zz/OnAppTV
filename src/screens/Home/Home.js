@@ -16,7 +16,8 @@ import {
     Platform,
     Dimensions,
     NativeModules,
-    TouchableOpacity
+    TouchableOpacity,
+    StatusBar
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -72,7 +73,16 @@ export default class Home extends Component {
                 })
             }
         });
+
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     };
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
 
     _renderChannelListItem = ({item}) => {
         var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
@@ -412,6 +422,10 @@ export default class Home extends Component {
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
+                <StatusBar
+                    translucent={true}
+                    backgroundColor='#00000000'
+                    barStyle='light-content'/>
                 <SectionList
                     style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
                     keyExtractor={this._keyExtractor}

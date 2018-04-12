@@ -300,6 +300,19 @@ RCT_EXPORT_METHOD(setPreferAudioLanguageWithJsonString: (NSString *)jsonString c
     }];
 }
 
+RCT_EXPORT_METHOD(setPreferAudioLanguage: (NSString *)language callback: (RCTResponseSenderBlock)callback) {
+    [Api.sharedApi hIG_SetPreferAudioLanguage:language callback:^(BOOL isSuccess, NSString *error) {
+        NSMutableString *string = [[NSMutableString alloc] init];
+        if (isSuccess) {
+            [string setString:@"{\"success\": 1}"];
+        } else {
+            [string setString:[[NSString alloc] initWithFormat:@"{\"success\": 1, \"error\": \"%@\"}", error]];
+        }
+        NSArray *events = [[NSArray alloc] initWithObjects: string, nil];
+        callback(@[[NSNull null], events]);
+    }];
+}
+
 RCT_EXPORT_METHOD(getPreferAudioLanguageInJson: (RCTResponseSenderBlock)callback) {
     NSArray *events = [[NSArray alloc] initWithObjects: [Api.sharedApi hIG_GetPreferAudioLanguageInJson], nil];
     callback(@[[NSNull null], events]);
