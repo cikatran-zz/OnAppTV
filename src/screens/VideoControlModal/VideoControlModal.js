@@ -8,6 +8,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    NativeModules,
     View
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
@@ -18,10 +19,12 @@ import LowerPagerComponent from "../../components/LowerPageComponent"
 import VerticalSwiper from '../../components/VerticalSwiper';
 import BlurView from '../../components/BlurView'
 import {getBlurRadius} from '../../utils/blurRadius'
+import { secondFormatter } from '../../utils/timeUtils'
 
 
 const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
+
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
     if (width > height) {
@@ -38,7 +41,10 @@ export default class VideoControlModal extends React.Component {
       recordEnabled: false,
       favoriteEnabled: false,
       isPlaying: true,
-      modalVisibility: false
+      modalVisibility: false,
+      passTime: 0,
+      etrTime: 0,
+      volume: 0
     }
   }
 
@@ -46,8 +52,48 @@ export default class VideoControlModal extends React.Component {
     Orientation.unlockAllOrientations()
   }
 
+  _getTimeInterval = setInterval(() => {
+      this.setState({
+        currentTime: new Date().getTime()
+      })
+    }, 1000)
+
+  componentWillUnmount() {
+    clearInterval(this._getTimeInterval)
+
+    NativeModules.STBManager.playMediaStop((error, events) => {})
+
+  }
+
   componentDidMount() {
-    const {item} = this.props.navigation.state.params
+    const {item, isLive} = this.props.navigation.state.params
+
+    NativeModules.STBManager.getVolumeInJson((error, events) => {
+        if (!error) {
+            this.setState({volume: JSON.parse(events[0]).volume})
+        }
+    })
+
+    if (isLive) {
+      // Change channel with lcn
+      NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lcn}),(error, events) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(JSON.parse(events[0]))
+        }
+      })
+
+      this.setState({
+        currentTime: new Date().getTime(),
+        startPoint: new Date().getTime()
+      })
+    }
+    else {
+      //Test play video
+      NativeModules.STBManager.playMediaStartWithJson(jsonString, (error, events) => {
+      })
+    }
 
     switch (item.type) {
       case 'Standalone': {
@@ -95,11 +141,69 @@ export default class VideoControlModal extends React.Component {
 
   }
 
+  _onVolumeChange = (newValue) => {
+    this.setState({ volume: newValue })
+    let jsonString = "{\n" +
+      "\tvolume: \n" + newValue + "}"
+    NativeModules.STBManager.setVolumeWithJsonString(jsonString, (error, events) => {})
+  }
+
+  _getLivePassedTime = (isLive, timeInSeconds, durationInSeconds) => {
+      if (isLive) {
+        let time = this.state.currentTime
+        let startTime = new Date(timeInSeconds)
+        let passed = (time - startTime.getTime()) / 1000
+        if (passed > 0) return secondFormatter(passed.toString())
+      }
+      else {
+
+      }
+  }
+
+  _getEtrTime = (isLive, timeInSeconds, durationInSeconds) => {
+    if (isLive) {
+      let time = this.state.currentTime
+      let endTime = new Date(timeInSeconds)
+      let passed = (endTime.getTime() - time) / 1000
+      if (passed > 0) return "-" + secondFormatter(passed.toString())
+    }
+    else {
+      return ''
+    }
+  }
+
+  _getRecordStartMargin = (startTime, endTime) => {
+    const {startPoint} = this.state;
+    let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let passedTime = startPoint - (new Date(startTime)).getTime();
+    return (passedTime / durationInSeconds) * 100
+  }
+
+  _getRecordProgress = (currentTime, startTime, endTime) => {
+    const {startPoint} = this.state;
+    let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let recordedTime = (((currentTime - startPoint) / durationInSeconds) * 100)
+    if (recordedTime <= 0) return '1%'
+    else return recordedTime + "%"
+  }
+
+  _getLiveProgress = (startTime, endTime) => {
+    const {currentTime} = this.state;
+    let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let passedTime = currentTime - (new Date(startTime)).getTime();
+    return (passedTime / durationInSeconds) * 100 + "%"
+  }
+
   _renderPlaybackController = (item) => {
     const {recordEnabled, favoriteEnabled} = this.state
+    const {isLive} = this.props.navigation.state.params;
 
     return (
       <View style={styles.playbackContainer}>
+        <View style={{height: '11%', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <Text style={styles.passedText}>{this._getLivePassedTime(isLive, item.startTime ? item.startTime : 0 )}</Text>
+          <Text style={styles.etrText}>{this._getEtrTime(isLive, item.endTime ? item.endTime : 0)}</Text>
+        </View>
         <View style={styles.topButtonsContainer}>
           <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
             <Image source={require('../../assets/ic_record.png')} style={styles.buttonIconStyle}/>
@@ -110,7 +214,7 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={styles.buttonStyle}>
             <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
+          <TouchableOpacity disabled={isLive}  style={styles.buttonStyle}>
             <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonStyle}>
@@ -118,18 +222,46 @@ export default class VideoControlModal extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.mediaInfoContainer}>
-          <Text style={styles.titleText}>{item.title}</Text>
-          <Text style={styles.typeText}>{this._formatGenresText(item.genresData)}</Text>
+          <Text style={styles.titleText}>{isLive !== true ? item.title : item.videoData.title}</Text>
+          <Text style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
         </View>
         <View style={styles.playbackButtons}>
-          <!-- TODO: Detect is live or not to change fastforward and backward background-->
-          <TouchableOpacity style={styles.rewindButton}>
+          <TouchableOpacity  onPress={() => {
+              NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+                if (!error) {
+                  let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
+                  let playPosInJson = "{\n" +
+                    "\tplayPosition: \n" + playPos + "}"
+                  NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {})
+                }
+              })
+            }
+          } style={styles.rewindButton}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{ width: '21%', height: '100%'}} onPress={() => this.setState({isPlaying: !this.state.isPlaying})}>
+          <TouchableOpacity  disabled={isLive}  style={{ width: '21%', height: '100%'}} onPress={() => {
+            this.setState({isPlaying: !this.state.isPlaying})
+            if (this.state.isPlaying) {
+              NativeModules.STBManager.playMediaPause((error, events) => {})
+            }
+            else {
+              NativeModules.STBManager.playMediaResume((error, events) => {})
+            }
+          }
+          }>
             <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.fastForwardButton}>
+          <TouchableOpacity  disabled={isLive} onPress={() => {
+            NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+              if (!error) {
+                let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
+                let playPosInJson = "{\n" +
+                  "\tplayPosition: \n" + playPos + "}"
+                console.log(playPosInJson)
+                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {})
+              }
+            })
+          }} style={styles.fastForwardButton}>
             <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
@@ -137,12 +269,25 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={styles.volumeLessIcon}>
             <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <VolumeSeeker width={260} thumbSize={16} maxValue={100}/>
+          <VolumeSeeker width={260} thumbSize={16} maxValue={100} value={this.state.volume} onVolumeChange={this._onVolumeChange}/>
           <TouchableOpacity style={styles.volumeMoreIcon}>
             <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
     </View>)
+  }
+
+  _renderRecordBar = (isLive, startTime, endTime) => {
+    const {currentTime} = this.state
+    console.log(this._getRecordProgress(currentTime, startTime, endTime))
+    if (isLive) {
+      let marginLeft = this._getRecordStartMargin(startTime, endTime) <= 0 ? '3%' : this._getRecordStartMargin(startTime, endTime) + "%"
+
+      return (
+        <View style={[styles.recordBar, {marginLeft: marginLeft, width: this._getRecordProgress(currentTime, startTime, endTime)}]}/>
+      )
+    }
+    else return null
   }
 
   _onLowerPageScroll = (y) => {
@@ -170,6 +315,7 @@ export default class VideoControlModal extends React.Component {
 
   _renderUpperPage = (epg, item) => {
     let data = item
+    const {isLive} = this.props.navigation.state.params
 
     if (item.serviceID) {
       if (!epg.data) {
@@ -185,13 +331,17 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={{uri: data.originalImages[0].url}}/>
+                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
           {this._renderPlaybackController(data)}
         </View>
         <View style={styles.topContainer}>
           <ImageBackground style={styles.topVideoControl}
                            resizeMode="cover"
-                           source={{uri: data.originalImages[0].url}}/>
+                           source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+          {this._renderRecordBar(isLive, item.startTime, item.endTime)}
+          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : '69%', height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+
+          </View>
         </View>
       </View>)
   }
@@ -224,11 +374,8 @@ export default class VideoControlModal extends React.Component {
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          <VerticalSwiper
-            style={styles.dragContainer}
-            content={this._renderLowerPage(epg, item)}>
-            {this._renderUpperPage(epg, item)}
-          </VerticalSwiper>
+          {this._renderUpperPage(epg, item)}
+
         </View>
 
       );
@@ -329,6 +476,7 @@ const styles = StyleSheet.create({
     left: 0,
     height: '42%',
     width: '100%',
+    flexDirection: 'column'
   },
   modal: {
     flex: 1,
@@ -438,7 +586,6 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '58%',
-    paddingTop: '11%',
     flexDirection: 'column'
   },
   topButtonsContainer: {
@@ -513,5 +660,29 @@ const styles = StyleSheet.create({
     width: '98%',
     height: '98%',
     alignSelf: 'center'
+  },
+  passedText: {
+    marginLeft: 20,
+    fontSize: 12,
+    color: colors.whitePrimary
+  },
+  etrText: {
+    marginRight: 20,
+    fontSize: 12,
+    color: colors.whitePrimary
+  },
+  recordBar: {
+    height: 3,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    backgroundColor: colors.mainPink
   }
 })
+
+const jsonString = "{\n" +
+  "      \"url\": \"http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4\",\n" +
+  "      \"playPosition\": 0\n" +
+  "    }"
+
+
