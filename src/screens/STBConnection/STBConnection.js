@@ -5,7 +5,7 @@
  */
 
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native';
+import {Platform, StatusBar, StyleSheet} from 'react-native';
 import STBConnectionView from '../../components/STBConnectionView'
 import Orientation from 'react-native-orientation';
 
@@ -26,9 +26,13 @@ export default class STBConnection extends Component {
         navigate('Home', {})
     }
 
+    componentDidMount() {
+        StatusBar.setBarStyle('light-content');
+        (Platform.OS != 'ios') && StatusBar.setBackgroundColor('#000000');
+    }
+
     render() {
         return (
-
             <STBConnectionView style={{width: '100%', height: '100%', left: 0, top: 0}} onFinished={this._onFinished} />
         );
     }

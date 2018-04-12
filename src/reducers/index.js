@@ -12,6 +12,11 @@ import epgsReducer from './epgsReducer';
 import bookListReducer from './bookListReducer'
 import genresContentReducer from './genresContentReducer'
 import recordReducer from './recordReducer'
+import audioLanguageReducer from "./audioLanguageReducer";
+import settingsReducer from "./settingsReducer";
+import subtitlesReducer from "./subtitlesReducer"
+import resolutionReducer from "./resolutionReducer";
+import videoFormatReducer from './videoFormatReducer';
 
 export default combineReducers({
     nav,
@@ -27,4 +32,9 @@ export default combineReducers({
     bookListReducer,
     genresContentReducer,
     recordReducer
+    audioLanguageReducer,
+    settingsReducer,
+    subtitlesReducer,
+    resolutionReducer,
+    videoFormatReducer
 });

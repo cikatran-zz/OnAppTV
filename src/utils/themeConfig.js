@@ -2,6 +2,7 @@ export const colors = {
   mainPink: '#FF2D55',
   screenBackground: '#F5FCFF',
   textWhitePrimary: '#ffffff',
+    whiteBackground: '#ffffff',
   textGrey: '#a5a5a5',
   textDarkGrey: '#8a8a8a',
   mainDarkGrey: '#767676F2',

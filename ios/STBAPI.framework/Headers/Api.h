@@ -550,7 +550,6 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
  @param callback JSON字符串的方式回调
  */
 - (void)hIG_UdpReceiveMessageInJson:(TypeNSStringCallbackBlock)callback;
-
 /**
  未发现的机顶盒列表
  @param callback 回调
@@ -563,6 +562,8 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
 - (void)hIG_UndiscoveredSTBListInJson:(TypeNSStringCallbackBlock)callback;
 //断开所有连接
 - (void)hIG_DisconnectAll;
+//是否连接
+- (BOOL)hIG_IsConnect;
 /**
  通过机顶盒信息和用户名连接
  @param sTBInfo 机顶盒信息

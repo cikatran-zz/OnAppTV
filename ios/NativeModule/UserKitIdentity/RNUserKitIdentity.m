@@ -26,9 +26,17 @@ RCT_EXPORT_METHOD(signUpWithEmail: (NSString *)email
                                                    password:password
                                            customProperties:customProperties
                                                successBlock:^(NSString* authenModel) {
-                                                   callback(@[[NSNull null], @[authenModel]]);
+                                                   NSMutableArray *result = [[NSMutableArray alloc] init];
+                                                   if (authenModel == nil) {
+                                                       [result addObject:[NSNull null]];
+                                                   }
+                                                   callback(@[[NSNull null], result]);
                                                } errorBlock:^(NSString* error) {
-                                                   callback(@[error, [NSNull null]]);
+                                                   NSMutableString *result = [[NSMutableString alloc] init];
+                                                   if (error == nil) {
+                                                       [result setString: @"{\"error_message\": \"Unknown error\"}"];
+                                                   }
+                                                   callback(@[result, [NSNull null]]);
                                                }];
 }
 
@@ -38,9 +46,17 @@ RCT_EXPORT_METHOD(signInWithFacebookAccount:(NSString *)facebookAuthToken
     
     [[UserKitIdentityModule sharedInstance] signInWithFacebookAccount:facebookAuthToken
                                                         successBlock:^(NSString* authenModel) {
-                                                            callback(@[[NSNull null], @[authenModel]]);
+                                                            NSMutableArray *result = [[NSMutableArray alloc] init];
+                                                            if (authenModel == nil) {
+                                                                [result addObject:[NSNull null]];
+                                                            }
+                                                            callback(@[[NSNull null], result]);
                                                         } errorBlock:^(NSString* error) {
-                                                            callback(@[error, [NSNull null]]);
+                                                            NSMutableString *result = [[NSMutableString alloc] init];
+                                                            if (error == nil) {
+                                                                [result setString: @"{\"error_message\": \"Unknown error\"}"];
+                                                            }
+                                                            callback(@[result, [NSNull null]]);
                                                         }];
 }
 
@@ -51,9 +67,17 @@ RCT_EXPORT_METHOD(signInWithEmail: (NSString *)email
     [[UserKitIdentityModule sharedInstance] signInWithEmail:email
                                                    password:password
                                                successBlock:^(NSString* authenModel) {
-                                                   callback(@[[NSNull null], @[authenModel]]);
+                                                   NSMutableArray *result = [[NSMutableArray alloc] init];
+                                                   if (authenModel == nil) {
+                                                       [result addObject:[NSNull null]];
+                                                   }
+                                                   callback(@[[NSNull null], result]);
                                                } errorBlock:^(NSString* error) {
-                                                   callback(@[error, [NSNull null]]);
+                                                   NSMutableString *result = [[NSMutableString alloc] init];
+                                                   if (error == nil) {
+                                                       [result setString: @"{\"error_message\": \"Unknown error\"}"];
+                                                   }
+                                                   callback(@[result, [NSNull null]]);
                                                }];
 }
 
