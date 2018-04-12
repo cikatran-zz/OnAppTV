@@ -15,7 +15,7 @@ header{padding-top:20px;padding-top:constant(safe-area-inset-top)}
 .selectedname{text-align:left}
 .stb-name{color:white;font-family:SF UI Text;font-size:.45rem}
 .con-describe{color:white;font-size:.32rem;margin:.4rem .2rem .4rem .2rem;text-align:center;font-family:SF UI Text;line-height:.5rem}
-.close::before,.close::after{content:'';position:absolute;height:50%;width:50%;left:-webkit-calc(50% - .20335rem);margin-top:-webkit-calc(50% - .29335rem);background:#FFFFFF}
+.close::before,.close::after{content:'';position:absolute;height:50%;width:50%;left:-webkit-calc(50% - .29335rem);margin-top:-webkit-calc(50% - .29335rem);background:#FFFFFF}
 .btn{color:white;text-align:center;font-size:.4rem;background:none;border:1px solid rgba(255,255,255,.39);width:70%;border-radius:.5rem;line-height:.8rem;position:relative;margin-left:15%;outline:none}
 .btn-conn{background-color:#FC355B;border-color:#FC355B}
 .btn-skip{margin-top:.5rem}

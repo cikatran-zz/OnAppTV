@@ -82,11 +82,12 @@ header {
 	font-size: 0.3467rem;
 }
 .body-group {
-	position: relative;
+	position: absolute;
 	width: 100%;
 	margin: 0 auto;
-	margin-top: 1.2rem;
+	margin-top: calc(12%);
 	text-align: center;
+	z-index: 99;
 }
 .body-group p{
 	/*color: #FFFFFF;

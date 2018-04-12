@@ -38,22 +38,28 @@ setupWebViewJavascriptBridge(function(bridge) {
 })
 $(function() {
 	nums = $.query.get("nums");
+	$(".Selector").css({
+		"width":"100%",
+		"height":"100%"
+	});
 	$(".HIGContent-header").height($(window).height() * 0.25);
 	$(".HIGContent-body").css({
 		"width": "100%",
-		"height": $(window).height() * 0.55
+		"height": $(window).height() * 0.55  //0.55
 	})
 	$(".content-body").css({
 		"width": $(window).width(),
-		"height": $(window).height() * 0.63
+		"height": $(window).height() * 0.63,//0.63
+		"z-index":"-1",
+		"position":"relative"
 	})
 	$(".body-square").css({
-		height:"55%",
+		height:"55%", //55
 		width:"76%",
 		background:"url(./img/blur.png) center center no-repeat",
-		"background-size":"100%"
-		
+		"background-size":"100%"	
 	})
+	
 	mySwiper = new Swiper('.swiper-container', {
 		direction: "horizontal",
 		pagination: '.swiper-pagination',

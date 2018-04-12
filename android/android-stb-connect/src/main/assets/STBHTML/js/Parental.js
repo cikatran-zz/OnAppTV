@@ -1,7 +1,10 @@
 var parentalGuideRating;
 var connectState;
 window.onload = function() {
-	window.WebViewJavascriptBridge.callHandler('HIG_GetParentalGuideRating');
+	var times = setTimeout(function() {
+			getParanttalGuideRating();
+		}, 500);
+//	window.WebViewJavascriptBridge.callHandler('HIG_GetParentalGuideRating');
 }
 
 function setupWebViewJavascriptBridge(callback) {
@@ -22,10 +25,10 @@ function setupWebViewJavascriptBridge(callback) {
 }
 
 setupWebViewJavascriptBridge(function(bridge) {
-	bridge.registerHandler('HIG_GetParentalGuideRating', function(data, responseCallback) {
-		var jsonObj = JSON.parse(data);
-		parentalGuideRating = jsonObj.parentalGuideRating == "" ? 0 : jsonObj.parentalGuideRating;
-	})
+	//	bridge.registerHandler('HIG_GetParentalGuideRating', function(data, responseCallback) {
+	//		var jsonObj = JSON.parse(data);
+	//		parentalGuideRating = jsonObj.parentalGuideRating == "" ? 0 : jsonObj.parentalGuideRating;
+	//	})
 })
 $(function() {
 	$(".content-body").css({
@@ -35,11 +38,14 @@ $(function() {
 	mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
 		connectState = true;
 		$("body").removeClass('bg').addClass('backBg');
-//		document.location.href = "Antional.html?connectState=" + connectState;
+		//		document.location.href = "Antional.html?connectState=" + connectState;
 		$(".selectcoder").animate({
-			"left": 0
+			"left": 0,
 		}, "fast", function() {
-			$(".selectcoder").css("display", "block");
+			$(".selectcoder").css({
+				"display": "block",
+				"height": "100%"
+			});
 		})
 		$(".Parental").animate({
 			"left": -$(window).width()
@@ -72,7 +78,7 @@ $(function() {
 					"parentalGuideRating": $(controls).html()
 				};
 				var data = JSON.stringify(parentalGuideRatingData);
-				window.WebViewJavascriptBridge.callHandler('HIG_SetParantalGuideRating', data);
+				window.WebViewJavascriptBridge.callHandler('HIG_SetParantalGuideRating', data,null);
 			})
 		} else {
 			for(var i = 0; i < roundList.length; i++) {
@@ -90,3 +96,10 @@ $(function() {
 		window.WebViewJavascriptBridge.callHandler('HIG_STBConnectStatus', data);
 	})
 })
+
+function getParanttalGuideRating(data) {
+	window.WebViewJavascriptBridge.callHandler('HIG_GetParentalGuideRating', data, function(responseData) {
+		var jsonObj = JSON.parse(responseData);
+		parentalGuideRating = jsonObj.parentalGuideRating == "" ? 0 : jsonObj.parentalGuideRating;
+	});
+}

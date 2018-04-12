@@ -1,0 +1,26 @@
+*{padding:0;margin:0}
+body{width:100%;height:100%;position:relative;overflow:hidden}
+.bg{background:url(../img/antional.png) no-repeat center center;background-attachment:fixed;background-size:cover;width:100%;height:100%}
+.STB-bg{width:100%;height:100%;position:absolute;background-image:url(../img/conn_bg.png);background-size:100% 100%;z-index:0}
+*{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+header{padding-top:20px;padding-top:constant(safe-area-inset-top)}
+.STB-Container{z-index:99;display:block;position:relative}
+.con-header{text-align:center;padding-top:.8rem}
+.con-stb{color:white;font-size:.4rem;font-family:SF UI Text}
+.con-list{display:block;background:url(../img/blur.png) no-repeat center center;position:relative;background-size:100%;text-align:center;border-radius:.6rem;margin:.6rem 1.2rem 0rem 1.2rem}
+.stb-list{padding:0px .3rem}
+.con-list>.stb-title{color:rgba(112,113,115,.68);font-family:SF UI Text;font-size:.42rem;position:relative;display:block;padding:.36rem .28rem .34rem .28rem}
+.stb-list>ul>li{padding:.08rem .12rem;list-style-type:none;border-bottom:1px solid rgba(100,100,100,.56);line-height:.8rem}
+.stb-list>ul>li>input[type='checkbox']{margin-top:.1rem}
+.selectedname{text-align:left}
+.stb-name{color:white;font-family:SF UI Text;font-size:.45rem}
+.con-describe{color:white;font-size:.32rem;margin:.4rem .2rem .4rem .2rem;text-align:center;font-family:SF UI Text;line-height:.5rem}
+.close::before,.close::after{content:'';position:absolute;height:50%;width:50%;left:-webkit-calc(50% - .20335rem);margin-top:-webkit-calc(50% - .29335rem);background:#FFFFFF}
+.btn{color:white;text-align:center;font-size:.4rem;background:none;border:1px solid rgba(255,255,255,.39);width:70%;border-radius:.5rem;line-height:.8rem;position:relative;margin-left:15%;outline:none}
+.btn-conn{background-color:#FC355B;border-color:#FC355B}
+.btn-skip{margin-top:.5rem}
+.close::before{-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);-o-transform:rotate(45deg);transform:rotate(45deg)}
+.close::after{-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-o-transform:rotate(-45deg);transform:rotate(-45deg)}
+.close::before,.close::after{height:0.03344rem}
+.close{background-color:rgba(100,100,100,.39) !important;opacity:1 !important;border-radius:.9867rem;line-height:2;text-align:center;height:.65rem;width:.65rem;font-size:.4267rem;padding:.2667rem;visibility:visible}
+.close{right:.5rem;position:absolute;margin-top:5px}

@@ -39,6 +39,17 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void isConnect(Callback callback) {
+        WritableNativeArray array = new WritableNativeArray();
+        String isConnected = "{\"is_connected\": false}";
+        if (Api_Implementation.sharedManager().hIG_IsConnect()) {
+            isConnected = "{\"is_connected\": true}";
+        }
+        array.pushString(isConnected);
+        callback.invoke(array);
+    }
+
+    @ReactMethod
     public void isStbConnected(Callback callback) {
         WritableNativeArray array = new WritableNativeArray();
         if (Api_Implementation.sharedManager().getCurrentSTBInfo() != null) {
@@ -309,7 +320,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getAspectRatioInJson(Callback callback) {
-        callback.invoke(Api_Implementation.sharedManager().hIG_GetAspectRatioInJson());
+        WritableNativeArray array = new WritableNativeArray();
+        array.pushString(Api_Implementation.sharedManager().hIG_GetAspectRatioInJson());
+        callback.invoke(null, array);
     }
 
     @ReactMethod
@@ -326,7 +339,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getResolutionInJson(Callback callback) {
-        callback.invoke(Api_Implementation.sharedManager().hIG_GetResolutionInJson());
+        WritableNativeArray array = new WritableNativeArray();
+        array.pushString(Api_Implementation.sharedManager().hIG_GetResolutionInJson());
+        callback.invoke(null, array);
     }
 
     @ReactMethod
@@ -428,7 +443,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPreferSubtitleLanguageInJson(Callback callback) {
-        callback.invoke(Api_Implementation.sharedManager().hIG_GetPreferSubtitleLanguageInJson());
+        WritableNativeArray array = new WritableNativeArray();
+        array.pushString(Api_Implementation.sharedManager().hIG_GetPreferSubtitleLanguageInJson());
+        callback.invoke(null, array);
     }
 
     @ReactMethod
@@ -462,7 +479,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPreferAudioLanguageInJson(Callback callback) {
-        callback.invoke(Api_Implementation.sharedManager().hIG_GetPreferAudioLanguageInJson());
+        WritableNativeArray array = new WritableNativeArray();
+        array.pushString(Api_Implementation.sharedManager().hIG_GetPreferAudioLanguageInJson());
+        callback.invoke(null, array);
     }
 
     @ReactMethod

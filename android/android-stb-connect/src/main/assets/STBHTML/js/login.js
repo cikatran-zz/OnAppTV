@@ -1,5 +1,5 @@
 $(function() {
-	$("#picID").attr("src", "TROPICALISLAND_42.gif");
+	$("#picID").attr("src", "img/TROPICALISLAND_42.gif");
 	//	var times = setInterval(function() {
 	//		$("#picID").attr("src", "TROPICALISLAND_4.png");
 	//		setTimeout(function() {
