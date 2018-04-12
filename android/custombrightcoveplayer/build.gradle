@@ -21,15 +21,44 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
 
+ext {
+    userkitVersion = "2.2.49.1"
+    userkitVersionStaging = "2.2.49.1-staging"
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
 
     implementation 'com.brightcove.player:exoplayer2:6.0.2'
 
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+
+    implementation("com.github.bumptech.glide:glide:4.6.1") {
+        exclude group: "com.android.support"
+    }
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.6.1") {
+        transitive = false
+    }
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+
+
+    releaseApi("com.mstage.userkit:sdk:${userkitVersion}") {
+        transitive = false
+    }
+    releaseApi("com.mstage.userkit:identity:${userkitVersion}") {
+        transitive = false
+    }
+    debugApi("com.mstage.userkit:sdk:${userkitVersionStaging}") {
+        transitive = false
+    }
+    debugApi("com.mstage.userkit:identity:${userkitVersionStaging}") {
+        transitive = false
+    }
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

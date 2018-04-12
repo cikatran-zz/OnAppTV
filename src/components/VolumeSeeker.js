@@ -27,6 +27,7 @@ class VolumeSeeker extends React.PureComponent {
         thumbTouchSize={{width: this.props.thumbSize, height: this.props.thumbSize}}
         onValueChange={value => this.setState({ value })}
         thumbStyle={{width: 16, height: 16}}
+        trackStyle={styles.track}
         minimumTrackTintColor={colors.mainPink}
       />
     )
@@ -34,8 +35,9 @@ class VolumeSeeker extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  seek_bar: {
-
+  track: {
+    height: 2,
+    backgroundColor: 'rgba(255,255,255,0.2)'
   }
 })
 

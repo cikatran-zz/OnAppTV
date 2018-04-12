@@ -1,5 +1,7 @@
 package com.onapptv;
 
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -35,5 +37,10 @@ public class ReactBrightcovePlayerViewManager extends SimpleViewManager<CustomBr
     @ReactProp(name = "policyKey")
     public void setPolicyKey(CustomBrightcovePlayer view, String policyKey) {
         view.setPolicyKey(policyKey);
+    }
+
+    @ReactMethod
+    public void setMetadata(CustomBrightcovePlayer view, ReadableMap metadata){
+        view.setMetadata(metadata.toHashMap());
     }
 }

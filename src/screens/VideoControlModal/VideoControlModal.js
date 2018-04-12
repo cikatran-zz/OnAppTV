@@ -98,48 +98,50 @@ export default class VideoControlModal extends React.Component {
   _renderPlaybackController = (item) => {
     const {recordEnabled, favoriteEnabled} = this.state
 
-    return (<View style={styles.playbackContainer}>
-      <View style={styles.topButtonsContainer}>
-        <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
-          <Image source={require('../../assets/ic_record.png')} style={{alignSelf: 'center', width: '100%', height: '100%'}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
-          <Image source={require('../../assets/ic_heart_with_border.png')} style={{alignSelf: 'center'}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
-          <Image source={require('../../assets/ic_share.png')} style={{alignSelf: 'center'}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
-          <Image source={require('../../assets/ic_repeat.png')} style={{alignSelf: 'center'}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={{width: 46, height: 46, marginRight: 12}}>
-          <Image source={require('../../assets/ic_caption.png')} style={{alignSelf: 'center'}}/>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.mediaInfoContainer}>
-        <Text style={styles.titleText}>{item.title}</Text>
-        <Text style={styles.typeText}>{this._formatGenresText(item.genresData)}</Text>
-      </View>
-      <View style={styles.playbackButtons}>
-        <TouchableOpacity style={styles.rewindButton}>
-          <Image source={require('../../assets/ic_rewind.png')}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ width: 75, height: 75}} onPress={() => this.setState({isPlaying: !this.state.isPlaying})}>
-          <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={{alignSelf: 'center'}}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.fastForwardButton}>
-          <Image source={require('../../assets/ic_fastforward.png')}/>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.volumeSeekBarContainer}>
-        <TouchableOpacity style={styles.volumeLessIcon}>
-          <Image source={require('../../assets/ic_quieter.png')}/>
-        </TouchableOpacity>
-        <VolumeSeeker width={260} thumbSize={16} maxValue={100}/>
-        <TouchableOpacity style={styles.volumeMoreIcon}>
-          <Image source={require('../../assets/ic_louder.png')}/>
-        </TouchableOpacity>
-      </View>
+    return (
+      <View style={styles.playbackContainer}>
+        <View style={styles.topButtonsContainer}>
+          <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
+            <Image source={require('../../assets/ic_record.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
+            <Image source={require('../../assets/ic_heart_with_border.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonStyle}>
+            <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonStyle}>
+            <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonStyle}>
+            <Image source={require('../../assets/ic_caption.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.mediaInfoContainer}>
+          <Text style={styles.titleText}>{item.title}</Text>
+          <Text style={styles.typeText}>{this._formatGenresText(item.genresData)}</Text>
+        </View>
+        <View style={styles.playbackButtons}>
+          <!-- TODO: Detect is live or not to change fastforward and backward background-->
+          <TouchableOpacity style={styles.rewindButton}>
+            <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ width: '21%', height: '100%'}} onPress={() => this.setState({isPlaying: !this.state.isPlaying})}>
+            <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.fastForwardButton}>
+            <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.volumeSeekBarContainer}>
+          <TouchableOpacity style={styles.volumeLessIcon}>
+            <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+          <VolumeSeeker width={260} thumbSize={16} maxValue={100}/>
+          <TouchableOpacity style={styles.volumeMoreIcon}>
+            <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
+          </TouchableOpacity>
+        </View>
     </View>)
   }
 
@@ -175,22 +177,21 @@ export default class VideoControlModal extends React.Component {
       }
       data = epg.data[0].videoData
     }
-    console.log('upperpage 166')
-    console.log(data)
 
     return (
       <View style={{width: '100%', height: height}}>
-        <View style={styles.topContainer}>
-          <ImageBackground style={styles.topVideoControl}
-                           resizeMode="cover"
-                           source={{uri: data.originalImages[0].url}}/>
-        </View>
+
         <View style={styles.bottomContainer}>
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
                            source={{uri: data.originalImages[0].url}}/>
           {this._renderPlaybackController(data)}
+        </View>
+        <View style={styles.topContainer}>
+          <ImageBackground style={styles.topVideoControl}
+                           resizeMode="cover"
+                           source={{uri: data.originalImages[0].url}}/>
         </View>
       </View>)
   }
@@ -323,7 +324,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   topContainer: {
-    height: '40%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '42%',
     width: '100%',
   },
   modal: {
@@ -384,7 +388,7 @@ const styles = StyleSheet.create({
     marginTop: 11
   },
   bottomContainer: {
-    height: '60%',
+    height: '100%',
     width: '100%',
     overflow:'hidden',
     alignItems: 'center'
@@ -395,7 +399,7 @@ const styles = StyleSheet.create({
   },
   bottomVideoControl: {
     aspectRatio: 1.3,
-    height: '150%'
+    height: '100%'
   },
   blurView: {
     position: 'absolute',
@@ -430,25 +434,29 @@ const styles = StyleSheet.create({
   },
   playbackContainer: {
     position: 'absolute',
-    top: 0,
+    top: '42%',
     left: 0,
     width: '100%',
-    height: '100%',
-    paddingTop: 43,
+    height: '58%',
+    paddingTop: '11%',
+    flexDirection: 'column'
   },
   topButtonsContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
+    width: '72.5%',
+    justifyContent: 'space-between',
+    height: '11%'
   },
   mediaInfoContainer: {
     flexDirection: 'column',
     width: '100%',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: '8%',
   },
   titleText: {
     color: colors.whitePrimary,
-    fontSize: 17
+    fontSize: 16
   },
   typeText: {
     color: colors.whitePrimary,
@@ -460,32 +468,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 28
+    marginTop: '7%',
+    height: '21%'
   },
   rewindButton: {
-    width: 33,
-    height: 21,
-    marginRight: 40
+    width: '9%',
+    height: '30%',
+    marginRight: '11%'
   },
   fastForwardButton: {
-    marginLeft: 40,
-    width: 33,
-    height: 21,
+    marginLeft: '11%',
+    width: '9%',
+    height: '30%',
   },
   volumeSeekBarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    marginTop: 34,
+    marginTop: '7%'
   },
   volumeLessIcon: {
-    marginRight: 2,
+    marginRight: 5,
     width: 7,
     height: 10
   },
   volumeMoreIcon: {
-    marginLeft: 2,
+    marginLeft: 5,
     width: 17,
     height: 15
   },
@@ -495,23 +504,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonStyle: {
-    width: 46,
-    height: 46,
-    marginRight: 12,
-    borderRadius: 23
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  buttonIconStyle: {
+    resizeMode: 'contain',
+    width: '98%',
+    height: '98%',
+    alignSelf: 'center'
   }
 })
-
-const fakeBannerInfoData = {
-  title: 'At Frida Kahlo’s',
-  type: 'Drama',
-  specificInfo: 'The Blue House” located in Mexico City, is the home where Frida Kahlo was born (1907) and would die (1954). She is surrounded not only by painter Diego Rivera, but also by Leon Trotsky, André Breton, Sergei Eisenstein, Pablo Neruda, Waldo Frank, Pablo Picasso, Marcel Duchamp, Vassily Kandinsky, etc'
-}
-
-const fakeListData = [
-  {key: 'Nicolas',type: 'Drama',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'Gorrilas in Danger',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'I\'m Roger Casement',type: 'Art-Dance',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'Aaron',type: 'Concert',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'The Mythes - Orphee',type: 'Documentary',start_time: '21h30',end_time: '22h30', url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'},
-  {key: 'Art of Movie',type: 'Documentary',start_time: '22h30',end_time: '23h15',url: 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg'}]

@@ -40,7 +40,7 @@ export default class LowerPageComponent extends PureComponent {
           </View>
           <View style={styles.bannerButtonsContainer}>
             <TouchableOpacity>
-              <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.videoPlayButton}/>
+              <Image source={require('../assets/lowerpage_record.png')} style={styles.videoPlayButton}/>
             </TouchableOpacity>
             <TouchableOpacity>
               <Image source={require('../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
@@ -68,10 +68,9 @@ export default class LowerPageComponent extends PureComponent {
   }
 
   _renderLogoChannel = (urlArray) => {
-    // let logoUrl = url ? url : '../assets/arte.png'
-    let logoUrl = require('../assets/arte.png')
+    let logoUrl
     if (urlArray && urlArray.length > 0) logoUrl = {uri :urlArray[0].url}
-    if (this._isFromChannel()) {
+    if (this._isFromChannel() && logoUrl) {
         return (<Image source={logoUrl}/>)
     }
   }
@@ -141,7 +140,7 @@ export default class LowerPageComponent extends PureComponent {
         </View>
         <View style={styles.itemActionsContainer}>
           <TouchableOpacity>
-            <Image source={require('../assets/lowerpage_playbtn.png')} style={styles.itemPlayButton}/>
+            <Image source={require('../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={require('../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
