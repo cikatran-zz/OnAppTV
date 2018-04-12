@@ -397,15 +397,13 @@ export default class Home extends Component {
             !news.fetched || news.isFetching ||
             !live.fetched || live.isFetching)
             return null;
-        var channelData = []
-        if (channel.data != null) {
-            channelData = channel.data.filter(item => item.favorite == 1);
-        }
+
+        var channelData = channel.data ? channel.data.filter(item => item.favorite == 1) : [];
         if (channelData.length == 0) {
             channelData = [null];
         }
 
-        if (this.state.favoriteCategories == null) {
+        if (this.state.favoriteCategories == null && category.data) {
             var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
             this.state.category = category.data;
             categoryData.push({"name": "_ADD"});
@@ -500,7 +498,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 35,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     bannerPlayIconBackground: {
         width: '100%',
@@ -508,12 +506,12 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     bannerPlayIcon: {
-        top: 0,
-        left: 0,
+        top: -1,
+        left: -1,
         position: 'absolute',
         backgroundColor: 'transparent',
-        width: '100%',
-        height: '100%'
+        width: 72,
+        height: 72
     },
     listHorizontal: {
         marginVertical: 30,

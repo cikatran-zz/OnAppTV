@@ -1,6 +1,6 @@
 import React from 'react'
 import Swiper from 'react-native-swiper'
-import {StyleSheet, View} from 'react-native'
+import { StatusBar, StyleSheet, View } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
@@ -39,28 +39,5 @@ const styles = StyleSheet.create({
   pageViewStyle: {
     paddingTop: rootViewTopPadding(),
     backgroundColor: colors.screenBackground
-  },
-  slide1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB',
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
   }
 })

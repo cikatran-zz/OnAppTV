@@ -84,8 +84,8 @@ public class AndroidSTBConnectScreen extends FrameLayout {
                 Api_Implementation.sharedManager().hIG_GetMobileWifiInfo(new Api.OnMapCallbackBlock() {
                     @Override
                     public void OnMapCallback(Map map) {
-                        String ssid =(String) map.get("SSID");
-                        if(!ssid.startsWith("STB")) {
+                        String ssid = (String) map.get("SSID");
+                        if ( ssid != null && !ssid.startsWith("STB")) {
                             Api_Implementation.sharedManager().hIG_UdpOperation();
                             Api_Implementation.sharedManager().hIG_UdpReceiveMessageInJson(new Api.OnStringCallbackBlock() {
                                 @Override

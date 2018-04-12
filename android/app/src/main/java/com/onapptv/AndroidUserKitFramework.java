@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,8 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
                     array.pushString(valueJson.toString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    callback.invoke(throwable.toString(), null);
+                    Gson gson = new Gson();
+                    callback.invoke(gson.toJson(throwable), null);
                 });
     }
 
@@ -75,7 +77,8 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
                     array.pushString(valueJson.toString());
                     callback.invoke(null, array);
                 }, throwable -> {
-                    callback.invoke(throwable.toString(), null);
+                    Gson gson = new Gson();
+                    callback.invoke(gson.toJson(throwable), null);
                 });
     }
 }

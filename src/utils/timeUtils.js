@@ -1,8 +1,13 @@
+let monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "June",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+
 export const timeFormatter = (time) => {
     let date = new Date(time);
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    return ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes))
+    let day = date.getDate()
+    let month = date.getMonth() + 1
+    return (monthNames[month] + " " + (day < 10 ? '0' + day : day)) + " - " + ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes))
 };
 
 export const secondFormatter = (duration) => {
