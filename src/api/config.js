@@ -151,6 +151,7 @@ query getLiveEPG($currentTime: Date){
     }) {
       channelData {
         title
+        lcn
       }
       videoData {
         title

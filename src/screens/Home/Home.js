@@ -183,20 +183,20 @@ export default class Home extends Component {
               genres = genres.concat(genre.name.toString());
           })
       }
-      var timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+      let timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
-      var currentDate = (new Date()).getTime();
-      var startDate = (new Date(item.startTime)).getTime();
-      var endDate = (new Date(item.endTime)).getTime();
-      var progress = (currentDate-startDate)/(endDate - startDate) * 100;
+      let currentDate = (new Date()).getTime();
+      let startDate = (new Date(item.startTime)).getTime();
+      let endDate = (new Date(item.endTime)).getTime();
+      let progress = (currentDate-startDate)/(endDate - startDate) * 100;
         return (
-          <View style={styles.liveThumbnailContainer}>
+          <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, true)}>
               <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
-          </View>
+          </TouchableOpacity>
       )
   }
 
@@ -208,11 +208,12 @@ export default class Home extends Component {
       })
   }
 
-  _onVideoPress = (item) => {
+  _onVideoPress = (item, isLive) => {
       const {navigation} = this.props;
 
       navigation.navigate('VideoControlModal', {
-        item: item
+        item: item,
+        isLive: isLive
       })
   }
 
@@ -234,7 +235,7 @@ export default class Home extends Component {
             })
         }
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item)}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
               <VideoThumbnail showProgress={false} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
