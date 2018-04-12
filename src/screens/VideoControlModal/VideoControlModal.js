@@ -74,6 +74,11 @@ export default class VideoControlModal extends React.Component {
         }
     })
 
+    this.setState({
+      currentTime: new Date().getTime(),
+      startPoint: new Date().getTime()
+    })
+
     if (isLive) {
       // Change channel with lcn
       NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lcn}),(error, events) => {
@@ -82,11 +87,6 @@ export default class VideoControlModal extends React.Component {
         } else {
           console.log(JSON.parse(events[0]))
         }
-      })
-
-      this.setState({
-        currentTime: new Date().getTime(),
-        startPoint: new Date().getTime()
       })
     }
     else {
@@ -156,7 +156,11 @@ export default class VideoControlModal extends React.Component {
         if (passed > 0) return secondFormatter(passed.toString())
       }
       else {
+        const {startPoint, currentTime} = this.state
 
+        let passedTime = (currentTime - startPoint) / 1000
+        console.log(passedTime)
+        if (passedTime > 0) return secondFormatter(passedTime.toString())
       }
   }
 
@@ -168,7 +172,10 @@ export default class VideoControlModal extends React.Component {
       if (passed > 0) return "-" + secondFormatter(passed.toString())
     }
     else {
-      return ''
+      const {startPoint, currentTime} = this.state
+
+      let etrTime = durationInSeconds - ((currentTime - startPoint) / 1000)
+      if (etrTime > 0) return secondFormatter(etrTime.toString())
     }
   }
 
@@ -189,8 +196,15 @@ export default class VideoControlModal extends React.Component {
 
   _getLiveProgress = (startTime, endTime) => {
     const {currentTime} = this.state;
-    let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let durationInMsSecons = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
     let passedTime = currentTime - (new Date(startTime)).getTime();
+    return (passedTime / durationInMsSecons) * 100 + "%"
+  }
+
+  _getVodProgress = (durationInSeconds) => {
+    const {startPoint, currentTime} = this.state
+
+    let passedTime = (currentTime - startPoint) / 1000
     return (passedTime / durationInSeconds) * 100 + "%"
   }
 
@@ -201,8 +215,8 @@ export default class VideoControlModal extends React.Component {
     return (
       <View style={styles.playbackContainer}>
         <View style={{height: '11%', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Text style={styles.passedText}>{this._getLivePassedTime(isLive, item.startTime ? item.startTime : 0 )}</Text>
-          <Text style={styles.etrText}>{this._getEtrTime(isLive, item.endTime ? item.endTime : 0)}</Text>
+          <Text style={styles.passedText}>{this._getLivePassedTime(isLive, item.startTime ? item.startTime : 0 , item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
+          <Text style={styles.etrText}>{this._getEtrTime(isLive, item.endTime ? item.endTime : 0, item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
         </View>
         <View style={styles.topButtonsContainer}>
           <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
@@ -279,7 +293,6 @@ export default class VideoControlModal extends React.Component {
 
   _renderRecordBar = (isLive, startTime, endTime) => {
     const {currentTime} = this.state
-    console.log(this._getRecordProgress(currentTime, startTime, endTime))
     if (isLive) {
       let marginLeft = this._getRecordStartMargin(startTime, endTime) <= 0 ? '3%' : this._getRecordStartMargin(startTime, endTime) + "%"
 
@@ -339,7 +352,7 @@ export default class VideoControlModal extends React.Component {
                            resizeMode="cover"
                            source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
           {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : '69%', height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
 
           </View>
         </View>
