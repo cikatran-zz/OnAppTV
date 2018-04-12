@@ -11,6 +11,7 @@ import newsReducer from "./newsReducer";
 import epgsReducer from './epgsReducer';
 import bookListReducer from './bookListReducer'
 import genresContentReducer from './genresContentReducer'
+import recordReducer from './recordReducer'
 
 export default combineReducers({
     nav,
@@ -24,5 +25,6 @@ export default combineReducers({
     newsReducer,
     epgsReducer,
     bookListReducer,
-    genresContentReducer
+    genresContentReducer,
+    recordReducer
 });

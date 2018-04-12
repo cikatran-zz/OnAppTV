@@ -5,6 +5,7 @@ import * as videoModalAction from './videoModalAction'
 import * as getNews from "./getNews";
 import * as getEpgs from "./getEPG";
 import * as getGenresContent from "./getGenresContent"
+import * as getRecordList from './getRecordList'
 
 export default actions = {
     getBanner,
@@ -13,5 +14,6 @@ export default actions = {
     videoModalAction,
     getNews,
     getEpgs,
-    getGenresContent
+    getGenresContent,
+    getRecordList
 };
