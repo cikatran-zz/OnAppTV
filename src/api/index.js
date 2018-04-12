@@ -5,6 +5,7 @@ import {HttpLink} from 'apollo-link-http';
 import {onError} from 'apollo-link-error'
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
+import _ from 'lodash';
 
 
 const instance = axios.create({
@@ -246,9 +247,9 @@ syncUserKitWithSTBChannels = (channels)=> {
             if (error) {
                 reject(error);
             } else {
-                let jsonObj = JSON.parse(result);
+                let jsonObj = JSON.parse(result[0]);
                 if (jsonObj.data != null) {
-                    let userKitResult = [];
+                    var userKitResult = new Array(0);
                     for(let i = 0; i< channels.length; i++) {
                         let foundObj = jsonObj.data.find((element)=> element.serviceID == channels[i].serviceID);
                         let element = channels[i];
@@ -397,7 +398,7 @@ export const getChannel = (limit) => {
     var zapList = null;
     return getSTBChannel()
       .then((value) => {
-          zapList = value;
+          zapList = _.cloneDeep(value);
           var serviceIDs = [];
           for (var i = 0; i< value.length; i++) {
               serviceIDs.push(value[i].serviceID);

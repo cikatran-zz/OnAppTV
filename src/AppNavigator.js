@@ -6,7 +6,6 @@ import {
 import {connect} from "react-redux";
 import {
     createReduxBoundAddListener,
-    createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
 
 function mapStateToProps (state) {
