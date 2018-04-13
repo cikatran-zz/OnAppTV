@@ -228,7 +228,7 @@ export default class Home extends Component {
   _onVideoPress = (item, isLive) => {
       const {navigation} = this.props;
 
-      navigation.navigate('VideoControlModal', {
+      navigation.navigate('LowerPageComponent', {
         item: item,
         isLive: isLive
       })
