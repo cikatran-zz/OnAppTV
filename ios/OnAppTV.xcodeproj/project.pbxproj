@@ -42,6 +42,33 @@
 		6931BE8A2074AFA5007DA182 /* JSONObjectToString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE892074AFA5007DA182 /* JSONObjectToString.swift */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
+		69644095207F284100215606 /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407B207F283F00215606 /* Load.html */; };
+		69644096207F284100215606 /* js in Resources */ = {isa = PBXBuildFile; fileRef = 6964407C207F283F00215606 /* js */; };
+		69644097207F284100215606 /* Test.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407D207F283F00215606 /* Test.html */; };
+		69644098207F284100215606 /* Revolution.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407E207F283F00215606 /* Revolution.html */; };
+		69644099207F284100215606 /* Welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407F207F283F00215606 /* Welcome.html */; };
+		6964409A207F284100215606 /* Login.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644080207F283F00215606 /* Login.html */; };
+		6964409B207F284100215606 /* img in Resources */ = {isa = PBXBuildFile; fileRef = 69644081207F283F00215606 /* img */; };
+		6964409C207F284100215606 /* STB-PIN.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644082207F283F00215606 /* STB-PIN.html */; };
+		6964409D207F284100215606 /* css in Resources */ = {isa = PBXBuildFile; fileRef = 69644083207F283F00215606 /* css */; };
+		6964409E207F284100215606 /* SelectSTB.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644084207F283F00215606 /* SelectSTB.html */; };
+		6964409F207F284100215606 /* WifiConnectionList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644085207F283F00215606 /* WifiConnectionList.html */; };
+		696440A0207F284100215606 /* Register.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644086207F284000215606 /* Register.html */; };
+		696440A1207F284100215606 /* Parental.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644087207F284000215606 /* Parental.html */; };
+		696440A2207F284100215606 /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 69644088207F284000215606 /* bootstrap */; };
+		696440A3207F284100215606 /* Load_1.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644089207F284000215606 /* Load_1.html */; };
+		696440A4207F284100215606 /* On.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964408A207F284000215606 /* On.html */; };
+		696440A5207F284100215606 /* STB.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964408B207F284000215606 /* STB.html */; };
+		696440A6207F284100215606 /* WifiPassword.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964408C207F284000215606 /* WifiPassword.html */; };
+		696440A7207F284100215606 /* SelectDecoder.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964408D207F284000215606 /* SelectDecoder.html */; };
+		696440A8207F284100215606 /* ChannelList.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964408E207F284000215606 /* ChannelList.html */; };
+		696440A9207F284100215606 /* main.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964408F207F284000215606 /* main.html */; };
+		696440AA207F284100215606 /* WifiConnection.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644090207F284000215606 /* WifiConnection.html */; };
+		696440AB207F284100215606 /* Antional.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644091207F284000215606 /* Antional.html */; };
+		696440AC207F284100215606 /* agents.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644092207F284000215606 /* agents.html */; };
+		696440AD207F284100215606 /* ConnectLoad.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644093207F284100215606 /* ConnectLoad.html */; };
+		696440AE207F284100215606 /* SignIn.html in Resources */ = {isa = PBXBuildFile; fileRef = 69644094207F284100215606 /* SignIn.html */; };
+		696440B0207F285100215606 /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 696440AF207F285100215606 /* database _IBC_2017-2.xml */; };
 		6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE4C204C29E400470C97 /* CustomControlsView.swift */; };
 		6969BE77204C2A8000470C97 /* SliderMPVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE76204C2A8000470C97 /* SliderMPVolumeView.swift */; };
 		6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE78204C2CFC00470C97 /* CustomVolumeView.swift */; };
@@ -54,33 +81,6 @@
 		69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D21E5A20525C8200DFA90A /* STBConnectionView.swift */; };
 		69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */; };
 		69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */; };
-		69D2C14A207B50A400AA32AE /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C130207B50A200AA32AE /* Load.html */; };
-		69D2C14B207B50A400AA32AE /* WifiConnection.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C131207B50A200AA32AE /* WifiConnection.html */; };
-		69D2C14C207B50A400AA32AE /* STB.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C132207B50A300AA32AE /* STB.html */; };
-		69D2C14D207B50A400AA32AE /* WifiPassword.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C133207B50A300AA32AE /* WifiPassword.html */; };
-		69D2C14E207B50A400AA32AE /* ChannelList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C134207B50A300AA32AE /* ChannelList.html */; };
-		69D2C14F207B50A400AA32AE /* Welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C135207B50A300AA32AE /* Welcome.html */; };
-		69D2C150207B50A400AA32AE /* SelectSTB.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C136207B50A300AA32AE /* SelectSTB.html */; };
-		69D2C151207B50A400AA32AE /* SelectDecoder.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C137207B50A300AA32AE /* SelectDecoder.html */; };
-		69D2C152207B50A400AA32AE /* SignIn.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C138207B50A300AA32AE /* SignIn.html */; };
-		69D2C153207B50A400AA32AE /* Register.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C139207B50A300AA32AE /* Register.html */; };
-		69D2C154207B50A400AA32AE /* Parental.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C13A207B50A300AA32AE /* Parental.html */; };
-		69D2C155207B50A400AA32AE /* ConnectLoad.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C13B207B50A300AA32AE /* ConnectLoad.html */; };
-		69D2C156207B50A400AA32AE /* main.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C13C207B50A300AA32AE /* main.html */; };
-		69D2C157207B50A400AA32AE /* STB-PIN.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C13D207B50A300AA32AE /* STB-PIN.html */; };
-		69D2C158207B50A400AA32AE /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C13E207B50A300AA32AE /* bootstrap */; };
-		69D2C159207B50A400AA32AE /* Login.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C13F207B50A300AA32AE /* Login.html */; };
-		69D2C15A207B50A400AA32AE /* Test.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C140207B50A300AA32AE /* Test.html */; };
-		69D2C15B207B50A400AA32AE /* js in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C141207B50A400AA32AE /* js */; };
-		69D2C15C207B50A400AA32AE /* Load_1.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C142207B50A400AA32AE /* Load_1.html */; };
-		69D2C15D207B50A400AA32AE /* On.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C143207B50A400AA32AE /* On.html */; };
-		69D2C15E207B50A400AA32AE /* Revolution.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C144207B50A400AA32AE /* Revolution.html */; };
-		69D2C15F207B50A400AA32AE /* WifiConnectionList.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C145207B50A400AA32AE /* WifiConnectionList.html */; };
-		69D2C160207B50A400AA32AE /* css in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C146207B50A400AA32AE /* css */; };
-		69D2C161207B50A400AA32AE /* agents.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C147207B50A400AA32AE /* agents.html */; };
-		69D2C162207B50A400AA32AE /* Antional.html in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C148207B50A400AA32AE /* Antional.html */; };
-		69D2C163207B50A400AA32AE /* img in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C149207B50A400AA32AE /* img */; };
-		69D2C165207B5DA800AA32AE /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69D2C164207B5DA800AA32AE /* database _IBC_2017-2.xml */; };
 		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
 		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
 		69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F020244A9200832440 /* RCTBlurView.m */; };
@@ -92,6 +92,7 @@
 		C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D95F211BEEE94A0D94986107 /* MaterialCommunityIcons.ttf */; };
 		CC40F05A00924368B7051154 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE0BD7F0BD7346FBAF6ADA1B /* FontAwesome.ttf */; };
 		CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B2F42C5B1614A10B2B0B67C /* SimpleLineIcons.ttf */; };
+		E76066255A4942C9AEDF8FBC /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -277,6 +278,13 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		6964419C2080B11600215606 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNGestureHandler;
+		};
 		69BD179920319D8900E33978 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 69BD179420319D8900E33978 /* ART.xcodeproj */;
@@ -403,6 +411,7 @@
 		4257AC3EAD9CAB389072E44A /* libPods-OnAppTV-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		448061058CFC4C71B200113C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		4E05E5C2F22A40968E5DA132 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		587810DCB4763890CDC13B4C /* Pods_OnAppTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OnAppTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B2F42C5B1614A10B2B0B67C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		5D4ED6312EE2F2E159F28126 /* Pods-OnAppTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.release.xcconfig"; sourceTree = "<group>"; };
@@ -427,6 +436,33 @@
 		6931BE892074AFA5007DA182 /* JSONObjectToString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONObjectToString.swift; sourceTree = "<group>"; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
+		6964407B207F283F00215606 /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = STBHTML/Load.html; sourceTree = "<group>"; };
+		6964407C207F283F00215606 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = STBHTML/js; sourceTree = "<group>"; };
+		6964407D207F283F00215606 /* Test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Test.html; path = STBHTML/Test.html; sourceTree = "<group>"; };
+		6964407E207F283F00215606 /* Revolution.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Revolution.html; path = STBHTML/Revolution.html; sourceTree = "<group>"; };
+		6964407F207F283F00215606 /* Welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Welcome.html; path = STBHTML/Welcome.html; sourceTree = "<group>"; };
+		69644080207F283F00215606 /* Login.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Login.html; path = STBHTML/Login.html; sourceTree = "<group>"; };
+		69644081207F283F00215606 /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = STBHTML/img; sourceTree = "<group>"; };
+		69644082207F283F00215606 /* STB-PIN.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "STB-PIN.html"; path = "STBHTML/STB-PIN.html"; sourceTree = "<group>"; };
+		69644083207F283F00215606 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = STBHTML/css; sourceTree = "<group>"; };
+		69644084207F283F00215606 /* SelectSTB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectSTB.html; path = STBHTML/SelectSTB.html; sourceTree = "<group>"; };
+		69644085207F283F00215606 /* WifiConnectionList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnectionList.html; path = STBHTML/WifiConnectionList.html; sourceTree = "<group>"; };
+		69644086207F284000215606 /* Register.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Register.html; path = STBHTML/Register.html; sourceTree = "<group>"; };
+		69644087207F284000215606 /* Parental.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Parental.html; path = STBHTML/Parental.html; sourceTree = "<group>"; };
+		69644088207F284000215606 /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = STBHTML/bootstrap; sourceTree = "<group>"; };
+		69644089207F284000215606 /* Load_1.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load_1.html; path = STBHTML/Load_1.html; sourceTree = "<group>"; };
+		6964408A207F284000215606 /* On.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = On.html; path = STBHTML/On.html; sourceTree = "<group>"; };
+		6964408B207F284000215606 /* STB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = STB.html; path = STBHTML/STB.html; sourceTree = "<group>"; };
+		6964408C207F284000215606 /* WifiPassword.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiPassword.html; path = STBHTML/WifiPassword.html; sourceTree = "<group>"; };
+		6964408D207F284000215606 /* SelectDecoder.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectDecoder.html; path = STBHTML/SelectDecoder.html; sourceTree = "<group>"; };
+		6964408E207F284000215606 /* ChannelList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ChannelList.html; path = STBHTML/ChannelList.html; sourceTree = "<group>"; };
+		6964408F207F284000215606 /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = main.html; path = STBHTML/main.html; sourceTree = "<group>"; };
+		69644090207F284000215606 /* WifiConnection.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnection.html; path = STBHTML/WifiConnection.html; sourceTree = "<group>"; };
+		69644091207F284000215606 /* Antional.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Antional.html; path = STBHTML/Antional.html; sourceTree = "<group>"; };
+		69644092207F284000215606 /* agents.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = agents.html; path = STBHTML/agents.html; sourceTree = "<group>"; };
+		69644093207F284100215606 /* ConnectLoad.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ConnectLoad.html; path = STBHTML/ConnectLoad.html; sourceTree = "<group>"; };
+		69644094207F284100215606 /* SignIn.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SignIn.html; path = STBHTML/SignIn.html; sourceTree = "<group>"; };
+		696440AF207F285100215606 /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "../android/android-stb-connect/src/main/assets/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
 		6969BE4B204C29E400470C97 /* OnAppTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnAppTV-Bridging-Header.h"; sourceTree = "<group>"; };
 		6969BE4C204C29E400470C97 /* CustomControlsView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = CustomControlsView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		6969BE76204C2A8000470C97 /* SliderMPVolumeView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = SliderMPVolumeView.swift; sourceTree = "<group>"; tabWidth = 4; };
@@ -442,33 +478,6 @@
 		69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STBConnectionView.xib; sourceTree = "<group>"; };
 		69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSTBConnectionViewManager.h; sourceTree = "<group>"; };
 		69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTSTBConnectionViewManager.m; sourceTree = "<group>"; };
-		69D2C130207B50A200AA32AE /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Load.html"; sourceTree = "<group>"; };
-		69D2C131207B50A200AA32AE /* WifiConnection.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnection.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/WifiConnection.html"; sourceTree = "<group>"; };
-		69D2C132207B50A300AA32AE /* STB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = STB.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/STB.html"; sourceTree = "<group>"; };
-		69D2C133207B50A300AA32AE /* WifiPassword.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiPassword.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/WifiPassword.html"; sourceTree = "<group>"; };
-		69D2C134207B50A300AA32AE /* ChannelList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ChannelList.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/ChannelList.html"; sourceTree = "<group>"; };
-		69D2C135207B50A300AA32AE /* Welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Welcome.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Welcome.html"; sourceTree = "<group>"; };
-		69D2C136207B50A300AA32AE /* SelectSTB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectSTB.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/SelectSTB.html"; sourceTree = "<group>"; };
-		69D2C137207B50A300AA32AE /* SelectDecoder.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectDecoder.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/SelectDecoder.html"; sourceTree = "<group>"; };
-		69D2C138207B50A300AA32AE /* SignIn.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SignIn.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/SignIn.html"; sourceTree = "<group>"; };
-		69D2C139207B50A300AA32AE /* Register.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Register.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Register.html"; sourceTree = "<group>"; };
-		69D2C13A207B50A300AA32AE /* Parental.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Parental.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Parental.html"; sourceTree = "<group>"; };
-		69D2C13B207B50A300AA32AE /* ConnectLoad.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ConnectLoad.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/ConnectLoad.html"; sourceTree = "<group>"; };
-		69D2C13C207B50A300AA32AE /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = main.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/main.html"; sourceTree = "<group>"; };
-		69D2C13D207B50A300AA32AE /* STB-PIN.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "STB-PIN.html"; path = "../android/android-stb-connect/src/main/assets/STBHTML/STB-PIN.html"; sourceTree = "<group>"; };
-		69D2C13E207B50A300AA32AE /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = "../android/android-stb-connect/src/main/assets/STBHTML/bootstrap"; sourceTree = "<group>"; };
-		69D2C13F207B50A300AA32AE /* Login.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Login.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Login.html"; sourceTree = "<group>"; };
-		69D2C140207B50A300AA32AE /* Test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Test.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Test.html"; sourceTree = "<group>"; };
-		69D2C141207B50A400AA32AE /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = "../android/android-stb-connect/src/main/assets/STBHTML/js"; sourceTree = "<group>"; };
-		69D2C142207B50A400AA32AE /* Load_1.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load_1.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Load_1.html"; sourceTree = "<group>"; };
-		69D2C143207B50A400AA32AE /* On.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = On.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/On.html"; sourceTree = "<group>"; };
-		69D2C144207B50A400AA32AE /* Revolution.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Revolution.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Revolution.html"; sourceTree = "<group>"; };
-		69D2C145207B50A400AA32AE /* WifiConnectionList.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = WifiConnectionList.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/WifiConnectionList.html"; sourceTree = "<group>"; };
-		69D2C146207B50A400AA32AE /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; name = css; path = "../android/android-stb-connect/src/main/assets/STBHTML/css"; sourceTree = "<group>"; };
-		69D2C147207B50A400AA32AE /* agents.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = agents.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/agents.html"; sourceTree = "<group>"; };
-		69D2C148207B50A400AA32AE /* Antional.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Antional.html; path = "../android/android-stb-connect/src/main/assets/STBHTML/Antional.html"; sourceTree = "<group>"; };
-		69D2C149207B50A400AA32AE /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; name = img; path = "../android/android-stb-connect/src/main/assets/STBHTML/img"; sourceTree = "<group>"; };
-		69D2C164207B5DA800AA32AE /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "../android/android-stb-connect/src/main/assets/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
 		69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTBrightcovePlayerManager.h; sourceTree = "<group>"; };
 		69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBrightcovePlayerManager.m; sourceTree = "<group>"; };
 		69F9A4EC20244A4D00832440 /* RCTBlurViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurViewManager.h; sourceTree = "<group>"; };
@@ -477,6 +486,7 @@
 		69F9A4F020244A9200832440 /* RCTBlurView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurView.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		A18CC350655E48C29541CF46 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		A77980E816AAFC432B46CA60 /* Pods-OnAppTV.release staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.release staging.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.release staging.xcconfig"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -513,6 +523,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				69A16FD22068DB6600E215B8 /* STBAPI.framework in Frameworks */,
 				A20D31429B8FEED8F2605160 /* Pods_OnAppTV.framework in Frameworks */,
+				E76066255A4942C9AEDF8FBC /* libRNGestureHandler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +780,14 @@
 			path = Controls;
 			sourceTree = "<group>";
 		};
+		696441712080B11600215606 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6964419D2080B11600215606 /* libRNGestureHandler.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6969BED1204E4A4900470C97 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -817,33 +836,33 @@
 		69D21E9420525DC300DFA90A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				69D2C164207B5DA800AA32AE /* database _IBC_2017-2.xml */,
-				69D2C147207B50A400AA32AE /* agents.html */,
-				69D2C148207B50A400AA32AE /* Antional.html */,
-				69D2C13E207B50A300AA32AE /* bootstrap */,
-				69D2C134207B50A300AA32AE /* ChannelList.html */,
-				69D2C13B207B50A300AA32AE /* ConnectLoad.html */,
-				69D2C146207B50A400AA32AE /* css */,
-				69D2C149207B50A400AA32AE /* img */,
-				69D2C141207B50A400AA32AE /* js */,
-				69D2C142207B50A400AA32AE /* Load_1.html */,
-				69D2C130207B50A200AA32AE /* Load.html */,
-				69D2C13F207B50A300AA32AE /* Login.html */,
-				69D2C13C207B50A300AA32AE /* main.html */,
-				69D2C143207B50A400AA32AE /* On.html */,
-				69D2C13A207B50A300AA32AE /* Parental.html */,
-				69D2C139207B50A300AA32AE /* Register.html */,
-				69D2C144207B50A400AA32AE /* Revolution.html */,
-				69D2C137207B50A300AA32AE /* SelectDecoder.html */,
-				69D2C136207B50A300AA32AE /* SelectSTB.html */,
-				69D2C138207B50A300AA32AE /* SignIn.html */,
-				69D2C13D207B50A300AA32AE /* STB-PIN.html */,
-				69D2C132207B50A300AA32AE /* STB.html */,
-				69D2C140207B50A300AA32AE /* Test.html */,
-				69D2C135207B50A300AA32AE /* Welcome.html */,
-				69D2C131207B50A200AA32AE /* WifiConnection.html */,
-				69D2C145207B50A400AA32AE /* WifiConnectionList.html */,
-				69D2C133207B50A300AA32AE /* WifiPassword.html */,
+				696440AF207F285100215606 /* database _IBC_2017-2.xml */,
+				69644092207F284000215606 /* agents.html */,
+				69644091207F284000215606 /* Antional.html */,
+				69644088207F284000215606 /* bootstrap */,
+				6964408E207F284000215606 /* ChannelList.html */,
+				69644093207F284100215606 /* ConnectLoad.html */,
+				69644083207F283F00215606 /* css */,
+				69644081207F283F00215606 /* img */,
+				6964407C207F283F00215606 /* js */,
+				69644089207F284000215606 /* Load_1.html */,
+				6964407B207F283F00215606 /* Load.html */,
+				69644080207F283F00215606 /* Login.html */,
+				6964408F207F284000215606 /* main.html */,
+				6964408A207F284000215606 /* On.html */,
+				69644087207F284000215606 /* Parental.html */,
+				69644086207F284000215606 /* Register.html */,
+				6964407E207F283F00215606 /* Revolution.html */,
+				6964408D207F284000215606 /* SelectDecoder.html */,
+				69644084207F283F00215606 /* SelectSTB.html */,
+				69644094207F284100215606 /* SignIn.html */,
+				69644082207F283F00215606 /* STB-PIN.html */,
+				6964408B207F284000215606 /* STB.html */,
+				6964407D207F283F00215606 /* Test.html */,
+				6964407F207F283F00215606 /* Welcome.html */,
+				69644090207F284000215606 /* WifiConnection.html */,
+				69644085207F283F00215606 /* WifiConnectionList.html */,
+				6964408C207F284000215606 /* WifiPassword.html */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -852,6 +871,7 @@
 			isa = PBXGroup;
 			children = (
 				B6F46B9B844A4731B5D3B567 /* libRNBlur.a */,
+				8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -930,6 +950,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
+				51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1012,7 +1033,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8TP5543C2X;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 920;
 					};
 				};
 			};
@@ -1083,6 +1104,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 696441712080B11600215606 /* Products */;
+					ProjectRef = 51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1275,6 +1300,13 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		6964419D2080B11600215606 /* libRNGestureHandler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGestureHandler.a;
+			remoteRef = 6964419C2080B11600215606 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		69BD179A20319D8900E33978 /* libART.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1380,49 +1412,49 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6964409D207F284100215606 /* css in Resources */,
+				696440A3207F284100215606 /* Load_1.html in Resources */,
+				696440A1207F284100215606 /* Parental.html in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				69D2C15E207B50A400AA32AE /* Revolution.html in Resources */,
+				696440AB207F284100215606 /* Antional.html in Resources */,
+				69644096207F284100215606 /* js in Resources */,
 				69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				696440A4207F284100215606 /* On.html in Resources */,
+				6964409C207F284100215606 /* STB-PIN.html in Resources */,
 				9D2C60BC2BB342CE83B123C7 /* Entypo.ttf in Resources */,
-				69D2C156207B50A400AA32AE /* main.html in Resources */,
 				330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */,
-				69D2C15F207B50A400AA32AE /* WifiConnectionList.html in Resources */,
-				69D2C159207B50A400AA32AE /* Login.html in Resources */,
-				69D2C14F207B50A400AA32AE /* Welcome.html in Resources */,
 				69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */,
-				69D2C15B207B50A400AA32AE /* js in Resources */,
-				69D2C150207B50A400AA32AE /* SelectSTB.html in Resources */,
-				69D2C14D207B50A400AA32AE /* WifiPassword.html in Resources */,
+				696440A9207F284100215606 /* main.html in Resources */,
 				2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */,
-				69D2C14E207B50A400AA32AE /* ChannelList.html in Resources */,
-				69D2C161207B50A400AA32AE /* agents.html in Resources */,
-				69D2C151207B50A400AA32AE /* SelectDecoder.html in Resources */,
-				69D2C15D207B50A400AA32AE /* On.html in Resources */,
+				696440A2207F284100215606 /* bootstrap in Resources */,
+				696440AC207F284100215606 /* agents.html in Resources */,
+				696440A6207F284100215606 /* WifiPassword.html in Resources */,
+				6964409E207F284100215606 /* SelectSTB.html in Resources */,
+				696440AD207F284100215606 /* ConnectLoad.html in Resources */,
 				CC40F05A00924368B7051154 /* FontAwesome.ttf in Resources */,
-				69D2C15A207B50A400AA32AE /* Test.html in Resources */,
+				69644098207F284100215606 /* Revolution.html in Resources */,
+				6964409B207F284100215606 /* img in Resources */,
+				6964409A207F284100215606 /* Login.html in Resources */,
+				696440AA207F284100215606 /* WifiConnection.html in Resources */,
+				696440A8207F284100215606 /* ChannelList.html in Resources */,
 				1D185041E25D442E86B5B882 /* Foundation.ttf in Resources */,
-				69D2C154207B50A400AA32AE /* Parental.html in Resources */,
-				69D2C157207B50A400AA32AE /* STB-PIN.html in Resources */,
-				69D2C14B207B50A400AA32AE /* WifiConnection.html in Resources */,
 				69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */,
-				69D2C15C207B50A400AA32AE /* Load_1.html in Resources */,
-				69D2C158207B50A400AA32AE /* bootstrap in Resources */,
+				69644097207F284100215606 /* Test.html in Resources */,
 				48D3EB7181F444FA878162B3 /* Ionicons.ttf in Resources */,
-				69D2C152207B50A400AA32AE /* SignIn.html in Resources */,
-				69D2C163207B50A400AA32AE /* img in Resources */,
-				69D2C14A207B50A400AA32AE /* Load.html in Resources */,
+				69644095207F284100215606 /* Load.html in Resources */,
 				C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */,
-				69D2C14C207B50A400AA32AE /* STB.html in Resources */,
 				B40B0805BE5A4CCCA084F1F4 /* MaterialIcons.ttf in Resources */,
-				69D2C160207B50A400AA32AE /* css in Resources */,
-				69D2C162207B50A400AA32AE /* Antional.html in Resources */,
-				69D2C165207B5DA800AA32AE /* database _IBC_2017-2.xml in Resources */,
+				6964409F207F284100215606 /* WifiConnectionList.html in Resources */,
+				696440A5207F284100215606 /* STB.html in Resources */,
 				1EE00015034747ECB3577192 /* Octicons.ttf in Resources */,
+				696440A7207F284100215606 /* SelectDecoder.html in Resources */,
+				696440B0207F285100215606 /* database _IBC_2017-2.xml in Resources */,
 				CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */,
-				69D2C155207B50A400AA32AE /* ConnectLoad.html in Resources */,
+				696440A0207F284100215606 /* Register.html in Resources */,
 				5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */,
-				69D2C153207B50A400AA32AE /* Register.html in Resources */,
+				696440AE207F284100215606 /* SignIn.html in Resources */,
+				69644099207F284100215606 /* Welcome.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1575,6 +1607,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = OnAppTV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1610,6 +1643,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = OnAppTV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

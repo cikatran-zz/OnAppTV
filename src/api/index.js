@@ -45,6 +45,15 @@ const get = (endpoints) => {
     });
 };
 
+getRecordPvrList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrListInJson((error, events) => {
+            if (error) reject(error)
+            else resolve(JSON.parse(events[0]))
+        })
+    })
+}
+
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
         // resolve([
@@ -278,6 +287,16 @@ export const checkStbConnection = () => {
   })
 };
 
+export const getRecordList = () => {
+    let recordList = null
+      return getRecordPvrList()
+        .then((value) => {
+          return new Promise((resolve, reject) => {
+            resolve(value)
+          })
+        })
+}
+
 export const getBookList = () => {
     let bookList = null;
     if (Platform.OS !== 'ios') {
@@ -395,12 +414,12 @@ export const getPvrBookList = (isConnected) => {
 }
 
 export const getChannel = (limit) => {
-    var zapList = null;
+    let zapList = null;
     return getSTBChannel()
       .then((value) => {
           zapList = _.cloneDeep(value);
           var serviceIDs = [];
-          for (var i = 0; i< value.length; i++) {
+          for (let i = 0; i< value.length; i++) {
               serviceIDs.push(value[i].serviceID);
           }
           return client.query({
@@ -409,17 +428,17 @@ export const getChannel = (limit) => {
           })
       })
       .then((response) =>{
-          var images = {};
-          var shortTitles = {}
+          let images = {};
+          let shortTitles = {}
           let data = response.data.viewer.channelMany;
-          for (var i = 0; i< data.length; i++) {
-              if (data[i].originalImages != null && data[i].originalImages.length > 0) {
+          for (let i = 0; i< data.length; i++) {
+              if (data[i].originalImages !== null && data[i].originalImages.length > 0) {
                   images[data[i].serviceId] = data[i].originalImages[0].url;
               }
               shortTitles[data[i].serviceId] = data[i].shortDescription;
 
           }
-          for (var i = 0; i< zapList.length; i++) {
+          for (let i = 0; i< zapList.length; i++) {
               zapList[i].image = images[zapList[i].serviceID];
               zapList[i].shortDescription = shortTitles[zapList[i].serviceID];
           }
@@ -463,13 +482,13 @@ export const getCategory = () => {
                 if (error) {
                     reject(JSON.parse(error));
                 } else {
-                    var categories = response.data.viewer.genreMany;
-                    var favoriteCategories = JSON.parse(results[0]);
+                    let categories = response.data.viewer.genreMany;
+                    let favoriteCategories = JSON.parse(results[0]);
                     console.log(favoriteCategories);
-                    var categoriesResults=[];
-                    for (var i = 0; i< categories.length; i++) {
-                        var name = categories[i].name;
-                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] == null) ? false : favoriteCategories[name]});
+                    let categoriesResults=[];
+                    for (let i = 0; i< categories.length; i++) {
+                        let name = categories[i].name;
+                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] === null) ? false : favoriteCategories[name]});
                     }
                     resolve(categoriesResults);
                 }
@@ -493,7 +512,7 @@ export const getEpgs = (serviceId) => {
 };
 
 export const getGenresContent = (genresIds) => {
-    var promises = [];
+    let promises = [];
 
     genresIds.forEach((genresId)=> {
         promises.push(client.query({
@@ -509,8 +528,8 @@ export const getGenresContent = (genresIds) => {
 
     return new Promise((resolve, reject) => {
         Promise.all(promises).then((values)=> {
-            var results = {};
-            for (var i=0; i<values.length-1; i++) {
+            let results = {};
+            for (let i=0; i<values.length-1; i++) {
                 results[genresIds[i]] = {features: [], VOD: [], EPGs: []};
                 values[i].data.viewer.videoMany.forEach((content)=>{
                     if (content.feature) {
@@ -552,6 +571,12 @@ export const getEpgWithSeriesId = (seriesId) => {
   })
 };
 
+export const getZapperContentWithChannelId = (serviceId) => {
+    return client.query({
+        query: config.queries.ZAPPER_CONTENT,
+        variables: {serviceId: serviceId}
+    })
+}
 
 // Settings screen
 
@@ -727,4 +752,11 @@ export const getSettings = () => {
         })
     });
 };
+
+export const getSeriesInfo = (seriesId) => {
+  return client.query({
+    query: config.queries.SERIES_INFO,
+    variables: {id: seriesId}
+  })
+}
 

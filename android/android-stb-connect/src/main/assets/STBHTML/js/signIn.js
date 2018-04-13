@@ -6,14 +6,18 @@ var Height;
 $(function() {
 	Height = $(window).height();
 	mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
+		//监听软键盘是否收起
+		if($(":focus").length != 0){
+			document.activeElement.blur();	
+		}
 		var thisID = this.id;
 		if(thisID == "dismiss")
 		{
 			document.location.href = "Login.html";
 		}else if(thisID == "loginButton"){
+			
 			document.location.href = "Register.html";
-		}
-		
+		}			
 	});
 	//footer height
 	var topheight = $(".modal-header").outerHeight();
@@ -130,6 +134,7 @@ $(".imgbg").css({
 				"height": foot,
 				"background-size":"100% auto"
 			});
+               
 		} else {
 			$(this).css({
 				"height": Height,
@@ -182,6 +187,8 @@ $(".imgbg").css({
 				"height": footerheight,
 				"background-size":"100% auto"
 			});
+               
+
 }
 //返回到登录界面
 //function dismissModal() {

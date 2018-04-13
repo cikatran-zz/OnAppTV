@@ -51,12 +51,49 @@ $(function() {
 			var currentBtnColor = $(this).css('background-color');
 			if(currentBtnColor == 'rgb(252, 53, 91)') {
 				for(var i = 0; i < jsonObj.length; i++) {
-					if(jsonObj[i].stb.sTBID == wifiName) {
+					if(jsonObj[i].stb.sTBID == wifiName) { //测试
 						if(time == 0) {
 							time = 3; //设置间隔时间（秒）
 							//机顶盒连接
 							var Str = JSON.stringify(jsonObj[i]);
-							window.WebViewJavascriptBridge.callHandler('HIG_ConnectSTB', Str);
+							window.WebViewJavascriptBridge.callHandler('HIG_ConnectSTB', Str, function(responseData) {
+								//							var jsonString = '{"return" : "1"}';
+								var Obj = JSON.parse(responseData);
+								if(Obj.return == 1) {
+									//连接成功
+									var hrefs;
+									if(nums == 'notFirst') {
+										window.clearInterval(times);
+										connectStatus = true;
+										$(".selectcoder").animate({
+											"left": 0
+										}, "fast", function() {
+											$(".selectcoder").css("display", "block");
+										})
+										$(".STBList").animate({
+											"left": -$(window).width()
+										}, "fast", function() {
+											$(".STBList").css("display", "none");
+										})
+									} else {
+										$("body").removeClass('bg');
+										hrefs = "ConnectLoad.html?isConnect=" + true;
+										mui.openWindow({
+											url: hrefs,
+											id: hrefs,
+											show: {
+												autoShow: true,
+												aniShow: "slide-in-bottom",
+												duartion: "2000"
+											},
+										});
+									}
+
+								} else {
+									//连接失败
+									connectStatus = false;
+								}
+							});
 							setTimeout(function() {
 								if(!connectStatus) {
 									$.MsgBox.Alert("Warning!", "The connection failed, please reconnect");
@@ -69,7 +106,7 @@ $(function() {
 									}
 									$("#btn-conn").removeClass("btn-conn");
 								}
-							}, 3000)
+							}, 6000)
 							var timers = setInterval(function() {
 								time--;
 								if(time == 0) {
@@ -82,17 +119,17 @@ $(function() {
 			}
 		}
 	});
-  //如果没有获取到数据
-    setTimeout(function() {
-        if(jsonObj.length <= 0) {
-            window.clearInterval(times);
-            $("body").removeClass('bg');
-            mui.openWindow({
-                url: "SelectDecoder.html?nums=" + nums,
-                id: "SelectDecoder.html"
-            })
-        }
-    }, 3000)
+	//如果没有获取到数据
+	setTimeout(function() {
+		if(jsonObj.length <= 0) {
+			window.clearInterval(times);
+			$("body").removeClass('bg');
+			mui.openWindow({
+				url: "SelectDecoder.html?nums=" + nums,
+				id: "SelectDecoder.html"
+			})
+		}
+	}, 6000)
 })
 
 function ConnectResize() {
@@ -149,6 +186,8 @@ function checkWhetherConnect() {
 			})
 			this.checked = true;
 			wifiName = $(this).prev().html();
+			window.clearInterval(times);
+
 			$("#btn-conn").addClass("btn-conn");
 		} else {
 			this.checked = false;
@@ -161,7 +200,7 @@ function resizeNotFoundList() {
 	$(".con-body-top").css({
 		//height: $(window).height() * 0.32
 		height: $(window).height() * 0.53,
-		"max-height":"10rem"
+		"max-height": "10rem"
 	})
 	$(".con-body-bottom").css({
 		"visibility": "hidden",
@@ -187,6 +226,9 @@ function setupWebViewJavascriptBridge(callback) {
 	if(window.WVJBCallbacks) {
 		return window.WVJBCallbacks.push(callback);
 	}
+	document.addEventListener('WebViewJavascriptBridgeReady', function() {
+		callback(WebViewJavascriptBridge)
+	}, false);
 	window.WVJBCallbacks = [callback];
 	var WVJBIframe = document.createElement('iframe');
 	WVJBIframe.style.display = 'none';
@@ -196,115 +238,191 @@ function setupWebViewJavascriptBridge(callback) {
 		document.documentElement.removeChild(WVJBIframe)
 	}, 0)
 }
+
 window.onload = function() {
 	//发送请求
-	window.WebViewJavascriptBridge.callHandler('HIG_GetSTBList');
+	//	getSTBList();
+	//	window.WebViewJavascriptBridge.callHandler('HIG_GetSTBList');
 	times = setInterval(function() {
-		window.WebViewJavascriptBridge.callHandler('HIG_GetSTBList');
-	}, 1500);
+		getSTBList();
+		getUnDisCoverStbList();
+		//		window.WebViewJavascriptBridge.callHandler('HIG_GetSTBList');
+	}, 2000);
 }
-setupWebViewJavascriptBridge(function(bridge) {
-	bridge.registerHandler('HIG_GetSTBList', function(data, responseCallback) {
-		var Obj = JSON.parse(data);
-		
-		//判断是否是第一次加载
-		if(jsonObj.length == 0) {
-			var arr = compareObject([], JSON.parse(data));
-			var squareList = $(".selectedname");
-			$(squareList).html('');
-			loadData(arr);
-			////判断没有找到的 STB
-			//if(Obj.noFoundSTBList.length > 0) {
-			//ConnectResize();
-			//loadNotFoundList(Obj.noFoundSTBList);
-			//} else {
-			//resizeNotFoundList();
-			//}
-		} else {
-			flag += 1;
-			arrData.push(JSON.parse(data));
-			//notFounfArray.push(Obj.noFoundSTBList);
-			if(flag % 5 == 0) {
-				var getArray = getObjectFromArray(arrData);
-				//var getNotArray = getCutObjectFromArray(notFounfArray);
-				//notFounfArray = [];
-				arrData = [];
-				flag == 0;
-				var del = compareObject(getArray, jsonObj);
-				var arr = compareObject(jsonObj, getArray);
-				//var delNot = compareObjectForNot(getNotArray, notFoundList);
-				//var arrNot = compareObjectForNot(notFoundList, getNotArray);
+
+function getSTBList() {
+	var data = '发送消息给java代码指定接收';
+	window.WebViewJavascriptBridge.callHandler(
+		"HIG_GetSTBList",
+		data,
+		function(responseData) {
+			var Obj = JSON.parse(responseData);
+			console.log("获取数据的长度" + Obj.length);
+			//判断是否是第一次加载
+			if(jsonObj.length == 0) {
+				var arr = compareObject([], JSON.parse(responseData));
+				var squareList = $(".selectedname");
+				$(squareList).html('');
 				loadData(arr);
-				deletData(del);
-				//loadNotFoundList(arrNot);
-				//delNotFoundList(delNot);
-			}
-		}
-	})
-	//HIG_UndiscoveredSTBList
-	bridge.registerHandler('HIG_UndiscoveredSTBList', function(data, responseCallback) {
-		//判断是否是第一次加载
-		//if(notFoundList.length == 0) {
-		//var arr = compareObjectForNot([], JSON.parse(data));
-		//loadNotFoundList(arr);
-		//} else {
-		//                                                    flag += 1;
-		//arrData.push(JSON.parse(data));
-		notFounfArray.push(JSON.parse(data));
-		//                                                    if(flag % 1 == 0) {
-		//var getArray = getObjectFromArray(arrData);
-		var getNotArray = getCutObjectFromArray(notFounfArray);
-		notFounfArray = [];
-		//arrData = [];
-		//                                                    flag == 0;
-		//var del = compareObject(getArray, jsonObj);
-		//var arr = compareObject(jsonObj, getArray);
-		//var delNot = compareObjectForNot(getNotArray, notFoundList);
-		//var arrNot = compareObjectForNot(notFoundList, getNotArray);
-		//loadData(arr);
-		//deletData(del);
-		loadNotFoundList(getNotArray);
-		//delNotFoundList(delNot);
-		//                                                    }
-		//}
-	})
-	bridge.registerHandler('HIG_ConnectSTB', function(data, responseCallback) {
-		var Obj = JSON.parse(data);
-		if(Obj.return == "1") {
-			//连接成功
-			var hrefs;
-			if(nums == 'notFirst') {
-				window.clearInterval(times);
-				connectStatus = true;
-				$(".selectcoder").animate({
-					"left": 0
-				}, "fast", function() {
-					$(".selectcoder").css("display", "block");
-				})
-				$(".STBList").animate({
-					"left": -$(window).width()
-				}, "fast", function() {
-					$(".STBList").css("display", "none");
-				})
+				////判断没有找到的 STB
+				//if(Obj.noFoundSTBList.length > 0) {
+				//ConnectResize();
+				//loadNotFoundList(Obj.noFoundSTBList);
+				//} else {
+				//resizeNotFoundList();
+				//}
 			} else {
-				$("body").removeClass('bg');
-				hrefs = "ConnectLoad.html?isConnect=" + true;
+				flag += 1;
+				arrData.push(JSON.parse(responseData));
+				//notFounfArray.push(Obj.noFoundSTBList);
+				if(flag % 2 == 0) {
+					var getArray = getObjectFromArray(arrData);
+					//var getNotArray = getCutObjectFromArray(notFounfArray);
+					//notFounfArray = [];
+					arrData = [];
+					flag == 0;
+					var del = compareObject(getArray, jsonObj);
+					var arr = compareObject(jsonObj, getArray);
+					//var delNot = compareObjectForNot(getNotArray, notFoundList);
+					//var arrNot = compareObjectForNot(notFoundList, getNotArray);
+					loadData(arr);
+					//					deletData(del);
+					//loadNotFoundList(arrNot);
+					//delNotFoundList(delNot);
+				}
 			}
-			mui.openWindow({
-				url: hrefs,
-				id: hrefs,
-				show: {
-						autoShow: true,
-						aniShow: "slide-in-bottom",
-						duartion: "1000"
-					},
-			})
-		} else {
-			//连接失败
-			connectStatus = false;
-		}
-	})
-})
+		})
+}
+
+function getUnDisCoverStbList() {
+	var data = '发送消息给java代码指定接收';
+	window.WebViewJavascriptBridge.callHandler(
+		"HIG_UndiscoveredSTBList",
+		data,
+		function(responseData) {
+			//判断是否是第一次加载
+			//if(notFoundList.length == 0) {
+			//var arr = compareObjectForNot([], JSON.parse(data));
+			//loadNotFoundList(arr);
+			//} else {
+			//                                                    flag += 1;
+			//arrData.push(JSON.parse(data));
+			notFounfArray.push(JSON.parse(data));
+			//                                                    if(flag % 1 == 0) {
+			//var getArray = getObjectFromArray(arrData);
+			var getNotArray = getCutObjectFromArray(notFounfArray);
+			notFounfArray = [];
+			//arrData = [];
+			//                                                    flag == 0;
+			//var del = compareObject(getArray, jsonObj);
+			//var arr = compareObject(jsonObj, getArray);
+			//var delNot = compareObjectForNot(getNotArray, notFoundList);
+			//var arrNot = compareObjectForNot(notFoundList, getNotArray);
+			//loadData(arr);
+			//deletData(del);
+			loadNotFoundList(getNotArray);
+			//delNotFoundList(delNot);
+			//                                                    }
+			//}
+		})
+}
+
+//setupWebViewJavascriptBridge(function(bridge) {
+//	bridge.registerHandler('HIG_GetSTBList', function(data, responseCallback) {
+//		var Obj = JSON.parse(data);
+//		//判断是否是第一次加载
+//		if(jsonObj.length == 0) {
+//			var arr = compareObject([], JSON.parse(data));
+//			var squareList = $(".selectedname");
+//			$(squareList).html('');
+//			loadData(arr);
+//			////判断没有找到的 STB
+//			//if(Obj.noFoundSTBList.length > 0) {
+//			//ConnectResize();
+//			//loadNotFoundList(Obj.noFoundSTBList);
+//			//} else {
+//			//resizeNotFoundList();
+//			//}
+//		} else {
+//			flag += 1;
+//			arrData.push(JSON.parse(data));
+//			//notFounfArray.push(Obj.noFoundSTBList);
+//			if(flag % 5 == 0) {
+//				var getArray = getObjectFromArray(arrData);
+//				//var getNotArray = getCutObjectFromArray(notFounfArray);
+//				//notFounfArray = [];
+//				arrData = [];
+//				flag == 0;
+//				var del = compareObject(getArray, jsonObj);
+//				var arr = compareObject(jsonObj, getArray);
+//				//var delNot = compareObjectForNot(getNotArray, notFoundList);
+//				//var arrNot = compareObjectForNot(notFoundList, getNotArray);
+//				loadData(arr);
+//				deletData(del);
+//				//loadNotFoundList(arrNot);
+//				//delNotFoundList(delNot);
+//			}
+//		}
+//	})
+//	//HIG_UndiscoveredSTBList
+//	bridge.registerHandler('HIG_UndiscoveredSTBList', function(data, responseCallback) {
+//		//判断是否是第一次加载
+//		//if(notFoundList.length == 0) {
+//		//var arr = compareObjectForNot([], JSON.parse(data));
+//		//loadNotFoundList(arr);
+//		//} else {
+//		//                                                    flag += 1;
+//		//arrData.push(JSON.parse(data));
+//		notFounfArray.push(JSON.parse(data));
+//		//                                                    if(flag % 1 == 0) {
+//		//var getArray = getObjectFromArray(arrData);
+//		var getNotArray = getCutObjectFromArray(notFounfArray);
+//		notFounfArray = [];
+//		//arrData = [];
+//		//                                                    flag == 0;
+//		//var del = compareObject(getArray, jsonObj);
+//		//var arr = compareObject(jsonObj, getArray);
+//		//var delNot = compareObjectForNot(getNotArray, notFoundList);
+//		//var arrNot = compareObjectForNot(notFoundList, getNotArray);
+//		//loadData(arr);
+//		//deletData(del);
+//		loadNotFoundList(getNotArray);
+//		//delNotFoundList(delNot);
+//		//                                                    }
+//		//}
+//	})
+//	bridge.registerHandler('HIG_ConnectSTB', function(data, responseCallback) {
+//		var Obj = JSON.parse(data);
+//		if(Obj.return == "1") {
+//			//连接成功
+//			var hrefs;
+//			if(nums == 'notFirst') {
+//				window.clearInterval(times);
+//				connectStatus = true;
+//				$(".selectcoder").animate({
+//					"left": 0
+//				}, "fast", function() {
+//					$(".selectcoder").css("display", "block");
+//				})
+//				$(".STBList").animate({
+//					"left": -$(window).width()
+//				}, "fast", function() {
+//					$(".STBList").css("display", "none");
+//				})
+//			} else {
+//				$("body").removeClass('bg');
+//				hrefs = "ConnectLoad.html?isConnect=" + true;
+//			}
+//			mui.openWindow({
+//				url: hrefs,
+//				id: hrefs
+//			})
+//		} else {
+//			//连接失败
+//			connectStatus = false;
+//		}
+//	})
+//})
 
 function loadNotFoundList(data) {
 	notFoundList = [];
@@ -395,14 +513,14 @@ function deletData(obg) {
 			}
 		}
 	}
-//	if(jsonObj.length <= 0) {
-//		window.clearInterval(times);
-//		$("body").removeClass('bg');
-//		mui.openWindow({
-//			url: "SelectDecoder.html?nums=" + nums,
-//			id: "SelectDecoder.html"
-//		})
-//	}
+	//	if(jsonObj.length <= 0) {
+	//		window.clearInterval(times);
+	//		$("body").removeClass('bg');
+	//		mui.openWindow({
+	//			url: "SelectDecoder.html?nums=" + nums,
+	//			id: "SelectDecoder.html"
+	//		})
+	//	}
 	checkWhetherConnect();
 	if(notFoundList.length == 0) {
 		resizeNotFoundList();

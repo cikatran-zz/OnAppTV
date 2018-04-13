@@ -8,6 +8,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    NativeModules,
+    Share,
     View
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
@@ -18,10 +20,12 @@ import LowerPagerComponent from "../../components/LowerPageComponent"
 import VerticalSwiper from '../../components/VerticalSwiper';
 import BlurView from '../../components/BlurView'
 import {getBlurRadius} from '../../utils/blurRadius'
+import { secondFormatter } from '../../utils/timeUtils'
 
 
 const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
+
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
     if (width > height) {
@@ -38,7 +42,12 @@ export default class VideoControlModal extends React.Component {
       recordEnabled: false,
       favoriteEnabled: false,
       isPlaying: true,
-      modalVisibility: false
+      modalVisibility: false,
+      modalRecordTarget: "none",
+      modalFavoriteTarget: "none",
+      passTime: 0,
+      etrTime: 0,
+      volume: 0
     }
   }
 
@@ -46,8 +55,48 @@ export default class VideoControlModal extends React.Component {
     Orientation.unlockAllOrientations()
   }
 
+  _getTimeInterval = setInterval(() => {
+      this.setState({
+        currentTime: new Date().getTime()
+      })
+    }, 1000)
+
+  componentWillUnmount() {
+    clearInterval(this._getTimeInterval)
+
+    NativeModules.STBManager.playMediaStop((error, events) => {})
+
+  }
+
   componentDidMount() {
-    const {item} = this.props.navigation.state.params
+    const {item, isLive} = this.props.navigation.state.params
+
+    NativeModules.STBManager.getVolumeInJson((error, events) => {
+        if (!error) {
+            this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
+        }
+    })
+
+    this.setState({
+      currentTime: new Date().getTime(),
+      startPoint: new Date().getTime()
+    })
+
+    if (isLive) {
+      // Change channel with lcn
+      NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lcn}),(error, events) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(JSON.parse(events[0]))
+        }
+      })
+    }
+    else {
+      //Test play video
+      NativeModules.STBManager.playMediaStartWithJson(jsonString, (error, events) => {
+      })
+    }
 
     switch (item.type) {
       case 'Standalone': {
@@ -57,6 +106,7 @@ export default class VideoControlModal extends React.Component {
       }
       case 'Episode': {
         this.props.getEpgWithSeriesId([item.seriesId])
+        this.props.getSeriesInfo([item.seriesId])
         break;
       }
       default: {
@@ -95,11 +145,83 @@ export default class VideoControlModal extends React.Component {
 
   }
 
+  _onVolumeChange = (newValue) => {
+    this.setState({ volume: newValue })
+    let jsonString = "{\n" +
+      "\tvolume: \n" + newValue + "}"
+    NativeModules.STBManager.setVolumeWithJsonString(jsonString, (error, events) => {})
+  }
+
+  _getLivePassedTime = (isLive, timeInSeconds, durationInSeconds) => {
+      if (isLive) {
+        let time = this.state.currentTime
+        let startTime = new Date(timeInSeconds)
+        let passed = (time - startTime.getTime()) / 1000
+        if (passed > 0) return secondFormatter(passed.toString())
+      }
+      else {
+        const {startPoint, currentTime} = this.state
+
+        let passedTime = (currentTime - startPoint) / 1000
+        console.log(passedTime)
+        if (passedTime > 0) return secondFormatter(passedTime.toString())
+      }
+  }
+
+  _getEtrTime = (isLive, timeInSeconds, durationInSeconds) => {
+    if (isLive) {
+      let time = this.state.currentTime
+      let endTime = new Date(timeInSeconds)
+      let passed = (endTime.getTime() - time) / 1000
+      if (passed > 0) return "-" + secondFormatter(passed.toString())
+    }
+    else {
+      const {startPoint, currentTime} = this.state
+
+      let etrTime = durationInSeconds - ((currentTime - startPoint) / 1000)
+      if (etrTime > 0) return secondFormatter(etrTime.toString())
+    }
+  }
+
+  _getRecordStartMargin = (startTime, endTime) => {
+    const {startPoint} = this.state;
+    let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let passedTime = startPoint - (new Date(startTime)).getTime();
+    return (passedTime / durationInSeconds) * 100
+  }
+
+  _getRecordProgress = (currentTime, startTime, endTime) => {
+    const {startPoint} = this.state;
+    let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let recordedTime = (((currentTime - startPoint) / durationInSeconds) * 100)
+    if (recordedTime <= 0) return '1%'
+    else return recordedTime + "%"
+  }
+
+  _getLiveProgress = (startTime, endTime) => {
+    const {currentTime} = this.state;
+    let durationInMsSecons = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
+    let passedTime = currentTime - (new Date(startTime)).getTime();
+    return (passedTime / durationInMsSecons) * 100 + "%"
+  }
+
+  _getVodProgress = (durationInSeconds) => {
+    const {startPoint, currentTime} = this.state
+
+    let passedTime = (currentTime - startPoint) / 1000
+    return (passedTime / durationInSeconds) * 100 + "%"
+  }
+
   _renderPlaybackController = (item) => {
     const {recordEnabled, favoriteEnabled} = this.state
+    const {isLive} = this.props.navigation.state.params;
 
     return (
       <View style={styles.playbackContainer}>
+        <View style={{height: '11%', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <Text style={styles.passedText}>{this._getLivePassedTime(isLive, item.startTime ? item.startTime : 0 , item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
+          <Text style={styles.etrText}>{this._getEtrTime(isLive, item.endTime ? item.endTime : 0, item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
+        </View>
         <View style={styles.topButtonsContainer}>
           <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
             <Image source={require('../../assets/ic_record.png')} style={styles.buttonIconStyle}/>
@@ -107,10 +229,10 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
             <Image source={require('../../assets/ic_heart_with_border.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
+          <TouchableOpacity style={styles.buttonStyle} onPress={() => this._shareExecution(item.title, "")}>
             <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
+          <TouchableOpacity disabled={isLive}  style={styles.buttonStyle}>
             <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonStyle}>
@@ -118,17 +240,46 @@ export default class VideoControlModal extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.mediaInfoContainer}>
-          <Text style={styles.titleText}>{item.title}</Text>
-          <Text style={styles.typeText}>{this._formatGenresText(item.genresData)}</Text>
+          <Text style={styles.titleText}>{isLive !== true ? item.title : item.videoData.title}</Text>
+          <Text style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
         </View>
         <View style={styles.playbackButtons}>
-          <TouchableOpacity style={styles.rewindButton}>
+          <TouchableOpacity  onPress={() => {
+              NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+                if (!error) {
+                  let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
+                  let playPosInJson = "{\n" +
+                    "\tplayPosition: \n" + playPos + "}"
+                  NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {})
+                }
+              })
+            }
+          } style={styles.rewindButton}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{ width: '21%', height: '100%'}} onPress={() => this.setState({isPlaying: !this.state.isPlaying})}>
+          <TouchableOpacity  disabled={isLive}  style={{ width: '21%', height: '100%'}} onPress={() => {
+            this.setState({isPlaying: !this.state.isPlaying})
+            if (this.state.isPlaying) {
+              NativeModules.STBManager.playMediaPause((error, events) => {})
+            }
+            else {
+              NativeModules.STBManager.playMediaResume((error, events) => {})
+            }
+          }
+          }>
             <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.fastForwardButton}>
+          <TouchableOpacity  disabled={isLive} onPress={() => {
+            NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+              if (!error) {
+                let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
+                let playPosInJson = "{\n" +
+                  "\tplayPosition: \n" + playPos + "}"
+                console.log(playPosInJson)
+                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {})
+              }
+            })
+          }} style={styles.fastForwardButton}>
             <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
@@ -136,12 +287,24 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={styles.volumeLessIcon}>
             <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <VolumeSeeker width={260} thumbSize={16} maxValue={100}/>
+          <VolumeSeeker width={260} thumbSize={16} maxValue={100} value={this.state.volume} onVolumeChange={this._onVolumeChange}/>
           <TouchableOpacity style={styles.volumeMoreIcon}>
             <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
     </View>)
+  }
+
+  _renderRecordBar = (isLive, startTime, endTime) => {
+    const {currentTime} = this.state
+    if (isLive) {
+      let marginLeft = this._getRecordStartMargin(startTime, endTime) <= 0 ? '3%' : this._getRecordStartMargin(startTime, endTime) + "%"
+
+      return (
+        <View style={[styles.recordBar, {marginLeft: marginLeft, width: this._getRecordProgress(currentTime, startTime, endTime)}]}/>
+      )
+    }
+    else return null
   }
 
   _onLowerPageScroll = (y) => {
@@ -169,6 +332,7 @@ export default class VideoControlModal extends React.Component {
 
   _renderUpperPage = (epg, item) => {
     let data = item
+    const {isLive} = this.props.navigation.state.params
 
     if (item.serviceID) {
       if (!epg.data) {
@@ -184,13 +348,17 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={{uri: data.originalImages[0].url}}/>
+                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
           {this._renderPlaybackController(data)}
         </View>
         <View style={styles.topContainer}>
           <ImageBackground style={styles.topVideoControl}
                            resizeMode="cover"
-                           source={{uri: data.originalImages[0].url}}/>
+                           source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+          {this._renderRecordBar(isLive, item.startTime, item.endTime)}
+          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+
+          </View>
         </View>
       </View>)
   }
@@ -223,11 +391,8 @@ export default class VideoControlModal extends React.Component {
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          <VerticalSwiper
-            style={styles.dragContainer}
-            content={this._renderLowerPage(epg, item)}>
-            {this._renderUpperPage(epg, item)}
-          </VerticalSwiper>
+          {this._renderUpperPage(epg, item)}
+
         </View>
 
       );
@@ -247,11 +412,30 @@ export default class VideoControlModal extends React.Component {
       const {recordEnabled, favoriteEnabled} = this.state
 
       if (actionType === 'record') {
+        if (item.type === 'Standalone') {
+          if (recordEnabled) {
+            // Stop downloading current item
+          }
+          else {
+            // Start or resume downloading current item
+          }
+        }
+        else {
+          if (recordEnabled) {
+            // Stop recording current channel
+          }
+          else {
+            // Start recording
+          }
+        }
+
         this.setState({
           recordEnabled: !recordEnabled
         })
       }
       else {
+        // Use Userkit
+
         this.setState({
           favoriteEnabled: !favoriteEnabled
         })
@@ -259,51 +443,191 @@ export default class VideoControlModal extends React.Component {
     }
   }
 
-  _onModalButtonPress = (actionType) => {
-    const {recordEnabled, favoriteEnabled} = this.state
+  _stopRecord = () => {
+    NativeModules.STBManager.recordPvrStopInJson((error, events) => {
+
+    })
+  }
+
+  stopDownload = () => {
+    let dataPath = "/Download"
+    let url = ""
+    let json = {
+      removeFlag: 1, // 0 -> not delele media, 1 -> delete
+      destination_path: dataPath,
+      url: url
+    }
+    NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
+
+    })
+  }
+
+  _downloadExecution = (vodItem) => {
+    let url = ""
+    let dataPath = "/Download"
+    let jsonString = {
+      destination_path: dataPath,
+      url: url
+    }
+
+    NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(jsonString), (error, events) => {
+      if (error) {
+        console.log(error)
+      }
+      else {
+        console.log(events)
+        // If download start successfully -> add to Userkit with 2 props : contentId and destination path => in order to display at bookmark page
+
+      }
+    })
+  }
+
+  _bookExecution = (liveItem) => {
+      let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
+
+      let metaData = {
+        "endtime": liveItem.endTime,
+        "starttime": liveItem.startTime,
+        "title": liveItem.videoData.title,
+        "image": liveItem.videoData.originalImages[0].url,
+        "subTitle": liveItem.genresData.length > 0 ? liveItem.genresData[0] : ""
+      }
+
+      let jsonString = {
+        "record": {
+          "startTime" : liveItem.startTime,
+          "recordMode" : 1,
+          "recordName" : liveItem.videoData.title,
+          "lCN" : liveItem.videoData.lcn,
+          "duration" : durationInSeconds
+
+        },
+        "metaData": JSON.stringify(metaData)
+      }
+
+      NativeModules.STBManager.addPvrBooKListWithJson(JSON.stringify(jsonString), (error, events) => {
+        if (error)
+          console.log(error)
+        else console.log(events)
+      })
+  }
+
+  _shareExecution = (title, url) => {
+    content = {
+      message: "",
+      title: title,
+      url: url
+    }
+    Share.share(content, {})
+  }
+
+  _onModalButtonPress = (actionType, secondActionType) => {
+    const {recordEnabled, favoriteEnabled, modalRecordTarget, modalFavoriteTarget} = this.state
 
     if (actionType === 'record') {
+      if (recordEnabled) {
+        // Stop downloading case
+        if (secondActionType === 'item') {
+          console.log('Stop downloading item')
+          // Stop downloading current item
+        }
+        else {
+          // Update Userkit variable to remove series from downloading
+          console.log('Stop downloading series')
+        }
+      }
+      else {
+        // Start downloading current item
+
+        if (secondActionType === 'series') {
+          // Start query all VOD video with seriesId and downloading one by one. Save seriesId into Userkit variable as a list of download with type : series
+          // List structure
+          /*
+            [
+              {
+                type: "series",
+                id: seriesId or contentId
+              }
+            ]
+           */
+          console.log('Start downloading series')
+
+        }
+        else {
+          // Downloading current item
+          console.log('Start downloading item')
+
+        }
+
+      }
       this.setState({
-        recordEnabled: !recordEnabled
+        recordEnabled: modalRecordTarget === secondActionType ? false : true,
+        modalRecordTarget: modalRecordTarget === secondActionType ? "none" : secondActionType
       })
     }
     else {
+      // Use Userkit
+
       this.setState({
-        favoriteEnabled: !favoriteEnabled
+        favoriteEnabled: modalFavoriteTarget === secondActionType ? false : true,
+        modalFavoriteTarget: modalFavoriteTarget === secondActionType ? "none" : secondActionType
       })
     }
   }
 
   _renderRecordModal = () => {
-    let img = this.state.modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
+    const {modalContent, modalRecordTarget, modalFavoriteTarget} = this.state
 
-    return (
-      <Modal animationType={'fade'} transparent={true}
-              visible={this.state.modalVisibility} onRequestClose={() => console.log('close')}>
-        <View style={styles.modal}>
-          <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
-          <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
-            <Image source={require('../../assets/ic_modal_close.png')} />
-          </TouchableOpacity>
-          <View style={styles.modalInsideContainer}>
-            <Image source={{uri: 'http://hs.sbcounty.gov/CN/Photo%20Gallery/Sample%20Picture%20-%20Koala.jpg?Mobile=1&Source=%2FCN%2F_layouts%2Fmobile%2Fdispform%2Easpx%3FList%3D1720b750%252D8275%252D4398%252Da0b8%252D6c84221f704f%26View%3Dffcf12f7%252D5df8%252D4de0%252Da991%252D79340a805821%26ID%3D1%26CurrentPage%3D1'}} style={styles.modalImage}/>
-            <Text style={styles.modalTitleText}>Ma pire angoise</Text>
-            <Text style={styles.modalShortDes}>Short des</Text>
-            <Text style={styles.modalLongDes}>Long des</Text>
-            <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
-              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent)}>
-                <Image source={img} style={{width: 40, height: 40, marginRight: 7}}/>
-                <Text>Sample 1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent)}>
-                <Image source={img} style={{width: 40, height: 40, marginRight: 7}}/>
-                <Text>Sample 2</Text>
-              </TouchableOpacity>
+    let img = modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
+    let firstButtonImg
+    let secondButtonImg
+
+    if (this.state.modalContent === 'record') {
+      firstButtonImg = modalRecordTarget === 'item' ? colors.mainPink : 'transparent'
+      secondButtonImg = modalRecordTarget === 'series' ? colors.mainPink : 'transparent'
+    }
+    else {
+      firstButtonImg = modalFavoriteTarget === 'item' ? colors.mainPink : 'transparent'
+      secondButtonImg = modalFavoriteTarget === 'series' ? colors.mainPink : 'transparent'
+    }
+
+    const {item} = this.props.navigation.state.params
+    const {seriesInfo} = this.props;
+
+    if (item.type === 'Episode') {
+      return (
+        <Modal animationType={'fade'} transparent={true}
+                visible={this.state.modalVisibility} onRequestClose={() => console.log('close')}>
+          <View style={styles.modal}>
+            <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
+            <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
+              <Image source={require('../../assets/ic_modal_close.png')} />
+            </TouchableOpacity>
+            <View style={styles.modalInsideContainer}>
+              <Image source={{uri: item.originalImages[0].url}} style={styles.modalImage}/>
+              <Text style={styles.modalTitleText}>{item.title}</Text>
+              <Text style={styles.modalShortDes}>{"Series - Episode " + item.seasonIndex}</Text>
+              <Text style={styles.modalLongDes}>{item.longDescription}</Text>
+              <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'item')}>
+                  <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: firstButtonImg, borderRadius: 20}}>
+                    <Image source={img} style={styles.buttonIconStyle}/>
+                  </View>
+                  <Text>{"Episode " + item.seasonIndex}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'series')}>
+                  <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: secondButtonImg, borderRadius: 20}}>
+                  <Image source={img} style={styles.buttonIconStyle}/>
+                  </View>
+                  <Text>{seriesInfo.data ? seriesInfo.data.title : ""}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    )
+        </Modal>
+      )
+    }
+    else return null
   }
 
   render() {
@@ -328,6 +652,7 @@ const styles = StyleSheet.create({
     left: 0,
     height: '42%',
     width: '100%',
+    flexDirection: 'column'
   },
   modal: {
     flex: 1,
@@ -384,7 +709,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.greyParentalControl,
     textAlign: 'center',
-    marginTop: 11
+    marginTop: 11,
+    marginLeft: 37,
+    marginRight: 37
   },
   bottomContainer: {
     height: '100%',
@@ -437,7 +764,6 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '58%',
-    paddingTop: '11%',
     flexDirection: 'column'
   },
   topButtonsContainer: {
@@ -512,5 +838,29 @@ const styles = StyleSheet.create({
     width: '98%',
     height: '98%',
     alignSelf: 'center'
+  },
+  passedText: {
+    marginLeft: 20,
+    fontSize: 12,
+    color: colors.whitePrimary
+  },
+  etrText: {
+    marginRight: 20,
+    fontSize: 12,
+    color: colors.whitePrimary
+  },
+  recordBar: {
+    height: 3,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    backgroundColor: colors.mainPink
   }
 })
+
+const jsonString = "{\n" +
+  "      \"url\": \"http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4\",\n" +
+  "      \"playPosition\": 0\n" +
+  "    }"
+
+

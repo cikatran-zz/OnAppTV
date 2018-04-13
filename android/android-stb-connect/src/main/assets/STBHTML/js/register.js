@@ -3,7 +3,7 @@ var optSex;
 $(function() {
 	$("#RegisterModal").css({
 		"width":"100%",
-		"height":$(window).height()
+		"height":"100%"
 	});
 
  mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {

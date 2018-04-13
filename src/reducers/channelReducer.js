@@ -12,7 +12,6 @@ export default function channelReducer(state = initialState, action) {
         case actionTypes.FETCHING_CHANNEL:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_CHANNEL_SUCCESS:

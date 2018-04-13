@@ -6,26 +6,18 @@ import { colors } from '../utils/themeConfig'
 class VolumeSeeker extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.state = {
-      value: 10
-    }
-  }
-
-  _onVolumeChange = (newValue) => {
-
   }
 
   render() {
-    const {value} = this.state
-
+    console.log("VALUE", this.props.value);
     return(
       <Slider
         style={{width: this.props.width}}
-        value={this.state.value}
+        value={this.props.value}
         maximumValue={100}
         thumbTintColor={colors.whitePrimary}
         thumbTouchSize={{width: this.props.thumbSize, height: this.props.thumbSize}}
-        onValueChange={value => this.setState({ value })}
+        onValueChange={this.props.onVolumeChange}
         thumbStyle={{width: 16, height: 16}}
         trackStyle={styles.track}
         minimumTrackTintColor={colors.mainPink}
