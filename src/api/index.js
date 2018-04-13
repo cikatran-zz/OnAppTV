@@ -622,13 +622,52 @@ export const getVideoFormat = () => {
     });
 };
 
+export const getCurrentSTBInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getCurrentSTBInfoInJson((error, results)=> {
+                    resolve(results[0]);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    })
+};
+
+export const getWifiInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.getMobileWifiInfoInJson((error, results)=> {
+            resolve(JSON.parse(results[0]));
+        });
+    })
+};
+
+export const getUSBDisks = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getUSBDisksInJson((error, results)=> {
+                    resolve(JSON.parse(results[0]));
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    })
+};
+
 export const getSettings = () => {
     let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
     let languageShort = ["eng", "fre", "spa", "ita", "chi", "000"];
     let resolutions = ["1080P","1080I","720P","576P","576I"];
     let aspectRatio = ["4:3 Letter Box","4:3 Center Cut Out","4:3 Extended","16:9 Pillar Box","16:9 Full Screen","16:9 Extended"];
+    let usbFileSystems = ["FAT 16","FAT 32","NTFS","EXT2","EXT3","EXT4"];
     return new Promise((resolve, reject) => {
-        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat()]).then((values)=> {
+        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat(), getCurrentSTBInfo(), getUSBDisks()]).then((values)=> {
             // Audio lang
             let indexLang = languageShort.indexOf(values[0]);
             if (indexLang == -1) {
@@ -649,11 +688,39 @@ export const getSettings = () => {
             // Video format
             let ratio = aspectRatio[values[3]];
 
+            let manufacturerID = values[4].STBID;
+            let hardwareVersion = values[4].hardwareVersion;
+            let bootLoaderVersion = values[4].loaderVersion;
+            let softwareVersion = values[4].softwareVersion;
+            let decoderID = values[4].STBID;
+
+            let hardDiskFile = "";
+            let hardDiskTotalSize = 0;
+            let hardDiskFreeSize = 0;
+
+            if (values[5].length > 0) {
+                let disk = values[5][values[5].length - 1];
+                if (disk.partitionArr != null && disk.partitionArr.length > 0) {
+                    let partition = disk.partitionArr[disk.partitionArr.length -1];
+                    hardDiskFile = usbFileSystems[partition.fileSystemType];
+                    hardDiskTotalSize = partition.partitionTotalSize / 1024;
+                    hardDiskFreeSize = partition.partitionFreeSize / 1024;
+                }
+            }
+
             resolve({
                 AudioLanguage: audioLanguage,
                 Subtitles: subLanguage,
                 Resolution: resolution,
-                VideoFormat: ratio
+                VideoFormat: ratio,
+                ManufacturerID: manufacturerID,
+                HardwareVersion: hardwareVersion.toFixed(1),
+                BootLoaderVersion: bootLoaderVersion.toFixed(1),
+                STBSoftwareVersion: softwareVersion.toFixed(1),
+                DecoderID: decoderID,
+                HardDiskFile: hardDiskFile,
+                HardDiskTotalSize: (hardDiskTotalSize > 0) ? hardDiskTotalSize.toFixed(1) + "G" : "",
+                HardDiskFreeSize: (hardDiskFreeSize > 0 ) ? hardDiskFreeSize.toFixed(1) + "G": ""
             });
         }).catch((error)=> {
             reject(error);

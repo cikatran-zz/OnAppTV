@@ -14,6 +14,7 @@ import getSettingsEpic from "./settingsRequestEpic";
 import getSubtitlesEpic from "./subtitlesRequestEpic";
 import getResolutionEpic from "./resolutionRequestEpic";
 import getVideoFormatEpic from "./videoFormatRequestEpic";
+import getWifiInfoEpic from "./wifiInfoRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -32,7 +33,8 @@ const rootEpic = combineEpics(
     getSettingsEpic,
     getSubtitlesEpic,
     getResolutionEpic,
-    getVideoFormatEpic
+    getVideoFormatEpic,
+    getWifiInfoEpic
 );
 
 export default rootEpic;

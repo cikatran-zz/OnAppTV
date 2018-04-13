@@ -8,9 +8,7 @@ import {colors} from '../../utils/themeConfig'
 export default class ParentalControl extends React.PureComponent {
 
     constructor(props) {
-        super(props)
-        const {navigation} = this.props;
-        navigation.navigate("ParentalControlLock", {onBack: this._onDonePIN.bind(this)})
+        super(props);
 
         this.state = {
             isParentalControl: false,
@@ -35,6 +33,11 @@ export default class ParentalControl extends React.PureComponent {
         };
 
         this._getParentalControlInfo();
+    }
+
+    componentWillMount() {
+        const {navigation} = this.props;
+        navigation.navigate("ParentalControlLock", {onBack: this._onDonePIN.bind(this)});
     }
 
     _getParentalControlInfo = () => {

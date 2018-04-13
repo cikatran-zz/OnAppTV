@@ -11,6 +11,7 @@ import {
     View
 } from "react-native";
 import {colors} from "../../utils/themeConfig";
+import * as Orientation from "react-native-orientation";
 
 export default class MyCategories extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class MyCategories extends Component {
     };
 
     componentWillMount() {
-        //Orientation.lockToPortrait();
+        Orientation.lockToPortrait();
     }
 
     componentDidMount() {
@@ -82,7 +83,6 @@ export default class MyCategories extends Component {
                 toggles[data[i].name] = data[i].favorite;
             }
             this.state.toggleState = toggles;
-            console.log(toggles);
         }
         return (
             <View style={styles.container}>

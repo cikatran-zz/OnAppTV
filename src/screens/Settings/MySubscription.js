@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'transparent',
+    backgroundColor: colors.whiteBackground,
   },
   listInfoContainer: {
     marginTop: 60,

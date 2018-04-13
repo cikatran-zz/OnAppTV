@@ -10,6 +10,7 @@ import * as getSettings from "./getSettings";
 import * as getSubtitles from "./getSubtitles"
 import * as getResolution from "./getResolution"
 import * as getVideoFormat from "./getVideoFormat"
+import * as getWifiInfo from "./getWifiInfo"
 
 export default actions = {
     getBanner,
@@ -23,5 +24,6 @@ export default actions = {
     getSettings,
     getSubtitles,
     getResolution,
-    getVideoFormat
+    getVideoFormat,
+    getWifiInfo
 };
