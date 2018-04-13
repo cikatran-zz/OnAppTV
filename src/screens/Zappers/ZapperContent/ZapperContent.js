@@ -6,6 +6,10 @@ import {rootViewTopPadding} from '../../../utils/rootViewTopPadding'
 import ZapperCell from '../../../components/ZapperCell'
 import ChannelModal from "../ChannelModal/ChannelModal";
 import PinkRoundedLabel from "../../../components/PinkRoundedLabel"
+import {
+    PanGestureHandler,
+    State,
+} from 'react-native-gesture-handler';
 
 const icClose = require('../../../assets/ic_modal_close.png');
 const minTop = 70;
@@ -27,11 +31,13 @@ export default class Zappers extends Component {
             position: minTop,
             dragging: false
         };
+        this._translateY = new Animated.Value(0);
         this.channelModal = null;
+        this._lastOffsetY = minTop;
     };
 
     _onPanResponderMove = (event, gestureState) => {
-        const {width, height} = Dimensions.get("window");
+
         this.setState({dragging: true})
         this.handleScrollviewPanresponder();
         this.setPosition(this.getCurrentPosition() + gestureState.dy);
@@ -41,6 +47,23 @@ export default class Zappers extends Component {
         this.scrollList((this.contentHeight/height)*gestureState.dy)
     }
 
+
+
+
+    _onGestureEvent() {
+        // const {height} = Dimensions.get("window");
+        // this.scrollList((this.contentHeight/height)*event.nativeEvent.dy)
+        return Animated.event(
+            [
+                {
+                    nativeEvent: {
+                        translationY: this._translateY,
+                    },
+                },
+            ],
+            {useNativeDriver: true}
+        )
+    };
     getCurrentPosition() {
         return this.currentPosition;
     }
@@ -50,6 +73,7 @@ export default class Zappers extends Component {
     }
 
     scrollList(position) {
+        console.log("Scroll List: ", position)
         this._list.scrollToOffset({x:0, y:position, animated: true});
     }
 
@@ -67,6 +91,17 @@ export default class Zappers extends Component {
         console.log("List Set Pan");
         return false;
     }
+
+    _onHandlerStateChange = event => {
+        console.log("Change State")
+        const {width, height} = Dimensions.get("window");
+        if (event.nativeEvent.oldState === State.ACTIVE) {
+            this._lastOffsetY += event.nativeEvent.translationY;
+            this._translateY.setOffset(this._lastOffsetY);
+            this._translateY.setValue(0);
+            this.scrollList((this.contentHeight/height)*this._lastOffsetY)
+        }
+    };
 
     componentWillMount(){
         this._panResponder = PanResponder.create({
@@ -127,18 +162,28 @@ export default class Zappers extends Component {
         this.contentHeight = height;
     }
 
-    _handleScroll = (event) => {
-        console.log("Scroll", event.nativeEvent.contentOffset.y);
-        console.log("Content H", event.nativeEvent.contentSize.height);
-        if (!this.state.dragging) {
-            let offsetY = event.nativeEvent.contentOffset.y;
-            let contentHeight = event.nativeEvent.contentSize.height;
-            let layoutHeight = event.nativeEvent.layoutMeasurement.height;
-            let position = minTop + offsetY * (layoutHeight / contentHeight)
-            this.setPosition(position);
-            this.setCurrentPosition(position);
-        }
-    }
+    // _handleScroll = (event) => {
+    //     // console.log("Scroll", event.nativeEvent.contentOffset.y);
+    //     // console.log("Content H", event.nativeEvent.contentSize.height);
+    //     // if (!this.state.dragging) {
+    //     //     let offsetY = event.nativeEvent.contentOffset.y;
+    //     //     let contentHeight = event.nativeEvent.contentSize.height;
+    //     //     let layoutHeight = event.nativeEvent.layoutMeasurement.height;
+    //     //     let position = minTop + offsetY * (layoutHeight / contentHeight)
+    //     //     this.setPosition(position);
+    //     //     this.setCurrentPosition(position);
+    //     // }
+    //     if(this.props.onScroll) this.props.onScroll(event)
+    //     Animated.event([
+    //         {
+    //             nativeEvent: {contentOffset: {y: this._lastOffsetY}}
+    //         },
+    //         {
+    //             useNativeDriver: true
+    //         }
+    //     ])(event)
+    // }
+
 
     _onScrollviewStartPanResponder = () => {
         const {dragging} = this.state;
@@ -162,8 +207,10 @@ export default class Zappers extends Component {
 
     getMovableStyle = () => {
         return [styles.floatingPinkLabel, {
-            top: this.state.position,
-        }]
+            transform: [
+                {translateY: this._translateY}
+            ]}
+        ]
     };
 
 
@@ -190,12 +237,15 @@ export default class Zappers extends Component {
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content' />
-                <Animated.View
-                    {...this._panResponder.panHandlers}
-                    style={this.getMovableStyle()}
-                    ref={(ref) => this._movable = ref} >
-                    <PinkRoundedLabel style={{zIndex: 1}} text={this.state.showTime} />
-                </Animated.View>
+                <PanGestureHandler
+                    onHandlerStateChange={this._onHandlerStateChange}
+                    onGestureEvent={this._onGestureEvent()} >
+                    <Animated.View
+                        style={this.getMovableStyle()}
+                        ref={(ref) => this._movable = ref} >
+                        <PinkRoundedLabel style={{zIndex: 1, marginLeft: 5}} text="Today 19:00"/>
+                    </Animated.View>
+                </PanGestureHandler>
                 <ImageBackground style={styles.image}
                                  source={require('../../../assets/conn_bg.png')}
                                  blurRadius={30}>
@@ -208,7 +258,6 @@ export default class Zappers extends Component {
                     <FlatList style={styles.grid}
                               data={epgsData}
                               numColumns={3}
-                              {...this._listPanResponder.panHandlers}
                               onContentSizeChange={this._onContentSizeChange}
                               ref={(ref) => this._list = ref}
                               onScroll={this._handleScroll}
@@ -272,6 +321,7 @@ const styles = StyleSheet.create({
     floatingPinkLabel: {
         position: 'absolute',
         left: 0,
-        top: minTop
+        top: minTop,
+        zIndex: 200,
     }
 });
