@@ -69,7 +69,7 @@ export default class Messages extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.whiteBackground,
     position: 'relative',
     flexDirection: 'column',
   },
