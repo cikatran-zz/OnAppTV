@@ -15,12 +15,14 @@ import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import VolumeSeeker from "../../components/VolumeSeeker"
-import LowerPagerComponent from "../../components/LowerPageComponent"
+import LowerPagerComponent from "../../screens/LowerPage/LowerPageComponent"
 import VerticalSwiper from '../../components/VerticalSwiper';
 import BlurView from '../../components/BlurView'
 import {getBlurRadius} from '../../utils/blurRadius'
 import { secondFormatter } from '../../utils/timeUtils'
-
+import Swiper from 'react-native-swiper'
+import PinkRoundedButton from '../../components/PinkRoundedLabel'
+import { rootViewTopPadding } from '../../utils/rootViewTopPadding'
 
 const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
@@ -44,7 +46,8 @@ export default class VideoControlModal extends React.Component {
       modalVisibility: false,
       passTime: 0,
       etrTime: 0,
-      volume: 0
+      volume: 0,
+      index: -1,
     }
   }
 
@@ -66,7 +69,7 @@ export default class VideoControlModal extends React.Component {
   }
 
   componentDidMount() {
-    const {item, isLive} = this.props.navigation.state.params
+    const {item, isLive, epg} = this.props.navigation.state.params
 
     NativeModules.STBManager.getVolumeInJson((error, events) => {
         if (!error) {
@@ -95,20 +98,20 @@ export default class VideoControlModal extends React.Component {
       })
     }
 
-    switch (item.type) {
-      case 'Standalone': {
-        // Find video with related genre
-        this.props.getEpgWithGenre(item.genreIds)
-        break;
-      }
-      case 'Episode': {
-        this.props.getEpgWithSeriesId([item.seriesId])
-        break;
-      }
-      default: {
-        this.props.getEpgs([item.serviceID])
-      }
-    }
+    // switch (item.type) {
+    //   case 'Standalone': {
+    //     // Find video with related genre
+    //     this.props.getEpgWithGenre(item.genreIds)
+    //     break;
+    //   }
+    //   case 'Episode': {
+    //     this.props.getEpgWithSeriesId([item.seriesId])
+    //     break;
+    //   }
+    //   default: {
+    //     this.props.getEpgs([item.serviceID])
+    //   }
+    // }
 
     Orientation.addOrientationListener(this._orientationDidChange);
     // PUT YOUR CHANNEL ID HERE
@@ -143,9 +146,11 @@ export default class VideoControlModal extends React.Component {
 
   _onVolumeChange = (newValue) => {
     this.setState({ volume: newValue })
-    let jsonString = "{\n" +
-      "\tvolume: \n" + newValue + "}"
-    NativeModules.STBManager.setVolumeWithJsonString(jsonString, (error, events) => {})
+    let jsonString = {
+      volume: newValue
+    }
+    // Check connection before set volume
+    NativeModules.STBManager.setVolumeWithJsonString(JSON.stringify(jsonString), (error, events) => {})
   }
 
   _getLivePassedTime = (isLive, timeInSeconds, durationInSeconds) => {
@@ -158,8 +163,15 @@ export default class VideoControlModal extends React.Component {
       else {
         const {startPoint, currentTime} = this.state
 
+        // Check STB Connection before
+        // NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+        //   if (!error) {
+        //     let passedTime = JSON.parse(events[0]).playPosition
+        //     return secondFormatter(passedTime.toString())
+        //   }
+        // })
+
         let passedTime = (currentTime - startPoint) / 1000
-        console.log(passedTime)
         if (passedTime > 0) return secondFormatter(passedTime.toString())
       }
   }
@@ -175,7 +187,7 @@ export default class VideoControlModal extends React.Component {
       const {startPoint, currentTime} = this.state
 
       let etrTime = durationInSeconds - ((currentTime - startPoint) / 1000)
-      if (etrTime > 0) return secondFormatter(etrTime.toString())
+      if (etrTime > 0) return "-" + secondFormatter(etrTime.toString())
     }
   }
 
@@ -319,11 +331,69 @@ export default class VideoControlModal extends React.Component {
     let video = listData[0]
 
     return(
-      <LowerPagerComponent toggleModal={this._toggleModal}
-                           videoType={item.serviceID ? 'channel' : item.type}
-                           listScrollOffsetY={this._onLowerPageScroll}
-                           listData={listData} video={item.serviceID ? video : item}/>
+      <LowerPagerComponent
+        toggleModal={this._toggleModal}
+        videoType={item.serviceID ? 'channel' : item.type}
+        listScrollOffsetY={this._onLowerPageScroll}
+        listData={listData} video={item.serviceID ? video : item}/>
     )
+  }
+
+  _renderTopContainer = (epg, index, isLive) => {
+    let item = this.state.index === -1 ? epg[index] : epg[this.state.index]
+    let data = item
+
+    if (item.serviceID) {
+      if (!epg.data) {
+        return null
+      }
+      data = epg.data[0].videoData
+    }
+    return (
+      <View style={styles.topContainer}>
+        <ImageBackground style={styles.topVideoControl}
+                         resizeMode="cover"
+                         source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+        {this._renderRecordBar(isLive, item.startTime, item.endTime)}
+        <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+
+        </View>
+      </View>
+    )
+  }
+
+  _renderLive = (epg, item) => {
+    let data = item
+    const {isLive} = this.props.navigation.state.params
+
+    if (item.serviceID) {
+      if (!epg.data) {
+        return null
+      }
+      data = epg.data[0].videoData
+    }
+
+    return (
+      <View style={{width: '100%', height: height}} key={item}>
+
+        <View style={styles.bottomContainer}>
+          <ImageBackground style={styles.bottomVideoControl}
+                           resizeMode="cover"
+                           blurRadius={10}
+                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+          {this._renderPlaybackController(data)}
+        </View>
+
+        <View style={styles.topContainer}>
+          <ImageBackground style={styles.topVideoControl}
+                           resizeMode="cover"
+                           source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+          {this._renderRecordBar(isLive, item.startTime, item.endTime)}
+          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+
+          </View>
+        </View>
+      </View>)
   }
 
   _renderUpperPage = (epg, item) => {
@@ -338,7 +408,7 @@ export default class VideoControlModal extends React.Component {
     }
 
     return (
-      <View style={{width: '100%', height: height}}>
+      <View style={{width: '100%', height: height}} key={item}>
 
         <View style={styles.bottomContainer}>
           <ImageBackground style={styles.bottomVideoControl}
@@ -347,15 +417,7 @@ export default class VideoControlModal extends React.Component {
                            source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
           {this._renderPlaybackController(data)}
         </View>
-        <View style={styles.topContainer}>
-          <ImageBackground style={styles.topVideoControl}
-                           resizeMode="cover"
-                           source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
-          {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
 
-          </View>
-        </View>
       </View>)
   }
 
@@ -369,9 +431,15 @@ export default class VideoControlModal extends React.Component {
       { useNativeDriver: true },
     ])
   }
+
+  _onSwiperIndexChanged = (index) => {
+    this.setState({
+      index: index
+    })
+  }
+
   _renderModal = () => {
-    const {item} = this.props.navigation.state.params;
-    const {epg} = this.props
+    const {item, epg, isLive} = this.props.navigation.state.params;
 
     if (this.state.showBrightcove) {
       return (
@@ -382,13 +450,35 @@ export default class VideoControlModal extends React.Component {
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
     } else {
+      // Right now, Live is just one video, check for one video
+      if (isLive) {
+        return (
+          <View
+            onLayout={this.onLayout.bind(this)}
+            style={{flex: 1}}>
+            {this._renderLive({}, item)}
+            <TouchableOpacity style={{position: 'absolute', top: 30, left: 30}} onPress={() => this.props.navigation.goBack(null)}>
+              <PinkRoundedButton text='DISMISS'/>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
 
       return (
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          {this._renderUpperPage(epg, item)}
-
+          <Swiper loop={false} loadMinimal={true} loadMinimalSize={1} onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true} style={styles.pageViewStyle} removeClippedSubviews={false} index={index}>
+            {
+              epg.map(value => this._renderUpperPage(epg, value))
+            }
+          </Swiper>
+          {this._renderTopContainer(epg, index, isLive)}
+          <TouchableOpacity style={{position: 'absolute', top: 30, left: 30}} onPress={() => this.props.navigation.goBack(null)}>
+            <PinkRoundedButton text='DISMISS'/>
+          </TouchableOpacity>
         </View>
 
       );
@@ -479,6 +569,10 @@ export default class VideoControlModal extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  pageViewStyle: {
+    paddingTop: rootViewTopPadding(),
+    backgroundColor: colors.screenBackground
+  },
   container: {
     flex: 1,
     flexDirection: 'column'

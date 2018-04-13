@@ -11,47 +11,82 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import {colors} from '../utils/themeConfig'
-import PinkRoundedLabel from './PinkRoundedLabel'
-import {secondFormatter, timeFormatter} from '../utils/timeUtils'
+import {colors} from '../../utils/themeConfig'
+import PinkRoundedLabel from '../../components/PinkRoundedLabel'
+import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 
-export default class LowerPageComponent extends PureComponent {
+export default class LowerPageComponent extends React.Component {
 
   constructor(props) {
     super(props);
   }
+
+  componentDidMount() {
+    const {item, isLive} = this.props.navigation.state.params
+    switch (item.type) {
+      case 'Standalone': {
+        // Find video with related genre
+        this.props.getEpgWithGenre(item.genreIds)
+        break;
+      }
+      case 'Episode': {
+        this.props.getEpgWithSeriesId([item.seriesId])
+        break;
+      }
+      default: {
+        this.props.getEpgs([item.serviceID])
+      }
+    }
+  }
+
+  _onPress = (item) => {
+    const {isLive} = this.props.navigation.state.params
+    const {epg, navigation} = this.props
+
+    navigation.navigate('VideoControlModal', {
+      item: item,
+      epg: epg.data,
+      isLive: isLive
+    })
+  }
+
   _renderBanner = ({item}) => {
+    const {isLive} = this.props.navigation.state.params
+
+    let data = isLive === true ? item.videoData : item
       return (
-        <View style={styles.topContainer}>
+        <TouchableOpacity style={styles.topContainer} onPress={() => this._onPress(item)}>
             <View style={styles.bannerThumbnailContainer}>
-              <Image source={{uri: item.originalImages[0].url}} style={styles.banner}/>
+              <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
             </View>
-        </View>
+        </TouchableOpacity>
       )
   }
 
   _renderBannerInfo = ({item}) => {
+    let data = this._isFromChannel() ? item.videoData : item
+
     return (
       <View style={styles.bannerContainer}>
         <View style={styles.bannerInfoContainer}>
           <View style={styles.bannerInfo}>
-            <Text style={styles.videoTitleText}>{item.title}</Text>
-            <Text style={styles.videoTypeText}>{item.type}</Text>
+            <Text style={styles.videoTitleText}>{data.title}</Text>
+            <Text style={styles.videoTypeText}>{data.type}</Text>
           </View>
           <View style={styles.bannerButtonsContainer}>
             <TouchableOpacity>
-              <Image source={require('../assets/lowerpage_record.png')} style={styles.videoPlayButton}/>
+              <Image source={require('../../assets/lowerpage_record.png')} style={styles.videoPlayButton}/>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Image source={require('../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
+              <Image source={require('../../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Image source={require('../assets/share.png')} style={styles.videoShareButton}/>
+              <Image source={require('../../assets/share.png')} style={styles.videoShareButton}/>
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.videoDescriptionContainer}>
-          <Text style={styles.videoDescription}>{item.longDescription}</Text>
+          <Text style={styles.videoDescription}>{data.longDescription}</Text>
         </View>
       </View>
     )
@@ -88,7 +123,6 @@ export default class LowerPageComponent extends PureComponent {
             </View>
             <View style={styles.logoContainer}>
               {/*// TODO: Logo*/}
-              {this._renderLogoChannel(data.item.originalImages)}
             </View>
           </View>
           <FlatList
@@ -119,35 +153,40 @@ export default class LowerPageComponent extends PureComponent {
     }
   }
 
-  _isFromChannel = () => this.props.videoType === 'channel'
+  _isFromChannel = () => this.props.navigation.state.params.isLive === true
 
   _renderListVideoItem = ({item}) => {
-    console.log(this._isFromChannel())
-    console.log(item)
 
     let videoData = this._isFromChannel() ? item.videoData : item
-    console.log('lowerpage 118')
-    console.log(videoData)
-    return (
-      <View style={styles.itemContainer}>
-        <Image
-          style={styles.videoThumnbail}
-          source={{uri: videoData.originalImages.length > 0 ? videoData.originalImages[0].url : fakeBannerData.url}}/>
-        <View style={styles.itemInformationContainer}>
-          <Text style={styles.itemTitle}>{videoData.title}</Text>
-          <Text style={styles.itemType}>{videoData.type}</Text>
-          <Text style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
-        </View>
-        <View style={styles.itemActionsContainer}>
-          <TouchableOpacity>
-            <Image source={require('../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
+
+    if (videoData) {
+      return (
+        <View style={styles.itemContainer}>
+          <TouchableOpacity
+            style={styles.videoThumnbailContainer}
+            onPress={() => this._onPress(item)}>
+            <Image
+              style={styles.videoThumbnail}
+              source={{uri: videoData.originalImages.length > 0 ? videoData.originalImages[0].url : fakeBannerData.url}}/>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={require('../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
-          </TouchableOpacity>
+          <View style={styles.itemInformationContainer}>
+            <Text style={styles.itemTitle}>{videoData.title}</Text>
+            <Text style={styles.itemType}>{videoData.type}</Text>
+            <Text
+              style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
+          </View>
+          <View style={styles.itemActionsContainer}>
+            <TouchableOpacity>
+              <Image source={require('../../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image source={require('../../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    )
+      )
+    }
+    else return null
   }
 
   _onScroll(e) {
@@ -156,19 +195,16 @@ export default class LowerPageComponent extends PureComponent {
 
   render() {
     // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-    const {listData, video} = this.props;
+    const {epg} = this.props;
+    const {item, isLive} = this.props.navigation.state.params
+    console.log(epg)
+    console.log(item)
 
-    console.log("RENDER_LOWERPAGE" )
-
-    if (!listData || !video)
-      return null;
-
-    let videoModel
-    if (this._isFromChannel()){
-      videoModel = video.videoData
-    } else {
-      videoModel = video
+    if (isLive) {
+      if (!item) return null
     }
+    else if (!epg || !epg.data || !item)
+      return null;
 
     return (
       <View style={styles.container}>
@@ -180,11 +216,11 @@ export default class LowerPageComponent extends PureComponent {
           style={styles.container}
           keyExtractor={this._keyExtractor}
           stickySectionHeadersEnabled={false}
-          onScroll={(e) => this._onScroll(e)}
+          //onScroll={(e) => this._onScroll(e)}
           sections={[
-            {data: [videoModel],showHeader: false, renderItem: this._renderBanner},
-            {data: [videoModel], renderItem: this._renderBannerInfo},
-            {data: [listData],showHeader: false, renderItem: this._renderList}
+            {data: [item],showHeader: false, renderItem: this._renderBanner},
+            {data: [item], renderItem: this._renderBannerInfo},
+            {data: [epg.data],showHeader: false, renderItem: this._renderList}
           ]}
         />
       </View>
@@ -201,14 +237,13 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flexDirection: 'row',
-    height: 400,
+    height: 225,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   bannerThumbnailContainer: {
-    marginTop: 40,
-    height: 164,
+    height: '72%',
     width: '92%',
     backgroundColor: colors.whitePrimary,
     borderRadius: (Platform.OS === 'ios') ? 4 : 8
@@ -226,8 +261,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 100,
   },
-  videoThumnbail: {
+  videoThumnbailContainer: {
     width: '41%',
+    height: '100%',
+    borderRadius: (Platform.OS === 'ios') ? 4 : 8
+  },
+  videoThumbnail: {
+    width: '100%',
     height: '100%',
     borderRadius: (Platform.OS === 'ios') ? 4 : 8
   },
@@ -325,7 +365,7 @@ const styles = StyleSheet.create({
   },
   videoDescriptionContainer: {
     width: '90%',
-    marginTop: 15,
+    marginTop: 20,
     maxHeight: 162,
     flexDirection: 'column',
   },
