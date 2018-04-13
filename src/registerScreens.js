@@ -60,6 +60,6 @@ export const ScreenStack = StackNavigator({
     mode: 'modal',
     headerMode: 'none',
     navigationOptions: {
-        gesturesEnabled: false,
+        gesturesEnabled: true,
     }
 });

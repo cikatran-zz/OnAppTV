@@ -391,7 +391,7 @@ export default class Settings extends React.PureComponent {
         if (wifi.data != null) {
             let newData = _.cloneDeep(this.data);
             newData[3].list[1].value = (wifi.data.SSID == null) ? "Not found" : wifi.data.SSID;
-            if (settings.data.HardDiskFile !== "") {
+            if (settings.data == null || settings.data.HardDiskFile !== "") {
                 newData[2].list[3].errorMessage = null;
                 newData[2].list[3].canBeNavigated = true;
             } else {
