@@ -16,7 +16,8 @@ import {
     Platform,
     Dimensions,
     NativeModules,
-    TouchableOpacity
+    TouchableOpacity,
+    StatusBar
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -50,13 +51,20 @@ export default class Home extends Component {
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
+        // NativeModules.RNUserKitIdentity.signUpWithEmail("dev@gmail.com", "00000000",{}, (error, results) => {
+        //     if (error) {
+        //         console.log(error)
+        //     } else {
+        //         console.log("Sign up success", results[0]);
+        //     }
+        // })
         NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
             console.log(results)
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 console.log("Already logged in");
             } else {
-                NativeModules.RNUserKitIdentity.signInWithEmail("chuong@gmail.com", "00000000", (error, results) => {
+                NativeModules.RNUserKitIdentity.signInWithEmail("dev@gmail.com", "00000000", (error, results) => {
                     if (error) {
                         console.log(error)
                     } else {
@@ -65,7 +73,16 @@ export default class Home extends Component {
                 })
             }
         });
+
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     };
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
 
     _renderChannelListItem = ({item}) => {
         var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
@@ -391,12 +408,12 @@ export default class Home extends Component {
             !live.fetched || live.isFetching)
             return null;
 
-        var channelData = channel.data.filter(item => item.favorite == 1);
+        var channelData = channel.data ? channel.data.filter(item => item.favorite == 1) : [];
         if (channelData.length == 0) {
             channelData = [null];
         }
 
-        if (this.state.favoriteCategories == null) {
+        if (this.state.favoriteCategories == null && category.data) {
             var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
             this.state.category = category.data;
             categoryData.push({"name": "_ADD"});
@@ -405,6 +422,10 @@ export default class Home extends Component {
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
+                <StatusBar
+                    translucent={true}
+                    backgroundColor='#00000000'
+                    barStyle='light-content'/>
                 <SectionList
                     style={{backgroundColor: colors.whitePrimary, position: 'relative', flex: 1}}
                     keyExtractor={this._keyExtractor}
@@ -491,7 +512,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 35,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     bannerPlayIconBackground: {
         width: '100%',
@@ -499,12 +520,12 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     bannerPlayIcon: {
-        top: 0,
-        left: 0,
+        top: -1,
+        left: -1,
         position: 'absolute',
         backgroundColor: 'transparent',
-        width: '100%',
-        height: '100%'
+        width: 72,
+        height: 72
     },
     listHorizontal: {
         marginVertical: 30,

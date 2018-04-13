@@ -17,6 +17,14 @@ RCT_EXPORT_METHOD(udpOperation) {
     [Api.sharedApi hIG_UdpOperation];
 }
 
+RCT_EXPORT_METHOD(isConnect: (RCTResponseSenderBlock)callback) {
+    NSMutableString *isConnected = [[NSMutableString alloc] initWithString: @"{\"is_connected\": false}"];
+    if ([Api.sharedApi hIG_IsConnect]) {
+        [isConnected setString:@"{\"is_connected\": true}"];
+    }
+    callback(@[isConnected]);
+}
+
 RCT_EXPORT_METHOD(udpReceiveMessageInJson: (RCTResponseSenderBlock)callback) {
     [Api.sharedApi hIG_UdpReceiveMessageInJson:^(NSString *string) {
         NSArray *events = [[NSArray alloc] initWithObjects: string, nil];
@@ -287,6 +295,19 @@ RCT_EXPORT_METHOD(getSubtitleLanguageCodeIndexInJson: (RCTResponseSenderBlock)ca
 
 RCT_EXPORT_METHOD(setPreferAudioLanguageWithJsonString: (NSString *)jsonString callback: (RCTResponseSenderBlock)callback) {
     [Api.sharedApi hIG_SetPreferAudioLanguageWithJsonString:jsonString callback:^(NSString *string) {
+        NSArray *events = [[NSArray alloc] initWithObjects: string, nil];
+        callback(@[[NSNull null], events]);
+    }];
+}
+
+RCT_EXPORT_METHOD(setPreferAudioLanguage: (NSString *)language callback: (RCTResponseSenderBlock)callback) {
+    [Api.sharedApi hIG_SetPreferAudioLanguage:language callback:^(BOOL isSuccess, NSString *error) {
+        NSMutableString *string = [[NSMutableString alloc] init];
+        if (isSuccess) {
+            [string setString:@"{\"success\": 1}"];
+        } else {
+            [string setString:[[NSString alloc] initWithFormat:@"{\"success\": 1, \"error\": \"%@\"}", error]];
+        }
         NSArray *events = [[NSArray alloc] initWithObjects: string, nil];
         callback(@[[NSNull null], events]);
     }];

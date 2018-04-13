@@ -1,8 +1,6 @@
 package com.onapptv;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.widget.Toast;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -10,19 +8,12 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeArray;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import com.google.gson.Gson;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import userkit.sdk.UserKit;
 import userkit.sdk.identity.UserKitIdentity;
 import userkit.sdk.identity.exception.IdentityException;
-import userkit.sdk.identity.model.AccountProfile;
 import userkit.sdk.identity.model.ProfileProperties;
 
 /**
@@ -30,6 +21,7 @@ import userkit.sdk.identity.model.ProfileProperties;
  */
 public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule {
     public static final String REACT_MODULE = "RNUserKitIdentity";
+    Gson gson = new Gson();
 
     public AndroidUserKitIdentityFramework(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -61,11 +53,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountInfo -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(accountInfo.toJsonString());
+                    array.pushString(gson.toJson(accountInfo));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
-                });
+                }, throwable -> callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
     @SuppressLint("CheckResult")
@@ -76,11 +66,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountInfo -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(accountInfo.toJsonString());
+                    array.pushString(gson.toJson(accountInfo));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
-                });
+                }, throwable -> callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
     @SuppressLint("CheckResult")
@@ -91,11 +79,9 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountInfo -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(accountInfo.toJsonString());
+                    array.pushString(gson.toJson(accountInfo));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(((IdentityException) throwable).toJsonString(), null);
-                });
+                }, throwable -> callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
 }

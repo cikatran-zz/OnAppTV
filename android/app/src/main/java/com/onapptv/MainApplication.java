@@ -12,6 +12,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.onapptv.custombrightcoveplayer.MyOkhttpModule;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
         super.onCreate();
         MultiDex.install(this);
         SoLoader.init(this, /* native exopackage */ false);
+        MyOkhttpModule.init(this);
         String token = "";
         if (BuildConfig.BUILD_TYPE == "release") {
             token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0X2lkIjoiNWFjMmVhZmVkMGY0NGY0NzRmYWUwMzM3IiwiaWF0IjoxNTIyNzMxNTIyfQ.QquSfGGQNc0PCZppc0deIqIYQaYUh5J0R76bl0ayKjI";

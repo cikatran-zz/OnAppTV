@@ -1,6 +1,6 @@
 import React from 'react'
 import Swiper from 'react-native-swiper'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, StatusBar, Platform} from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
@@ -13,7 +13,15 @@ export default class Book extends React.Component {
   }
 
   componentDidMount() {
-     this.props.getList()
+     this.props.getList();
+      this._navListener = this.props.navigation.addListener('didFocus', () => {
+          StatusBar.setBarStyle('dark-content');
+          (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+      });
+  }
+
+  componentWillUnmount() {
+      this._navListener.remove();
   }
 
   _keyExtractor = (item, index) => index
@@ -24,7 +32,10 @@ export default class Book extends React.Component {
 
     return (
       <View style={{width: '100%', height: '100%'}}>
-
+          <StatusBar
+              translucent={true}
+              backgroundColor='#00000000'
+              barStyle='dark-content'/>
         <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
           <Bookmark books={books}/>
           <RecordList header={"MY RECORDS"} books={books}/>
@@ -39,28 +50,5 @@ const styles = StyleSheet.create({
   pageViewStyle: {
     paddingTop: rootViewTopPadding(),
     backgroundColor: colors.screenBackground
-  },
-  slide1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB',
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
   }
 })

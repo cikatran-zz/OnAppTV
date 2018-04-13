@@ -5,6 +5,11 @@ import * as videoModalAction from './videoModalAction'
 import * as getNews from "./getNews";
 import * as getEpgs from "./getEPG";
 import * as getGenresContent from "./getGenresContent"
+import * as getAudioLanguage from "./getAudioLanguage"
+import * as getSettings from "./getSettings";
+import * as getSubtitles from "./getSubtitles"
+import * as getResolution from "./getResolution"
+import * as getVideoFormat from "./getVideoFormat"
 
 export default actions = {
     getBanner,
@@ -13,5 +18,10 @@ export default actions = {
     videoModalAction,
     getNews,
     getEpgs,
-    getGenresContent
+    getGenresContent,
+    getAudioLanguage,
+    getSettings,
+    getSubtitles,
+    getResolution,
+    getVideoFormat
 };

@@ -8,20 +8,20 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import userkit.sdk.UserKit;
-import userkit.sdk.identity.UserKitIdentity;
 
 /**
  * Created by henry on 4/2/18.
  */
 public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
     public static final String REACT_MODULE = "RNUserKit";
+    Gson gson = new Gson();
 
     public AndroidUserKitFramework(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -55,12 +55,9 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    Object valueJson = JsonHelper.toJSON(value.toHashMap());
-                    array.pushString(valueJson.toString());
+                    array.pushString(gson.toJson(value.toHashMap()));
                     callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(throwable.toString(), null);
-                });
+                }, throwable -> callback.invoke(gson.toJson(throwable), null));
     }
 
     @SuppressLint("CheckResult")
@@ -71,11 +68,14 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(value -> {
                     WritableNativeArray array = new WritableNativeArray();
-                    Object valueJson = JsonHelper.toJSON(value.get());
-                    array.pushString(valueJson.toString());
-                    callback.invoke(null, array);
-                }, throwable -> {
-                    callback.invoke(throwable.toString(), null);
-                });
+                    if (value.isPresent()) {
+                        array.pushString(gson.toJson(value.get()));
+                        callback.invoke(null, array);
+                    } else {
+                        array.pushString("{}");
+                        callback.invoke(null, array);
+                    }
+
+                }, throwable -> callback.invoke(gson.toJson(throwable), null));
     }
 }
