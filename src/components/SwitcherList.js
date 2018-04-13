@@ -36,7 +36,9 @@ export default class SwitcherList extends React.PureComponent {
         let newStates = _.times(this.props.data.length, false);
         _.fill(newStates, false);
 
-        newStates[index] = true;
+        if (index != -1) {
+            newStates[index] = true;
+        }
         this.setState({switchStates: newStates});
     }
 

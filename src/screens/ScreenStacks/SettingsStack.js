@@ -13,6 +13,8 @@ import SignIn from "../Settings/SignIn";
 import defaultNavigationOptions from "../../utils/navigationOption";
 import Privacy from "../Settings/Privacy";
 import Authorization from "../Settings/Authorization";
+import STBSelfTests from "../Settings/STBSelfTests";
+import SelectOperator from "../Settings/SelectOperator";
 
 export default SettingsStack = StackNavigator({
     Setting: {
@@ -87,5 +89,17 @@ export default SettingsStack = StackNavigator({
         navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("Authorization", navigation, true)
         })
-    }
+    },
+    STBSelfTests: {
+        screen: STBSelfTests,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("STB self tests", navigation, true)
+        })
+    },
+    SelectOperator: {
+        screen: SelectOperator,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Select Operator", navigation, true)
+        })
+    },
 });

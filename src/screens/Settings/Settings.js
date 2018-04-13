@@ -6,6 +6,8 @@ import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
 import _ from 'lodash'
+import STBSelfTests from "./STBSelfTests";
+import AlertModal from "../../components/AlertModal";
 
 export default class Settings extends React.PureComponent {
 
@@ -105,7 +107,49 @@ export default class Settings extends React.PureComponent {
             },
             {
                 title: "ON SUPPORT",
-                list: []
+                list: [
+                    {
+                        name: "Antenna configuration",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Decoder self-check",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'STBSelfTests',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Rights in my decoder",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'SelectOperator',
+                        needSTB: false,
+                        icon: require('../../assets/settings-number1.png')
+                    },
+                    {
+                        name: "Format Hard Disk",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: '',
+                        needSTB: true,
+                        icon: require('../../assets/ic_wifi.png'),
+                        errorMessage: "No hard disk exists"
+                    },
+                    {
+                        name: "Timeshift max size on Hard Disk",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                ]
             },
             {
                 title: "ABOUT ON",
@@ -227,7 +271,7 @@ export default class Settings extends React.PureComponent {
         ];
 
         this.changeableItems = {};
-
+        this.alertVC = null;
     }
 
     componentDidMount() {
@@ -249,6 +293,8 @@ export default class Settings extends React.PureComponent {
         const {navigation} = this.props;
         if (item.canBeNavigated) {
             navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+        } else if (item.errorMessage != null) {
+            this._showModal(item.errorMessage);
         }
     }
 
@@ -259,7 +305,8 @@ export default class Settings extends React.PureComponent {
     _renderSettingItem = ({item}) => {
         return (<SettingItem ref={(settingItem) => {
             this.changeableItems[item.screen] = settingItem
-        }} showIcon={true} showRightIcon={item.canBeNavigated} icon={item.icon} item={item} onPress={() => this._navigateToItem(item)}/>)
+        }} showIcon={true} showRightIcon={item.canBeNavigated} icon={item.icon} item={item}
+                             onPress={() => this._navigateToItem(item)}/>)
     };
 
     _renderSection = ({item}) => {
@@ -323,6 +370,10 @@ export default class Settings extends React.PureComponent {
         }}/>
     );
 
+    _showModal = (message) => {
+        this.alertVC.setState({isShow: true, message: message});
+    };
+
     render() {
 
         const {settings, wifi} = this.props;
@@ -340,6 +391,13 @@ export default class Settings extends React.PureComponent {
         if (wifi.data != null) {
             let newData = _.cloneDeep(this.data);
             newData[3].list[1].value = (wifi.data.SSID == null) ? "Not found" : wifi.data.SSID;
+            if (settings.data.HardDiskFile !== "") {
+                newData[2].list[3].errorMessage = null;
+                newData[2].list[3].canBeNavigated = true;
+            } else {
+                newData[2].list[3].errorMessage = "No hard disk exists";
+                newData[2].list[3].canBeNavigated = false;
+            }
             this.data = newData;
         }
 
@@ -349,6 +407,7 @@ export default class Settings extends React.PureComponent {
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='dark-content'/>
+                <AlertModal ref={(modal)=>{this.alertVC = modal}}/>
                 <SectionList
                     style={styles.sectionListContainer}
                     keyExtractor={this._keyExtractor}
