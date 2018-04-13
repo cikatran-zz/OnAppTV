@@ -10,9 +10,8 @@ export default class Category extends Component {
         super(props);
         this.names = {}
         this.startCategory = ""
-    };
 
-    componentDidMount() {
+        // Fetch data
         const {data, fromItem} = this.props.navigation.state.params;
         var ids = [];
         this.startCategory = fromItem;
@@ -21,6 +20,10 @@ export default class Category extends Component {
             this.names[item.id] = item.name;
         });
         this.props.getGenresContent(ids);
+    };
+
+    componentDidMount() {
+
     };
 
     _getPagePosition = (index, length) => {

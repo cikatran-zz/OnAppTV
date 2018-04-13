@@ -5,6 +5,7 @@ import {HttpLink} from 'apollo-link-http';
 import {onError} from 'apollo-link-error'
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
+import _ from 'lodash';
 
 
 const instance = axios.create({
@@ -46,178 +47,225 @@ const get = (endpoints) => {
 
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
-        resolve([
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 100,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 1,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "MOSAIC",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 200,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 2,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "France 24 (in English)",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 300,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 3,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "Orange",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 310,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 4,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "DisneyXD",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 400,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 5,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "UTVSTAR",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 500,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 6,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "Nickelodeon",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 600,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 7,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "Music India",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 800,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 8,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "Disney Channel",
-                "locked" : 0,
-                "reserved" : 0
-            },
-            {
-                "favorite" : 0,
-                "satelliteID" : 1,
-                "scrambled" : 0,
-                "transportStreamID" : 1,
-                "serviceID" : 900,
-                "orginalNetworkID" : 1,
-                "invisible" : 0,
-                "removed" : 0,
-                "carrierID" : 1025,
-                "serviceType" : 1,
-                "lCN" : 9,
-                "transponderIndex" : 1,
-                "hDLCN" : 0,
-                "serviceName" : "Fox Family Movies",
-                "locked" : 0,
-                "reserved" : 0
-            }
-        ]);
-
-        // NativeModules.STBManager.getZapServiceListInJson((error, events) => {
-        //     if (error) {
-        //         reject(error);
-        //     } else {
-        //         resolve(JSON.parse(events[0]))
+        // resolve([
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 100,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 1,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "MOSAIC",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 200,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 2,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "France 24 (in English)",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 300,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 3,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "Orange",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 310,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 4,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "DisneyXD",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 400,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 5,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "UTVSTAR",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 500,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 6,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "Nickelodeon",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 600,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 7,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "Music India",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 800,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 8,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "Disney Channel",
+        //         "locked" : 0,
+        //         "reserved" : 0
+        //     },
+        //     {
+        //         "favorite" : 0,
+        //         "satelliteID" : 1,
+        //         "scrambled" : 0,
+        //         "transportStreamID" : 1,
+        //         "serviceID" : 900,
+        //         "orginalNetworkID" : 1,
+        //         "invisible" : 0,
+        //         "removed" : 0,
+        //         "carrierID" : 1025,
+        //         "serviceType" : 1,
+        //         "lCN" : 9,
+        //         "transponderIndex" : 1,
+        //         "hDLCN" : 0,
+        //         "serviceName" : "Fox Family Movies",
+        //         "locked" : 0,
+        //         "reserved" : 0
         //     }
-        // });
+        // ]);
+
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getZapServiceListInJson((error, events) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        syncUserKitWithSTBChannels(JSON.parse(events[0])).then((values)=>{
+                            resolve(values);
+                        }).catch((e)=>{
+                            resolve(JSON.parse(events[0]));
+                        });
+                    }
+                });
+            } else {
+                NativeModules.RNUserKit.getProperty("favorite_channels", (error, result)=> {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        let jsonObj = JSON.parse(result[0]);
+                        resolve(jsonObj.data);
+                    }
+                });
+            }
+        });
+
+    });
+};
+
+syncUserKitWithSTBChannels = (channels)=> {
+    return new Promise((resolve, reject)=> {
+        NativeModules.RNUserKit.getProperty("favorite_channels", (error, result)=> {
+            if (error) {
+                reject(error);
+            } else {
+                let jsonObj = JSON.parse(result[0]);
+                if (jsonObj.data != null) {
+                    var userKitResult = new Array(0);
+                    for(let i = 0; i< channels.length; i++) {
+                        let foundObj = jsonObj.data.find((element)=> element.serviceID == channels[i].serviceID);
+                        let element = channels[i];
+                        if (foundObj != null) {
+                            element.favorite = foundObj.favorite;
+                        }
+                        userKitResult.push(element);
+                    }
+                    NativeModules.RNUserKit.storeProperty("favorite_channels", {data: userKitResult}, (e, r)=>{});
+                    resolve(userKitResult);
+                } else {
+                    NativeModules.RNUserKit.storeProperty("favorite_channels", {data: channels}, (e, r)=>{});
+                    reject({error_message: "Cannot found property"});
+                }
+            }
+        });
     });
 };
 
@@ -228,7 +276,7 @@ export const checkStbConnection = () => {
       else resolve(events)
     })
   })
-}
+};
 
 export const getBookList = () => {
     let bookList = null;
@@ -350,8 +398,8 @@ export const getChannel = (limit) => {
     var zapList = null;
     return getSTBChannel()
       .then((value) => {
-          zapList = value;
-          var serviceIDs = []
+          zapList = _.cloneDeep(value);
+          var serviceIDs = [];
           for (var i = 0; i< value.length; i++) {
               serviceIDs.push(value[i].serviceID);
           }
@@ -502,5 +550,114 @@ export const getEpgWithSeriesId = (seriesId) => {
     query: config.queries.EPG_WITH_SERIES,
     variables: {id: seriesId}
   })
-}
+};
+
+
+// Settings screen
+
+// Audio language
+export const getAudioLanguage = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getPreferAudioLanguageInJson((error, results)=> {
+                    let audioLanguage = JSON.parse(results[0]).audioLanguageCode;
+                    resolve(audioLanguage);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+// Subtitles
+export const getSubtitles = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getPreferSubtitleLanguageInJson((error, results)=> {
+                    let subLanguage = JSON.parse(results[0]).subtitleLanguageCode;
+                    resolve(subLanguage);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+// Resolution
+export const getResolution = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getResolutionInJson((error, results)=> {
+                    let resolution = JSON.parse(results[0]).resolution;
+                    resolve(resolution);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+export const getVideoFormat = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getAspectRatioInJson((error, results)=> {
+                    let aspectRatio = JSON.parse(results[0]).aspectRatio;
+                    resolve(aspectRatio);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+export const getSettings = () => {
+    let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
+    let languageShort = ["eng", "fre", "spa", "ita", "chi", "000"];
+    let resolutions = ["1080P","1080I","720P","576P","576I"];
+    let aspectRatio = ["4:3 Letter Box","4:3 Center Cut Out","4:3 Extended","16:9 Pillar Box","16:9 Full Screen","16:9 Extended"];
+    return new Promise((resolve, reject) => {
+        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat()]).then((values)=> {
+            // Audio lang
+            let indexLang = languageShort.indexOf(values[0]);
+            if (indexLang == -1) {
+                indexLang = 0;
+            }
+            let audioLanguage = languageFull[indexLang];
+
+            // Subtitles lang
+            indexLang = languageShort.indexOf(values[1]);
+            if (indexLang == -1) {
+                indexLang = 0;
+            }
+            let subLanguage = languageFull[indexLang];
+
+            // Resolution
+            let resolution = resolutions[values[2]];
+
+            // Video format
+            let ratio = aspectRatio[values[3]];
+
+            resolve({
+                AudioLanguage: audioLanguage,
+                Subtitles: subLanguage,
+                Resolution: resolution,
+                VideoFormat: ratio
+            });
+        }).catch((error)=> {
+            reject(error);
+        })
+    });
+};
 
