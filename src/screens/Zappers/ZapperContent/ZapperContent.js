@@ -1,29 +1,87 @@
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
+import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, PanResponder, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
 import Orientation from 'react-native-orientation';
 import {rootViewTopPadding} from '../../../utils/rootViewTopPadding'
 import ZapperCell from '../../../components/ZapperCell'
 import ChannelModal from "../ChannelModal/ChannelModal";
+import PinkRoundedLabel from "../../../components/PinkRoundedLabel"
 
 const icClose = require('../../../assets/ic_modal_close.png');
+const minTop = 70;
 
 export default class Zappers extends Component {
 
+    _movable = null;
+    contentHeight = 0;
+    layoutHeight = 0;
+    _list = null;
+    currentPosition = minTop;
     constructor(props) {
         super(props);
         this.state = {
             channelData: [],
             showAllChannels: true,
             favoriteChannels: [],
-            allChannels: []
+            allChannels: [],
+            position: minTop,
+            dragging: false
         };
         this.channelModal = null;
     };
 
-    componentWillMount() {
-        //Orientation.lockToPortrait();
+    _onPanResponderMove = (event, gestureState) => {
+        const {width, height} = Dimensions.get("window");
+        this.setState({dragging: true})
+        this.handleScrollviewPanresponder();
+        this.setPosition(this.getCurrentPosition() + gestureState.dy);
+        console.log("Move", (this.contentHeight/height)*gestureState.dy);
+        console.log("Dy", gestureState.dy);
+        console.log("h", height)
+        this.scrollList((this.contentHeight/height)*gestureState.dy)
+    }
+
+    getCurrentPosition() {
+        return this.currentPosition;
+    }
+
+    setCurrentPosition(newPosition) {
+        this.currentPosition += newPosition;
+    }
+
+    scrollList(position) {
+        this._list.scrollToOffset({x:0, y:position, animated: true});
+    }
+
+    _onStartShouldSetPanResponder = (event) => {
+        return true;
     };
+
+    _onPanResponderRelease = (event, gestureState) => {
+        this.setState({dragging: false});
+        this.setCurrentPosition(gestureState.dy);
+        return true;
+    }
+
+    _listOnStartShouldSetPanResponder = (event) => {
+        console.log("List Set Pan");
+        return false;
+    }
+
+    componentWillMount(){
+        this._panResponder = PanResponder.create({
+            onMoveShouldSetPanResponder: this._onStartShouldSetPanResponder,
+            onMoveShouldSetPanResponderCapture: this._onStartShouldSetPanResponder,
+            onPanResponderMove: this._onPanResponderMove,
+            onPanResponderRelease: this._onPanResponderRelease,
+            onResponderTerminationRequest: (event) => false
+        });
+
+        this._listPanResponder = PanResponder.create({
+            onMoveShouldSetPanResponder: this._listOnStartShouldSetPanResponder,
+            onMoveShouldSetPanResponderCapture: this._listOnStartShouldSetPanResponder,
+        });
+    }
 
     componentDidMount() {
         const {params} = this.props.navigation.state;
@@ -64,6 +122,51 @@ export default class Zappers extends Component {
         // } )
     };
 
+    _onContentSizeChange = (width, height) => {
+        console.log("Content Size: ", height)
+        this.contentHeight = height;
+    }
+
+    _handleScroll = (event) => {
+        console.log("Scroll", event.nativeEvent.contentOffset.y);
+        console.log("Content H", event.nativeEvent.contentSize.height);
+        if (!this.state.dragging) {
+            let offsetY = event.nativeEvent.contentOffset.y;
+            let contentHeight = event.nativeEvent.contentSize.height;
+            let layoutHeight = event.nativeEvent.layoutMeasurement.height;
+            let position = minTop + offsetY * (layoutHeight / contentHeight)
+            this.setPosition(position);
+            this.setCurrentPosition(position);
+        }
+    }
+
+    _onScrollviewStartPanResponder = () => {
+        const {dragging} = this.state;
+        return dragging
+    }
+    handleScrollviewPanresponder(){
+        // Tell ListView not to give up the gesture so easy
+        Object.assign(this._list.getScrollResponder(), {
+            scrollResponderHandleStartShouldSetResponder: this._onScrollviewStartPanResponder,
+            scrollResponderHandleTerminationRequest: this._onScrollviewStartPanResponder
+        });
+    }
+
+    setPosition(position) {
+        this._movable.setNativeProps({
+            style: [styles.floatingPinkLabel, {
+                top: position,
+            }]
+        });
+    };
+
+    getMovableStyle = () => {
+        return [styles.floatingPinkLabel, {
+            top: this.state.position,
+        }]
+    };
+
+
     _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
                                                style={styles.item}
                                                onPress={()=>this._zapChannel(item.item.lCN)}>
@@ -87,6 +190,12 @@ export default class Zappers extends Component {
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content' />
+                <Animated.View
+                    {...this._panResponder.panHandlers}
+                    style={this.getMovableStyle()}
+                    ref={(ref) => this._movable = ref} >
+                    <PinkRoundedLabel style={{zIndex: 1}} text={this.state.showTime} />
+                </Animated.View>
                 <ImageBackground style={styles.image}
                                  source={require('../../../assets/conn_bg.png')}
                                  blurRadius={30}>
@@ -95,13 +204,19 @@ export default class Zappers extends Component {
                             <Image source={icClose} style={{resizeMode: 'stretch', height: 30, width: 30}}/>
                         </TouchableOpacity>
                     </View>
+
                     <FlatList style={styles.grid}
                               data={epgsData}
                               numColumns={3}
+                              {...this._listPanResponder.panHandlers}
+                              onContentSizeChange={this._onContentSizeChange}
+                              ref={(ref) => this._list = ref}
+                              onScroll={this._handleScroll}
                               showsVerticalScrollIndicator={false}
                               keyExtractor={(item, index) => index}
                               renderItem={this._renderItem}
                               ListFooterComponent={this._renderListFooter}/>
+
                 </ImageBackground>
             </View>
         );
@@ -154,4 +269,9 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         ...calculateItemSize(Dimensions.get("window").width - 60, 90, 0)
     },
+    floatingPinkLabel: {
+        position: 'absolute',
+        left: 0,
+        top: minTop
+    }
 });
