@@ -80,7 +80,7 @@ export default class Zappers extends Component {
     };
 
     _zapChannel = (item) => {
-        // NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
+        // NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lcn}),(error, events) => {
         //     if (error) {
         //         console.log(error);
         //     } else {
