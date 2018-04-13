@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,6 +47,18 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         }
         else array.pushBoolean(false);
         callback.invoke(null, array);
+    }
+
+    @ReactMethod
+    public void getCurrentSTBInfoInJson(Callback callback) {
+        WritableNativeMap map = new WritableNativeMap();
+        map.putString("STBID", Api_Implementation.sharedManager().getCurrentSTBInfo().sTBID);
+        map.putString("OUI", Api_Implementation.sharedManager().getCurrentSTBInfo().oUI);
+        map.putInt("hardwareVersion", Api_Implementation.sharedManager().getCurrentSTBInfo().hardwareVersion);
+        map.putInt("softwareVersion", Api_Implementation.sharedManager().getCurrentSTBInfo().softwareVersion);
+        map.putInt("loaderVersion", Api_Implementation.sharedManager().getCurrentSTBInfo().loaderVersion);
+        map.putString("IPAddress", Api_Implementation.sharedManager().getCurrentSTBInfo().iPAddress);
+        callback.invoke(null, map);
     }
 
     @ReactMethod
