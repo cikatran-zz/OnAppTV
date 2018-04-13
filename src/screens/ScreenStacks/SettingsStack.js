@@ -1,5 +1,5 @@
 import ParentalControlLock from "../Settings/ParentalControlLock";
-import PersonalInformation from "../Settings/PersionalInformations";
+import PersonalInformation from "../Settings/PersionalInformation";
 import Resolution from "../Settings/Resolution";
 import MySubscription from "../Settings/MySubscription";
 import ParentalControl from "../Settings/ParentalControl";
@@ -11,6 +11,10 @@ import {StackNavigator} from "react-navigation";
 import VideoFormat from "../Settings/VideoFormat";
 import SignIn from "../Settings/SignIn";
 import defaultNavigationOptions from "../../utils/navigationOption";
+import Privacy from "../Settings/Privacy";
+import Authorization from "../Settings/Authorization";
+import STBSelfTests from "../Settings/STBSelfTests";
+import SelectOperator from "../Settings/SelectOperator";
 
 export default SettingsStack = StackNavigator({
     Setting: {
@@ -56,12 +60,6 @@ export default SettingsStack = StackNavigator({
             ...defaultNavigationOptions("My Subscription", navigation, true)
         })
     },
-    ParentalControlLock: {
-        screen: ParentalControlLock,
-        navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("", navigation, true)
-        })
-    },
     ParentalControl: {
         screen: ParentalControl,
         navigationOptions: ({navigation}) => ({
@@ -71,7 +69,7 @@ export default SettingsStack = StackNavigator({
     PersonalInformation: {
         screen: PersonalInformation,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Personal informations", navigation, true)
+            ...defaultNavigationOptions("My personal information", navigation, true)
         })
     },
     SignIn: {
@@ -79,5 +77,29 @@ export default SettingsStack = StackNavigator({
         navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("Sign in", navigation, true)
         })
-    }
+    },
+    Privacy: {
+        screen: Privacy,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Privacy", navigation, true)
+        })
+    },
+    Authorization: {
+        screen: Authorization,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Authorization", navigation, true)
+        })
+    },
+    STBSelfTests: {
+        screen: STBSelfTests,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("STB self tests", navigation, true)
+        })
+    },
+    SelectOperator: {
+        screen: SelectOperator,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Select Operator", navigation, true)
+        })
+    },
 });

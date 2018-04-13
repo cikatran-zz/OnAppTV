@@ -18,6 +18,7 @@ import settingsReducer from "./settingsReducer";
 import subtitlesReducer from "./subtitlesReducer"
 import resolutionReducer from "./resolutionReducer";
 import videoFormatReducer from './videoFormatReducer';
+import wifiInfoReducer from "./wifiInfoReducer";
 import seriesInfoReducer from './seriesInfoReducer'
 
 export default combineReducers({
@@ -40,5 +41,6 @@ export default combineReducers({
     subtitlesReducer,
     resolutionReducer,
     videoFormatReducer,
+    wifiInfoReducer,
     seriesInfoReducer
 });

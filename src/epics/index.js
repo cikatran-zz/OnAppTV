@@ -16,6 +16,7 @@ import getSettingsEpic from "./settingsRequestEpic";
 import getSubtitlesEpic from "./subtitlesRequestEpic";
 import getResolutionEpic from "./resolutionRequestEpic";
 import getVideoFormatEpic from "./videoFormatRequestEpic";
+import getWifiInfoEpic from "./wifiInfoRequestEpic";
 import seriesInfoRequestEpic from "./seriesInfoRequestEpic"
 
 const rootEpic = combineEpics(
@@ -37,6 +38,7 @@ const rootEpic = combineEpics(
     getSubtitlesEpic,
     getResolutionEpic,
     getVideoFormatEpic,
+    getWifiInfoEpic,
     seriesInfoRequestEpic,
     getZapperContentRequestEpic,
 );
