@@ -73,7 +73,7 @@ export default class VideoControlModal extends React.Component {
 
     NativeModules.STBManager.getVolumeInJson((error, events) => {
         if (!error) {
-            this.setState({volume: JSON.parse(events[0]).volume})
+            this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
         }
     })
 

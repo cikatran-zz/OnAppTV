@@ -80,7 +80,8 @@ export default class Zappers extends Component {
     };
 
     _zapChannel = (item) => {
-        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lcn}),(error, events) => {
+        console.log("ZAP:",item);
+        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
             if (error) {
                 console.log(error);
             } else {
@@ -155,6 +156,7 @@ export default class Zappers extends Component {
         if (this.state.showAllChannels) {
             newData = this.state.favoriteChannels;
         }
+        this.setState({showAllChannels: !this.state.showAllChannels, channelData: newData});
         this.setState({showAllChannels: !this.state.showAllChannels, channelData: newData});
     };
 

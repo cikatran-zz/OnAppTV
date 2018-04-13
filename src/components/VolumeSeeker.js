@@ -9,7 +9,7 @@ class VolumeSeeker extends React.PureComponent {
   }
 
   render() {
-
+    console.log("VALUE", this.props.value);
     return(
       <Slider
         style={{width: this.props.width}}
