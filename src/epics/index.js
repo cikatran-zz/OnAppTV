@@ -15,6 +15,7 @@ import getSettingsEpic from "./settingsRequestEpic";
 import getSubtitlesEpic from "./subtitlesRequestEpic";
 import getResolutionEpic from "./resolutionRequestEpic";
 import getVideoFormatEpic from "./videoFormatRequestEpic";
+import seriesInfoRequestEpic from "./seriesInfoRequestEpic"
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -29,12 +30,13 @@ const rootEpic = combineEpics(
     epgWithSeriesId,
     getBookingEpic,
     getGenresContentEpic,
-    getRecordsEpic
+    getRecordsEpic,
     getAudioLanguageEpic,
     getSettingsEpic,
     getSubtitlesEpic,
     getResolutionEpic,
-    getVideoFormatEpic
+    getVideoFormatEpic,
+    seriesInfoRequestEpic
 );
 
 export default rootEpic;

@@ -680,3 +680,10 @@ export const getSettings = () => {
     });
 };
 
+export const getSeriesInfo = (seriesId) => {
+  return client.query({
+    query: config.queries.SERIES_INFO,
+    variables: {id: seriesId}
+  })
+}
+
