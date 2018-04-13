@@ -450,11 +450,15 @@ export default class VideoControlModal extends React.Component {
               <Text style={styles.modalLongDes}>{item.longDescription}</Text>
               <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'item')}>
-                  <Image source={img} style={{width: 40, height: 40, marginRight: 7, backgroundColor: firstButtonImg, borderRadius: 20, resizeMode: 'contain'}}/>
+                  <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: firstButtonImg, borderRadius: 20}}>
+                    <Image source={img} style={styles.buttonIconStyle}/>
+                  </View>
                   <Text>{"Episode " + item.seasonIndex}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'series')}>
-                  <Image source={img} style={{width: 40, height: 40, marginRight: 7, backgroundColor: secondButtonImg, borderRadius: 20, resizeMode: 'contain'}}/>
+                  <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: secondButtonImg, borderRadius: 20}}>
+                  <Image source={img} style={styles.buttonIconStyle}/>
+                  </View>
                   <Text>{seriesInfo.data ? seriesInfo.data.title : ""}</Text>
                 </TouchableOpacity>
               </View>
