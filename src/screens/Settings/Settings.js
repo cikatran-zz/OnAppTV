@@ -1,11 +1,13 @@
 import React from 'react'
 import {
-    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform
+    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import SettingItem from '../../components/SettingItem'
 import _ from 'lodash'
+import STBSelfTests from "./STBSelfTests";
+import AlertModal from "../../components/AlertModal";
 
 export default class Settings extends React.PureComponent {
 
@@ -38,7 +40,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'Resolution',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/settings-lock.png')
                     },
                     {
                         name: "Video Format",
@@ -47,16 +49,234 @@ export default class Settings extends React.PureComponent {
                         screen: 'VideoFormat',
                         needSTB: true,
                         icon: require('../../assets/ic_wifi.png')
-                    }]
+                    },
+                    {
+                        name: "Parental Control",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'ParentalControl',
+                        needSTB: true,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                ]
+            },
+            {
+                title: "ON ACCOUNT",
+                list: [
+                    {
+                        name: "My personal information",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'PersonalInformation',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "My subscription",
+                        value: "06X223YT-2017",
+                        canBeNavigated: true,
+                        screen: 'MySubscription',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "My messages",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'Messages',
+                        needSTB: false,
+                        icon: require('../../assets/settings-number1.png')
+                    },
+                    {
+                        name: "Privacy",
+                        value: "Share my view",
+                        canBeNavigated: true,
+                        screen: 'Privacy',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Authorization",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'Authorization',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                ]
+            },
+            {
+                title: "ON SUPPORT",
+                list: [
+                    {
+                        name: "Antenna configuration",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Decoder self-check",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'STBSelfTests',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Rights in my decoder",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: 'SelectOperator',
+                        needSTB: false,
+                        icon: require('../../assets/settings-number1.png')
+                    },
+                    {
+                        name: "Format Hard Disk",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: '',
+                        needSTB: true,
+                        icon: require('../../assets/ic_wifi.png'),
+                        errorMessage: "No hard disk exists"
+                    },
+                    {
+                        name: "Timeshift max size on Hard Disk",
+                        value: "",
+                        canBeNavigated: true,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                ]
+            },
+            {
+                title: "ABOUT ON",
+                list: [
+                    {
+                        name: "ON-MAD Version",
+                        value: "1.0",
+                        canBeNavigated: false,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Wifi",
+                        value: "Not found",
+                        canBeNavigated: false,
+                        screen: 'WIFI',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Manufacturer ID",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'ManufacturerID',
+                        needSTB: true,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Model ID",
+                        value: "50",
+                        canBeNavigated: false,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Serial Number",
+                        value: "70550295000010",
+                        canBeNavigated: false,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Hardware version",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'HardwareVersion',
+                        needSTB: true,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Boot Loader version",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'BootLoaderVersion',
+                        needSTB: true,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "STB software version",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'STBSoftwareVersion',
+                        needSTB: true,
+                        icon: require('../../assets/settings-numberthree.png')
+                    },
+                    {
+                        name: "Decoder ID",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'DecoderID',
+                        needSTB: true,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Smartcard",
+                        value: "10056144",
+                        canBeNavigated: false,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "ACS",
+                        value: "5841-6.1.0.9-AS+SC-E80050",
+                        canBeNavigated: false,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Hard Disk file system",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'HardDiskFile',
+                        needSTB: true,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                    {
+                        name: "Hard Disk size",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'HardDiskTotalSize',
+                        needSTB: true,
+                        icon: require('../../assets/ic_wifi.png')
+                    },
+                    {
+                        name: "Hard Disk size available",
+                        value: "",
+                        canBeNavigated: false,
+                        screen: 'HardDiskFreeSize',
+                        needSTB: true,
+                        icon: require('../../assets/settings-lock.png')
+                    },
+                ]
             }
         ];
 
         this.changeableItems = {};
-
+        this.alertVC = null;
     }
 
     componentDidMount() {
         this.props.getSettings();
+        this.props.getWifiInfo();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
@@ -73,6 +293,8 @@ export default class Settings extends React.PureComponent {
         const {navigation} = this.props;
         if (item.canBeNavigated) {
             navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+        } else if (item.errorMessage != null) {
+            this._showModal(item.errorMessage);
         }
     }
 
@@ -83,7 +305,8 @@ export default class Settings extends React.PureComponent {
     _renderSettingItem = ({item}) => {
         return (<SettingItem ref={(settingItem) => {
             this.changeableItems[item.screen] = settingItem
-        }} showIcon={true} icon={item.icon} item={item} onPress={() => this._navigateToItem(item)}/>)
+        }} showIcon={true} showRightIcon={item.canBeNavigated} icon={item.icon} item={item}
+                             onPress={() => this._navigateToItem(item)}/>)
     };
 
     _renderSection = ({item}) => {
@@ -131,7 +354,6 @@ export default class Settings extends React.PureComponent {
         for (let i = 0; i < newData.length; i++) {
             for (let j = 0; j < newData[i].list.length; j++) {
                 if (newData[i].list[j].needSTB) {
-                    newData[i].list[j].canBeNavigated = true;
                     newData[i].list[j].value = data[newData[i].list[j].screen];
                 }
             }
@@ -140,11 +362,23 @@ export default class Settings extends React.PureComponent {
         this.data = newData;
     }
 
+    _renderListFooter = () => (
+        <View style={{
+            width: '100%',
+            height: Dimensions.get("window").height * 0.08 + 20,
+            backgroundColor: 'transparent'
+        }}/>
+    );
+
+    _showModal = (message) => {
+        this.alertVC.setState({isShow: true, message: message});
+    };
+
     render() {
 
-        const {settings} = this.props;
+        const {settings, wifi} = this.props;
 
-        if (!settings.fetched || settings.isFetching) {
+        if (!settings.fetched || settings.isFetching || !wifi.fetched || wifi.isFetching) {
             return null;
         }
 
@@ -154,12 +388,26 @@ export default class Settings extends React.PureComponent {
             this._configureData(settings.data);
         }
 
+        if (wifi.data != null) {
+            let newData = _.cloneDeep(this.data);
+            newData[3].list[1].value = (wifi.data.SSID == null) ? "Not found" : wifi.data.SSID;
+            if (settings.data == null || settings.data.HardDiskFile !== "") {
+                newData[2].list[3].errorMessage = null;
+                newData[2].list[3].canBeNavigated = true;
+            } else {
+                newData[2].list[3].errorMessage = "No hard disk exists";
+                newData[2].list[3].canBeNavigated = false;
+            }
+            this.data = newData;
+        }
+
         return (
             <View style={styles.container}>
                 <StatusBar
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='dark-content'/>
+                <AlertModal ref={(modal)=>{this.alertVC = modal}}/>
                 <SectionList
                     style={styles.sectionListContainer}
                     keyExtractor={this._keyExtractor}
@@ -167,14 +415,15 @@ export default class Settings extends React.PureComponent {
                     onEndReachedThreshold={20}
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
-                    sections={[
-                        {
-                            data: [this.data[0].list],
+                    ListFooterComponent={this._renderListFooter}
+                    sections={this.data.map((section) => {
+                        return {
+                            data: [section.list],
                             showHeader: true,
-                            title: this.data[0].title,
+                            title: section.title,
                             renderItem: this._renderSection
                         }
-                    ]}
+                    })}
                 />
             </View>
         )
