@@ -8,6 +8,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    NativeModules,
+    Share,
     View
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
@@ -38,7 +40,9 @@ export default class VideoControlModal extends React.Component {
       recordEnabled: false,
       favoriteEnabled: false,
       isPlaying: true,
-      modalVisibility: false
+      modalVisibility: false,
+      modalRecordTarget: "none",
+      modalFavoriteTarget: "none"
     }
   }
 
@@ -57,6 +61,7 @@ export default class VideoControlModal extends React.Component {
       }
       case 'Episode': {
         this.props.getEpgWithSeriesId([item.seriesId])
+        this.props.getSeriesInfo([item.seriesId])
         break;
       }
       default: {
@@ -107,7 +112,7 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
             <Image source={require('../../assets/ic_heart_with_border.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
+          <TouchableOpacity style={styles.buttonStyle} onPress={() => this._shareExecution(item.title, "")}>
             <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonStyle}>
@@ -247,11 +252,30 @@ export default class VideoControlModal extends React.Component {
       const {recordEnabled, favoriteEnabled} = this.state
 
       if (actionType === 'record') {
+        if (item.type === 'Standalone') {
+          if (recordEnabled) {
+            // Stop downloading current item
+          }
+          else {
+            // Start or resume downloading current item
+          }
+        }
+        else {
+          if (recordEnabled) {
+            // Stop recording current channel
+          }
+          else {
+            // Start recording
+          }
+        }
+
         this.setState({
           recordEnabled: !recordEnabled
         })
       }
       else {
+        // Use Userkit
+
         this.setState({
           favoriteEnabled: !favoriteEnabled
         })
@@ -259,51 +283,191 @@ export default class VideoControlModal extends React.Component {
     }
   }
 
-  _onModalButtonPress = (actionType) => {
-    const {recordEnabled, favoriteEnabled} = this.state
+  _stopRecord = () => {
+    NativeModules.STBManager.recordPvrStopInJson((error, events) => {
+
+    })
+  }
+
+  stopDownload = () => {
+    let dataPath = "/Download"
+    let url = ""
+    let json = {
+      removeFlag: 1, // 0 -> not delele media, 1 -> delete
+      destination_path: dataPath,
+      url: url
+    }
+    NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
+
+    })
+  }
+
+  _downloadExecution = (vodItem) => {
+    let url = ""
+    let dataPath = "/Download"
+    let jsonString = {
+      destination_path: dataPath,
+      url: url
+    }
+
+    NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(jsonString), (error, events) => {
+      if (error) {
+        console.log(error)
+      }
+      else {
+        console.log(events)
+        // If download start successfully -> add to Userkit with 2 props : contentId and destination path => in order to display at bookmark page
+
+      }
+    })
+  }
+
+  _bookExecution = (liveItem) => {
+      let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
+
+      let metaData = {
+        "endtime": liveItem.endTime,
+        "starttime": liveItem.startTime,
+        "title": liveItem.videoData.title,
+        "image": liveItem.videoData.originalImages[0].url,
+        "subTitle": liveItem.genresData.length > 0 ? liveItem.genresData[0] : ""
+      }
+
+      let jsonString = {
+        "record": {
+          "startTime" : liveItem.startTime,
+          "recordMode" : 1,
+          "recordName" : liveItem.videoData.title,
+          "lCN" : liveItem.videoData.lcn,
+          "duration" : durationInSeconds
+
+        },
+        "metaData": JSON.stringify(metaData)
+      }
+
+      NativeModules.STBManager.addPvrBooKListWithJson(JSON.stringify(jsonString), (error, events) => {
+        if (error)
+          console.log(error)
+        else console.log(events)
+      })
+  }
+
+  _shareExecution = (title, url) => {
+    content = {
+      message: "",
+      title: title,
+      url: url
+    }
+    Share.share(content, {})
+  }
+
+  _onModalButtonPress = (actionType, secondActionType) => {
+    const {recordEnabled, favoriteEnabled, modalRecordTarget, modalFavoriteTarget} = this.state
 
     if (actionType === 'record') {
+      if (recordEnabled) {
+        // Stop downloading case
+        if (secondActionType === 'item') {
+          console.log('Stop downloading item')
+          // Stop downloading current item
+        }
+        else {
+          // Update Userkit variable to remove series from downloading
+          console.log('Stop downloading series')
+        }
+      }
+      else {
+        // Start downloading current item
+
+        if (secondActionType === 'series') {
+          // Start query all VOD video with seriesId and downloading one by one. Save seriesId into Userkit variable as a list of download with type : series
+          // List structure
+          /*
+            [
+              {
+                type: "series",
+                id: seriesId or contentId
+              }
+            ]
+           */
+          console.log('Start downloading series')
+
+        }
+        else {
+          // Downloading current item
+          console.log('Start downloading item')
+
+        }
+
+      }
       this.setState({
-        recordEnabled: !recordEnabled
+        recordEnabled: modalRecordTarget === secondActionType ? false : true,
+        modalRecordTarget: modalRecordTarget === secondActionType ? "none" : secondActionType
       })
     }
     else {
+      // Use Userkit
+
       this.setState({
-        favoriteEnabled: !favoriteEnabled
+        favoriteEnabled: modalFavoriteTarget === secondActionType ? false : true,
+        modalFavoriteTarget: modalFavoriteTarget === secondActionType ? "none" : secondActionType
       })
     }
   }
 
   _renderRecordModal = () => {
-    let img = this.state.modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
+    const {modalContent, modalRecordTarget, modalFavoriteTarget} = this.state
 
-    return (
-      <Modal animationType={'fade'} transparent={true}
-              visible={this.state.modalVisibility} onRequestClose={() => console.log('close')}>
-        <View style={styles.modal}>
-          <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
-          <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
-            <Image source={require('../../assets/ic_modal_close.png')} />
-          </TouchableOpacity>
-          <View style={styles.modalInsideContainer}>
-            <Image source={{uri: 'http://hs.sbcounty.gov/CN/Photo%20Gallery/Sample%20Picture%20-%20Koala.jpg?Mobile=1&Source=%2FCN%2F_layouts%2Fmobile%2Fdispform%2Easpx%3FList%3D1720b750%252D8275%252D4398%252Da0b8%252D6c84221f704f%26View%3Dffcf12f7%252D5df8%252D4de0%252Da991%252D79340a805821%26ID%3D1%26CurrentPage%3D1'}} style={styles.modalImage}/>
-            <Text style={styles.modalTitleText}>Ma pire angoise</Text>
-            <Text style={styles.modalShortDes}>Short des</Text>
-            <Text style={styles.modalLongDes}>Long des</Text>
-            <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
-              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent)}>
-                <Image source={img} style={{width: 40, height: 40, marginRight: 7}}/>
-                <Text>Sample 1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent)}>
-                <Image source={img} style={{width: 40, height: 40, marginRight: 7}}/>
-                <Text>Sample 2</Text>
-              </TouchableOpacity>
+    let img = modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
+    let firstButtonImg
+    let secondButtonImg
+
+    if (this.state.modalContent === 'record') {
+      firstButtonImg = modalRecordTarget === 'item' ? colors.mainPink : 'transparent'
+      secondButtonImg = modalRecordTarget === 'series' ? colors.mainPink : 'transparent'
+    }
+    else {
+      firstButtonImg = modalFavoriteTarget === 'item' ? colors.mainPink : 'transparent'
+      secondButtonImg = modalFavoriteTarget === 'series' ? colors.mainPink : 'transparent'
+    }
+
+    const {item} = this.props.navigation.state.params
+    const {seriesInfo} = this.props;
+
+    if (item.type === 'Episode') {
+      return (
+        <Modal animationType={'fade'} transparent={true}
+                visible={this.state.modalVisibility} onRequestClose={() => console.log('close')}>
+          <View style={styles.modal}>
+            <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
+            <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
+              <Image source={require('../../assets/ic_modal_close.png')} />
+            </TouchableOpacity>
+            <View style={styles.modalInsideContainer}>
+              <Image source={{uri: item.originalImages[0].url}} style={styles.modalImage}/>
+              <Text style={styles.modalTitleText}>{item.title}</Text>
+              <Text style={styles.modalShortDes}>{"Series - Episode " + item.seasonIndex}</Text>
+              <Text style={styles.modalLongDes}>{item.longDescription}</Text>
+              <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'item')}>
+                  <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: firstButtonImg, borderRadius: 20}}>
+                    <Image source={img} style={styles.buttonIconStyle}/>
+                  </View>
+                  <Text>{"Episode " + item.seasonIndex}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'series')}>
+                  <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: secondButtonImg, borderRadius: 20}}>
+                  <Image source={img} style={styles.buttonIconStyle}/>
+                  </View>
+                  <Text>{seriesInfo.data ? seriesInfo.data.title : ""}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    )
+        </Modal>
+      )
+    }
+    else return null
   }
 
   render() {
@@ -384,7 +548,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.greyParentalControl,
     textAlign: 'center',
-    marginTop: 11
+    marginTop: 11,
+    marginLeft: 37,
+    marginRight: 37
   },
   bottomContainer: {
     height: '100%',

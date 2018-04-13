@@ -10,6 +10,8 @@ import * as getSettings from "./getSettings";
 import * as getSubtitles from "./getSubtitles"
 import * as getResolution from "./getResolution"
 import * as getVideoFormat from "./getVideoFormat"
+import * as getRecordList from './getRecordList'
+import * as getSeriesInfo from './getSeriesInfo'
 
 export default actions = {
     getBanner,
@@ -18,10 +20,12 @@ export default actions = {
     videoModalAction,
     getNews,
     getEpgs,
-    getGenresContent,
+    getRecordList,
     getAudioLanguage,
     getSettings,
     getSubtitles,
     getResolution,
-    getVideoFormat
+    getVideoFormat,
+    getGenresContent,
+    getSeriesInfo
 };

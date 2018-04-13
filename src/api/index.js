@@ -45,6 +45,15 @@ const get = (endpoints) => {
     });
 };
 
+getRecordPvrList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrListInJson((error, events) => {
+            if (error) reject(error)
+            else resolve(JSON.parse(events[0]))
+        })
+    })
+}
+
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
         // resolve([
@@ -277,6 +286,16 @@ export const checkStbConnection = () => {
     })
   })
 };
+
+export const getRecordList = () => {
+    let recordList = null
+      return getRecordPvrList()
+        .then((value) => {
+          return new Promise((resolve, reject) => {
+            resolve(value)
+          })
+        })
+}
 
 export const getBookList = () => {
     let bookList = null;
@@ -666,4 +685,11 @@ export const getSettings = () => {
         })
     });
 };
+
+export const getSeriesInfo = (seriesId) => {
+  return client.query({
+    query: config.queries.SERIES_INFO,
+    variables: {id: seriesId}
+  })
+}
 

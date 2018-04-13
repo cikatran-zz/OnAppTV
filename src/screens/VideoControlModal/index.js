@@ -5,7 +5,8 @@ import VideoControlModal from './VideoControlModal'
 function mapStateToProps (state) {
   return {
     video: state.videoModalReducer,
-    epg: state.epgsReducer
+    epg: state.epgsReducer,
+    seriesInfo: state.seriesInfoReducer
   }
 }
 
@@ -14,7 +15,8 @@ function mapDispatchToProps(dispatch) {
     showVideoModal: (willShow) => dispatch(actions.videoModalAction.showVideoModal(willShow)),
     getEpgs: (serviceId) => dispatch(actions.getEpgs.getEpgs(serviceId)),
     getEpgWithGenre: (genresIds) => dispatch(actions.getEpgs.getEpgWithGenres(genresIds)),
-    getEpgWithSeriesId: (seriesId) => dispatch(actions.getEpgs.getEpgWithSeriesId(seriesId))
+    getEpgWithSeriesId: (seriesId) => dispatch(actions.getEpgs.getEpgWithSeriesId(seriesId)),
+    getSeriesInfo: (seriesId) => dispatch(actions.getSeriesInfo.getSeriesInfo(seriesId))
   }
 }
 

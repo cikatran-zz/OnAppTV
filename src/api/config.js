@@ -406,6 +406,29 @@ query genresEPGs($currentTime: Date, $genresId: [MongoID]){
 }
 `;
 
+const seriesInfoQuery = gql`
+query seriesInfo($id: [MongoID]) {
+    viewer {
+        seriesOne(filter: {
+      _operators: {
+        _id: {
+        in: $id
+        }
+      }
+    }) {
+      contentId
+          publishDate
+          title
+          longDescription
+          shortDescription
+          state
+          createdAt
+          updatedAt
+    }
+    }
+}
+`;
+
 export default {
     serverURL: 'http://13.250.57.10:3000/graphql',
     queries: {
@@ -421,6 +444,7 @@ export default {
         GENRES_EPG: genresEPGs,
         EPG_WITH_GENRES: relatedEpgQuery,
         EPG_WITH_SERIES: seriesEpgQuery,
+        SERIES_INFO: seriesInfoQuery,
         ZAPPER_CONTENT: zapperContentQuery
     }
 };
