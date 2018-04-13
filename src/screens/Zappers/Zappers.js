@@ -80,13 +80,13 @@ export default class Zappers extends Component {
     };
 
     _zapChannel = (item) => {
-        // NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lcn}),(error, events) => {
-        //     if (error) {
-        //         console.log(error);
-        //     } else {
-        //         console.log(JSON.parse(events[0]))
-        //     }
-        // } )
+        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lcn}),(error, events) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(JSON.parse(events[0]))
+            }
+        } )
         this.props.navigation.navigate("ZapperContent", {serviceId: item.serviceID})
     };
 
@@ -176,7 +176,6 @@ export default class Zappers extends Component {
             this.state.channelData = _.cloneDeep(channel.data);
             this.state.allChannels = _.cloneDeep(channel.data);
             this._filterFavoriteChannel();
-        }
         this.state.channelData = channel.data;
         this.state.allChannels = channel.data;
         this._filterFavoriteChannel();

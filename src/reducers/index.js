@@ -30,7 +30,7 @@ export default combineReducers({
     newsReducer,
     epgsReducer,
     bookListReducer,
-    zapperContentReducer
+    zapperContentReducer,
     genresContentReducer,
     audioLanguageReducer,
     settingsReducer,

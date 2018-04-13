@@ -162,27 +162,18 @@ export default class Zappers extends Component {
         this.contentHeight = height;
     }
 
-    // _handleScroll = (event) => {
-    //     // console.log("Scroll", event.nativeEvent.contentOffset.y);
-    //     // console.log("Content H", event.nativeEvent.contentSize.height);
-    //     // if (!this.state.dragging) {
-    //     //     let offsetY = event.nativeEvent.contentOffset.y;
-    //     //     let contentHeight = event.nativeEvent.contentSize.height;
-    //     //     let layoutHeight = event.nativeEvent.layoutMeasurement.height;
-    //     //     let position = minTop + offsetY * (layoutHeight / contentHeight)
-    //     //     this.setPosition(position);
-    //     //     this.setCurrentPosition(position);
-    //     // }
-    //     if(this.props.onScroll) this.props.onScroll(event)
-    //     Animated.event([
-    //         {
-    //             nativeEvent: {contentOffset: {y: this._lastOffsetY}}
-    //         },
-    //         {
-    //             useNativeDriver: true
-    //         }
-    //     ])(event)
-    // }
+    _handleScroll = (event) => {
+        console.log("Scroll", event.nativeEvent.contentOffset.y);
+        console.log("Content H", event.nativeEvent.contentSize.height);
+        if (!this.state.dragging) {
+            let offsetY = event.nativeEvent.contentOffset.y;
+            let contentHeight = event.nativeEvent.contentSize.height;
+            let layoutHeight = event.nativeEvent.layoutMeasurement.height;
+            let position = minTop + offsetY * (layoutHeight / contentHeight)
+            this.setPosition(position);
+            this.setCurrentPosition(position);
+        }
+    }
 
 
     _onScrollviewStartPanResponder = () => {

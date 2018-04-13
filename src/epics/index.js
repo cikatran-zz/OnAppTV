@@ -29,7 +29,7 @@ const rootEpic = combineEpics(
     epgWithSeriesId,
     getBookingEpic,
     getGenresContentEpic,
-    getZapperContentRequestEpic
+    getZapperContentRequestEpic,
     getGenresContentEpic,
     getAudioLanguageEpic,
     getSettingsEpic,
