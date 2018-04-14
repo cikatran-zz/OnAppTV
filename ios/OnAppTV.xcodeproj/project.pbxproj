@@ -40,6 +40,7 @@
 		690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFF62057B75F0099484A /* NotificationCenter.swift */; };
 		6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */; };
 		6931BE8A2074AFA5007DA182 /* JSONObjectToString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE892074AFA5007DA182 /* JSONObjectToString.swift */; };
+		6932A6AF2082447000C43924 /* spinner.html in Resources */ = {isa = PBXBuildFile; fileRef = 6932A6852082447000C43924 /* spinner.html */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
 		69644095207F284100215606 /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407B207F283F00215606 /* Load.html */; };
@@ -434,6 +435,7 @@
 		690EEFF62057B75F0099484A /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
 		6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ErrorModel+Extension.swift"; sourceTree = "<group>"; };
 		6931BE892074AFA5007DA182 /* JSONObjectToString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONObjectToString.swift; sourceTree = "<group>"; };
+		6932A6852082447000C43924 /* spinner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = spinner.html; path = STBHTML/spinner.html; sourceTree = "<group>"; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
 		6964407B207F283F00215606 /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = STBHTML/Load.html; sourceTree = "<group>"; };
@@ -836,6 +838,7 @@
 		69D21E9420525DC300DFA90A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6932A6852082447000C43924 /* spinner.html */,
 				696440AF207F285100215606 /* database _IBC_2017-2.xml */,
 				69644092207F284000215606 /* agents.html */,
 				69644091207F284000215606 /* Antional.html */,
@@ -1426,6 +1429,7 @@
 				330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */,
 				69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */,
 				696440A9207F284100215606 /* main.html in Resources */,
+				6932A6AF2082447000C43924 /* spinner.html in Resources */,
 				2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */,
 				696440A2207F284100215606 /* bootstrap in Resources */,
 				696440AC207F284100215606 /* agents.html in Resources */,

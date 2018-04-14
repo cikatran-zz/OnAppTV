@@ -8,6 +8,7 @@ import ZappersStack from "./screens/ScreenStacks/ZappersStack";
 import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
 import ParentalControlLock from "./screens/Settings/ParentalControlLock"
+import Player from "./screens/Player";
 
 const TabNav = TabNavigator({
     Home: {
@@ -44,7 +45,7 @@ const TabNav = TabNavigator({
 
 export const ScreenStack = StackNavigator({
     Root: {
-        screen: STBConnection
+        screen: Player
     },
     Home: {
         screen: TabNav,

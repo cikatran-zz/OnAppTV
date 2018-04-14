@@ -21,6 +21,7 @@ class CustomControlsView: UIView {
     @IBOutlet weak var etrTimeLabel: UILabel!
     @IBOutlet weak var captionButton: UIButton!
     @IBOutlet weak var startOverButton: UIButton!
+    @IBOutlet weak var thumbnailFilmstrip: UIImageView!
     
     // MARK: - Properties
     public var currentTime: TimeInterval = 0
@@ -30,6 +31,7 @@ class CustomControlsView: UIView {
     var isFadedIn: Bool = true
     var isPlayingBeforePan: Bool = true
     var lastTimeInteraction: TimeInterval = Date().timeIntervalSince1970
+    var lastImageResouce: ImageResource? = nil
     
     // MARK: - Blocks
     public var pauseBlock: () -> Void = {}
@@ -63,6 +65,9 @@ class CustomControlsView: UIView {
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         autoHideControls()
         initPanGesture()
+        thumbnailFilmstrip.clipsToBounds = true
+        thumbnailFilmstrip.layer.cornerRadius = 4
+        thumbnailFilmstrip.isHidden = true
     }
     
     fileprivate func setLabelTime(_ time: TimeInterval) {
@@ -88,7 +93,8 @@ extension CustomControlsView {
     }
     
     fileprivate func autoHideControls() {
-        DispatchQueue.global(qos: DispatchQoS.default.qosClass).async {
+        let queue = DispatchQueue(label: "com.onapptv.brightcove", attributes: .concurrent)
+        queue.async {
             while true {
                 Thread.sleep(forTimeInterval: 1.0)
                 if Date().timeIntervalSince1970 - self.lastTimeInteraction > 2.0 && self.isFadedIn {
@@ -141,6 +147,7 @@ extension CustomControlsView {
                 isDragging = true
                 isPlayingBeforePan = isPlaying
             }
+            thumbnailFilmstrip.isHidden = false
         }
         
         if isDragging {
@@ -149,11 +156,17 @@ extension CustomControlsView {
             if tapLocation.x >= 0 && tapLocation.x <= self.frame.width {
                 let translation = sender.translation(in: self)
                 progressWidth.constant = progressWidth.constant + translation.x
+                if (progressWidth.constant <= self.frame.width) {
                 let seekingTime = videoDuration * Double(progressWidth.constant / self.frame.width)
-                setLabelTime(seekingTime)
-                if (sender.state == .ended) {
+                    setLabelTime(seekingTime)
                     seekingBlock(seekingTime)
+                    if let imageResource = self.filmStripImage?(seekingTime) {
+                        lastImageResouce = imageResource
+                    }
+                    
+                    thumbnailFilmstrip.kf.setImage(with: lastImageResouce)
                 }
+                
                 sender.setTranslation(.zero, in: self)
             } else {
                 sender.setValue(UIGestureRecognizerState.ended, forKey: "state")
@@ -166,6 +179,7 @@ extension CustomControlsView {
                 playBlock()
             }
             isDragging = false
+            thumbnailFilmstrip.isHidden = true
         }
     }
     

@@ -122,6 +122,12 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
             self.playAnimationInRect(animationView: self.fastforwardAnimationView, region: CGRect(x: self.playerView!.controlsContainerView.frame.width - 400, y: -500, width: self.playerView!.controlsContainerView.frame.height + 600, height: self.playerView!.controlsContainerView.frame.height + 1000))
         }
         
+        controlsView.filmStripImage = { second in
+            let roundedSecond = second.rounded()
+            var image: ImageResource? = self.filmstrip[roundedSecond]
+            return image
+        }
+        
         controlsView.rewindAnimationBlock = {
             self.playAnimationInRect(animationView: self.rewindAnimationView, region: CGRect(x: -self.playerView!.controlsContainerView.frame.height - 200, y: -500, width: self.playerView!.controlsContainerView.frame.height + 600, height: self.playerView!.controlsContainerView.frame.height + 1000) )
         }
