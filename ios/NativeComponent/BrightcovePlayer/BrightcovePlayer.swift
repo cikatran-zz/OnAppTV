@@ -12,6 +12,7 @@ import BrightcovePlayerSDK
 import WebKit
 import Lottie
 import Kingfisher
+import UserKit
 
 public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     
@@ -37,6 +38,14 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
             }
         }
     }
+    public var metaData: [String: Any]? = nil {
+        didSet {
+            if let _ = metaData, let item = SpecificRequiredItem.createItemFromMetaData(metadata: metaData!) {
+                self.controlsView.playbackRecorder = OnDemandPlaybackEventRecorder(specificRequiredItem: item)
+            }
+        }
+    }
+    
     
     fileprivate var playbackService: BCOVPlaybackService?
     fileprivate var playbackController: BCOVPlaybackController?
@@ -47,6 +56,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     fileprivate var rewindAnimationView: LOTAnimationView = LOTAnimationView(contentsOf: URL(string: "https://www.lottiefiles.com/storage/datafiles/rT1xFybxaeBO4Qf/data.json")! )
     
     fileprivate var filmstrip: [Double: ImageResource] = [Double: ImageResource]()
+    fileprivate var lastPosition: Double = 0
     
     // MARK: - Life cycle
     public override init(frame: CGRect) {
@@ -122,9 +132,13 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
             self.playAnimationInRect(animationView: self.fastforwardAnimationView, region: CGRect(x: self.playerView!.controlsContainerView.frame.width - 400, y: -500, width: self.playerView!.controlsContainerView.frame.height + 600, height: self.playerView!.controlsContainerView.frame.height + 1000))
         }
         
+        controlsView.continueWatchingBlock = {
+            self.continueWatching()
+        }
+        
         controlsView.filmStripImage = { second in
             let roundedSecond = second.rounded()
-            var image: ImageResource? = self.filmstrip[roundedSecond]
+            let image: ImageResource? = self.filmstrip[roundedSecond]
             return image
         }
         
@@ -197,9 +211,37 @@ extension BrightcovePlayer {
 // MARK: - Video manager
 extension BrightcovePlayer {
     
+    fileprivate func continueWatching() {
+        
+        self.playbackController?.pause()
+        self.playbackController?.seek(to: CMTimeMakeWithSeconds(self.lastPosition, 1) , completionHandler: { isCompleted in
+            self.playbackController?.play()
+        })
+    }
+    
+    /// Store current video info to UserKit props for continue watching
+    ///
+    /// - Parameters:
+    ///   - videoLength: video length in seconds
+    ///   - currentSeconds: current playhead position in seconds
+    private func storeVideoToUserKit() {
+        
+        if controlsView.videoDuration - controlsView.currentTime >= 30 {
+            var movieJSON = [String: Any]()
+            movieJSON[UserKitKeys.StopPosition.rawValue] = controlsView.currentTime as Any
+            movieJSON[UserKitKeys.Id.rawValue] = self.videoId as Any
+            let properties: [String: Any] = [ UserKitKeys.ContinueWatching.rawValue: movieJSON as Any]
+            WatchingHistory.sharedInstance.updateWatchingHistory(id: self.videoId ?? "", properties: properties, completion: nil, errorBlock: nil)
+        } else {
+            WatchingHistory.sharedInstance.remove(id: self.videoId ?? "", completion: nil, errorBlock: nil)
+        }
+    }
+    
     fileprivate func stop() {
         playbackController?.pause()
         playbackController?.setVideos(NSArray())
+        controlsView.stop()
+        storeVideoToUserKit()
     }
     
     fileprivate func requestVideo() {
@@ -211,6 +253,10 @@ extension BrightcovePlayer {
                     }
                     self.playbackController?.setVideos([v] as NSArray)
                     self.controlsView.videoDuration = (v.properties["duration"] as? Double ?? 0) / 1000
+                    WatchingHistory.sharedInstance.getConsumedLength(id: videoId, completion: { (consumedLength) in
+                        self.lastPosition = consumedLength
+                        self.continueWatching()
+                    })
                 } else {
                     print("Error retrieving video: \(error?.localizedDescription ?? "unknown error")")
                 }
@@ -309,3 +355,5 @@ extension BrightcovePlayer: WKUIDelegate {
                                                                            constant: 0) )
     }
 }
+
+

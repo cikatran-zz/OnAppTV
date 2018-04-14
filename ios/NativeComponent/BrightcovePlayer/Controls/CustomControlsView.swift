@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import BrightcovePlayerSDK
 import Kingfisher
+import UserKit
 
 class CustomControlsView: UIView {
     // MARK: - Outlets
@@ -33,6 +34,12 @@ class CustomControlsView: UIView {
     var lastTimeInteraction: TimeInterval = Date().timeIntervalSince1970
     var lastImageResouce: ImageResource? = nil
     
+    public var playbackRecorder: OnDemandPlaybackEventRecorder? = nil {
+        willSet {
+            playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
+        }
+    }
+    
     // MARK: - Blocks
     public var pauseBlock: () -> Void = {}
     public var playBlock: () -> Void = {}
@@ -42,6 +49,7 @@ class CustomControlsView: UIView {
     public var fastforwardAnimationBlock: ()-> Void = {}
     public var rewindAnimationBlock: () -> Void = {}
     public var filmStripImage: ((_ second: Double) -> ImageResource?)?
+    public var continueWatchingBlock: () -> Void = {}
     
     // MARK: - Constructors
     override init(frame: CGRect) {
@@ -223,6 +231,14 @@ extension CustomControlsView {
     }
 }
 
+// MARK: - UserKit
+extension CustomControlsView {
+    
+    public func stop() {
+        self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
+    }
+}
+
 // MARK: - Actions
 extension CustomControlsView {
     
@@ -246,6 +262,8 @@ extension CustomControlsView {
 // MARK: - Delegation
 extension CustomControlsView: BCOVPlaybackControllerDelegate {
     
+    
+    
     func playbackController(_ controller: BCOVPlaybackController!, playbackSession session: BCOVPlaybackSession!, didProgressTo progress: TimeInterval) {
         currentTime = (progress != Double.infinity && progress != -Double.infinity) ? progress : currentTime
         if !isDragging {
@@ -255,18 +273,33 @@ extension CustomControlsView: BCOVPlaybackControllerDelegate {
     }
     
     func playbackController(_ controller: BCOVPlaybackController!, playbackSession session: BCOVPlaybackSession!, didReceive lifecycleEvent: BCOVPlaybackSessionLifecycleEvent!) {
+        
+        if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady {
+            continueWatchingBlock()
+        }
+        
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay {
             isPlaying = true
             playbackButton.setImage(UIImage(named: "pause") , for: .normal)
+            if !self.isDragging {
+                self.playbackRecorder?.recordPlayerState(.Play, playhead: currentTime)
+            }
+
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPause {
             isPlaying = false
             playbackButton.setImage(UIImage(named: "play") , for: .normal)
+            if !self.isDragging {
+                self.playbackRecorder?.recordPlayerState(.Pause, playhead: currentTime)
+            }
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty {
             bufferingBlock(true)
+            if !self.isDragging {
+                self.playbackRecorder?.recordPlayerState(.Buffer, playhead: currentTime)
+            }
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackLikelyToKeepUp {
@@ -275,10 +308,13 @@ extension CustomControlsView: BCOVPlaybackControllerDelegate {
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail {
             bufferingBlock(false)
+            let error = lifecycleEvent.properties["error"] as? NSError
+            self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: error)
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate {
             bufferingBlock(false)
+            self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
         }
     }
 }

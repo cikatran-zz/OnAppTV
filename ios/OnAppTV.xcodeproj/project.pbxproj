@@ -39,8 +39,11 @@
 		690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE62057915E0099484A /* UserKitIdentityModule.swift */; };
 		690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFF62057B75F0099484A /* NotificationCenter.swift */; };
 		6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */; };
-		6931BE8A2074AFA5007DA182 /* JSONObjectToString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE892074AFA5007DA182 /* JSONObjectToString.swift */; };
 		6932A6AF2082447000C43924 /* spinner.html in Resources */ = {isa = PBXBuildFile; fileRef = 6932A6852082447000C43924 /* spinner.html */; };
+		6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932A6B0208257A200C43924 /* SpecificRequiredItem+Extension.swift */; };
+		6932A6B320825FA600C43924 /* WatchingHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932A6B220825FA600C43924 /* WatchingHistory.swift */; };
+		6932A6B52082604700C43924 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932A6B42082604700C43924 /* Constants.swift */; };
+		6932A6B72082609700C43924 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932A6B62082609700C43924 /* JSON.swift */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
 		69644095207F284100215606 /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407B207F283F00215606 /* Load.html */; };
@@ -434,8 +437,11 @@
 		690EEFE62057915E0099484A /* UserKitIdentityModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitIdentityModule.swift; sourceTree = "<group>"; };
 		690EEFF62057B75F0099484A /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
 		6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ErrorModel+Extension.swift"; sourceTree = "<group>"; };
-		6931BE892074AFA5007DA182 /* JSONObjectToString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONObjectToString.swift; sourceTree = "<group>"; };
 		6932A6852082447000C43924 /* spinner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = spinner.html; path = STBHTML/spinner.html; sourceTree = "<group>"; };
+		6932A6B0208257A200C43924 /* SpecificRequiredItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpecificRequiredItem+Extension.swift"; sourceTree = "<group>"; };
+		6932A6B220825FA600C43924 /* WatchingHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingHistory.swift; sourceTree = "<group>"; };
+		6932A6B42082604700C43924 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		6932A6B62082609700C43924 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
 		6964407B207F283F00215606 /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = STBHTML/Load.html; sourceTree = "<group>"; };
@@ -732,6 +738,8 @@
 				690EEFE4205791350099484A /* UserKitModule.swift */,
 				69025A8F2071E90600F66EBE /* RNUserKit.h */,
 				69025A902071E90600F66EBE /* RNUserKit.m */,
+				6932A6B220825FA600C43924 /* WatchingHistory.swift */,
+				6932A6B42082604700C43924 /* Constants.swift */,
 			);
 			path = UserKit;
 			sourceTree = "<group>";
@@ -751,6 +759,7 @@
 			isa = PBXGroup;
 			children = (
 				6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */,
+				6932A6B0208257A200C43924 /* SpecificRequiredItem+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -758,7 +767,7 @@
 		6931BE882074AF74007DA182 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				6931BE892074AFA5007DA182 /* JSONObjectToString.swift */,
+				6932A6B62082609700C43924 /* JSON.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1523,6 +1532,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV-frameworks.sh",
 				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/UserKit/UserKit.framework",
 				"${BUILT_PRODUCTS_DIR}/UserKitIdentity/UserKitIdentity.framework",
 				"${BUILT_PRODUCTS_DIR}/WebViewJavascriptBridge/WebViewJavascriptBridge.framework",
@@ -1531,6 +1541,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UserKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UserKitIdentity.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebViewJavascriptBridge.framework",
@@ -1548,17 +1559,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6931BE8A2074AFA5007DA182 /* JSONObjectToString.swift in Sources */,
 				69025A912071E90600F66EBE /* RNUserKit.m in Sources */,
 				6969BE7B204C32CD00470C97 /* BrightcovePlayer.swift in Sources */,
 				6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */,
 				69025AC32071F4C200F66EBE /* ImageUpload+Extension.swift in Sources */,
+				6932A6B52082604700C43924 /* Constants.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				69025ABC2071EECE00F66EBE /* RNUserKitIdentity.m in Sources */,
 				6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */,
 				690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */,
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
 				69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */,
+				6932A6B320825FA600C43924 /* WatchingHistory.swift in Sources */,
 				69025ACB2072303000F66EBE /* RNNotificationCenter.m in Sources */,
 				69A16FD02068DABE00E215B8 /* STBManager.m in Sources */,
 				690EEFE5205791350099484A /* UserKitModule.swift in Sources */,
@@ -1568,6 +1580,8 @@
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */,
+				6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */,
+				6932A6B72082609700C43924 /* JSON.swift in Sources */,
 				69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */,
 				69025ABE2071F32600F66EBE /* AuthenticationModel+Extension.swift in Sources */,
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,
