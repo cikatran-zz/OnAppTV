@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import BrightcovePlayerSDK
+import Kingfisher
 
 class CustomControlsView: UIView {
     // MARK: - Outlets
@@ -38,6 +39,7 @@ class CustomControlsView: UIView {
     public var bufferingBlock: (_ buffering: Bool) -> Void = { buffering in }
     public var fastforwardAnimationBlock: ()-> Void = {}
     public var rewindAnimationBlock: () -> Void = {}
+    public var filmStripImage: ((_ second: Double) -> ImageResource?)?
     
     // MARK: - Constructors
     override init(frame: CGRect) {
@@ -149,7 +151,9 @@ extension CustomControlsView {
                 progressWidth.constant = progressWidth.constant + translation.x
                 let seekingTime = videoDuration * Double(progressWidth.constant / self.frame.width)
                 setLabelTime(seekingTime)
-                seekingBlock(seekingTime)
+                if (sender.state == .ended) {
+                    seekingBlock(seekingTime)
+                }
                 sender.setTranslation(.zero, in: self)
             } else {
                 sender.setValue(UIGestureRecognizerState.ended, forKey: "state")

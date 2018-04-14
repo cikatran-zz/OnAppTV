@@ -11,6 +11,7 @@ import UIKit
 import BrightcovePlayerSDK
 import WebKit
 import Lottie
+import Kingfisher
 
 public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     
@@ -44,6 +45,8 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     fileprivate var spinnerWebView: WKWebView = WKWebView()
     fileprivate var fastforwardAnimationView: LOTAnimationView = LOTAnimationView(contentsOf: URL(string: "https://www.lottiefiles.com/storage/datafiles/rT1xFybxaeBO4Qf/data.json")! )
     fileprivate var rewindAnimationView: LOTAnimationView = LOTAnimationView(contentsOf: URL(string: "https://www.lottiefiles.com/storage/datafiles/rT1xFybxaeBO4Qf/data.json")! )
+    
+    fileprivate var filmstrip: [Double: ImageResource] = [Double: ImageResource]()
     
     // MARK: - Life cycle
     public override init(frame: CGRect) {
@@ -197,12 +200,29 @@ extension BrightcovePlayer {
         if let playbackService = self.playbackService, let videoId = self.videoId {
             playbackService.findVideo(withVideoID: videoId, parameters: [:], completion: { (video, jsonResponse, error) in
                 if let v = video {
+                    if let cuePoints = video?.cuePoints.array() as? [BCOVCuePoint] {
+                        self.setUpCuePoints(cuePoints: cuePoints)
+                    }
                     self.playbackController?.setVideos([v] as NSArray)
                     self.controlsView.videoDuration = (v.properties["duration"] as? Double ?? 0) / 1000
                 } else {
                     print("Error retrieving video: \(error?.localizedDescription ?? "unknown error")")
                 }
             })
+        }
+    }
+}
+
+// MARK: - Video filmstrip
+extension BrightcovePlayer {
+    
+    fileprivate func setUpCuePoints(cuePoints: [BCOVCuePoint]) {
+        
+        // Get url and cache images
+        for cuePoint in cuePoints {
+            if let urlString = cuePoint.properties["metadata"] as? String, let url = URL(string: urlString) {
+                filmstrip[cuePoint.position.seconds] = ImageResource(downloadURL: url)
+            }
         }
     }
 }

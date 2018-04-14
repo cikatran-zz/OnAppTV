@@ -16,6 +16,7 @@ target 'OnAppTV' do
   pod 'WebViewJavascriptBridge', '~> 6.0'
   pod 'UserKit', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
   pod 'UserKitIdentity', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
+  pod 'Kingfisher'
 
 end
 
