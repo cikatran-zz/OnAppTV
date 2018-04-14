@@ -1333,9 +1333,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_switchCodeStream(bool, new Api.OnSuccessCallbackBlock() {
             @Override
             public void OnSuccessCallback(Boolean aBoolean, String s) {
-                    WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(s);
-                    callback.invoke(null, array);
+                WritableNativeArray array = new WritableNativeArray();
+                array.pushString(s);
+                callback.invoke(null, array);
             }
         });
     }
