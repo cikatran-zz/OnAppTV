@@ -685,6 +685,24 @@ export const getUSBDisks = () => {
     })
 };
 
+export const getParentalControl = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getParentalGuideRatingInJson((error, results)=> {
+                    let jsonObj = JSON.parse(results[0]);
+                    let rating = parseInt(jsonObj.parentalGuideRating);
+                    resolve(rating);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    })
+};
+
+
 export const getSettings = () => {
     let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
     let languageShort = ["eng", "fre", "spa", "ita", "chi", "000"];
@@ -692,7 +710,7 @@ export const getSettings = () => {
     let aspectRatio = ["4:3 Letter Box","4:3 Center Cut Out","4:3 Extended","16:9 Pillar Box","16:9 Full Screen","16:9 Extended"];
     let usbFileSystems = ["FAT 16","FAT 32","NTFS","EXT2","EXT3","EXT4"];
     return new Promise((resolve, reject) => {
-        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat(), getCurrentSTBInfo(), getUSBDisks()]).then((values)=> {
+        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat(), getCurrentSTBInfo(), getUSBDisks(), getParentalControl()]).then((values)=> {
             // Audio lang
             let indexLang = languageShort.indexOf(values[0]);
             if (indexLang == -1) {
@@ -733,6 +751,8 @@ export const getSettings = () => {
                 }
             }
 
+            let parentalControl = (values[6] == 0) ? "Off" : values[6] + ""
+
             resolve({
                 AudioLanguage: audioLanguage,
                 Subtitles: subLanguage,
@@ -745,7 +765,8 @@ export const getSettings = () => {
                 DecoderID: decoderID,
                 HardDiskFile: hardDiskFile,
                 HardDiskTotalSize: (hardDiskTotalSize > 0) ? hardDiskTotalSize.toFixed(1) + "G" : "",
-                HardDiskFreeSize: (hardDiskFreeSize > 0 ) ? hardDiskFreeSize.toFixed(1) + "G": ""
+                HardDiskFreeSize: (hardDiskFreeSize > 0 ) ? hardDiskFreeSize.toFixed(1) + "G": "",
+                ParentalControl: parentalControl
             });
         }).catch((error)=> {
             reject(error);

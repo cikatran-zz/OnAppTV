@@ -16,6 +16,14 @@ export default class AudioLanguage extends React.PureComponent {
 
     componentDidMount() {
         this.props.getAudioLanguage();
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     _keyExtractor = (item, index) => index;

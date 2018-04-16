@@ -13,6 +13,7 @@ import * as getVideoFormat from "./getVideoFormat"
 import * as getWifiInfo from "./getWifiInfo"
 import * as getRecordList from './getRecordList'
 import * as getSeriesInfo from './getSeriesInfo'
+import * as getUSBDisks from "./getUSBDisks";
 
 export default actions = {
     getBanner,
@@ -29,5 +30,6 @@ export default actions = {
     getVideoFormat,
     getWifiInfo,
     getGenresContent,
-    getSeriesInfo
+    getSeriesInfo,
+    getUSBDisks
 };

@@ -4,6 +4,7 @@ import {
     FlatList, Platform, TouchableOpacity, NativeModules
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
+import * as Orientation from "react-native-orientation";
 
 export default class ParentalControl extends React.PureComponent {
 
@@ -38,6 +39,18 @@ export default class ParentalControl extends React.PureComponent {
     componentWillMount() {
         const {navigation} = this.props;
         navigation.navigate("ParentalControlLock", {onBack: this._onDonePIN.bind(this)});
+        Orientation.lockToPortrait();
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
+
+    componentDidMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     }
 
     _getParentalControlInfo = () => {
@@ -69,6 +82,8 @@ export default class ParentalControl extends React.PureComponent {
         const {navigation} = this.props;
         if (!isMatched) {
             navigation.goBack();
+        } else {
+            StatusBar.setBarStyle('dark-content');
         }
     }
 
@@ -86,6 +101,8 @@ export default class ParentalControl extends React.PureComponent {
             }
         });
         this.setState({data: data});
+        const {onChange} = this.props.navigation.state.params;
+        onChange({screen: 'ParentalControl', value: age.toString()});
         NativeModules.STBManager.setParentalGuideRatingWithJsonString(JSON.stringify({parentalGuideRating: age.toString()}), (error, results)=>{});
     };
 
@@ -130,11 +147,14 @@ export default class ParentalControl extends React.PureComponent {
 
     _onChangeParentalControl(value) {
 
+        const {onChange} = this.props.navigation.state.params;
         if (value) {
-            NativeModules.STBManager.setParentalGuideRatingWithJsonString(JSON.stringify({parentalGuideRating: "10"}), (error, results)=>{});
+            onChange({screen: 'ParentalControl', value: "18"});
+            NativeModules.STBManager.setParentalGuideRatingWithJsonString(JSON.stringify({parentalGuideRating: "18"}), (error, results)=>{});
             this.setState({isParentalControl: true});
             this._changeStateForAgeControl(10);
         } else {
+            onChange({screen: 'ParentalControl', value: "Off"});
             NativeModules.STBManager.setParentalGuideRatingWithJsonString(JSON.stringify({parentalGuideRating: "0"}), (error, results)=>{});
             this.setState({isParentalControl: false});
             this._changeStateForAgeControl(0);

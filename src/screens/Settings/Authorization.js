@@ -66,8 +66,15 @@ export default class Privacy extends Component {
     }
 
     componentDidMount() {
-
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     };
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
 
     _changeBlocked(category, isChosen) {
         var toggles = this.state.blockedToggleState;
@@ -128,6 +135,7 @@ export default class Privacy extends Component {
                     style={styles.listContainer}
                     keyExtractor={this._keyExtractor}
                     horizontal={false}
+                    scrollEnabled={false}
                     renderItem={this._renderListItem}
                     data={this.data}
                     ItemSeparatorComponent={() => <View
