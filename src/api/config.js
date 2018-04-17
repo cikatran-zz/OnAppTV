@@ -431,7 +431,7 @@ query seriesInfo($id: [MongoID]) {
 `;
 
 export default {
-    serverURL: 'http://13.250.57.10:3000/graphql',
+    serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
     queries: {
         BANNER: bannerQuery,
         CHANNEL: channelQuery,

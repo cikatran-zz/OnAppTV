@@ -11,15 +11,16 @@ import {
 } from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
-import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
-import ZapperCell from '../../components/ZapperCell'
-import ChannelModal from "./ChannelModal/ChannelModal";
-import {colors} from "../../utils/themeConfig";
+import {rootViewTopPadding} from '../../../utils/rootViewTopPadding'
+import ZapperCell from '../../../components/ZapperCell'
+import ChannelModal from "../ChannelModal/ChannelModal";
+import {colors} from "../../../utils/themeConfig";
 
-const favoriteImg = require('../../assets/ic_favorite.png');
-const allImg = require('../../assets/ic_all.png');
+const favoriteImg = require('../../../assets/ic_favorite.png');
+const allImg = require('../../../assets/ic_all.png');
+const imgBackground = require('../../../assets/conn_bg.png')
 
-export default class Zappers extends Component {
+export default class ZapperChannel extends Component {
 
     constructor(props) {
         super(props);
@@ -46,10 +47,6 @@ export default class Zappers extends Component {
 
     componentDidMount() {
         this.props.getChannel(-1);
-        this._navListener = this.props.navigation.addListener('didFocus', () => {
-            StatusBar.setBarStyle('light-content');
-            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
-        });
     };
 
     componentWillUnmount() {
@@ -165,19 +162,19 @@ export default class Zappers extends Component {
     };
 
     render() {
-            const {channel} = this.props;
-            if (!channel.data || channel.isFetching) {
-                return (<View style={styles.root}>
-                    <ImageBackground style={styles.image}
-                                     source={require('../../assets/conn_bg.png')}
-                                     blurRadius={30}>
-                        <Text style={styles.errorMessage}>You must connect to STB first</Text>
-                    </ImageBackground>
-                </View>)
-            }
-            this.state.channelData = _.cloneDeep(channel.data);
-            this.state.allChannels = _.cloneDeep(channel.data);
-            this._filterFavoriteChannel();
+        const {channel} = this.props;
+        if (!channel.data || channel.isFetching) {
+            return (<View style={styles.root}>
+                <ImageBackground style={styles.image}
+                                 source={imgBackground}
+                                 blurRadius={30}>
+                    <Text style={styles.errorMessage}>You must connect to STB first</Text>
+                </ImageBackground>
+            </View>)
+        }
+        this.state.channelData = _.cloneDeep(channel.data);
+        this.state.allChannels = _.cloneDeep(channel.data);
+        this._filterFavoriteChannel();
         this.state.channelData = channel.data;
         this.state.allChannels = channel.data;
         this._filterFavoriteChannel();
@@ -190,14 +187,14 @@ export default class Zappers extends Component {
                 <ChannelModal ref={(modal) => this.channelModal = modal} channels={this.state.channelData}
                               onFavoriteItem={this._favoriteItem}/>
                 <ImageBackground style={styles.image}
-                                 source={require('../../assets/conn_bg.png')}
+                                 source={imgBackground}
                                  blurRadius={30}>
                     <View style={styles.controlView}>
                         <TouchableOpacity style={styles.controlButton} onPress={this._onSwitchPress}>
                             {this._renderSwitchImage()}
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.controlButton}>
-                            <Image source={require('../../assets/ic_sort.png')} style={{resizeMode: 'stretch'}}/>
+                            <Image source={require('../../../assets/ic_sort.png')} style={{resizeMode: 'stretch'}}/>
                         </TouchableOpacity>
                     </View>
                     <FlatList style={styles.grid}

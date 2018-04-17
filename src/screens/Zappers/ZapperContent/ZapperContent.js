@@ -14,7 +14,7 @@ import {
 const icClose = require('../../../assets/ic_modal_close.png');
 const minTop = 70;
 
-export default class Zappers extends Component {
+export default class ZapperContent extends Component {
 
     _movable = null;
     contentHeight = 0;
@@ -99,29 +99,26 @@ export default class Zappers extends Component {
             this._lastOffsetY += event.nativeEvent.translationY;
             this._translateY.setOffset(this._lastOffsetY);
             this._translateY.setValue(0);
-            this.scrollList((this.contentHeight/height)*this._lastOffsetY)
         }
     };
 
     componentWillMount(){
-        this._panResponder = PanResponder.create({
-            onMoveShouldSetPanResponder: this._onStartShouldSetPanResponder,
-            onMoveShouldSetPanResponderCapture: this._onStartShouldSetPanResponder,
-            onPanResponderMove: this._onPanResponderMove,
-            onPanResponderRelease: this._onPanResponderRelease,
-            onResponderTerminationRequest: (event) => false
-        });
-
-        this._listPanResponder = PanResponder.create({
-            onMoveShouldSetPanResponder: this._listOnStartShouldSetPanResponder,
-            onMoveShouldSetPanResponderCapture: this._listOnStartShouldSetPanResponder,
-        });
     }
 
     componentDidMount() {
-        const {params} = this.props.navigation.state;
-        this.props.getZapperContent(params.serviceId);
+        // const {params} = this.props.navigation.state;
+        // this.props.getZapperContent(params.serviceId);
+        // this.listener = this._lastOffsetY.addListener((_lastOffsetY) => {
+        //     this._list.scrollTo({
+        //         y: _lastOffsetY,
+        //         animated: false
+        //     });
+        // });
     };
+
+    // componentWillUnmount() {
+    //     this._lastOffsetY.removeListener(this.listener);
+    // }
 
     _imageUri(item) {
         let image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
