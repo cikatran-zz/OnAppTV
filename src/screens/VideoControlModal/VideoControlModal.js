@@ -202,7 +202,7 @@ export default class VideoControlModal extends React.Component {
     const {startPoint} = this.state;
     let durationInSeconds = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
     let recordedTime = (((currentTime - startPoint) / durationInSeconds) * 100)
-    if (recordedTime <= 0) return '1%'
+    if (recordedTime <= 1) return '1%'
     else return recordedTime + "%"
   }
 
@@ -268,10 +268,13 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity  disabled={isLive}  style={{ width: '21%', height: '100%'}} onPress={() => {
             this.setState({isPlaying: !this.state.isPlaying})
             if (this.state.isPlaying) {
-              NativeModules.STBManager.playMediaPause((error, events) => {})
+              NativeModules.STBManager.playMediaPause((error, events) => {
+
+              })
             }
             else {
-              NativeModules.STBManager.playMediaResume((error, events) => {})
+              NativeModules.STBManager.playMediaResume((error, events) => {
+              })
             }
           }
           }>
@@ -307,9 +310,10 @@ export default class VideoControlModal extends React.Component {
     const {currentTime} = this.state
     if (isLive) {
       let marginLeft = this._getRecordStartMargin(startTime, endTime) <= 0 ? '3%' : this._getRecordStartMargin(startTime, endTime) + "%"
-
+      let width = this._getRecordProgress(currentTime, startTime, endTime)
+      console.log(width)
       return (
-        <View style={[styles.recordBar, {marginLeft: marginLeft, width: this._getRecordProgress(currentTime, startTime, endTime)}]}/>
+        <View style={[styles.recordBar, {left: marginLeft, width: width}]}/>
       )
     }
     else return null
@@ -390,8 +394,10 @@ export default class VideoControlModal extends React.Component {
                            source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
           {this._renderRecordBar(isLive, item.startTime, item.endTime)}
           <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
-
           </View>
+          <TouchableOpacity style={{position: 'absolute', top: 30, left: 20}} onPress={() => this.props.navigation.goBack(null)}>
+          <PinkRoundedButton text={"Dismiss"} />
+          </TouchableOpacity>
         </View>
       </View>)
   }
@@ -782,7 +788,6 @@ const styles = StyleSheet.create({
     height: 3,
     position: 'absolute',
     bottom: 0,
-    left: 0,
     backgroundColor: colors.mainPink
   }
 })
