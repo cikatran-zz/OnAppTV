@@ -21,6 +21,8 @@ import videoFormatReducer from './videoFormatReducer';
 import wifiInfoReducer from "./wifiInfoReducer";
 import seriesInfoReducer from './seriesInfoReducer'
 import usbDisksReducer from "./usbDisksReducer";
+import satelliteReducer from "./satelliteReducer";
+import timeShiftLimitSizeReducer from "./timeShiftLimitSizeReducer";
 
 export default combineReducers({
     nav,
@@ -44,5 +46,7 @@ export default combineReducers({
     videoFormatReducer,
     wifiInfoReducer,
     seriesInfoReducer,
-    usbDisksReducer
+    usbDisksReducer,
+    satelliteReducer,
+    timeShiftLimitSizeReducer
 });

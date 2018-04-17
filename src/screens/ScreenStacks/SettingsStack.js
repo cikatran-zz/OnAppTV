@@ -15,6 +15,8 @@ import Authorization from "../Settings/Authorization";
 import STBSelfTests from "../Settings/STBSelfTests";
 import SelectOperator from "../Settings/SelectOperator";
 import FormatHDD from "../Settings/FormatHDD";
+import AtennaTests from "../Settings/AtennaTests";
+import TimeShiftConfig from "../Settings/TimeShiftConfig";
 
 export default SettingsStack = StackNavigator({
     Setting: {
@@ -28,6 +30,18 @@ export default SettingsStack = StackNavigator({
         screen: FormatHDD,
         navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("Format HDD", navigation, true)
+        })
+    },
+    AtennaTests: {
+        screen: AtennaTests,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Athena tests", navigation, true)
+        })
+    },
+    TimeShiftConfig: {
+        screen: TimeShiftConfig,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Timeshift config", navigation, true)
         })
     },
     AudioLanguage: {

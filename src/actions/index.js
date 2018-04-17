@@ -14,6 +14,8 @@ import * as getWifiInfo from "./getWifiInfo"
 import * as getRecordList from './getRecordList'
 import * as getSeriesInfo from './getSeriesInfo'
 import * as getUSBDisks from "./getUSBDisks";
+import * as getSatellite from "./getSatellite"
+import * as getTimeShiftLimitSize from './getTimeShiftLimitSize'
 
 export default actions = {
     getBanner,
@@ -31,5 +33,7 @@ export default actions = {
     getWifiInfo,
     getGenresContent,
     getSeriesInfo,
-    getUSBDisks
+    getUSBDisks,
+    getSatellite,
+    getTimeShiftLimitSize
 };

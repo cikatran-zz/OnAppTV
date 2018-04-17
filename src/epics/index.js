@@ -19,6 +19,8 @@ import getVideoFormatEpic from "./videoFormatRequestEpic";
 import getWifiInfoEpic from "./wifiInfoRequestEpic";
 import seriesInfoRequestEpic from "./seriesInfoRequestEpic"
 import getUSBDisksEpic from "./usbDisksRequestEpic";
+import getSatelliteEpic from "./satelliteRequestEpic";
+import getTimeShiftLimitSizeEpic from "./timeShiftLimitSizeRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -42,7 +44,9 @@ const rootEpic = combineEpics(
     getWifiInfoEpic,
     seriesInfoRequestEpic,
     getZapperContentRequestEpic,
-    getUSBDisksEpic
+    getUSBDisksEpic,
+    getSatelliteEpic,
+    getTimeShiftLimitSizeEpic
 );
 
 export default rootEpic;

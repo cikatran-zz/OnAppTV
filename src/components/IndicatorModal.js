@@ -16,6 +16,13 @@ export default class IndicatorModal extends React.Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.isShow === false && this.state.isShow === true) {
+            this.props.onDismiss();
+        }
+        return true;
+    }
+
     render() {
         return(
             <Modal animationType="fade"
@@ -26,7 +33,7 @@ export default class IndicatorModal extends React.Component {
                 <View style={styles.container}>
                     <BlurView style={styles.blurView}
                               blurRadius={getBlurRadius(50)}
-                              overlayColor={1} />
+                              overlayColor={0x75000000} />
                     <View style={styles.dots}>
                         <DotsLoader color={colors.textWhitePrimary} size={20} betweenSpace={10}/>
                     </View>

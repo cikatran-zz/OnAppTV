@@ -104,8 +104,8 @@ export default class Settings extends React.PureComponent {
                         name: "Antenna configuration",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
-                        needSTB: false,
+                        screen: 'AtennaTests',
+                        needSTB: true,
                         icon: require('../../assets/settings-lock.png')
                     },
                     {
@@ -137,8 +137,8 @@ export default class Settings extends React.PureComponent {
                         name: "Timeshift max size on Hard Disk",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
-                        needSTB: false,
+                        screen: 'TimeShiftConfig',
+                        needSTB: true,
                         icon: require('../../assets/ic_wifi.png')
                     },
                 ]

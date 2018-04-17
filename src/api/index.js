@@ -702,6 +702,42 @@ export const getParentalControl = () => {
     })
 };
 
+export const getSatellite = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getSatelliteListInJson((error, results)=> {
+                    let jsonObj = JSON.parse(results[0]);
+                    if (jsonObj.length > 0) {
+                        resolve(jsonObj[jsonObj.length -1]);
+                    } else {
+                        reject({errorMessage: "Satellite not found"});
+                    }
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
+export const getTimeShiftLimitSize = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getTimeshiftLimitSizeInJson((error, results)=> {
+                    let jsonObj = JSON.parse(results[0]);
+                    resolve(parseFloat(jsonObj.timeshiftLimitSize));
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    });
+};
+
 
 export const getSettings = () => {
     let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
