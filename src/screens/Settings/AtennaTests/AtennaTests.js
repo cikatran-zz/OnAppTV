@@ -53,6 +53,8 @@ export default class AtennaTests extends React.PureComponent {
         this.satellite = null;
         this.rerender = false;
         this.transponderModelIndex = 0;
+
+        this.props.getSatellite();
     }
 
     _intervalGetSignal = () => {
@@ -67,13 +69,24 @@ export default class AtennaTests extends React.PureComponent {
     };
 
     componentDidMount() {
-        this.props.getSatellite();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
         });
         let timer = setInterval(this._intervalGetSignal, 1000);
         this.setState({timer});
+
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getSatelliteListInJson((error, results)=> {
+                    let jsonObj = JSON.parse(results[0]);
+                    if (jsonObj.length > 0) {
+                        this.setDatasource(jsonObj[jsonObj.length -1]);
+                    }
+                });
+            }
+        });
     }
 
     componentWillUnmount() {
@@ -262,27 +275,27 @@ export default class AtennaTests extends React.PureComponent {
     }
 
     render() {
-        const {satellite} = this.props;
-
-        if (!satellite.fetched || satellite.isFetching) {
-            return null;
-        }
-        if (satellite.data == null || satellite.error) {
-            return (
-                <View style={styles.container}>
-                    <StatusBar
-                        translucent={true}
-                        backgroundColor='#00000000'
-                        barStyle='dark-content'/>
-                    <Text style={styles.errorText}>{satellite.errorMessage}</Text>
-                </View>
-            )
-        }
-
-        if (!this.rerender) {
-            this.setDatasource(satellite.data);
-            this.rerender = true;
-        }
+        // const {satellite} = this.props;
+        //
+        // if (!satellite.fetched || satellite.isFetching) {
+        //     return null;
+        // }
+        // if (satellite.data == null || satellite.error) {
+        //     return (
+        //         <View style={styles.container}>
+        //             <StatusBar
+        //                 translucent={true}
+        //                 backgroundColor='#00000000'
+        //                 barStyle='dark-content'/>
+        //             <Text style={styles.errorText}>{satellite.errorMessage}</Text>
+        //         </View>
+        //     )
+        // }
+        //
+        // if (!this.rerender) {
+        //     this.setDatasource(satellite.data);
+        //     this.rerender = true;
+        // }
 
         return (
             <View style={styles.container}>
