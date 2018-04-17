@@ -29,6 +29,34 @@ query queryChannel($serviceIDs: [Float]!){
   }
 }`;
 
+const zapperContentQuery = gql`
+query queryChannelById($serviceId: Float!){
+  viewer{
+    channelOne(filter:{
+        serviceId: $serviceId
+    }) {
+      serviceId
+      lcn
+      epgsData(today: true) {
+        videoId
+        channelId
+        startTime
+        endTime
+        videoData {
+          originalImages {
+            height
+            width
+            url
+            name
+            fileName
+          }
+        }
+      }
+    }
+  }
+}
+`
+
 const bannerQuery = gql`
 query{
   viewer{
@@ -379,6 +407,29 @@ query genresEPGs($currentTime: Date, $genresId: [MongoID]){
 }
 `;
 
+const seriesInfoQuery = gql`
+query seriesInfo($id: [MongoID]) {
+    viewer {
+        seriesOne(filter: {
+      _operators: {
+        _id: {
+        in: $id
+        }
+      }
+    }) {
+      contentId
+          publishDate
+          title
+          longDescription
+          shortDescription
+          state
+          createdAt
+          updatedAt
+    }
+    }
+}
+`;
+
 export default {
     serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
     queries: {
@@ -393,6 +444,8 @@ export default {
         GENRES_VOD: genresVOD,
         GENRES_EPG: genresEPGs,
         EPG_WITH_GENRES: relatedEpgQuery,
-        EPG_WITH_SERIES: seriesEpgQuery
+        EPG_WITH_SERIES: seriesEpgQuery,
+        SERIES_INFO: seriesInfoQuery,
+        ZAPPER_CONTENT: zapperContentQuery
     }
 };

@@ -21,7 +21,7 @@ export default class SettingItem extends React.PureComponent {
     }
 
     render() {
-        const {onPress, item, showIcon} = this.props;
+        const {onPress, item, showIcon, showRightIcon} = this.props;
 
         return (
             <TouchableOpacity onPress={onPress}>
@@ -30,7 +30,9 @@ export default class SettingItem extends React.PureComponent {
                     <Text style={styles.settingItemName}>{item.name}</Text>
                     <View style={{marginLeft: 'auto', flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={styles.settingItemValue}>{this.state.text}</Text>
-                        <Image source={require('../assets/ic_right_arrow.png')}/>
+                        { showRightIcon &&
+                            <Image source={require('../assets/ic_right_arrow.png')}/>
+                        }
                     </View>
 
                 </View>

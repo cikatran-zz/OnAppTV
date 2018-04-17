@@ -44,6 +44,16 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
+        // Create download directory if haven't
+      // TODO: testing
+        let jsonString = "{\n" +
+          "\t\"path\": \"/Download\"\n" +
+          "}"
+        NativeModules.STBManager.usbMakeDirectoryWithJson(jsonString, (error, events) => {
+          console.log(error)
+          console.log(events)
+        })
+
         this.props.getBanner();
         this.props.getChannel(-1);
         this.props.getAds();

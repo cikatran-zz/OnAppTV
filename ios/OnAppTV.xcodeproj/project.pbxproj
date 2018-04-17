@@ -92,6 +92,7 @@
 		C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D95F211BEEE94A0D94986107 /* MaterialCommunityIcons.ttf */; };
 		CC40F05A00924368B7051154 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE0BD7F0BD7346FBAF6ADA1B /* FontAwesome.ttf */; };
 		CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B2F42C5B1614A10B2B0B67C /* SimpleLineIcons.ttf */; };
+		E76066255A4942C9AEDF8FBC /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -277,6 +278,13 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		6964419C2080B11600215606 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNGestureHandler;
+		};
 		69BD179920319D8900E33978 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 69BD179420319D8900E33978 /* ART.xcodeproj */;
@@ -403,6 +411,7 @@
 		4257AC3EAD9CAB389072E44A /* libPods-OnAppTV-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnAppTV-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		448061058CFC4C71B200113C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		4E05E5C2F22A40968E5DA132 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		587810DCB4763890CDC13B4C /* Pods_OnAppTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OnAppTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B2F42C5B1614A10B2B0B67C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		5D4ED6312EE2F2E159F28126 /* Pods-OnAppTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.release.xcconfig"; sourceTree = "<group>"; };
@@ -477,6 +486,7 @@
 		69F9A4F020244A9200832440 /* RCTBlurView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurView.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		A18CC350655E48C29541CF46 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		A77980E816AAFC432B46CA60 /* Pods-OnAppTV.release staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.release staging.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.release staging.xcconfig"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -513,6 +523,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				69A16FD22068DB6600E215B8 /* STBAPI.framework in Frameworks */,
 				A20D31429B8FEED8F2605160 /* Pods_OnAppTV.framework in Frameworks */,
+				E76066255A4942C9AEDF8FBC /* libRNGestureHandler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +780,14 @@
 			path = Controls;
 			sourceTree = "<group>";
 		};
+		696441712080B11600215606 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6964419D2080B11600215606 /* libRNGestureHandler.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6969BED1204E4A4900470C97 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -852,6 +871,7 @@
 			isa = PBXGroup;
 			children = (
 				B6F46B9B844A4731B5D3B567 /* libRNBlur.a */,
+				8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -930,6 +950,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
+				51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1012,7 +1033,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8TP5543C2X;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 920;
 					};
 				};
 			};
@@ -1083,6 +1104,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 696441712080B11600215606 /* Products */;
+					ProjectRef = 51EDDFD0786C445FBE6FB85D /* RNGestureHandler.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1273,6 +1298,13 @@
 			fileType = archive.ar;
 			path = libRCTAnimation.a;
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6964419D2080B11600215606 /* libRNGestureHandler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGestureHandler.a;
+			remoteRef = 6964419C2080B11600215606 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		69BD179A20319D8900E33978 /* libART.a */ = {
@@ -1575,6 +1607,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = OnAppTV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1610,6 +1643,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-blur/ios",
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = OnAppTV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

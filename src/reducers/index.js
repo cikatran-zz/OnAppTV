@@ -10,12 +10,16 @@ import adsReducer from "./adsReducer";
 import newsReducer from "./newsReducer";
 import epgsReducer from './epgsReducer';
 import bookListReducer from './bookListReducer'
+import zapperContentReducer from './zapperContentReducer'
 import genresContentReducer from './genresContentReducer'
+import recordReducer from './recordReducer'
 import audioLanguageReducer from "./audioLanguageReducer";
 import settingsReducer from "./settingsReducer";
 import subtitlesReducer from "./subtitlesReducer"
 import resolutionReducer from "./resolutionReducer";
 import videoFormatReducer from './videoFormatReducer';
+import wifiInfoReducer from "./wifiInfoReducer";
+import seriesInfoReducer from './seriesInfoReducer'
 
 export default combineReducers({
     nav,
@@ -29,10 +33,14 @@ export default combineReducers({
     newsReducer,
     epgsReducer,
     bookListReducer,
+    zapperContentReducer,
     genresContentReducer,
+    recordReducer,
     audioLanguageReducer,
     settingsReducer,
     subtitlesReducer,
     resolutionReducer,
-    videoFormatReducer
+    videoFormatReducer,
+    wifiInfoReducer,
+    seriesInfoReducer
 });

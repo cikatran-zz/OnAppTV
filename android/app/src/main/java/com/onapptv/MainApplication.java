@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.multidex.MultiDex;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
                     new MainReactPackage(),
+            new RNGestureHandlerPackage(),
                     new OrientationPackage(),
                     new VectorIconsPackage(),
                     new OnAppTVPackage()

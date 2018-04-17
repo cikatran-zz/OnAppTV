@@ -45,6 +45,15 @@ const get = (endpoints) => {
     });
 };
 
+getRecordPvrList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrListInJson((error, events) => {
+            if (error) reject(error)
+            else resolve(JSON.parse(events[0]))
+        })
+    })
+}
+
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
         // resolve([
@@ -278,6 +287,16 @@ export const checkStbConnection = () => {
   })
 };
 
+export const getRecordList = () => {
+    let recordList = null
+      return getRecordPvrList()
+        .then((value) => {
+          return new Promise((resolve, reject) => {
+            resolve(value)
+          })
+        })
+}
+
 export const getBookList = () => {
     let bookList = null;
     if (Platform.OS !== 'ios') {
@@ -395,12 +414,12 @@ export const getPvrBookList = (isConnected) => {
 }
 
 export const getChannel = (limit) => {
-    var zapList = null;
+    let zapList = null;
     return getSTBChannel()
       .then((value) => {
           zapList = _.cloneDeep(value);
           var serviceIDs = [];
-          for (var i = 0; i< value.length; i++) {
+          for (let i = 0; i< value.length; i++) {
               serviceIDs.push(value[i].serviceID);
           }
           return client.query({
@@ -409,17 +428,17 @@ export const getChannel = (limit) => {
           })
       })
       .then((response) =>{
-          var images = {};
-          var shortTitles = {}
+          let images = {};
+          let shortTitles = {}
           let data = response.data.viewer.channelMany;
-          for (var i = 0; i< data.length; i++) {
-              if (data[i].originalImages != null && data[i].originalImages.length > 0) {
+          for (let i = 0; i< data.length; i++) {
+              if (data[i].originalImages !== null && data[i].originalImages.length > 0) {
                   images[data[i].serviceId] = data[i].originalImages[0].url;
               }
               shortTitles[data[i].serviceId] = data[i].shortDescription;
 
           }
-          for (var i = 0; i< zapList.length; i++) {
+          for (let i = 0; i< zapList.length; i++) {
               zapList[i].image = images[zapList[i].serviceID];
               zapList[i].shortDescription = shortTitles[zapList[i].serviceID];
           }
@@ -463,13 +482,13 @@ export const getCategory = () => {
                 if (error) {
                     reject(JSON.parse(error));
                 } else {
-                    var categories = response.data.viewer.genreMany;
-                    var favoriteCategories = JSON.parse(results[0]);
+                    let categories = response.data.viewer.genreMany;
+                    let favoriteCategories = JSON.parse(results[0]);
                     console.log(favoriteCategories);
-                    var categoriesResults=[];
-                    for (var i = 0; i< categories.length; i++) {
-                        var name = categories[i].name;
-                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] == null) ? false : favoriteCategories[name]});
+                    let categoriesResults=[];
+                    for (let i = 0; i< categories.length; i++) {
+                        let name = categories[i].name;
+                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] === null) ? false : favoriteCategories[name]});
                     }
                     resolve(categoriesResults);
                 }
@@ -493,7 +512,7 @@ export const getEpgs = (serviceId) => {
 };
 
 export const getGenresContent = (genresIds) => {
-    var promises = [];
+    let promises = [];
 
     genresIds.forEach((genresId)=> {
         promises.push(client.query({
@@ -509,8 +528,8 @@ export const getGenresContent = (genresIds) => {
 
     return new Promise((resolve, reject) => {
         Promise.all(promises).then((values)=> {
-            var results = {};
-            for (var i=0; i<values.length-1; i++) {
+            let results = {};
+            for (let i=0; i<values.length-1; i++) {
                 results[genresIds[i]] = {features: [], VOD: [], EPGs: []};
                 values[i].data.viewer.videoMany.forEach((content)=>{
                     if (content.feature) {
@@ -552,6 +571,12 @@ export const getEpgWithSeriesId = (seriesId) => {
   })
 };
 
+export const getZapperContentWithChannelId = (serviceId) => {
+    return client.query({
+        query: config.queries.ZAPPER_CONTENT,
+        variables: {serviceId: serviceId}
+    })
+}
 
 // Settings screen
 
@@ -622,13 +647,52 @@ export const getVideoFormat = () => {
     });
 };
 
+export const getCurrentSTBInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getCurrentSTBInfoInJson((error, results)=> {
+                    resolve(results[0]);
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    })
+};
+
+export const getWifiInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.getMobileWifiInfoInJson((error, results)=> {
+            resolve(JSON.parse(results[0]));
+        });
+    })
+};
+
+export const getUSBDisks = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.STBManager.isConnect((connectString)=>{
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                NativeModules.STBManager.getUSBDisksInJson((error, results)=> {
+                    resolve(JSON.parse(results[0]));
+                });
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
+        });
+    })
+};
+
 export const getSettings = () => {
     let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
     let languageShort = ["eng", "fre", "spa", "ita", "chi", "000"];
     let resolutions = ["1080P","1080I","720P","576P","576I"];
     let aspectRatio = ["4:3 Letter Box","4:3 Center Cut Out","4:3 Extended","16:9 Pillar Box","16:9 Full Screen","16:9 Extended"];
+    let usbFileSystems = ["FAT 16","FAT 32","NTFS","EXT2","EXT3","EXT4"];
     return new Promise((resolve, reject) => {
-        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat()]).then((values)=> {
+        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat(), getCurrentSTBInfo(), getUSBDisks()]).then((values)=> {
             // Audio lang
             let indexLang = languageShort.indexOf(values[0]);
             if (indexLang == -1) {
@@ -649,15 +713,50 @@ export const getSettings = () => {
             // Video format
             let ratio = aspectRatio[values[3]];
 
+            let manufacturerID = values[4].STBID;
+            let hardwareVersion = values[4].hardwareVersion;
+            let bootLoaderVersion = values[4].loaderVersion;
+            let softwareVersion = values[4].softwareVersion;
+            let decoderID = values[4].STBID;
+
+            let hardDiskFile = "";
+            let hardDiskTotalSize = 0;
+            let hardDiskFreeSize = 0;
+
+            if (values[5].length > 0) {
+                let disk = values[5][values[5].length - 1];
+                if (disk.partitionArr != null && disk.partitionArr.length > 0) {
+                    let partition = disk.partitionArr[disk.partitionArr.length -1];
+                    hardDiskFile = usbFileSystems[partition.fileSystemType];
+                    hardDiskTotalSize = partition.partitionTotalSize / 1024;
+                    hardDiskFreeSize = partition.partitionFreeSize / 1024;
+                }
+            }
+
             resolve({
                 AudioLanguage: audioLanguage,
                 Subtitles: subLanguage,
                 Resolution: resolution,
-                VideoFormat: ratio
+                VideoFormat: ratio,
+                ManufacturerID: manufacturerID,
+                HardwareVersion: hardwareVersion.toFixed(1),
+                BootLoaderVersion: bootLoaderVersion.toFixed(1),
+                STBSoftwareVersion: softwareVersion.toFixed(1),
+                DecoderID: decoderID,
+                HardDiskFile: hardDiskFile,
+                HardDiskTotalSize: (hardDiskTotalSize > 0) ? hardDiskTotalSize.toFixed(1) + "G" : "",
+                HardDiskFreeSize: (hardDiskFreeSize > 0 ) ? hardDiskFreeSize.toFixed(1) + "G": ""
             });
         }).catch((error)=> {
             reject(error);
         })
     });
 };
+
+export const getSeriesInfo = (seriesId) => {
+  return client.query({
+    query: config.queries.SERIES_INFO,
+    variables: {id: seriesId}
+  })
+}
 

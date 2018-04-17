@@ -7,6 +7,7 @@ import HomeStack from './screens/ScreenStacks/HomeStack';
 import ZappersStack from "./screens/ScreenStacks/ZappersStack";
 import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
+import ParentalControlLock from "./screens/Settings/ParentalControlLock"
 
 const TabNav = TabNavigator({
     Home: {
@@ -40,6 +41,7 @@ const TabNav = TabNavigator({
     animationEnabled: false,
 });
 
+
 export const ScreenStack = StackNavigator({
     Root: {
         screen: STBConnection
@@ -50,7 +52,14 @@ export const ScreenStack = StackNavigator({
     VideoControlModal: {
         screen: VideoControlModal
     },
+    ParentalControlLock: {
+        screen: ParentalControlLock,
+
+    }
 }, {
     mode: 'modal',
-    headerMode: 'none'
+    headerMode: 'none',
+    navigationOptions: {
+        gesturesEnabled: true,
+    }
 });
