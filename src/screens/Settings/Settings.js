@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions
+    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions, NativeModules
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -284,7 +284,18 @@ export default class Settings extends React.PureComponent {
     _navigateToItem(item) {
         const {navigation} = this.props;
         if (item.canBeNavigated) {
-            navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+            if (item.screen === "PersonalInformation" || item.screen === "Messages") {
+                NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+                    let result = JSON.parse(results[0]);
+                    if (result.is_sign_in) {
+                        navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+                    } else {
+                        navigation.navigate("LoginScreen");
+                    }
+                });
+            } else {
+                navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+            }
         } else if (item.errorMessage != null) {
             this._showModal(item.errorMessage);
         }

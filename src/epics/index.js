@@ -21,6 +21,8 @@ import seriesInfoRequestEpic from "./seriesInfoRequestEpic"
 import getUSBDisksEpic from "./usbDisksRequestEpic";
 import getSatelliteEpic from "./satelliteRequestEpic";
 import getTimeShiftLimitSizeEpic from "./timeShiftLimitSizeRequestEpic";
+import getNotificationEpic from "./notificationRequestEpic";
+import getProfileInfoEpic from "./profileInfoRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -46,7 +48,9 @@ const rootEpic = combineEpics(
     getZapperContentRequestEpic,
     getUSBDisksEpic,
     getSatelliteEpic,
-    getTimeShiftLimitSizeEpic
+    getTimeShiftLimitSizeEpic,
+    getNotificationEpic,
+    getProfileInfoEpic
 );
 
 export default rootEpic;

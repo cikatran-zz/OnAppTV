@@ -23,6 +23,8 @@ import seriesInfoReducer from './seriesInfoReducer'
 import usbDisksReducer from "./usbDisksReducer";
 import satelliteReducer from "./satelliteReducer";
 import timeShiftLimitSizeReducer from "./timeShiftLimitSizeReducer";
+import notificationReducer from "./notificationReducer"
+import profileInfoReducer from "./profileInfoReducer";
 
 export default combineReducers({
     nav,
@@ -48,5 +50,7 @@ export default combineReducers({
     seriesInfoReducer,
     usbDisksReducer,
     satelliteReducer,
-    timeShiftLimitSizeReducer
+    timeShiftLimitSizeReducer,
+    notificationReducer,
+    profileInfoReducer
 });

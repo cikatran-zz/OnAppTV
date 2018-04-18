@@ -1,4 +1,4 @@
-import PersonalInformation from "../Settings/PersionalInformation";
+import PersonalInformation from "../Settings/PersonalInformation";
 import Resolution from "../Settings/Resolution";
 import MySubscription from "../Settings/MySubscription";
 import ParentalControl from "../Settings/ParentalControl";
