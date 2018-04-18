@@ -7,7 +7,8 @@ import HomeStack from './screens/ScreenStacks/HomeStack';
 import ZappersStack from "./screens/ScreenStacks/ZappersStack";
 import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
-import ParentalControlLock from "./screens/Settings/ParentalControlLock"
+import ParentalControlLock from "./screens/Settings/ParentalControlLock";
+import TermAndCondition from "./screens/Settings/TermAndCondition";
 
 const TabNav = TabNavigator({
     Home: {
@@ -55,11 +56,14 @@ export const ScreenStack = StackNavigator({
     ParentalControlLock: {
         screen: ParentalControlLock,
 
+    },
+    TermAndCondition: {
+        screen: TermAndCondition
     }
 }, {
     mode: 'modal',
     headerMode: 'none',
     navigationOptions: {
-        gesturesEnabled: true,
+        gesturesEnabled: false,
     }
 });

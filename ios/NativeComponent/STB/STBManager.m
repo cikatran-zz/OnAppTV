@@ -17,6 +17,18 @@ RCT_EXPORT_METHOD(udpOperation) {
     [Api.sharedApi hIG_UdpOperation];
 }
 
+RCT_EXPORT_METHOD(getCurrentSTBInfoInJson: (RCTResponseSenderBlock)callback) {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    dict[@"STBID"] = [Api.sharedApi.currentSTBInfo sTBID];
+    dict[@"OUI"] = [Api.sharedApi.currentSTBInfo oUI];
+    dict[@"hardwareVersion"] = [[NSNumber alloc] initWithInt:[Api.sharedApi.currentSTBInfo hardwareVersion]];
+    dict[@"softwareVersion"] = [[NSNumber alloc] initWithInt:[Api.sharedApi.currentSTBInfo softwareVersion]];
+    dict[@"loaderVersion"] = [[NSNumber alloc] initWithInt:[Api.sharedApi.currentSTBInfo loaderVersion]];
+    dict[@"IPAddress"] = [Api.sharedApi.currentSTBInfo iPAddress];
+    
+    callback(@[[NSNull null], @[dict]]);
+}
+
 RCT_EXPORT_METHOD(isConnect: (RCTResponseSenderBlock)callback) {
     NSMutableString *isConnected = [[NSMutableString alloc] initWithString: @"{\"is_connected\": false}"];
     if ([Api.sharedApi hIG_IsConnect]) {

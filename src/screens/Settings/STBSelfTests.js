@@ -3,6 +3,7 @@ import {
     Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions
 } from 'react-native'
 import SettingItem from '../../components/SettingItem'
+import * as Orientation from "react-native-orientation";
 
 export default class STBSelfTests extends React.PureComponent {
 
@@ -34,7 +35,19 @@ export default class STBSelfTests extends React.PureComponent {
 
     }
 
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
+
     componentDidMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     }
 
     _keyExtractor = (item, index) => index;

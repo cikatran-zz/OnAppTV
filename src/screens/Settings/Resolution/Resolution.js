@@ -5,6 +5,7 @@ import {
 import {colors} from '../../../utils/themeConfig'
 import SwitcherList from '../../../components/SwitcherList'
 import _ from 'lodash'
+import * as Orientation from "react-native-orientation";
 
 export default class Resolution extends React.PureComponent {
 
@@ -15,6 +16,18 @@ export default class Resolution extends React.PureComponent {
 
     componentDidMount() {
         this.props.getResolution();
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
+    }
+
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     _keyExtractor = (item, index) => index;

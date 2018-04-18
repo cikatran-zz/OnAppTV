@@ -75,6 +75,7 @@ export default class SwitcherList extends React.PureComponent {
                 horizontal={false}
                 renderItem={this._renderListItem}
                 data={this.props.data}
+                scrollEnabled={false}
                 ItemSeparatorComponent={() => <View
                     style={{width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
             />
