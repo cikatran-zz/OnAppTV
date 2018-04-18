@@ -1,9 +1,13 @@
 
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, PanResponder, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
-import ZapperCell from '../../../components/ZapperCell'
-import PinkRoundedLabel from "../../../components/PinkRoundedLabel"
-import moment from 'moment'
+import {
+    StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
+    Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules
+} from 'react-native';
+import ZapperCell from '../../../components/ZapperCell';
+import PinkRoundedLabel from "../../../components/PinkRoundedLabel";
+import {colors} from "../../../utils/themeConfig";
+import moment from 'moment';
 const minTop = 70;
 const {height} = Dimensions.get('window')
 const maxHeight = height - 100;
@@ -144,8 +148,20 @@ export default class ZapperContent extends Component {
 
     _renderEPGList() {
         const {content} = this.props;
-        if (!content.data || content.isFetching) {
-            return null;
+        if ( content.isFetching) {
+            return (
+                <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size="large"/>
+                </View>
+            );
+        }
+
+        if (!content.data || content.data.length === 0) {
+            return (
+                <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
+                    <Text style={styles.errorMessage}>No programs found at this time</Text>
+                </View>
+            )
         }
         return (
             <FlatList style={styles.grid}
@@ -227,5 +243,11 @@ const styles = StyleSheet.create({
         left: 0,
         top: minTop,
         zIndex: 200,
-    }
+    },
+    errorMessage: {
+        color: colors.whiteBackground,
+        fontSize: 20,
+        width: '100%',
+        textAlign: 'center'
+    },
 });
