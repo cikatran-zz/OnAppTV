@@ -45,7 +45,11 @@
     [[UserKitModule sharedInstance] initializeWithToken:token];
     [[UserKitIdentityModule sharedInstance] initializeWithToken:token];
     
+    [OANotificationCenter.sharedInstance requestPermissionWithCallback:^{
+        
+    }];
     
+    [application registerForRemoteNotifications];
     return YES;
 }
 
@@ -55,6 +59,14 @@
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
     return [Orientation getOrientation];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [OANotificationCenter.sharedInstance receiveNotificationWithUserInfo: userInfo];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [OANotificationCenter.sharedInstance receiveNotificationWithUserInfo: userInfo];
 }
 
 @end

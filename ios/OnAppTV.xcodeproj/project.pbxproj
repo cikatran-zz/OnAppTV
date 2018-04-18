@@ -34,7 +34,7 @@
 		69025AC32071F4C200F66EBE /* ImageUpload+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC22071F4C200F66EBE /* ImageUpload+Extension.swift */; };
 		69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC42072149200F66EBE /* UKIError+Extension.swift */; };
 		69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC72072287C00F66EBE /* OANotificationCenter.swift */; };
-		69025ACB2072303000F66EBE /* RNNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 69025ACA2072303000F66EBE /* RNNotificationCenter.m */; };
+		69025ACB2072303000F66EBE /* RNOANotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 69025ACA2072303000F66EBE /* RNOANotification.m */; };
 		690EEFE5205791350099484A /* UserKitModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE4205791350099484A /* UserKitModule.swift */; };
 		690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE62057915E0099484A /* UserKitIdentityModule.swift */; };
 		690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFF62057B75F0099484A /* NotificationCenter.swift */; };
@@ -83,6 +83,7 @@
 		69A16FD22068DB6600E215B8 /* STBAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69A16FD12068DB6600E215B8 /* STBAPI.framework */; };
 		69BD179D20319DB500E33978 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD179A20319D8900E33978 /* libART.a */; };
 		69BD17D82032988000E33978 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD17BE2032986D00E33978 /* libRCTOrientation.a */; };
+		69CD24F0208607E70075883F /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CD24EF208607E70075883F /* Notification.swift */; };
 		69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D21E5A20525C8200DFA90A /* STBConnectionView.swift */; };
 		69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */; };
 		69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D21F2D205270A200DFA90A /* RNTSTBConnectionViewManager.m */; };
@@ -390,6 +391,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		69FF7E9C20872DE90078D652 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
@@ -432,8 +446,8 @@
 		69025AC22071F4C200F66EBE /* ImageUpload+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageUpload+Extension.swift"; sourceTree = "<group>"; };
 		69025AC42072149200F66EBE /* UKIError+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UKIError+Extension.swift"; sourceTree = "<group>"; };
 		69025AC72072287C00F66EBE /* OANotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OANotificationCenter.swift; sourceTree = "<group>"; };
-		69025AC92072303000F66EBE /* RNNotificationCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNNotificationCenter.h; sourceTree = "<group>"; };
-		69025ACA2072303000F66EBE /* RNNotificationCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNNotificationCenter.m; sourceTree = "<group>"; };
+		69025AC92072303000F66EBE /* RNOANotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNOANotification.h; sourceTree = "<group>"; };
+		69025ACA2072303000F66EBE /* RNOANotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNOANotification.m; sourceTree = "<group>"; };
 		690EEFE4205791350099484A /* UserKitModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitModule.swift; sourceTree = "<group>"; };
 		690EEFE62057915E0099484A /* UserKitIdentityModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitIdentityModule.swift; sourceTree = "<group>"; };
 		690EEFF62057B75F0099484A /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
@@ -479,12 +493,13 @@
 		6969BE7A204C32CD00470C97 /* BrightcovePlayer.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BrightcovePlayer.swift; sourceTree = "<group>"; tabWidth = 4; };
 		6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		698460F32083620100D1679B /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
-		6989BA412084479100E49F28 /* OnAppTV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OnAppTV.entitlements; path = OnAppTV/OnAppTV.entitlements; sourceTree = "<group>"; };
+		6989BA412084479100E49F28 /* OnAppTV-sandbox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "OnAppTV-sandbox.entitlements"; path = "OnAppTV/OnAppTV-sandbox.entitlements"; sourceTree = "<group>"; };
 		69A16FCE2068DABE00E215B8 /* STBManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBManager.h; sourceTree = "<group>"; };
 		69A16FCF2068DABE00E215B8 /* STBManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBManager.m; sourceTree = "<group>"; };
 		69A16FD12068DB6600E215B8 /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
 		69BD179420319D8900E33978 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		69BD17AB2032986D00E33978 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
+		69CD24EF208607E70075883F /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		69D21E5A20525C8200DFA90A /* STBConnectionView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = STBConnectionView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STBConnectionView.xib; sourceTree = "<group>"; };
 		69D21F2C205270A200DFA90A /* RNTSTBConnectionViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTSTBConnectionViewManager.h; sourceTree = "<group>"; };
@@ -495,6 +510,9 @@
 		69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurViewManager.m; sourceTree = "<group>"; };
 		69F9A4EF20244A9200832440 /* RCTBlurView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurView.h; sourceTree = "<group>"; };
 		69F9A4F020244A9200832440 /* RCTBlurView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurView.m; sourceTree = "<group>"; };
+		69FF7E6120872DE90078D652 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		69FF7E6320872DE90078D652 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		69FF7E9D20874C250078D652 /* OnAppTV-prod.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "OnAppTV-prod.entitlements"; path = "OnAppTV/OnAppTV-prod.entitlements"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
@@ -623,7 +641,8 @@
 		13B07FAE1A68108700A75B9A /* OnAppTV */ = {
 			isa = PBXGroup;
 			children = (
-				6989BA412084479100E49F28 /* OnAppTV.entitlements */,
+				69FF7E9D20874C250078D652 /* OnAppTV-prod.entitlements */,
+				6989BA412084479100E49F28 /* OnAppTV-sandbox.entitlements */,
 				6931BE882074AF74007DA182 /* Utilities */,
 				690EEFE1205790F80099484A /* NativeModule */,
 				69D21E9420525DC300DFA90A /* Resources */,
@@ -673,6 +692,8 @@
 				60B423A662D3DBDE109F1C61 /* libPods-OnAppTV-tvOSTests.a */,
 				587810DCB4763890CDC13B4C /* Pods_OnAppTV.framework */,
 				059A53021B4082D460CEA8BB /* Pods_OnAppTVTests.framework */,
+				69FF7E6120872DE90078D652 /* UserNotifications.framework */,
+				69FF7E6320872DE90078D652 /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -719,8 +740,9 @@
 			isa = PBXGroup;
 			children = (
 				69025AC72072287C00F66EBE /* OANotificationCenter.swift */,
-				69025AC92072303000F66EBE /* RNNotificationCenter.h */,
-				69025ACA2072303000F66EBE /* RNNotificationCenter.m */,
+				69025AC92072303000F66EBE /* RNOANotification.h */,
+				69025ACA2072303000F66EBE /* RNOANotification.m */,
+				69CD24EF208607E70075883F /* Notification.swift */,
 			);
 			path = OANotificationCenter;
 			sourceTree = "<group>";
@@ -1029,6 +1051,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				E631A31DE68C03960D5759B3 /* [CP] Embed Pods Frameworks */,
 				9C6AF8FAFAEA40208CCD6F2A /* [CP] Copy Pods Resources */,
+				69FF7E9C20872DE90078D652 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -1051,6 +1074,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8TP5543C2X;
 						LastSwiftMigration = 920;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -1582,7 +1606,7 @@
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
 				69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */,
 				6932A6B320825FA600C43924 /* WatchingHistory.swift in Sources */,
-				69025ACB2072303000F66EBE /* RNNotificationCenter.m in Sources */,
+				69025ACB2072303000F66EBE /* RNOANotification.m in Sources */,
 				69A16FD02068DABE00E215B8 /* STBManager.m in Sources */,
 				690EEFE5205791350099484A /* UserKitModule.swift in Sources */,
 				690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */,
@@ -1598,6 +1622,7 @@
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,
 				69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */,
 				69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */,
+				69CD24F0208607E70075883F /* Notification.swift in Sources */,
 				69025AC02071F44F00F66EBE /* UserKitIdentityProfile+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1623,7 +1648,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = OnAppTV/OnAppTV.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "OnAppTV/OnAppTV-sandbox.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
@@ -1648,6 +1675,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mStage.ON;
 				PRODUCT_NAME = OnAppTV;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "OnAppTV-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -1661,7 +1689,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = OnAppTV/OnAppTV.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "OnAppTV/OnAppTV-prod.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8TP5543C2X;
@@ -1685,6 +1715,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mStage.ON;
 				PRODUCT_NAME = OnAppTV;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "OnAppTV-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";

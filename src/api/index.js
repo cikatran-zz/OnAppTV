@@ -815,5 +815,22 @@ export const getSeriesInfo = (seriesId) => {
     query: config.queries.SERIES_INFO,
     variables: {id: seriesId}
   })
-}
+};
+
+export const getNotification = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.RNUserKit.getProperty("notification",(error, result)=> {
+            resolve(JSON.parse(result[0]).data)
+        });
+    })
+};
+
+export const getProfileInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.RNUserKitIdentity.getProfileInfo((error, result)=> {
+            console.log("PROFILE",result);
+            resolve(result[0])
+        });
+    })
+};
 

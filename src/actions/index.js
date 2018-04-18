@@ -16,6 +16,8 @@ import * as getSeriesInfo from './getSeriesInfo'
 import * as getUSBDisks from "./getUSBDisks";
 import * as getSatellite from "./getSatellite"
 import * as getTimeShiftLimitSize from './getTimeShiftLimitSize'
+import * as getNotification from './getNotification'
+import * as getProfileInfo from './getProfileInfo'
 
 export default actions = {
     getBanner,
@@ -35,5 +37,7 @@ export default actions = {
     getSeriesInfo,
     getUSBDisks,
     getSatellite,
-    getTimeShiftLimitSize
+    getTimeShiftLimitSize,
+    getNotification,
+    getProfileInfo
 };
