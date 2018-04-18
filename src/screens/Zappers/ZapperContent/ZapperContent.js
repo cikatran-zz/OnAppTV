@@ -1,16 +1,9 @@
 
 import React, {Component} from 'react';
 import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, PanResponder, Image, Dimensions, FlatList, TouchableOpacity, NativeModules} from 'react-native';
-import Orientation from 'react-native-orientation';
-import {rootViewTopPadding} from '../../../utils/rootViewTopPadding'
 import ZapperCell from '../../../components/ZapperCell'
-import ChannelModal from "../ChannelModal/ChannelModal";
 import PinkRoundedLabel from "../../../components/PinkRoundedLabel"
-import {
-    PanGestureHandler,
-    State,
-} from 'react-native-gesture-handler';
-
+import moment from 'moment'
 const icClose = require('../../../assets/ic_modal_close.png');
 const minTop = 70;
 
@@ -37,44 +30,17 @@ export default class ZapperContent extends Component {
     };
 
     _onPanResponderMove = (event, gestureState) => {
-
         this.setState({dragging: true})
         this.handleScrollviewPanresponder();
         this.setPosition(this.getCurrentPosition() + gestureState.dy);
-        console.log("Move", (this.contentHeight/height)*gestureState.dy);
-        console.log("Dy", gestureState.dy);
-        console.log("h", height)
-        this.scrollList((this.contentHeight/height)*gestureState.dy)
     }
 
-
-
-
-    _onGestureEvent() {
-        // const {height} = Dimensions.get("window");
-        // this.scrollList((this.contentHeight/height)*event.nativeEvent.dy)
-        return Animated.event(
-            [
-                {
-                    nativeEvent: {
-                        translationY: this._translateY,
-                    },
-                },
-            ],
-            {useNativeDriver: true}
-        )
-    };
     getCurrentPosition() {
         return this.currentPosition;
     }
 
     setCurrentPosition(newPosition) {
         this.currentPosition += newPosition;
-    }
-
-    scrollList(position) {
-        console.log("Scroll List: ", position)
-        this._list.scrollToOffset({x:0, y:position, animated: true});
     }
 
     _onStartShouldSetPanResponder = (event) => {
@@ -106,8 +72,11 @@ export default class ZapperContent extends Component {
     }
 
     componentDidMount() {
-        // const {params} = this.props.navigation.state;
-        // this.props.getZapperContent(params.serviceId);
+        let currentTime = moment();
+        console.log(currentTime.toDate());
+        let fiveMinuteMore = currentTime.add(5, 'minutes');
+        console.log(fiveMinuteMore.toDate());
+        this.props.getZapperContent(moment().toDate(), fiveMinuteMore.toDate());
         // this.listener = this._lastOffsetY.addListener((_lastOffsetY) => {
         //     this._list.scrollTo({
         //         y: _lastOffsetY,
@@ -116,9 +85,6 @@ export default class ZapperContent extends Component {
         // });
     };
 
-    // componentWillUnmount() {
-    //     this._lastOffsetY.removeListener(this.listener);
-    // }
 
     _imageUri(item) {
         let image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
@@ -173,18 +139,6 @@ export default class ZapperContent extends Component {
     }
 
 
-    _onScrollviewStartPanResponder = () => {
-        const {dragging} = this.state;
-        return dragging
-    }
-    handleScrollviewPanresponder(){
-        // Tell ListView not to give up the gesture so easy
-        Object.assign(this._list.getScrollResponder(), {
-            scrollResponderHandleStartShouldSetResponder: this._onScrollviewStartPanResponder,
-            scrollResponderHandleTerminationRequest: this._onScrollviewStartPanResponder
-        });
-    }
-
     setPosition(position) {
         this._movable.setNativeProps({
             style: [styles.floatingPinkLabel, {
@@ -211,7 +165,7 @@ export default class ZapperContent extends Component {
         <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 50, backgroundColor:'transparent'}}/>
     )
 
-    render() {
+    _renderEPGList() {
         const {content, navigation} = this.props;
         if (!content.data || content.isFetching) {
             return null;
@@ -220,40 +174,36 @@ export default class ZapperContent extends Component {
         if (!epgsData)
             return null;
         return (
+            <FlatList style={styles.grid}
+                      data={epgsData}
+                      numColumns={3}
+                      onContentSizeChange={this._onContentSizeChange}
+                      ref={(ref) => this._list = ref}
+                      onScroll={this._handleScroll}
+                      showsVerticalScrollIndicator={false}
+                      keyExtractor={(item, index) => index}
+                      renderItem={this._renderItem}
+                      ListFooterComponent={this._renderListFooter}/>
+        );
+    }
+
+    render() {
+
+        return (
             <View style={styles.root}>
                 <StatusBar
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content' />
-                <PanGestureHandler
-                    onHandlerStateChange={this._onHandlerStateChange}
-                    onGestureEvent={this._onGestureEvent()} >
-                    <Animated.View
-                        style={this.getMovableStyle()}
-                        ref={(ref) => this._movable = ref} >
-                        <PinkRoundedLabel style={{zIndex: 1, marginLeft: 5}} text="Today 19:00"/>
-                    </Animated.View>
-                </PanGestureHandler>
+                <Animated.View
+                    style={this.getMovableStyle()}
+                    ref={(ref) => this._movable = ref} >
+                    <PinkRoundedLabel style={{zIndex: 1, marginLeft: 5}} text="Today 19:00"/>
+                </Animated.View>
                 <ImageBackground style={styles.image}
                                  source={require('../../../assets/conn_bg.png')}
                                  blurRadius={30}>
-                    <View style={styles.controlView}>
-                        <TouchableOpacity style={styles.controlButton} onPress={() => navigation.goBack()}>
-                            <Image source={icClose} style={{resizeMode: 'stretch', height: 30, width: 30}}/>
-                        </TouchableOpacity>
-                    </View>
-
-                    <FlatList style={styles.grid}
-                              data={epgsData}
-                              numColumns={3}
-                              onContentSizeChange={this._onContentSizeChange}
-                              ref={(ref) => this._list = ref}
-                              onScroll={this._handleScroll}
-                              showsVerticalScrollIndicator={false}
-                              keyExtractor={(item, index) => index}
-                              renderItem={this._renderItem}
-                              ListFooterComponent={this._renderListFooter}/>
-
+                    {this._renderEPGList()}
                 </ImageBackground>
             </View>
         );
@@ -281,15 +231,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    controlView: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        height: 40,
-        width: '100%',
-        marginTop: rootViewTopPadding() === 0 ? 24 : rootViewTopPadding(),
-        flexDirection: 'row',
-        justifyContent: 'space-between'
     },
     grid: {
         paddingLeft: 30,

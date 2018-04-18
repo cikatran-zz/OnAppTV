@@ -30,28 +30,16 @@ query queryChannel($serviceIDs: [Float]!){
 }`;
 
 const zapperContentQuery = gql`
-query queryChannelById($serviceId: Float!){
+query queryZapperByTime($gtTime: Date, $ltTime: Date){
   viewer{
-    channelOne(filter:{
-        serviceId: $serviceId
-    }) {
-      serviceId
-      lcn
-      epgsData(today: true) {
-        videoId
-        channelId
-        startTime
-        endTime
-        videoData {
-          originalImages {
-            height
-            width
-            url
-            name
-            fileName
-          }
-        }
-      }
+    epgRange (
+      startTimeBegin:$gtTime,
+      startTimeEnd:$ltTime
+    ) {
+      videoId
+      channelId
+      startTime
+      endTime
     }
   }
 }

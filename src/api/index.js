@@ -571,10 +571,10 @@ export const getEpgWithSeriesId = (seriesId) => {
   })
 };
 
-export const getZapperContentWithChannelId = (serviceId) => {
+export const getZapperContentTimeRange = (gtTime, ltTime) => {
     return client.query({
         query: config.queries.ZAPPER_CONTENT,
-        variables: {serviceId: serviceId}
+        variables: {gtTime: gtTime, ltTime: ltTime}
     })
 }
 

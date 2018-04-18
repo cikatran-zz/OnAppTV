@@ -85,7 +85,6 @@ export default class ZapperChannel extends Component {
                 console.log(JSON.parse(events[0]))
             }
         } )
-        this.props.navigation.navigate("ZapperContent", {serviceId: item.serviceID})
     };
 
     _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
