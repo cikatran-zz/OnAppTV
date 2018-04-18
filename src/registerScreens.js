@@ -20,7 +20,6 @@ const TabNav = TabNavigator({
         screen: ZapperStack,
         navigationOptions: ({navigation}) => ({
             header: null,
-            gesturesEnabled: false,
         }),
     },
     Book: {
@@ -61,6 +60,6 @@ export const ScreenStack = StackNavigator({
     mode: 'modal',
     headerMode: 'none',
     navigationOptions: {
-        gesturesEnabled: true,
+        gesturesEnabled: false,
     }
 });

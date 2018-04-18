@@ -4,34 +4,31 @@ import {StyleSheet, View, StatusBar, ImageBackground, Text, Animated, PanRespond
 import ZapperCell from '../../../components/ZapperCell'
 import PinkRoundedLabel from "../../../components/PinkRoundedLabel"
 import moment from 'moment'
-const icClose = require('../../../assets/ic_modal_close.png');
 const minTop = 70;
-
+const {height} = Dimensions.get('window')
+const maxHeight = height - 100;
+const rangeHeight = maxHeight - minTop;
 export default class ZapperContent extends Component {
 
     _movable = null;
     contentHeight = 0;
-    layoutHeight = 0;
     _list = null;
     currentPosition = minTop;
+    _rangeTime = 0;
+    _offsetRate = 0;
+    _currentTime = null;
+    _timeAtMove = moment();
     constructor(props) {
         super(props);
         this.state = {
-            channelData: [],
-            showAllChannels: true,
-            favoriteChannels: [],
-            allChannels: [],
             position: minTop,
-            dragging: false
+            dragging: false,
+            time: ""
         };
-        this._translateY = new Animated.Value(0);
-        this.channelModal = null;
-        this._lastOffsetY = minTop;
     };
 
     _onPanResponderMove = (event, gestureState) => {
         this.setState({dragging: true})
-        this.handleScrollviewPanresponder();
         this.setPosition(this.getCurrentPosition() + gestureState.dy);
     }
 
@@ -40,6 +37,13 @@ export default class ZapperContent extends Component {
     }
 
     setCurrentPosition(newPosition) {
+        let position = this.currentPosition + newPosition;
+        if (position < minTop)
+            return;
+        if (position > maxHeight )
+            return;
+        let fiveMinuteMore = this._timeAtMove.add(5, 'minutes');
+        this.props.getZapperContent(this._timeAtMove.toDate(), fiveMinuteMore.toDate());
         this.currentPosition += newPosition;
     }
 
@@ -53,34 +57,27 @@ export default class ZapperContent extends Component {
         return true;
     }
 
-    _listOnStartShouldSetPanResponder = (event) => {
-        console.log("List Set Pan");
-        return false;
-    }
-
-    _onHandlerStateChange = event => {
-        console.log("Change State")
-        const {width, height} = Dimensions.get("window");
-        if (event.nativeEvent.oldState === State.ACTIVE) {
-            this._lastOffsetY += event.nativeEvent.translationY;
-            this._translateY.setOffset(this._lastOffsetY);
-            this._translateY.setValue(0);
-        }
-    };
-
     componentWillMount(){
+        this._panResponder = PanResponder.create({
+            onMoveShouldSetPanResponder: this._onStartShouldSetPanResponder,
+            onMoveShouldSetPanResponderCapture: this._onStartShouldSetPanResponder,
+            onPanResponderMove: this._onPanResponderMove,
+            onPanResponderRelease: this._onPanResponderRelease,
+        });
     }
 
     componentDidMount() {
-        let currentTime = moment();
+        // let currentTime = moment().startOf('day');
+        this._currentTime = moment();
+        let time = "Today " + this._currentTime.format("HH:mm");
+        console.log("Time Parse ",time);
+        this.setState({time: time})
+        let endOfDay = moment().endOf('day');
+        this._rangeTime = moment.duration(endOfDay.diff(this._currentTime)).asMinutes();
+        this._offsetRate  = rangeHeight / this._rangeTime;
+        console.log("Offset Rate: ", this._offsetRate);
         let fiveMinuteMore = moment().add(5, 'minutes');
-        this.props.getZapperContent(currentTime.toDate(), fiveMinuteMore.toDate());
-        // this.listener = this._lastOffsetY.addListener((_lastOffsetY) => {
-        //     this._list.scrollTo({
-        //         y: _lastOffsetY,
-        //         animated: false
-        //     });
-        // });
+        this.props.getZapperContent(this._currentTime.toDate(), fiveMinuteMore.toDate());
     };
 
 
@@ -93,29 +90,14 @@ export default class ZapperContent extends Component {
         return image;
     }
 
-    _showChannelModal = (item) => {
-        let index = 0;
-        for (let i = 0; i < this.state.channelData.length; i++) {
-            if (this.state.channelData[i].serviceID === item.serviceID) {
-                index = i;
-                break;
-            }
-        }
-        this.channelModal.state.currentIndex = index;
-        this.channelModal.state.currentTitle = this.state.channelData[index].serviceName;
-        this.channelModal.state.currentDescription = this.state.channelData[index].shortDescription;
-        this.channelModal.state.currentFavorite = (this.state.channelData[index].favorite === 0) ? "Favorite" : "Unfavorite";
-        this.channelModal.toggleModal();
-    };
-
     _zapChannel = (lcn) => {
-        // NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
-        //     if (error) {
-        //         console.log(error);
-        //     } else {
-        //         console.log(JSON.parse(events[0]))
-        //     }
-        // } )
+        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(JSON.parse(events[0]))
+            }
+        } )
     };
 
     _onContentSizeChange = (width, height) => {
@@ -123,21 +105,18 @@ export default class ZapperContent extends Component {
         this.contentHeight = height;
     }
 
-    _handleScroll = (event) => {
-        console.log("Scroll", event.nativeEvent.contentOffset.y);
-        console.log("Content H", event.nativeEvent.contentSize.height);
-        if (!this.state.dragging) {
-            let offsetY = event.nativeEvent.contentOffset.y;
-            let contentHeight = event.nativeEvent.contentSize.height;
-            let layoutHeight = event.nativeEvent.layoutMeasurement.height;
-            let position = minTop + offsetY * (layoutHeight / contentHeight)
-            this.setPosition(position);
-            this.setCurrentPosition(position);
-        }
-    }
-
-
     setPosition(position) {
+        if (position < minTop)
+            return;
+        if (position > maxHeight )
+            return;
+        let currentOffset = position - minTop;
+        console.log("Current Offset", currentOffset);
+        let periodRate = Math.round(currentOffset/this._offsetRate);
+        console.log("Period Rate", periodRate);
+        this._timeAtMove= moment().add(periodRate, 'minutes');
+        let time = "Today " + this._timeAtMove.format("HH:mm");
+        this.setState({time: time});
         this._movable.setNativeProps({
             style: [styles.floatingPinkLabel, {
                 top: position,
@@ -147,37 +126,33 @@ export default class ZapperContent extends Component {
 
     getMovableStyle = () => {
         return [styles.floatingPinkLabel, {
-            transform: [
-                {translateY: this._translateY}
-            ]}
-        ]
+            top: this.state.position,
+        }]
     };
 
 
-    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
-                                               style={styles.item}
-                                               onPress={()=>this._zapChannel(item.item.lCN)}>
-        <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
-    </TouchableOpacity>);
+    _renderItem = (item) => (
+        <TouchableOpacity
+            style={styles.item}
+            onPress={()=>this._zapChannel(item.item.channelData.lCN)}>
+            <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
+        </TouchableOpacity>
+    );
     _renderListFooter = () => (
         <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 50, backgroundColor:'transparent'}}/>
     )
 
     _renderEPGList() {
-        const {content, navigation} = this.props;
+        const {content} = this.props;
         if (!content.data || content.isFetching) {
             return null;
         }
-        const {epgsData} = content.data;
-        if (!epgsData)
-            return null;
         return (
             <FlatList style={styles.grid}
-                      data={epgsData}
+                      data={content.data}
                       numColumns={3}
                       onContentSizeChange={this._onContentSizeChange}
                       ref={(ref) => this._list = ref}
-                      onScroll={this._handleScroll}
                       showsVerticalScrollIndicator={false}
                       keyExtractor={(item, index) => index}
                       renderItem={this._renderItem}
@@ -194,9 +169,10 @@ export default class ZapperContent extends Component {
                     backgroundColor='#00000000'
                     barStyle='light-content' />
                 <Animated.View
+                    {...this._panResponder.panHandlers}
                     style={this.getMovableStyle()}
                     ref={(ref) => this._movable = ref} >
-                    <PinkRoundedLabel style={{zIndex: 1, marginLeft: 5}} text="Today 19:00"/>
+                    <PinkRoundedLabel style={{zIndex: 1, marginLeft: 5}} text={this.state.time}/>
                 </Animated.View>
                 <ImageBackground style={styles.image}
                                  source={require('../../../assets/conn_bg.png')}
@@ -233,6 +209,7 @@ const styles = StyleSheet.create({
     grid: {
         paddingLeft: 30,
         paddingRight: 30,
+        marginTop: 50,
         width: '100%'
     },
 
