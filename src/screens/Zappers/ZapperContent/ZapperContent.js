@@ -73,10 +73,8 @@ export default class ZapperContent extends Component {
 
     componentDidMount() {
         let currentTime = moment();
-        console.log(currentTime.toDate());
-        let fiveMinuteMore = currentTime.add(5, 'minutes');
-        console.log(fiveMinuteMore.toDate());
-        this.props.getZapperContent(moment().toDate(), fiveMinuteMore.toDate());
+        let fiveMinuteMore = moment().add(5, 'minutes');
+        this.props.getZapperContent(currentTime.toDate(), fiveMinuteMore.toDate());
         // this.listener = this._lastOffsetY.addListener((_lastOffsetY) => {
         //     this._list.scrollTo({
         //         y: _lastOffsetY,
