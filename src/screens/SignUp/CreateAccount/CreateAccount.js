@@ -24,7 +24,8 @@ export default class CreateAccount extends React.PureComponent {
     }];
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={{width: 44, height: 44, borderRadius: 22, position: 'absolute', top: 10, right: 20, backgroundColor: 'rgba(11,11,11,0.31)'}}>
+        <TouchableOpacity style={{width: 44, height: 44, borderRadius: 22, position: 'absolute', top: 10, right: 20, backgroundColor: 'rgba(11,11,11,0.31)'}}
+          onPress={() => this.props.navigation.goBack(null)}>
           <Image source={require('../../../assets/ic_modal_close.png')}/>
         </TouchableOpacity>
         <Text style={{marginTop: '13%', alignSelf: 'center', fontSize: 22, color: 'black', marginBottom: '9%', fontWeight: 'bold'}}>CREATE ACCOUNT</Text>
