@@ -31,6 +31,9 @@ class OANotificationCenter: NSObject, UNUserNotificationCenterDelegate {
                         if (titleArr.count > 1) {
                             title = titleArr[1] as? String ?? ""
                         }
+                        if (title == "") {
+                            title = userInfo["title"] as? String ?? ""
+                        }
                         return Notification(jsonObj: asJsonObj(["title": title as Any, "body": asJsonObj(userInfo["aps"])["alert"] as Any]) )
                     }
                     Notification.updateNotifications(notis: notis, successBlock: {}, errorBlock: { _ in });
@@ -65,6 +68,9 @@ class OANotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         var title = ""
         if (titleArr.count > 1) {
             title = titleArr[1] as? String ?? ""
+        }
+        if (title == "") {
+            title = userInfo["title"] as? String ?? ""
         }
         let noti = Notification(jsonObj: ["title": title as Any, "body":asJsonObj(userInfo["aps"])["alert"] as Any])
         Notification.updateNotification(noti: noti, successBlock: {}, errorBlock: {_ in})
