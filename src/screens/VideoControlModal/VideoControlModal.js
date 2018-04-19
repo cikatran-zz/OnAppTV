@@ -500,7 +500,7 @@ export default class VideoControlModal extends React.Component {
         <BrightcovePlayer
           onLayout={this.onLayout.bind(this)}
           style={{width: '100%', height: '100%', left: 0, top: 0, backgroundColor: "#000000"}}
-          videoId='5714823997001'
+          videoId= {item.contentId ? item.contentId : '5714823997001'}
           accountId='5706818955001'
           policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'
           />);
