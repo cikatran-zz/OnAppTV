@@ -112,8 +112,8 @@ export default class VideoControlModal extends React.Component {
     const {item, isLive, epg} = this.props.navigation.state.params
     console.log(epg)
 
-    NativeModules.STBManager.isConnect((r) => {
-      let json = JSON.parse(r[0]).is_connected
+    NativeModules.STBManager.isConnect((connectStr) => {
+      let json = JSON.parse(connectStr).is_connected
       if (json === true) this.setState({isConnected: true})
     })
 
@@ -500,9 +500,10 @@ export default class VideoControlModal extends React.Component {
         <BrightcovePlayer
           onLayout={this.onLayout.bind(this)}
           style={{width: '100%', height: '100%', left: 0, top: 0, backgroundColor: "#000000"}}
-          videoId='5714823997001'
+          videoId= {item.contentId ? item.contentId : '5714823997001'}
           accountId='5706818955001'
-          policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'/>);
+          policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'
+          />);
     } else {
       // Right now, Live is just one video, check for one video
       if (isLive) {
@@ -842,7 +843,7 @@ const styles = StyleSheet.create({
   },
   close: {
     position: 'absolute',
-    top: 6,
+    top: 6 + rootViewTopPadding(),
     right: 20
   },
   modalButtonText: {
