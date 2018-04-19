@@ -22,6 +22,9 @@ import userkit.sdk.identity.UserKitIdentity;
 
 public class MainApplication extends Application implements ReactApplication {
 
+    public static String NOTIFICATION_PREF = "notificationPref";
+    public static String IS_ENABLED_NOTIFICATION = "isEnabledNotification";
+
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
