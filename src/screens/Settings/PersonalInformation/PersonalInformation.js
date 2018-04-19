@@ -54,11 +54,11 @@ export default class PersonalInformation extends React.PureComponent {
         let data = [
             {
                 name: "Name",
-                value: profile.data.name.toString()
+                value: (profile.data.name == null ? "": profile.data.name.toString())
             },
             {
                 name: "Email",
-                value: profile.data.email.toString()
+                value: profile.data.email == null ? "" : profile.data.email.toString()
             },
             {
                 name: "Age",

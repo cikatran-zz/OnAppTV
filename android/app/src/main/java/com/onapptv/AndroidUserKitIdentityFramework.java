@@ -55,13 +55,13 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                     WritableNativeMap map = new WritableNativeMap();
                     map.putString("name",profile.getName());
                     map.putString("email", profile.getAccountEmail());
-                    map.putInt("age", profile.getProperties().getOrDefault("age",""));
-                    map.putString("sex", profile.getProperties().getOrDefault("sex", ""));
+                    map.putInt("age", (int)profile.getProperties().getOrDefault("age",0));
+                    map.putString("sex", (String)profile.getProperties().getOrDefault("sex", ""));
                     WritableNativeArray array = new WritableNativeArray();
-                    array.pushString(gson.toJson(map));
+                    array.pushMap(map);
                     callback.invoke(null, array);
 
-                }, throwable ->  callback.invoke(((IdentityException) throwable).toJsonString(), null))
+                }, throwable ->  callback.invoke(((IdentityException) throwable).toJsonString(), null));
     }
 
 
