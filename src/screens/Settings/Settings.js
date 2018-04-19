@@ -320,7 +320,7 @@ export default class Settings extends React.PureComponent {
                     renderItem={this._renderSettingItem}
                     keyExtractor={this._keyExtractor}
                     ItemSeparatorComponent={() => <View
-                        style={{left: 45, width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
+                        style={{left: 45, width: "100%", height: 1, backgroundColor: '#DADADE', opacity: 0.41}}/>}
                 />
             </View>
         )
@@ -344,7 +344,7 @@ export default class Settings extends React.PureComponent {
             for (let j = 0; j < newData[i].list.length; j++) {
                 if (newData[i].list[j].needSTB) {
                     newData[i].list[j].canBeNavigated = false;
-                    newData[i].list[j].value = "No STB Connected";
+                    newData[i].list[j].value = "";
                 }
             }
         }
@@ -394,13 +394,18 @@ export default class Settings extends React.PureComponent {
         if (wifi.data != null) {
             let newData = _.cloneDeep(this.data);
             newData[3].list[1].value = (wifi.data.SSID == null) ? "Not found" : wifi.data.SSID;
-            if (settings.data == null || settings.data.HardDiskFile !== "") {
-                newData[2].list[3].errorMessage = null;
-                newData[2].list[3].canBeNavigated = true;
-            } else {
-                newData[2].list[3].errorMessage = "No hard disk exists";
-                newData[2].list[3].canBeNavigated = false;
-            }
+            this.data = newData;
+        }
+
+        if (settings.data !== null && settings.data.HardDiskFile !== "") {
+            let newData = _.cloneDeep(this.data);
+            newData[2].list[3].errorMessage = null;
+            newData[2].list[3].canBeNavigated = true;
+            this.data = newData;
+        } else {
+            let newData = _.cloneDeep(this.data);
+            newData[2].list[3].errorMessage = "No hard disk exists";
+            newData[2].list[3].canBeNavigated = false;
             this.data = newData;
         }
 

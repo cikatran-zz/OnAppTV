@@ -240,7 +240,8 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         width: '32%',
         flexDirection: 'row',
-        margin: 2.5
+        margin: 2.5,
+        overflow: "hidden"
     },
     numberText: {
         position: 'absolute',

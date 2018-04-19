@@ -51,19 +51,19 @@ export default class Home extends Component {
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
-        // NativeModules.RNUserKitIdentity.signUpWithEmail("dev@gmail.com", "00000000",{}, (error, results) => {
+        // NativeModules.RNUserKitIdentity.signUpWithEmail("tester@gmail.com", "00000000",{}, (error, results) => {
         //     if (error) {
         //         console.log(error)
         //     } else {
         //         console.log("Sign up success", results[0]);
         //     }
-        // })
+        // });
         NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 console.log("Already logged in");
             } else {
-                NativeModules.RNUserKitIdentity.signInWithEmail("dev@gmail.com", "00000000", (error, results) => {
+                NativeModules.RNUserKitIdentity.signInWithEmail("tester@gmail.com", "00000000", (error, results) => {
                     if (error) {
                         console.log(error)
                     } else {
@@ -413,9 +413,9 @@ export default class Home extends Component {
             channelData = [null];
         }
 
-        if (this.state.favoriteCategories == null && category.data) {
-            var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
-            this.state.category = category.data;
+        if (this.state.favoriteCategories == null) {
+            var categoryData = (category.data == null ? [] : category.data).filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
+            this.state.category = category.data == null ? [] : category.data;
             categoryData.push({"name": "_ADD"});
             this.state.favoriteCategories = categoryData;
         }

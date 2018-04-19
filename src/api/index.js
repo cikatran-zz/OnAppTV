@@ -9,40 +9,40 @@ import _ from 'lodash';
 
 
 const instance = axios.create({
-  serverURL: `${config.serverURL}`
+    serverURL: `${config.serverURL}`
 });
 
 const httpLink = new HttpLink({uri: config.serverURL})
 
-const errorHandler = onError(({ networkError }) => {
-  switch (networkError.statusCode) {
-    case 404:
-      return {error: {message: 'Cannot connect to server'}};
-    default:
-      return {error: {message: 'Unknown error'}};
-  }
+const errorHandler = onError(({networkError}) => {
+    switch (networkError.statusCode) {
+        case 404:
+            return {error: {message: 'Cannot connect to server'}};
+        default:
+            return {error: {message: 'Unknown error'}};
+    }
 })
 
 const client = new ApolloClient({
-  link: errorHandler.concat(httpLink),
-  cache: new InMemoryCache()
+    link: errorHandler.concat(httpLink),
+    cache: new InMemoryCache()
 })
 
 const get = (endpoints) => {
-  return instance.get(`${endpoints}`)
-    .then((response) => {
-      switch (response.status) {
-        case 403:
-          return {error: {message: 'Invalid token'}, kickOut: true};
-        case 404:
-          return {error: {message: 'Cannot connect to server'}};
-        default:
-          return response;
-      }
-    })
-    .catch((err) => {
-      throw err;
-    });
+    return instance.get(`${endpoints}`)
+        .then((response) => {
+            switch (response.status) {
+                case 403:
+                    return {error: {message: 'Invalid token'}, kickOut: true};
+                case 404:
+                    return {error: {message: 'Cannot connect to server'}};
+                default:
+                    return response;
+            }
+        })
+        .catch((err) => {
+            throw err;
+        });
 };
 
 getRecordPvrList = () => {
@@ -221,22 +221,22 @@ getSTBChannel = () => {
         //     }
         // ]);
 
-        NativeModules.STBManager.isConnect((connectString)=>{
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
                 NativeModules.STBManager.getZapServiceListInJson((error, events) => {
                     if (error) {
                         reject(error);
                     } else {
-                        syncUserKitWithSTBChannels(JSON.parse(events[0])).then((values)=>{
+                        syncUserKitWithSTBChannels(JSON.parse(events[0])).then((values) => {
                             resolve(values);
-                        }).catch((e)=>{
+                        }).catch((e) => {
                             resolve(JSON.parse(events[0]));
                         });
                     }
                 });
             } else {
-                NativeModules.RNUserKit.getProperty("favorite_channels", (error, result)=> {
+                NativeModules.RNUserKit.getProperty("favorite_channels", (error, result) => {
                     if (error) {
                         reject(error);
                     } else {
@@ -250,27 +250,29 @@ getSTBChannel = () => {
     });
 };
 
-syncUserKitWithSTBChannels = (channels)=> {
-    return new Promise((resolve, reject)=> {
-        NativeModules.RNUserKit.getProperty("favorite_channels", (error, result)=> {
+syncUserKitWithSTBChannels = (channels) => {
+    return new Promise((resolve, reject) => {
+        NativeModules.RNUserKit.getProperty("favorite_channels", (error, result) => {
             if (error) {
                 reject(error);
             } else {
                 let jsonObj = JSON.parse(result[0]);
                 if (jsonObj.data != null) {
                     var userKitResult = new Array(0);
-                    for(let i = 0; i< channels.length; i++) {
-                        let foundObj = jsonObj.data.find((element)=> element.serviceID == channels[i].serviceID);
+                    for (let i = 0; i < channels.length; i++) {
+                        let foundObj = jsonObj.data.find((element) => element.serviceID == channels[i].serviceID);
                         let element = channels[i];
                         if (foundObj != null) {
                             element.favorite = foundObj.favorite;
                         }
                         userKitResult.push(element);
                     }
-                    NativeModules.RNUserKit.storeProperty("favorite_channels", {data: userKitResult}, (e, r)=>{});
+                    NativeModules.RNUserKit.storeProperty("favorite_channels", {data: userKitResult}, (e, r) => {
+                    });
                     resolve(userKitResult);
                 } else {
-                    NativeModules.RNUserKit.storeProperty("favorite_channels", {data: channels}, (e, r)=>{});
+                    NativeModules.RNUserKit.storeProperty("favorite_channels", {data: channels}, (e, r) => {
+                    });
                     reject({error_message: "Cannot found property"});
                 }
             }
@@ -279,81 +281,81 @@ syncUserKitWithSTBChannels = (channels)=> {
 };
 
 export const checkStbConnection = () => {
-  return new Promise((resolve, reject) => {
-    NativeModules.STBManager.isStbConnected((error, events) => {
-      if (error) reject(error)
-      else resolve(events)
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isStbConnected((error, events) => {
+            if (error) reject(error)
+            else resolve(events)
+        })
     })
-  })
 };
 
 export const getRecordList = () => {
     let recordList = null
-      return getRecordPvrList()
+    return getRecordPvrList()
         .then((value) => {
-          return new Promise((resolve, reject) => {
-            resolve(value)
-          })
+            return new Promise((resolve, reject) => {
+                resolve(value)
+            })
         })
 }
 
 export const getBookList = () => {
-  return getPvrBookList()
-    .then(value => {
-      return new Promise((resolve, reject) => {
-        resolve(value)
-      })
-    })
+    return getPvrBookList()
+        .then(value => {
+            return new Promise((resolve, reject) => {
+                resolve(value)
+            })
+        })
 }
 
 export const getPvrBookList = () => {
     return new Promise((resolve, reject) => {
-         NativeModules.STBManager.getPvrBookListInJson((error, events) => {
-           console.log('getPvrBookListInJson')
-           console.log(error)
-           console.log(events)
-           if (error)
-             reject(error)
-           else {
-             resolve(JSON.parse(events[0]))
-           }
-         })
+        NativeModules.STBManager.getPvrBookListInJson((error, events) => {
+            console.log('getPvrBookListInJson')
+            console.log(error)
+            console.log(events)
+            if (error)
+                reject(error)
+            else {
+                resolve(JSON.parse(events[0]))
+            }
+        })
     })
 }
 
 export const getChannel = (limit) => {
     let zapList = null;
     return getSTBChannel()
-      .then((value) => {
-          zapList = _.cloneDeep(value);
-          var serviceIDs = [];
-          for (let i = 0; i< value.length; i++) {
-              serviceIDs.push(value[i].serviceID);
-          }
-          return client.query({
-              query: config.queries.CHANNEL,
-              variables:  {serviceIDs: serviceIDs}
-          })
-      })
-      .then((response) =>{
-          let images = {};
-          let shortTitles = {}
-          let data = response.data.viewer.channelMany;
-          for (let i = 0; i< data.length; i++) {
-              if (data[i].originalImages !== null && data[i].originalImages.length > 0) {
-                  images[data[i].serviceId] = data[i].originalImages[0].url;
-              }
-              shortTitles[data[i].serviceId] = data[i].shortDescription;
+        .then((value) => {
+            zapList = _.cloneDeep(value);
+            var serviceIDs = [];
+            for (let i = 0; i < value.length; i++) {
+                serviceIDs.push(value[i].serviceID);
+            }
+            return client.query({
+                query: config.queries.CHANNEL,
+                variables: {serviceIDs: serviceIDs}
+            })
+        })
+        .then((response) => {
+            let images = {};
+            let shortTitles = {}
+            let data = response.data.viewer.channelMany;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].originalImages !== null && data[i].originalImages.length > 0) {
+                    images[data[i].serviceId] = data[i].originalImages[0].url;
+                }
+                shortTitles[data[i].serviceId] = data[i].shortDescription;
 
-          }
-          for (let i = 0; i< zapList.length; i++) {
-              zapList[i].image = images[zapList[i].serviceID];
-              zapList[i].shortDescription = shortTitles[zapList[i].serviceID];
-          }
-          return new Promise((resolve,reject) => {
-              resolve(zapList);
-          });
-      });
+            }
+            for (let i = 0; i < zapList.length; i++) {
+                zapList[i].image = images[zapList[i].serviceID];
+                zapList[i].shortDescription = shortTitles[zapList[i].serviceID];
+            }
+            return new Promise((resolve, reject) => {
+                resolve(zapList);
+            });
+        });
 };
 
 export const getBanner = () => {
@@ -371,21 +373,21 @@ export const getAds = () => {
 export const getLive = (currentTime) => {
     return client.query({
         query: config.queries.LIVE,
-        variables:  {currentTime: currentTime}
+        variables: {currentTime: currentTime}
     });
 };
 export const getVOD = (page, itemPerPage) => {
     return client.query({
         query: config.queries.VOD,
-        variables:  {page: page, perPage: itemPerPage}
+        variables: {page: page, perPage: itemPerPage}
     });
 };
 
 export const getCategory = () => {
     return client.query({
         query: config.queries.CATEGORY
-    }).then((response)=>{
-        return new Promise((resolve,reject) => {
+    }).then((response) => {
+        return new Promise((resolve, reject) => {
             NativeModules.RNUserKit.getProperty("favorite_categories", (error, results) => {
                 if (error) {
                     reject(JSON.parse(error));
@@ -393,10 +395,14 @@ export const getCategory = () => {
                     let categories = response.data.viewer.genreMany;
                     let favoriteCategories = JSON.parse(results[0]);
                     console.log(favoriteCategories);
-                    let categoriesResults=[];
-                    for (let i = 0; i< categories.length; i++) {
+                    let categoriesResults = [];
+                    for (let i = 0; i < categories.length; i++) {
                         let name = categories[i].name;
-                        categoriesResults.push({id:categories[i]._id, name: name,favorite:(favoriteCategories[name] === null) ? false : favoriteCategories[name]});
+                        categoriesResults.push({
+                            id: categories[i]._id,
+                            name: name,
+                            favorite: (favoriteCategories[name] === null || favoriteCategories[name] === false || favoriteCategories[name] == 0.0) ? false : true
+                        });
                     }
                     resolve(categoriesResults);
                 }
@@ -412,17 +418,17 @@ export const getNews = () => {
 };
 
 export const getEpgs = (serviceId) => {
-  console.log(serviceId)
-  return client.query({
-    query: config.queries.EPG,
-    variables: {id: serviceId}
-  })
+    console.log(serviceId)
+    return client.query({
+        query: config.queries.EPG,
+        variables: {id: serviceId}
+    })
 };
 
 export const getGenresContent = (genresIds) => {
     let promises = [];
 
-    genresIds.forEach((genresId)=> {
+    genresIds.forEach((genresId) => {
         promises.push(client.query({
             query: config.queries.GENRES_VOD,
             variables: {genresId: [genresId]}
@@ -435,11 +441,11 @@ export const getGenresContent = (genresIds) => {
     }));
 
     return new Promise((resolve, reject) => {
-        Promise.all(promises).then((values)=> {
+        Promise.all(promises).then((values) => {
             let results = {};
-            for (let i=0; i<values.length-1; i++) {
+            for (let i = 0; i < values.length - 1; i++) {
                 results[genresIds[i]] = {features: [], VOD: [], EPGs: []};
-                values[i].data.viewer.videoMany.forEach((content)=>{
+                values[i].data.viewer.videoMany.forEach((content) => {
                     if (content.feature) {
                         results[genresIds[i]].features.push(content)
                     } else {
@@ -449,34 +455,34 @@ export const getGenresContent = (genresIds) => {
             }
 
             // Get EPGs
-            values[values.length-1].data.viewer.epgMany.forEach((epg)=> {
+            values[values.length - 1].data.viewer.epgMany.forEach((epg) => {
                 console.log(epg);
-                epg.genreIds.forEach((genre)=> {
+                epg.genreIds.forEach((genre) => {
                     if (genresIds.indexOf(genre) > -1) {
                         results[genre].EPGs.push(epg);
                     }
                 });
             });
             resolve(results);
-        }).catch((error)=>{
+        }).catch((error) => {
             reject(error)
         });
     });
 };
 
 export const getEpgWithGenres = (genresIds) => {
-  console.log(genresIds)
-  return client.query({
-    query: config.queries.EPG_WITH_GENRES,
-    variables: {genreIds: genresIds}
-  })
+    console.log(genresIds)
+    return client.query({
+        query: config.queries.EPG_WITH_GENRES,
+        variables: {genreIds: genresIds}
+    })
 }
 
 export const getEpgWithSeriesId = (seriesId) => {
-  return client.query({
-    query: config.queries.EPG_WITH_SERIES,
-    variables: {id: seriesId}
-  })
+    return client.query({
+        query: config.queries.EPG_WITH_SERIES,
+        variables: {id: seriesId}
+    })
 };
 
 export const getZapperContentTimeRange = (gtTime, ltTime) => {
@@ -490,11 +496,11 @@ export const getZapperContentTimeRange = (gtTime, ltTime) => {
 
 // Audio language
 export const getAudioLanguage = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getPreferAudioLanguageInJson((error, results)=> {
+                NativeModules.STBManager.getPreferAudioLanguageInJson((error, results) => {
                     let audioLanguage = JSON.parse(results[0]).audioLanguageCode;
                     resolve(audioLanguage);
                 });
@@ -507,11 +513,11 @@ export const getAudioLanguage = () => {
 
 // Subtitles
 export const getSubtitles = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getPreferSubtitleLanguageInJson((error, results)=> {
+                NativeModules.STBManager.getPreferSubtitleLanguageInJson((error, results) => {
                     let subLanguage = JSON.parse(results[0]).subtitleLanguageCode;
                     resolve(subLanguage);
                 });
@@ -524,11 +530,11 @@ export const getSubtitles = () => {
 
 // Resolution
 export const getResolution = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getResolutionInJson((error, results)=> {
+                NativeModules.STBManager.getResolutionInJson((error, results) => {
                     let resolution = JSON.parse(results[0]).resolution;
                     resolve(resolution);
                 });
@@ -540,11 +546,11 @@ export const getResolution = () => {
 };
 
 export const getVideoFormat = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getAspectRatioInJson((error, results)=> {
+                NativeModules.STBManager.getAspectRatioInJson((error, results) => {
                     let aspectRatio = JSON.parse(results[0]).aspectRatio;
                     resolve(aspectRatio);
                 });
@@ -556,11 +562,11 @@ export const getVideoFormat = () => {
 };
 
 export const getCurrentSTBInfo = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getCurrentSTBInfoInJson((error, results)=> {
+                NativeModules.STBManager.getCurrentSTBInfoInJson((error, results) => {
                     resolve(results[0]);
                 });
             } else {
@@ -571,19 +577,19 @@ export const getCurrentSTBInfo = () => {
 };
 
 export const getWifiInfo = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.getMobileWifiInfoInJson((error, results)=> {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getMobileWifiInfoInJson((error, results) => {
             resolve(JSON.parse(results[0]));
         });
     })
 };
 
 export const getUSBDisks = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getUSBDisksInJson((error, results)=> {
+                NativeModules.STBManager.getUSBDisksInJson((error, results) => {
                     resolve(JSON.parse(results[0]));
                 });
             } else {
@@ -594,11 +600,11 @@ export const getUSBDisks = () => {
 };
 
 export const getParentalControl = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getParentalGuideRatingInJson((error, results)=> {
+                NativeModules.STBManager.getParentalGuideRatingInJson((error, results) => {
                     let jsonObj = JSON.parse(results[0]);
                     let rating = parseInt(jsonObj.parentalGuideRating);
                     resolve(rating);
@@ -611,14 +617,14 @@ export const getParentalControl = () => {
 };
 
 export const getSatellite = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getSatelliteListInJson((error, results)=> {
+                NativeModules.STBManager.getSatelliteListInJson((error, results) => {
                     let jsonObj = JSON.parse(results[0]);
                     if (jsonObj.length > 0) {
-                        resolve(jsonObj[jsonObj.length -1]);
+                        resolve(jsonObj[jsonObj.length - 1]);
                     } else {
                         reject({errorMessage: "Satellite not found"});
                     }
@@ -631,11 +637,11 @@ export const getSatellite = () => {
 };
 
 export const getTimeShiftLimitSize = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.STBManager.isConnect((connectString)=>{
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
-                NativeModules.STBManager.getTimeshiftLimitSizeInJson((error, results)=> {
+                NativeModules.STBManager.getTimeshiftLimitSizeInJson((error, results) => {
                     let jsonObj = JSON.parse(results[0]);
                     resolve(parseFloat(jsonObj.timeshiftLimitSize));
                 });
@@ -650,11 +656,11 @@ export const getTimeShiftLimitSize = () => {
 export const getSettings = () => {
     let languageFull = ["English", "French", "Spanish", "Italian", "Chinese", "Off"];
     let languageShort = ["eng", "fre", "spa", "ita", "chi", "000"];
-    let resolutions = ["1080P","1080I","720P","576P","576I"];
-    let aspectRatio = ["4:3 Letter Box","4:3 Center Cut Out","4:3 Extended","16:9 Pillar Box","16:9 Full Screen","16:9 Extended"];
-    let usbFileSystems = ["FAT 16","FAT 32","NTFS","EXT2","EXT3","EXT4"];
+    let resolutions = ["1080P", "1080I", "720P", "576P", "576I"];
+    let aspectRatio = ["4:3 Letter Box", "4:3 Center Cut Out", "4:3 Extended", "16:9 Pillar Box", "16:9 Full Screen", "16:9 Extended"];
+    let usbFileSystems = ["FAT 16", "FAT 32", "NTFS", "EXT2", "EXT3", "EXT4"];
     return new Promise((resolve, reject) => {
-        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat(), getCurrentSTBInfo(), getUSBDisks(), getParentalControl()]).then((values)=> {
+        Promise.all([getAudioLanguage(), getSubtitles(), getResolution(), getVideoFormat(), getCurrentSTBInfo(), getUSBDisks(), getParentalControl()]).then((values) => {
             // Audio lang
             let indexLang = languageShort.indexOf(values[0]);
             if (indexLang == -1) {
@@ -688,7 +694,7 @@ export const getSettings = () => {
             if (values[5].length > 0) {
                 let disk = values[5][values[5].length - 1];
                 if (disk.partitionArr != null && disk.partitionArr.length > 0) {
-                    let partition = disk.partitionArr[disk.partitionArr.length -1];
+                    let partition = disk.partitionArr[disk.partitionArr.length - 1];
                     hardDiskFile = usbFileSystems[partition.fileSystemType];
                     hardDiskTotalSize = partition.partitionTotalSize / 1024;
                     hardDiskFreeSize = partition.partitionFreeSize / 1024;
@@ -709,64 +715,66 @@ export const getSettings = () => {
                 DecoderID: decoderID,
                 HardDiskFile: hardDiskFile,
                 HardDiskTotalSize: (hardDiskTotalSize > 0) ? hardDiskTotalSize.toFixed(1) + "G" : "",
-                HardDiskFreeSize: (hardDiskFreeSize > 0 ) ? hardDiskFreeSize.toFixed(1) + "G": "",
+                HardDiskFreeSize: (hardDiskFreeSize > 0) ? hardDiskFreeSize.toFixed(1) + "G" : "",
                 ParentalControl: parentalControl
             });
-        }).catch((error)=> {
+        }).catch((error) => {
             reject(error);
         })
     });
 };
 
 export const getSeriesInfo = (seriesId) => {
-  return client.query({
-    query: config.queries.SERIES_INFO,
-    variables: {id: seriesId}
-  })
-};
-
-export const getNotification = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.RNUserKit.getProperty("notification",(error, result)=> {
-            resolve(JSON.parse(result[0]).data)
-        });
+    return client.query({
+        query: config.queries.SERIES_INFO,
+        variables: {id: seriesId}
     })
 };
 
+export const getNotification = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.RNUserKit.getProperty("notification", (error, result) => {
+            NativeModules.RNUserKit.getProperty("notification", (error, result) => {
+                resolve(JSON.parse(result[0]).data)
+            });
+        })
+    })
+}
+
 export const getProfileInfo = () => {
-    return new Promise((resolve, reject)=> {
-        NativeModules.RNUserKitIdentity.getProfileInfo((error, result)=> {
+    return new Promise((resolve, reject) => {
+        NativeModules.RNUserKitIdentity.getProfileInfo((error, result) => {
             resolve(result[0])
         });
     })
 };
 
 export const getBcVideos = (contentId) => {
-  return client.query({
-    query: config.queries.BRIGHTCOVE_SEARCH,
-    variables: {id: contentId}
-  })
+    return client.query({
+        query: config.queries.BRIGHTCOVE_SEARCH,
+        variables: {id: contentId}
+    })
 }
 
 export const readUsbDir = (dir_path) => {
-  console.log(dir_path)
-  return new Promise((resolve, reject) => {
-    NativeModules.STBManager.isConnect((connectString) => {
-      let connected = JSON.parse(connectString).is_connected;
-      if (connected) {
-        let json = {
-          dir_path: dir_path
-        }
+    console.log(dir_path)
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                let json = {
+                    dir_path: dir_path
+                }
 
-        NativeModules.STBManager.readUSBDirWithJsonString(JSON.stringify(json), (error, events) => {
-          resolve(JSON.parse(events[0]))
+                NativeModules.STBManager.readUSBDirWithJsonString(JSON.stringify(json), (error, events) => {
+                    resolve(JSON.parse(events[0]))
+                })
+            } else {
+                reject({errorMessage: "No STB connection"});
+            }
         })
-      } else {
-        reject({errorMessage: "No STB connection"});
-      }
-    })
 
-  })
+    })
 }
 
 
