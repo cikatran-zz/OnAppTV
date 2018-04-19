@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import {getZapperContentWithChannelId} from '../../../actions/getZapperContent'
+import {getZapperContentWithTime} from '../../../actions/getZapperContent'
 import ZapperContent from './ZapperContent'
 
 function mapStateToProps (state) {
@@ -10,7 +10,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getZapperContent: (channelId) => dispatch(getZapperContentWithChannelId(channelId)),
+        getZapperContent: (gtTime, ltTime) => dispatch(getZapperContentWithTime(gtTime, ltTime)),
     }
 }
 

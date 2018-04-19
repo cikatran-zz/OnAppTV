@@ -70,15 +70,16 @@ class STBConnectionView: UIView {
         
         //        The HTML file name of the webView
         var webViewName = "" ;
+        webViewName = "Revolution";
         //        Determine whether the APP is first started
-        if UserKitIdentity.mainInstance().accountManager.isLoggedIn() {
-            //            Not for the first time
-            webViewName = "Revolution";
-        }else {
-            //            Start the APP for the first time
-//            UserDefaults.standard.set(true, forKey: "isStarted");
-            webViewName = "Login";
-        }
+//        if UserKitIdentity.mainInstance().accountManager.isLoggedIn() {
+//            //            Not for the first time
+//
+//        }else {
+//            //            Start the APP for the first time
+////            UserDefaults.standard.set(true, forKey: "isStarted");
+//            webViewName = "Login";
+//        }
         //        Antional\Login\WifiConnection\SignIn\ChannelList\Revolution
         
         self.webView.scrollView.showsVerticalScrollIndicator = false;

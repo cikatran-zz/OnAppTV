@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions
+    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions, NativeModules
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -72,14 +72,6 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_wifi.png')
                     },
                     {
-                        name: "My subscription",
-                        value: "06X223YT-2017",
-                        canBeNavigated: true,
-                        screen: 'MySubscription',
-                        needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
-                    },
-                    {
                         name: "My messages",
                         value: "",
                         canBeNavigated: true,
@@ -112,8 +104,8 @@ export default class Settings extends React.PureComponent {
                         name: "Antenna configuration",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
-                        needSTB: false,
+                        screen: 'AtennaTests',
+                        needSTB: true,
                         icon: require('../../assets/settings-lock.png')
                     },
                     {
@@ -136,7 +128,7 @@ export default class Settings extends React.PureComponent {
                         name: "Format Hard Disk",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
+                        screen: 'FormatHDD',
                         needSTB: true,
                         icon: require('../../assets/ic_wifi.png'),
                         errorMessage: "No hard disk exists"
@@ -145,8 +137,8 @@ export default class Settings extends React.PureComponent {
                         name: "Timeshift max size on Hard Disk",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
-                        needSTB: false,
+                        screen: 'TimeShiftConfig',
+                        needSTB: true,
                         icon: require('../../assets/ic_wifi.png')
                     },
                 ]
@@ -292,7 +284,18 @@ export default class Settings extends React.PureComponent {
     _navigateToItem(item) {
         const {navigation} = this.props;
         if (item.canBeNavigated) {
-            navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+            if (item.screen === "PersonalInformation" || item.screen === "Messages") {
+                NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+                    let result = JSON.parse(results[0]);
+                    if (result.is_sign_in) {
+                        navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+                    } else {
+                        navigation.navigate("LoginScreen");
+                    }
+                });
+            } else {
+                navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+            }
         } else if (item.errorMessage != null) {
             this._showModal(item.errorMessage);
         }
@@ -317,7 +320,7 @@ export default class Settings extends React.PureComponent {
                     renderItem={this._renderSettingItem}
                     keyExtractor={this._keyExtractor}
                     ItemSeparatorComponent={() => <View
-                        style={{width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
+                        style={{left: 45, width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
                 />
             </View>
         )
@@ -416,6 +419,7 @@ export default class Settings extends React.PureComponent {
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     ListFooterComponent={this._renderListFooter}
+                    bounces={false}
                     sections={this.data.map((section) => {
                         return {
                             data: [section.list],
@@ -438,8 +442,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     sectionListContainer: {
-        marginLeft: 15,
-        marginRight: 15
+        marginLeft: 15
     },
     headerSection: {
         fontSize: 10,

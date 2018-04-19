@@ -60,4 +60,15 @@ class UserKitIdentityModule: NSObject {
         
         return asJSONString(["is_sign_in": module.accountManager.isLoggedIn()]) ?? ""
     }
+    
+    @objc func profileInfo() -> [String: Any] {
+        let profile = module.loginProfiles.first
+        let info = [
+            "name": profile?.name ?? "" as Any,
+            "email": profile?.customProperties?["_account_email"] ?? "" as Any,
+            "age": profile?.customProperties?["age"] ?? "" as Any,
+            "sex": profile?.customProperties?["sex"] ?? "" as Any,
+        ]
+        return info
+    }
 }

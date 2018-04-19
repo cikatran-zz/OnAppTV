@@ -20,6 +20,11 @@ import getWifiInfoEpic from "./wifiInfoRequestEpic";
 import seriesInfoRequestEpic from "./seriesInfoRequestEpic"
 import getBcVideosEpic from "./getBcVideosEpic"
 import readUsbDirEpic from './readUsbDirEpic'
+import getUSBDisksEpic from "./usbDisksRequestEpic";
+import getSatelliteEpic from "./satelliteRequestEpic";
+import getTimeShiftLimitSizeEpic from "./timeShiftLimitSizeRequestEpic";
+import getNotificationEpic from "./notificationRequestEpic";
+import getProfileInfoEpic from "./profileInfoRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -45,6 +50,11 @@ const rootEpic = combineEpics(
     getZapperContentRequestEpic,
     getBcVideosEpic,
     readUsbDirEpic
+    getUSBDisksEpic,
+    getSatelliteEpic,
+    getTimeShiftLimitSizeEpic,
+    getNotificationEpic,
+    getProfileInfoEpic
 );
 
 export default rootEpic;

@@ -4,10 +4,11 @@ import {StackNavigator, TabNavigator} from 'react-navigation'
 import BottomTabbar from './components/BottomTabbar'
 import STBConnection from './screens/STBConnection'
 import HomeStack from './screens/ScreenStacks/HomeStack';
-import ZappersStack from "./screens/ScreenStacks/ZappersStack";
+import ZapperStack from "./screens/ScreenStacks/ZapperStack";
 import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
-import ParentalControlLock from "./screens/Settings/ParentalControlLock"
+import ParentalControlLock from "./screens/Settings/ParentalControlLock";
+import TermAndCondition from "./screens/Settings/TermAndCondition";
 
 const TabNav = TabNavigator({
     Home: {
@@ -17,7 +18,7 @@ const TabNav = TabNavigator({
         }),
     },
     Zappers: {
-        screen: ZappersStack,
+        screen: ZapperStack,
         navigationOptions: ({navigation}) => ({
             header: null,
         }),
@@ -55,11 +56,14 @@ export const ScreenStack = StackNavigator({
     ParentalControlLock: {
         screen: ParentalControlLock,
 
+    },
+    TermAndCondition: {
+        screen: TermAndCondition
     }
 }, {
     mode: 'modal',
     headerMode: 'none',
     navigationOptions: {
-        gesturesEnabled: true,
+        gesturesEnabled: false,
     }
 });

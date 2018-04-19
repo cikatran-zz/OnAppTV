@@ -1,10 +1,11 @@
 import React from 'react'
 import {
     Text, Switch, View, StyleSheet, FlatList, Image, StatusBar,
-    TouchableOpacity, NativeModules
+    TouchableOpacity, NativeModules, Platform
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import {rootViewTopPadding} from "../../utils/rootViewTopPadding";
+import * as Orientation from "react-native-orientation";
 
 const passwordBase = require('../../assets/ic_pincode.png');
 const passwordTop = require('../../assets/password-top.png');
@@ -17,6 +18,21 @@ export default class ParentalControlLock extends React.PureComponent {
             PINCode: "",
             showError: false
         }
+    }
+
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
+    componentDidMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     _onInputPincode = (num) => {

@@ -59,7 +59,6 @@ export default class Home extends Component {
         //     }
         // })
         NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
-            console.log(results)
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 console.log("Already logged in");

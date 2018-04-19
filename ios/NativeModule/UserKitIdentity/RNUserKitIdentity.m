@@ -85,6 +85,8 @@ RCT_EXPORT_METHOD(checkSignIn: (RCTResponseSenderBlock)callback) {
     callback(@[[NSNull null], @[[[UserKitIdentityModule sharedInstance] isLoggedIn]]]);
 }
 
-
+RCT_EXPORT_METHOD(getProfileInfo: (RCTResponseSenderBlock)callback) {
+    callback(@[[NSNull null], @[[[UserKitIdentityModule sharedInstance] profileInfo]]]);
+}
 
 @end
