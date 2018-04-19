@@ -7,6 +7,7 @@ let brightcovePlayer = {
         videoId: PropTypes.string,
         accountId: PropTypes.string,
         policyKey: PropTypes.string,
+        metaData: PropTypes.object,
         ...ViewPropTypes, // include the default view properties
     },
 };

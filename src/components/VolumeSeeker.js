@@ -12,7 +12,7 @@ class VolumeSeeker extends React.PureComponent {
     console.log("VALUE", this.props.value);
     return(
       <Slider
-        style={{width: this.props.width}}
+        style={{width: this.props.width, height: 100}}
         value={this.props.value}
         maximumValue={100}
         thumbTintColor={colors.whitePrimary}
