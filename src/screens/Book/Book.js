@@ -1,6 +1,6 @@
 import React from 'react'
 import Swiper from 'react-native-swiper'
-import {StyleSheet, View, StatusBar, Platform} from 'react-native'
+import { StyleSheet, View, StatusBar, Platform, NativeModules } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
@@ -10,14 +10,25 @@ export default class Book extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      downloadedArr: []
+    }
   }
 
   componentDidMount() {
+
+
       this._navListener = this.props.navigation.addListener('didFocus', () => {
           StatusBar.setBarStyle('dark-content');
           (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
         this.props.getList();
         this.props.getUsbDirFiles('/C/Downloads')
+        NativeModules.RNUserKit.getProperty("download_list", (e, arr) => {
+          let downloadedArrFromUserKit = JSON.parse(arr).dataArr
+          this.setState({
+            downloadedArr: downloadedArrFromUserKit
+          })
+        })
       });
   }
 
@@ -29,6 +40,7 @@ export default class Book extends React.Component {
 
   render() {
     const {books, usbDirFiles} = this.props
+    const {downloadedArr} = this.state
 
     return (
       <View style={{width: '100%', height: '100%'}}>
@@ -39,7 +51,7 @@ export default class Book extends React.Component {
         <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
           <Bookmark books={books}/>
           <RecordList header={"MY RECORDS"} books={books}/>
-          <RecordList header={"MY DOWNLOADS"} books={books} downloaded={usbDirFiles}/>
+          <RecordList header={"MY DOWNLOADS"} books={books} downloaded={usbDirFiles} downloadedUserKit={downloadedArr} navigation={this.props.navigation}/>
         </Swiper>
       </View>
     )

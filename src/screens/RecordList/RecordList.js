@@ -19,26 +19,40 @@ export default class RecordList extends React.PureComponent {
 
   }
 
-  _toggleModal = (data) => {
+  _toggleModal = (item) => {
 
-    if (data || data === -1) {
+    if (item || item === -1) {
       // Open modal & close modal normally
       this.setState({
         openModal: !this.state.openModal,
-        data: data
+        data: item
       })
     }
     else {
       // Delete
-      const {listData, data} = this.state
-      let newArray = listData.slice()
-      let index = newArray.indexOf(data)
-      newArray.splice(index, 1)
+      const {downloaded, downloadedUserKit} = this.props
+      const {data} = this.state
 
-      this.setState({
-        openModal: !this.state.openModal,
-        data: {},
-        listData: newArray
+      let deletedList = [].concat(downloadedUserKit).filter(x => x.contentId !== data.contentId)
+
+      let target = {
+        remove_flag: 1,
+        destination_path: data.destination_path,
+        url: data.url
+      }
+
+      NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(target), (error, events) => {
+        console.log('MediaRemove')
+        console.log(error)
+        console.log(events)
+
+        NativeModules.RNUserKit.storeProperty("download_list", { dataArr: deletedList }, (e, r) => {
+        })
+
+        this.setState({
+          openModal: !this.state.openModal,
+          data: {}
+        })
       })
     }
   }
@@ -52,11 +66,15 @@ export default class RecordList extends React.PureComponent {
     }
   }
 
+  _playPvr = (item) => {
+    this.props.navigation.navigate('LocalVideoModal', {item: item, epg: [item], isLive: false})
+  }
+
   _keyExtractor = (item, index) => index
 
   _renderItem = ({item}) => {
     return (
-      <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
         <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
         <View style={{flexDirection: 'column', marginRight: 60}}>
           <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
@@ -66,7 +84,7 @@ export default class RecordList extends React.PureComponent {
         <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
           <Image source={require('../../assets/ic_three_dots.png')}/>
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -75,17 +93,20 @@ export default class RecordList extends React.PureComponent {
   )
 
   render() {
-    const {header, books, downloaded} = this.props;
+    const {header, books, downloaded, downloadedUserKit} = this.props;
+    const {data} = this.state
+    
+    console.log('Downloaded')
+    console.log(downloaded)
+    console.log(downloadedUserKit)
 
-    let dataArr
-
-    NativeModules.RNUserKit.getProperty("download_list", (e) => {
-      console.log(e)
-    })
+    let dataArr = downloadedUserKit ? downloadedUserKit.filter(x => x.fileName) : []
+    console.log('on stb videos')
+    console.log(dataArr)
 
     return (
       <View style={styles.container}>
-        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'record'} onClosePress={this._toggleModal} data={this.state.data}/>
+        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'record'} onClosePress={this._toggleModal} data={data}/>
         <PinkRoundedLabel text={header} style={styles.headerLabel}/>
         <View style={{width: '100%'}}>
         <TextInput style={styles.textInput}
@@ -166,16 +187,3 @@ const styles = StyleSheet.create({
     fontSize: 12
   }
 })
-
-const fakeData = {
-  url : "http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg",
-  videoData : {
-    title: "Test",
-    type: "Documentary",
-    originalImages: [{
-      url: "http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg"
-    }]
-  }
-}
-
-const fakeList = [fakeData, fakeData, fakeData, fakeData, fakeData]

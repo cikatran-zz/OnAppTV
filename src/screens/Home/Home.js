@@ -219,7 +219,7 @@ export default class Home extends Component {
   _onChannelPress = (item) => {
       const {navigation} = this.props;
 
-      navigation.navigate('VideoControlModal', {
+      navigation.navigate('LocalVideoModal', {
         item: item
       })
   }
