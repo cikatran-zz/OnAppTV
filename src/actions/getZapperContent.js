@@ -1,9 +1,10 @@
 import * as actionTypes from './actionTypes';
 
-export function getZapperContentWithChannelId(serviceId) {
+export function getZapperContentWithTime(gtTime, ltTime) {
     return {
         type: actionTypes.FETCHING_ZAPPER_CONTENT,
-        serviceId: serviceId
+        gtTime: gtTime,
+        ltTime: ltTime
     }
 }
 
