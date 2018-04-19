@@ -49,7 +49,7 @@ const rootEpic = combineEpics(
     seriesInfoRequestEpic,
     getZapperContentRequestEpic,
     getBcVideosEpic,
-    readUsbDirEpic
+    readUsbDirEpic,
     getUSBDisksEpic,
     getSatelliteEpic,
     getTimeShiftLimitSizeEpic,

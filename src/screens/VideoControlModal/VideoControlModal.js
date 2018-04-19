@@ -565,7 +565,7 @@ export default class VideoControlModal extends React.Component {
         else {
           if (recordEnabled) {
             // Stop recording current channel
-            //this._stopRecord()
+            // this._stopRecord()
           }
           else {
             // Start recording

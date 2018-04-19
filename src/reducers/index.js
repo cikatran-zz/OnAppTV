@@ -51,7 +51,7 @@ export default combineReducers({
     wifiInfoReducer,
     seriesInfoReducer,
     bcVideosReducer,
-    usbDirReducer
+    usbDirReducer,
     seriesInfoReducer,
     usbDisksReducer,
     satelliteReducer,

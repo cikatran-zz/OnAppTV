@@ -38,7 +38,7 @@ export default actions = {
     getGenresContent,
     getSeriesInfo,
     getBcVideos,
-    readUsbDir
+    readUsbDir,
     getSeriesInfo,
     getUSBDisks,
     getSatellite,
