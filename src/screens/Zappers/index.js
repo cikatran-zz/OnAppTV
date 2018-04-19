@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
         flex: 1
     },
     pageViewStyle: {
-        paddingTop: rootViewTopPadding(),
         backgroundColor: colors.screenBackground
     }
 });

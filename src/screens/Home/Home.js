@@ -44,16 +44,6 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        // Create download directory if haven't
-      // TODO: testing
-        let jsonString = "{\n" +
-          "\t\"path\": \"/Download\"\n" +
-          "}"
-        NativeModules.STBManager.usbMakeDirectoryWithJson(jsonString, (error, events) => {
-          console.log(error)
-          console.log(events)
-        })
-
         this.props.getBanner();
         this.props.getChannel(-1);
         this.props.getAds();
@@ -220,7 +210,7 @@ export default class Home extends Component {
               <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image} marginHorizontal={10}/>
               <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
+              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData ? item.channelData.title : ""}</Text>
               <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
           </TouchableOpacity>
       )
@@ -237,7 +227,7 @@ export default class Home extends Component {
   _onVideoPress = (item, isLive) => {
       const {navigation} = this.props;
 
-      navigation.navigate('VideoControlModal', {
+      navigation.navigate('LowerPageComponent', {
         item: item,
         isLive: isLive
       })

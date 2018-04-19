@@ -70,7 +70,7 @@ public class AndroidSTBConnectScreen extends FrameLayout {
 //        第一次跳转至登录界面
         if(userFirst){
             setting.edit().putBoolean("isStarted", false).commit();
-            jumpPagetoLogin(true);
+            jumpPagetoLogin(false);
         } else {
             jumpPagetoLogin(false);
         }

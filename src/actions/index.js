@@ -13,6 +13,8 @@ import * as getVideoFormat from "./getVideoFormat"
 import * as getWifiInfo from "./getWifiInfo"
 import * as getRecordList from './getRecordList'
 import * as getSeriesInfo from './getSeriesInfo'
+import * as getBcVideos from './getBcVideos'
+import * as readUsbDir from './getUsbDir'
 import * as getUSBDisks from "./getUSBDisks";
 import * as getSatellite from "./getSatellite"
 import * as getTimeShiftLimitSize from './getTimeShiftLimitSize'
@@ -34,6 +36,9 @@ export default actions = {
     getVideoFormat,
     getWifiInfo,
     getGenresContent,
+    getSeriesInfo,
+    getBcVideos,
+    readUsbDir,
     getSeriesInfo,
     getUSBDisks,
     getSatellite,

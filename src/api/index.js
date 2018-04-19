@@ -298,107 +298,16 @@ export const getRecordList = () => {
 }
 
 export const getBookList = () => {
-    let bookList = null;
-    if (Platform.OS !== 'ios') {
-      return checkStbConnection()
-        .then((value) => {
-          return getPvrBookList(value[0])
-        })
-        .then(value => {
-          return new Promise((resolve, reject) => {
-            resolve(value)
-          })
-        })
-    }
-    else {
-      return getPvrBookList(false)
-        .then(value => {
-          return new Promise((resolve, reject) => {
-            resolve(value)
-          })
-        })
-    }
+  return getPvrBookList()
+    .then(value => {
+      return new Promise((resolve, reject) => {
+        resolve(value)
+      })
+    })
 }
 
-export const getPvrBookList = (isConnected) => {
+export const getPvrBookList = () => {
     return new Promise((resolve, reject) => {
-      if (!isConnected) {
-        resolve([
-          {
-            "record":
-              {
-                "startTime": "1970-01-01 08:00:00",
-                "recordMode": 1,
-                "recordName": "Test1",
-                "lCN": 1,
-                "duration": 100
-              },
-            "metaData":
-              {
-                "endtime": "22:45",
-                "starttime": "20:00",
-                "title": "Pearl Harbor",
-                "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Vintage_Car_Museum_%26_Event_Center_May_2017_21_%281940_LaSalle_taxi_from_Pearl_Harbor%29.jpg/1280px-Vintage_Car_Museum_%26_Event_Center_May_2017_21_%281940_LaSalle_taxi_from_Pearl_Harbor%29.jpg",
-                "subTitle": "Movie"
-              }
-          },
-          {
-            "record":
-              {
-                "startTime": "1970-01-01 08:00:00",
-                "recordMode": 1,
-                "recordName": "Test2",
-                "lCN": 2,
-                "duration": 100
-              },
-            "metaData":
-              {
-                "endtime": "23:45",
-                "starttime": "22:45",
-                "title": "Pearl Harbor",
-                "image": "http://baoquocte.vn/stores/news_dataimages/quangchinh/122016/06/15/155125_t1.jpg",
-                "subTitle": "Movie"
-              }
-          },
-          {
-            "record":
-              {
-                "startTime": "1970-01-01 08:00:00",
-                "recordMode": 1,
-                "recordName": "Titanic",
-                "lCN": 3,
-                "duration": 100
-              },
-            "metaData":
-              {
-                "endtime": "23:45",
-                "starttime": "22:45",
-                "title": "Titanic",
-                "image": "http://baoquocte.vn/stores/news_dataimages/quangchinh/122016/06/15/155125_t1.jpg",
-                "subTitle": "Movie"
-              }
-          },
-          {
-            "record":
-              {
-                "startTime": "1970-01-01 08:00:00",
-                "recordMode": 1,
-                "recordName": "The Lastman Standing",
-                "lCN": 4,
-                "duration": 100
-              },
-            "metaData":
-              {
-                "endtime": "23:45",
-                "starttime": "22:45",
-                "title": "The Lastman Standing",
-                "image": "http://baoquocte.vn/stores/news_dataimages/quangchinh/122016/06/15/155125_t1.jpg",
-                "subTitle": "Movie"
-              }
-          }
-        ]);
-      }
-      else {
          NativeModules.STBManager.getPvrBookListInJson((error, events) => {
            console.log('getPvrBookListInJson')
            console.log(error)
@@ -409,7 +318,6 @@ export const getPvrBookList = (isConnected) => {
              resolve(JSON.parse(events[0]))
            }
          })
-       }
     })
 }
 
@@ -828,9 +736,38 @@ export const getNotification = () => {
 export const getProfileInfo = () => {
     return new Promise((resolve, reject)=> {
         NativeModules.RNUserKitIdentity.getProfileInfo((error, result)=> {
-            console.log("PROFILE",result);
             resolve(result[0])
         });
     })
 };
+
+export const getBcVideos = (contentId) => {
+  return client.query({
+    query: config.queries.BRIGHTCOVE_SEARCH,
+    variables: {id: contentId}
+  })
+}
+
+export const readUsbDir = (dir_path) => {
+  console.log(dir_path)
+  return new Promise((resolve, reject) => {
+    NativeModules.STBManager.isConnect((connectString) => {
+      let connected = JSON.parse(connectString).is_connected;
+      if (connected) {
+        let json = {
+          dir_path: dir_path
+        }
+
+        NativeModules.STBManager.readUSBDirWithJsonString(JSON.stringify(json), (error, events) => {
+          resolve(JSON.parse(events[0]))
+        })
+      } else {
+        reject({errorMessage: "No STB connection"});
+      }
+    })
+
+  })
+}
+
+
 
