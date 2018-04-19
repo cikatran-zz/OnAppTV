@@ -1,5 +1,6 @@
 PODS:
   - Brightcove-Player-Core/dynamic (6.2.2)
+  - Kingfisher (4.6.1)
   - lottie-ios (2.5.0)
   - UserKit (0.19.10)
   - UserKitIdentity (0.19.10):
@@ -8,6 +9,7 @@ PODS:
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
+  - Kingfisher
   - lottie-ios
   - UserKit (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
   - UserKitIdentity (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
@@ -31,11 +33,12 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
+  Kingfisher: 1f9157d9c02b380cbd0b7cc890161195164eb634
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
   UserKit: f55d1a8b5f485d33e0f809cf53665c5f9fe62dd2
   UserKitIdentity: 92784613ae918091b3d29628639414bbed2895a2
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: 45a313fa5407bf2ee7a508fd5cba2836be5b68e1
+PODFILE CHECKSUM: a73837d2aaae869364990c77503bddb2ef125d34
 
 COCOAPODS: 1.4.0

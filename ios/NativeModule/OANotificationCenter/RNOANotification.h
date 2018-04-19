@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 
-@interface RNNotificationCenter : NSObject<RCTBridgeModule>
+@interface RNOANotification : NSObject<RCTBridgeModule>
 
 
 

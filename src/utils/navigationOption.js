@@ -28,10 +28,10 @@ export default defaultNavigationOptions = (title, navigation, canBack = false) =
         },
         headerTitleStyle: {
             color: colors.greySettingLabel,
-            textAlign: 'center',
-            justifyContent: 'space-between',
+            //textAlign: 'center',
+            //justifyContent: 'space-between',
             fontSize: 17,
-            alignSelf: 'center',
+            //alignSelf: 'center',
             fontWeight: "normal"
         },
         ...backButton

@@ -5,6 +5,7 @@ import {
 import {colors} from '../../../utils/themeConfig'
 import SwitcherList from '../../../components/SwitcherList'
 import _ from 'lodash'
+import * as Orientation from "react-native-orientation";
 
 export default class Subtitles extends React.PureComponent {
 
@@ -16,6 +17,18 @@ export default class Subtitles extends React.PureComponent {
 
     componentDidMount() {
         this.props.getSubtitles();
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
+    }
+
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
     }
 
     _keyExtractor = (item, index) => index;
@@ -28,6 +41,8 @@ export default class Subtitles extends React.PureComponent {
         onChange({screen: 'Subtitles', value: this.data[index]});
         NativeModules.STBManager.setPreferSubtitleLanguageWithJsonString(JSON.stringify({subtitleLanguageCode: this.languageCode[index]}), (error, events) => {
         });
+
+
     }
 
     render() {

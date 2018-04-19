@@ -6,15 +6,21 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
-#import "RNNotificationCenter.h"
+#import "RNOANotification.h"
 #import "OnAppTV-Swift.h"
 
-@implementation RNNotificationCenter
+@implementation RNOANotification
+
+RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(requestPermission) {
     [[OANotificationCenter sharedInstance] requestPermissionWithCallback:^{
         
     }];
+}
+
+RCT_EXPORT_METHOD(updateBadge: (NSNumber * __nonnull)  number) {
+    [OANotificationCenter.sharedInstance updateBadgeWithNumber: number];
 }
 
 @end

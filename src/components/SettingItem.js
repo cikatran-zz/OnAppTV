@@ -28,10 +28,11 @@ export default class SettingItem extends React.PureComponent {
                 <View style={styles.settingItemContainer}>
                     {this._renderIcon(showIcon)}
                     <Text style={styles.settingItemName}>{item.name}</Text>
-                    <View style={{marginLeft: 'auto', flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={styles.settingItemValue}>{this.state.text}</Text>
-                        { showRightIcon &&
-                            <Image source={require('../assets/ic_right_arrow.png')}/>
+                    <View style={styles.rightItems}>
+                        <Text
+                            style={[styles.settingItemValue, {marginRight: showRightIcon ? 12 : 0}]}>{this.state.text}</Text>
+                        {showRightIcon &&
+                        <Image source={require('../assets/ic_right_arrow.png')}/>
                         }
                     </View>
 
@@ -55,10 +56,16 @@ const styles = StyleSheet.create({
     },
     settingItemValue: {
         fontSize: 14,
-        color: colors.greySettingItemText,
-        marginRight: 12
+        color: colors.greySettingItemText
     },
     settingItemIcon: {
         marginRight: 23
+    },
+    rightItems: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+        flex: 1,
+        marginRight: 15
     }
-})
+});

@@ -13,6 +13,11 @@ import * as getVideoFormat from "./getVideoFormat"
 import * as getWifiInfo from "./getWifiInfo"
 import * as getRecordList from './getRecordList'
 import * as getSeriesInfo from './getSeriesInfo'
+import * as getUSBDisks from "./getUSBDisks";
+import * as getSatellite from "./getSatellite"
+import * as getTimeShiftLimitSize from './getTimeShiftLimitSize'
+import * as getNotification from './getNotification'
+import * as getProfileInfo from './getProfileInfo'
 
 export default actions = {
     getBanner,
@@ -29,5 +34,10 @@ export default actions = {
     getVideoFormat,
     getWifiInfo,
     getGenresContent,
-    getSeriesInfo
+    getSeriesInfo,
+    getUSBDisks,
+    getSatellite,
+    getTimeShiftLimitSize,
+    getNotification,
+    getProfileInfo
 };
