@@ -20,6 +20,8 @@ import resolutionReducer from "./resolutionReducer";
 import videoFormatReducer from './videoFormatReducer';
 import wifiInfoReducer from "./wifiInfoReducer";
 import seriesInfoReducer from './seriesInfoReducer'
+import bcVideosReducer from "./bcVideosReducer"
+import usbDirReducer from './usbDirReducer'
 import usbDisksReducer from "./usbDisksReducer";
 import satelliteReducer from "./satelliteReducer";
 import timeShiftLimitSizeReducer from "./timeShiftLimitSizeReducer";
@@ -47,6 +49,9 @@ export default combineReducers({
     resolutionReducer,
     videoFormatReducer,
     wifiInfoReducer,
+    seriesInfoReducer,
+    bcVideosReducer,
+    usbDirReducer,
     seriesInfoReducer,
     usbDisksReducer,
     satelliteReducer,

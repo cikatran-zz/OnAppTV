@@ -306,9 +306,11 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setVolumeWithJsonString(String json, Callback callback) {
+        Log.d("Volume", json);
         Api_Implementation.sharedManager().hIG_SetVolume(json, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
+                Log.d("Volume", s);
                 WritableNativeArray array = new WritableNativeArray();
                 array.pushString(s);
                 callback.invoke(null, array);
@@ -965,9 +967,11 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void playMediaStartWithJson(String jsonString, Callback callback)  {
+        Log.d("playMediaStartWithJson", jsonString);
         Api_Implementation.sharedManager().hIG_PlayMediaStart(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
+                Log.d("playMediaStart", s);
                 WritableNativeArray array = new WritableNativeArray();
                 array.pushString(s);
                 callback.invoke(null, array);
@@ -1028,6 +1032,7 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         Api_Implementation.sharedManager().hIG_PlayMediaGetPosition(new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
+                Log.d("position", s);
                 WritableNativeArray array = new WritableNativeArray();
                 array.pushString(s);
                 callback.invoke(null, array);
