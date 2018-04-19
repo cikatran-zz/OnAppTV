@@ -94,14 +94,21 @@ export default class ZapperContent extends Component {
         return image;
     }
 
-    _zapChannel = (lcn) => {
-        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:lcn}),(error, events) => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(JSON.parse(events[0]))
-            }
-        } )
+    _zapChannel = (item) => {
+        let currentTime = moment();
+        let showTime = moment(item.startTime);
+        if (showTime.isAfter(currentTime)){
+            //Todo show Bookmark Modal here for schedule record
+        } else {
+            NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lCN}),(error, events) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(JSON.parse(events[0]))
+                }
+            })
+        }
+
     };
 
     _onContentSizeChange = (width, height) => {
@@ -138,7 +145,7 @@ export default class ZapperContent extends Component {
     _renderItem = (item) => (
         <TouchableOpacity
             style={styles.item}
-            onPress={()=>this._zapChannel(item.item.channelData.lCN)}>
+            onPress={()=>this._zapChannel(item.item)}>
             <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
         </TouchableOpacity>
     );
