@@ -736,7 +736,6 @@ export const getNotification = () => {
 export const getProfileInfo = () => {
     return new Promise((resolve, reject)=> {
         NativeModules.RNUserKitIdentity.getProfileInfo((error, result)=> {
-            console.log("PROFILE",result);
             resolve(result[0])
         });
     })
