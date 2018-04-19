@@ -426,6 +426,31 @@ query seriesInfo($id: [MongoID]) {
 }
 `;
 
+const searchBrightcoveQuery = gql`
+query searchBc($id: String) {
+    viewer{
+    brightcoveSearchVideo(contentId: $id) {
+      contentId
+      durationInSeconds
+      publishDate
+      title
+      longDescription
+      shortDescription
+      feature
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      state
+      createdAt
+      updatedAt
+      sources
+    }
+  }
+}
+`;
+
 export default {
     serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
     queries: {
@@ -442,6 +467,7 @@ export default {
         EPG_WITH_GENRES: relatedEpgQuery,
         EPG_WITH_SERIES: seriesEpgQuery,
         SERIES_INFO: seriesInfoQuery,
-        ZAPPER_CONTENT: zapperContentQuery
+        ZAPPER_CONTENT: zapperContentQuery,
+        BRIGHTCOVE_SEARCH : searchBrightcoveQuery
     }
 };

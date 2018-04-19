@@ -13,10 +13,11 @@ export default class Book extends React.Component {
   }
 
   componentDidMount() {
-     this.props.getList();
       this._navListener = this.props.navigation.addListener('didFocus', () => {
           StatusBar.setBarStyle('dark-content');
           (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        this.props.getList();
+        this.props.getUsbDirFiles('/C/Downloads')
       });
   }
 
@@ -27,8 +28,7 @@ export default class Book extends React.Component {
   _keyExtractor = (item, index) => index
 
   render() {
-    const {books} = this.props
-    console.log(books)
+    const {books, usbDirFiles} = this.props
 
     return (
       <View style={{width: '100%', height: '100%'}}>
@@ -39,7 +39,7 @@ export default class Book extends React.Component {
         <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
           <Bookmark books={books}/>
           <RecordList header={"MY RECORDS"} books={books}/>
-          <RecordList header={"MY DOWNLOADS"} books={books}/>
+          <RecordList header={"MY DOWNLOADS"} books={books} downloaded={usbDirFiles}/>
         </Swiper>
       </View>
     )
