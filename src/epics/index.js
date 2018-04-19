@@ -18,6 +18,8 @@ import getResolutionEpic from "./resolutionRequestEpic";
 import getVideoFormatEpic from "./videoFormatRequestEpic";
 import getWifiInfoEpic from "./wifiInfoRequestEpic";
 import seriesInfoRequestEpic from "./seriesInfoRequestEpic"
+import getBcVideosEpic from "./getBcVideosEpic"
+import readUsbDirEpic from './readUsbDirEpic'
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -41,6 +43,8 @@ const rootEpic = combineEpics(
     getWifiInfoEpic,
     seriesInfoRequestEpic,
     getZapperContentRequestEpic,
+    getBcVideosEpic,
+    readUsbDirEpic
 );
 
 export default rootEpic;

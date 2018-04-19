@@ -17,7 +17,6 @@ import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../../screens/LowerPage/LowerPageComponent"
-import VerticalSwiper from '../../components/VerticalSwiper';
 import BlurView from '../../components/BlurView'
 import {getBlurRadius} from '../../utils/blurRadius'
 import { secondFormatter } from '../../utils/timeUtils'
@@ -43,6 +42,7 @@ export default class VideoControlModal extends React.Component {
       showBrightcove: false,
       recordEnabled: false,
       favoriteEnabled: false,
+      firstTimePlay: false,
       isPlaying: true,
       modalVisibility: false,
       modalRecordTarget: "none",
@@ -58,21 +58,65 @@ export default class VideoControlModal extends React.Component {
     Orientation.unlockAllOrientations()
   }
 
-  _getTimeInterval = setInterval(() => {
-      this.setState({
-        currentTime: new Date().getTime()
+  _getVodTime = setInterval(() => {
+    const {isLive} = this.props.navigation.state.params;
+    if (!isLive) {
+
+      NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
+        if (!e) {
+          let pos = JSON.parse(r[0]).playPosition
+          this.setState({
+            currentPos: pos
+          })
+        }
       })
+    }
+  }, 1000)
+
+  _getTimeInterval = setInterval(() => {
+    const {isLive} = this.props.navigation.state.params;
+    const {isConnected} = this.state
+      if (isLive || !isConnected) {
+        if (this.state.isPlaying) {
+          this.setState({
+            currentTime: new Date().getTime()
+          })
+        }
+      }
     }, 1000)
 
   componentWillUnmount() {
     clearInterval(this._getTimeInterval)
+    clearInterval(this._getVodTime)
 
     NativeModules.STBManager.playMediaStop((error, events) => {})
 
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+
+    let bcVideos = nextProps.bcVideos;
+    if (!bcVideos.isFetching && !this.state.firstTimePlay) {
+        let json = {
+          url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
+          playPosition: 0
+        }
+      console.log(json)
+      NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
+        })
+    }
+  }
+
   componentDidMount() {
     const {item, isLive, epg} = this.props.navigation.state.params
+    console.log(epg)
+
+    NativeModules.STBManager.isConnect((r) => {
+      let json = JSON.parse(r[0]).is_connected
+      if (json === true) this.setState({isConnected: true})
+    })
+
 
     NativeModules.STBManager.getVolumeInJson((error, events) => {
         if (!error) {
@@ -97,24 +141,8 @@ export default class VideoControlModal extends React.Component {
     }
     else {
       //Test play video
-      NativeModules.STBManager.playMediaStartWithJson(jsonString, (error, events) => {
-      })
+      this.props.getBcVideos(item.contentId)
     }
-
-    // switch (item.type) {
-    //   case 'Standalone': {
-    //     // Find video with related genre
-    //     this.props.getEpgWithGenre(item.genreIds)
-    //     break;
-    //   }
-    //   case 'Episode': {
-    //     this.props.getEpgWithSeriesId([item.seriesId])
-    //     break;
-    //   }
-    //   default: {
-    //     this.props.getEpgs([item.serviceID])
-    //   }
-    // }
 
     Orientation.addOrientationListener(this._orientationDidChange);
     // PUT YOUR CHANNEL ID HERE
@@ -153,7 +181,10 @@ export default class VideoControlModal extends React.Component {
       volume: newValue
     }
     // Check connection before set volume
-    NativeModules.STBManager.setVolumeWithJsonString(JSON.stringify(jsonString), (error, events) => {})
+    console.log(jsonString)
+    NativeModules.STBManager.isConnect((events) => {
+      if (this.state.isConnected) NativeModules.STBManager.setVolumeWithJsonString(JSON.stringify(jsonString), (error, events) => {})
+    })
   }
 
   _getLivePassedTime = (isLive, timeInSeconds, durationInSeconds) => {
@@ -165,14 +196,6 @@ export default class VideoControlModal extends React.Component {
       }
       else {
         const {startPoint, currentTime} = this.state
-
-        // Check STB Connection before
-        // NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-        //   if (!error) {
-        //     let passedTime = JSON.parse(events[0]).playPosition
-        //     return secondFormatter(passedTime.toString())
-        //   }
-        // })
 
         let passedTime = (currentTime - startPoint) / 1000
         if (passedTime > 0) return secondFormatter(passedTime.toString())
@@ -225,6 +248,7 @@ export default class VideoControlModal extends React.Component {
 
   _renderPlaybackController = (item) => {
     const {recordEnabled, favoriteEnabled} = this.state
+    const {bcVideos} = this.props
     const {isLive} = this.props.navigation.state.params;
 
     return (
@@ -243,7 +267,14 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={styles.buttonStyle} onPress={() => this._shareExecution(item.title, "")}>
             <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity disabled={isLive}  style={styles.buttonStyle}>
+          <TouchableOpacity disabled={isLive}  style={styles.buttonStyle} onPress={() => {
+            let json = {
+              playPosition: 0
+            }
+            NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (error, events) => {
+
+            })
+          }}>
             <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonStyle}>
@@ -254,46 +285,55 @@ export default class VideoControlModal extends React.Component {
           <Text style={styles.titleText}>{isLive !== true ? item.title : item.videoData.title}</Text>
           <Text style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
         </View>
-        <View style={styles.playbackButtons}>
+        <View style={[styles.playbackButtons, {opacity: isLive === true ? 0.17 : 1}]}>
           <TouchableOpacity  onPress={() => {
               NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
                 if (!error) {
                   let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
                   let playPosInJson = "{\n" +
                     "\tplayPosition: \n" + playPos + "}"
-                  NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {})
+                  NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
+                    NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+                      console.log(error)
+                      console.log(events[0])
+                    })
+                  })
                 }
               })
             }
           } style={styles.rewindButton}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>
-          <TouchableOpacity  disabled={isLive}  style={{ width: '21%', height: '100%'}} onPress={() => {
-            this.setState({isPlaying: !this.state.isPlaying})
-            if (this.state.isPlaying) {
-              NativeModules.STBManager.playMediaPause((error, events) => {
+          <TouchableOpacity style={{ width: '21%', height: '100%', opacity: isLive === true ? 0.17 : 1}} onPress={() => {
+            if (bcVideos.data) {
 
-              })
-            }
-            else {
-              NativeModules.STBManager.playMediaResume((error, events) => {
-              })
+              this.setState({isPlaying: !this.state.isPlaying})
+              if (this.state.isPlaying) {
+                NativeModules.STBManager.playMediaPause((error, events) => {
+
+                })
+              }
+              else {
+                NativeModules.STBManager.playMediaResume((error, events) => {
+                })
+              }
             }
           }
           }>
             <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity  disabled={isLive} onPress={() => {
+          <TouchableOpacity onPress={() => {
             NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
               if (!error) {
                 let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
                 let playPosInJson = "{\n" +
                   "\tplayPosition: \n" + playPos + "}"
-                console.log(playPosInJson)
-                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {})
+                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
+
+                })
               }
             })
-          }} style={styles.fastForwardButton}>
+          }} style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
             <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
@@ -442,9 +482,14 @@ export default class VideoControlModal extends React.Component {
   }
 
   _onSwiperIndexChanged = (index) => {
-    this.setState({
-      index: index
-    })
+    const {item, isLive, epg} = this.props.navigation.state.params
+    if (!isLive) {
+      this.props.getBcVideos(epg[index].contentId)
+      this.setState({
+        index: index,
+        isPlaying: true
+      })
+    }
   }
 
   _renderModal = () => {
@@ -495,7 +540,7 @@ export default class VideoControlModal extends React.Component {
   }
 
   _toggleModal = (actionType) => {
-    const {item} = this.props.navigation.state.params
+    const {item, isLive} = this.props.navigation.state.params
 
     if (item.type === 'Episode') {
       this.setState({
@@ -510,17 +555,21 @@ export default class VideoControlModal extends React.Component {
         if (item.type === 'Standalone') {
           if (recordEnabled) {
             // Stop downloading current item
+            this.stopDownload()
           }
           else {
             // Start or resume downloading current item
+            this._downloadExecution()
           }
         }
         else {
           if (recordEnabled) {
             // Stop recording current channel
+            //this._stopRecord()
           }
           else {
             // Start recording
+            //this._bookExecution(item)
           }
         }
 
@@ -545,35 +594,60 @@ export default class VideoControlModal extends React.Component {
   }
 
   stopDownload = () => {
-    let dataPath = "/Download"
-    let url = ""
+    const {bcVideos} = this.props
     let json = {
-      removeFlag: 1, // 0 -> not delele media, 1 -> delete
-      destination_path: dataPath,
-      url: url
+      url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
+      destination_path: '/C/Downloads'
     }
     NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
-
+      if (!error) console.log('Stop download result %s', events[0])
     })
   }
 
-  _downloadExecution = (vodItem) => {
-    let url = ""
-    let dataPath = "/Download"
-    let jsonString = {
-      destination_path: dataPath,
-      url: url
+  _downloadExecution = () => {
+    const {epg, item} = this.props.navigation.state.params
+    const {bcVideos} = this.props
+    const { index } = this.state
+
+    let videoData = index === -1 ? item : epg[index]
+
+    let json = {
+      contentId: bcVideos.data.contentId,
+      url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
+      destination_path: '/C/Downloads'
     }
 
-    NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(jsonString), (error, events) => {
-      if (error) {
-        console.log(error)
-      }
-      else {
-        console.log(events)
-        // If download start successfully -> add to Userkit with 2 props : contentId and destination path => in order to display at bookmark page
+    NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(json), (error, events) => {
+      console.log('Download result of id %s is %s', bcVideos.data.contentId, events[0])
+      let result = JSON.parse(events[0]).return
+      if (result === "1") {
+        // Start download successfully
+        // Add to userkit
+        let data
+        let downloadList = []
+        NativeModules.RNUserKit.getProperty("download_list", (e, r) => {
+          if (!e) data = JSON.parse(r[0])
+        })
+
+        if (data && data.dataArr) {
+          downloadList = data.dataArr
+        }
+
+        downloadList.push({
+          ...videoData,
+          ...json
+        })
+
+        console.log(downloadList)
+
+        NativeModules.RNUserKit.storeProperty("download_list", { dataArr: downloadList}, (e, r) => {
+          console.log(e)
+          console.log(r)
+          console.log('Store download list result %s', JSON.stringify(downloadList))
+        })
 
       }
+      else console.log(result)
     })
   }
 
@@ -589,7 +663,7 @@ export default class VideoControlModal extends React.Component {
       }
 
       let jsonString = {
-        "record": {
+        "record_parameter": {
           "startTime" : liveItem.startTime,
           "recordMode" : 1,
           "recordName" : liveItem.videoData.title,
@@ -600,7 +674,8 @@ export default class VideoControlModal extends React.Component {
         "metaData": JSON.stringify(metaData)
       }
 
-      NativeModules.STBManager.addPvrBooKListWithJson(JSON.stringify(jsonString), (error, events) => {
+      NativeModules.STBManager.recordPvrStartWithJsonString(JSON.stringify(jsonString), (error, events) => {
+        console.log('Record start')
         if (error)
           console.log(error)
         else console.log(events)

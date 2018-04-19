@@ -20,6 +20,8 @@ import resolutionReducer from "./resolutionReducer";
 import videoFormatReducer from './videoFormatReducer';
 import wifiInfoReducer from "./wifiInfoReducer";
 import seriesInfoReducer from './seriesInfoReducer'
+import bcVideosReducer from "./bcVideosReducer"
+import usbDirReducer from './usbDirReducer'
 
 export default combineReducers({
     nav,
@@ -42,5 +44,7 @@ export default combineReducers({
     resolutionReducer,
     videoFormatReducer,
     wifiInfoReducer,
-    seriesInfoReducer
+    seriesInfoReducer,
+    bcVideosReducer,
+    usbDirReducer
 });

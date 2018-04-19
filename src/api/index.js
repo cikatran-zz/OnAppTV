@@ -760,3 +760,33 @@ export const getSeriesInfo = (seriesId) => {
   })
 }
 
+export const getBcVideos = (contentId) => {
+  return client.query({
+    query: config.queries.BRIGHTCOVE_SEARCH,
+    variables: {id: contentId}
+  })
+}
+
+export const readUsbDir = (dir_path) => {
+  console.log(dir_path)
+  return new Promise((resolve, reject) => {
+    NativeModules.STBManager.isConnect((connectString) => {
+      let connected = JSON.parse(connectString).is_connected;
+      if (connected) {
+        let json = {
+          dir_path: dir_path
+        }
+
+        NativeModules.STBManager.readUSBDirWithJsonString(JSON.stringify(json), (error, events) => {
+          resolve(JSON.parse(events[0]))
+        })
+      } else {
+        reject({errorMessage: "No STB connection"});
+      }
+    })
+
+  })
+}
+
+
+

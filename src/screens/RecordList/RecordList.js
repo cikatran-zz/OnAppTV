@@ -1,10 +1,10 @@
 import React from 'react'
-import { Dimensions, FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View, NativeModules } from 'react-native'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import Modal from '../../components/DeleteBookmarModal'
 import VideoThumbnail from '../../components/VideoThumbnail'
 import { colors } from '../../utils/themeConfig'
-import { timeFormatter } from '../../utils/timeUtils'
+import { secondFormatter, timeFormatter } from '../../utils/timeUtils'
 
 export default class RecordList extends React.PureComponent {
   constructor(props) {
@@ -14,6 +14,10 @@ export default class RecordList extends React.PureComponent {
       data: {}
     }
   };
+
+  componentDidMount() {
+
+  }
 
   _toggleModal = (data) => {
 
@@ -39,16 +43,25 @@ export default class RecordList extends React.PureComponent {
     }
   }
 
+  _getSubtitle = (item) => {
+    if (item.type === 'Episode') {
+      return 'Season ' + item.seasonIndex + ' - Episode ' + item.episodeIndex
+    }
+    else {
+      return item.type
+    }
+  }
+
   _keyExtractor = (item, index) => index
 
   _renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>
-        <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
+        <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
         <View style={{flexDirection: 'column', marginRight: 60}}>
-          <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.metaData.title}</Text>
-          <Text style={styles.itemType}>{item.metaData.subTitle}</Text>
-          <Text style={styles.itemTime}>{timeFormatter(item.record.startTime)}</Text>
+          <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
+          <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
+          <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
         </View>
         <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
           <Image source={require('../../assets/ic_three_dots.png')}/>
@@ -62,14 +75,13 @@ export default class RecordList extends React.PureComponent {
   )
 
   render() {
-    const {header, books} = this.props;
-    if (books.data) {
-      if (!this.state.listData || books.data.length < this.state.listData.length) {
-        this.setState({
-          listData: books.data
-        })
-      }
-    }
+    const {header, books, downloaded} = this.props;
+
+    let dataArr
+
+    NativeModules.RNUserKit.getProperty("download_list", (e) => {
+      console.log(e)
+    })
 
     return (
       <View style={styles.container}>
@@ -87,7 +99,7 @@ export default class RecordList extends React.PureComponent {
           style={styles.list}
           horizontal={false}
           keyExtractor={this._keyExtractor}
-          data={books.data}
+          data={dataArr}
           renderItem={this._renderItem}
           ListFooterComponent={this._renderListFooter}
         />
