@@ -76,6 +76,7 @@ export default class Home extends Component {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            this.props.getChannel(-1);
         });
     };
 
@@ -413,12 +414,12 @@ export default class Home extends Component {
             channelData = [null];
         }
 
-        if (this.state.favoriteCategories == null) {
+        //if (this.state.favoriteCategories == null) {
             var categoryData = (category.data == null ? [] : category.data).filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
             this.state.category = category.data == null ? [] : category.data;
             categoryData.push({"name": "_ADD"});
             this.state.favoriteCategories = categoryData;
-        }
+        //}
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>

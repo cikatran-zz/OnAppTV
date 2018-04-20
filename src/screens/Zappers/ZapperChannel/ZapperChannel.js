@@ -25,14 +25,7 @@ export default class ZapperChannel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            channelData: [
-                'a',
-                'b',
-                'c',
-                'd',
-                'e',
-                'f',
-            ],
+            channelData: [],
             showAllChannels: true,
             favoriteChannels: [],
             allChannels: []
@@ -129,22 +122,33 @@ export default class ZapperChannel extends Component {
         this._filterFavoriteChannel();
 
 
-        var newData = this.state.allChannels;
+        let newData = this.state.allChannels;
+        let currentIndex = this.channelModal.state.currentIndex;
+        let currentFavorite = this.channelModal.state.currentFavorite === "Favorite" ? "Unfavorite" : "Favorite";
         if (!this.state.showAllChannels) {
             newData = this.state.favoriteChannels;
-            this.channelModal.setState({currentFavorite: "Unfavorite"});
-            if (newData.length === 1) {
-                this.channelModal.setState({currentIndex: 0});
+
+            if (currentIndex == 0) {
+                if (currentIndex + 1 < this.state.channelData.length && currentIndex + 1 >= 0) {
+                    this.channelModal.setState({currentTitle: this.channelModal.props.channels[currentIndex + 1].serviceName,
+                        currentDescription: this.channelModal.props.channels[currentIndex + 1].shortDescription});
+                }
+            } else {
+                if (currentIndex - 1 < this.state.channelData.length && currentIndex - 1 >= 0) {
+                    this.channelModal.setState({currentTitle: this.channelModal.props.channels[currentIndex - 1].serviceName,
+                        currentDescription: this.channelModal.props.channels[currentIndex - 1].shortDescription});
+                }
+                this.channelModal.carousel.snapToPrev();
             }
-        } else {
-            this.channelModal.setState({currentFavorite: this.channelModal.state.currentFavorite === "Favorite" ? "Unfavorite" : "Favorite"});
+            currentFavorite = "Unfavorite";
         }
 
         if (newData === null || newData.length === 0) {
-            this.channelModal.setState({isShow: false});
+            this.channelModal.setState({isShow: false, currentFavorite: currentFavorite});
+        } else {
+            this.channelModal.setState({currentFavorite: currentFavorite});
         }
-
-        this.setState({channelData: newData});
+        this.setState({channelData: newData})
     };
 
     _onSwitchPress = () => {
@@ -152,7 +156,6 @@ export default class ZapperChannel extends Component {
         if (this.state.showAllChannels) {
             newData = this.state.favoriteChannels;
         }
-        this.setState({showAllChannels: !this.state.showAllChannels, channelData: newData});
         this.setState({showAllChannels: !this.state.showAllChannels, channelData: newData});
     };
 
@@ -171,12 +174,15 @@ export default class ZapperChannel extends Component {
                 </ImageBackground>
             </View>)
         }
-        this.state.channelData = _.cloneDeep(channel.data);
-        this.state.allChannels = _.cloneDeep(channel.data);
-        this._filterFavoriteChannel();
-        this.state.channelData = channel.data;
-        this.state.allChannels = channel.data;
-        this._filterFavoriteChannel();
+        if (this.state.allChannels.length == 0) {
+            this.state.allChannels = _.cloneDeep(channel.data);
+            this._filterFavoriteChannel();
+            if (this.state.showAllChannels) {
+                this.state.channelData = _.cloneDeep(channel.data);
+            } else {
+                this.state.channelData = this.state.favoriteChannels;
+            }
+        }
         return (
             <View style={styles.root}>
                 <StatusBar
