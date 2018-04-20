@@ -8,12 +8,15 @@ import SettingItem from '../../components/SettingItem'
 import _ from 'lodash'
 import STBSelfTests from "./STBSelfTests";
 import AlertModal from "../../components/AlertModal";
+import {NavigationActions} from "react-navigation";
 
 export default class Settings extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoggedIn: true
+        };
         this.data = [
             {
                 title: "ON TV",
@@ -272,6 +275,14 @@ export default class Settings extends React.PureComponent {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+                let result = JSON.parse(results[0]);
+                if (result.is_sign_in) {
+                    this.setState({isLoggedIn: true});
+                } else {
+                    this.setState({isLoggedIn: false});
+                }
+            });
         });
     }
 
@@ -290,7 +301,7 @@ export default class Settings extends React.PureComponent {
                     if (result.is_sign_in) {
                         navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
                     } else {
-                        navigation.navigate("LoginScreen");
+                        navigation.navigate("SignUp");
                     }
                 });
             } else {
@@ -306,6 +317,13 @@ export default class Settings extends React.PureComponent {
     };
 
     _renderSettingItem = ({item}) => {
+
+        if (item.screen == "Messages") {
+            return (<SettingItem ref={(settingItem) => {
+                this.changeableItems[item.screen] = settingItem
+            }} showIcon={true} showRightIcon={this.state.isLoggedIn} icon={item.icon} item={item}
+                                 onPress={() => this._navigateToItem(item)}/>)
+        }
         return (<SettingItem ref={(settingItem) => {
             this.changeableItems[item.screen] = settingItem
         }} showIcon={true} showRightIcon={item.canBeNavigated} icon={item.icon} item={item}

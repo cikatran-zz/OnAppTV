@@ -4,7 +4,7 @@ import {
     TouchableOpacity, NativeModules, Platform
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
-import {rootViewTopPadding} from "../../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../../utils/rootViewPadding";
 import * as Orientation from "react-native-orientation";
 
 const passwordBase = require('../../assets/ic_pincode.png');

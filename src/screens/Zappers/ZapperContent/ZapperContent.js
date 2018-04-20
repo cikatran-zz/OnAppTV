@@ -33,8 +33,9 @@ export default class ZapperContent extends Component {
 
     _onPanResponderMove = (event, gestureState) => {
         this.setState({dragging: true})
+        this.props.onChangedScrollEnabled(false);
         this.setPosition(this.getCurrentPosition() + gestureState.dy);
-    }
+    };
 
     getCurrentPosition() {
         return this.currentPosition;
@@ -57,6 +58,7 @@ export default class ZapperContent extends Component {
 
     _onPanResponderRelease = (event, gestureState) => {
         this.setState({dragging: false});
+        this.props.onChangedScrollEnabled(true);
         this.setCurrentPosition(gestureState.dy);
         return true;
     }

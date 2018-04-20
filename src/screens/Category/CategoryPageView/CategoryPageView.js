@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import VideoThumbnail from '../../../components/VideoThumbnail'
 import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
 import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
-import {rootViewTopPadding} from "../../../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 
 class HeaderLabel extends React.PureComponent{
     constructor(props){

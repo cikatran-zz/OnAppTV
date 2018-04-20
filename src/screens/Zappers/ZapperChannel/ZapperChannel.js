@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
-import {rootViewTopPadding} from '../../../utils/rootViewTopPadding'
+import {rootViewTopPadding} from '../../../utils/rootViewPadding'
 import ZapperCell from '../../../components/ZapperCell'
 import ChannelModal from "../ChannelModal/ChannelModal";
 import {colors} from "../../../utils/themeConfig";
