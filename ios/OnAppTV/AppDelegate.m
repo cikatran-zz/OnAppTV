@@ -50,6 +50,10 @@
     }];
     
     [application registerForRemoteNotifications];
+    
+    
+    // IQKeyboardManager
+    [IQKeyboardManagerObj enable];
     return YES;
 }
 

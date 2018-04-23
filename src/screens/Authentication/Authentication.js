@@ -8,7 +8,7 @@ import * as Orientation from "react-native-orientation";
 import {rootViewBottomPadding} from "../../utils/rootViewPadding";
 import {NavigationActions} from "react-navigation";
 
-export default class SignIn extends React.PureComponent {
+export default class Authentication extends React.PureComponent {
 
     constructor(props) {
         super(props)
@@ -89,7 +89,7 @@ export default class SignIn extends React.PureComponent {
                     <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with Facebook</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.colorButton, {backgroundColor: colors.mainPink}]}
-                                  onPress={() => this.props.navigation.navigate("CreateAccount", {})}>
+                                  onPress={() => this.props.navigation.navigate("SignUp", {})}>
                     <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Sign Up</Text>
                 </TouchableOpacity>
 
@@ -130,9 +130,8 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     bottomText: {
-        color: '#fffffff8',
-        opacity: 0.24,
-        fontSize: 13
+        color: 'rgba(255,255,255,0.24)',
+        fontSize: 11
     },
     pageViewStyle: {
     },
@@ -154,10 +153,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     colorButton: {
-        borderRadius: (Platform.OS === 'ios') ? 15 : 30,
+        borderRadius: (Platform.OS === 'ios') ? 18 : 35,
         width: '62%',
-        paddingTop: '2%',
-        paddingBottom: '2%',
+        paddingVertical: 9,
         alignSelf: 'center',
         marginBottom: 20,
     },

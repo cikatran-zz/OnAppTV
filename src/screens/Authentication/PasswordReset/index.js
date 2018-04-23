@@ -1,18 +1,18 @@
-import SignUp from './SignUp'
+import PasswordReset from './PasswordReset'
 import {connect} from 'react-redux';
 
 function mapStateToProps(state) {
-  return {
+    return {
 
-  }
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-  }
+    return {
+    }
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignUp);
+    mapStateToProps,
+    mapDispatchToProps
+)(PasswordReset);
