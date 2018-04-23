@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import {colors} from "../../utils/themeConfig";
 import * as Orientation from "react-native-orientation";
+import {rootViewTopPadding} from "../../utils/rootViewPadding";
 
 export default class Privacy extends Component {
     constructor(props) {
@@ -57,8 +58,16 @@ export default class Privacy extends Component {
     }
 
     componentDidMount() {
-
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
     };
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
+
 
     _changePrivacy(category, isChosen) {
         var toggles = this.state.toggleState;
@@ -83,9 +92,14 @@ export default class Privacy extends Component {
 
             </View>
         )
-    }
+    };
 
     _keyExtractor = (item, index) => index;
+
+    _navigateToTC() {
+        const {navigation} = this.props;
+        navigation.navigate('TermAndCondition');
+    }
 
     render() {
 
@@ -101,12 +115,13 @@ export default class Privacy extends Component {
                     horizontal={false}
                     renderItem={this._renderListItem}
                     data={this.data}
+                    scrollEnabled={false}
                     ItemSeparatorComponent={() => <View
-                        style={{width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
+                        style={{width: "100%", height: 1, backgroundColor: '#DADADE', opacity: 0.3}}/>}
                 />
-
-                <Text style={styles.descriptionText}>By authorizing notification, you will enjoy {"\n"}additionnal services provided by the{"\n"}channels for additional services related to{"\n"}the channels you are watching.</Text>
-
+                <TouchableOpacity onPress={()=> this._navigateToTC()}>
+                    <Text style={styles.descriptionText}>By authorizing notification, you will enjoy {"\n"}additionnal services provided by the{"\n"}channels for additional services related to{"\n"}the channels you are watching.</Text>
+                </TouchableOpacity>
             </View>)
     }
 }
@@ -115,7 +130,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
     },
     listContainer: {
         marginTop: 46,

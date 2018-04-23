@@ -23,6 +23,21 @@ class OANotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert], completionHandler: { granted, error in
             if granted {
                 UNUserNotificationCenter.current().delegate = self
+                UNUserNotificationCenter.current().getDeliveredNotifications(completionHandler: { (notifications) in
+                    let notis = notifications.map{ noti -> Notification in
+                        let userInfo = noti.request.content.userInfo
+                        let titleArr = asJsonArr(userInfo["0"])
+                        var title = ""
+                        if (titleArr.count > 1) {
+                            title = titleArr[1] as? String ?? ""
+                        }
+                        if (title == "") {
+                            title = userInfo["title"] as? String ?? ""
+                        }
+                        return Notification(jsonObj: asJsonObj(["title": title as Any, "body": asJsonObj(userInfo["aps"])["alert"] as Any]) )
+                    }
+                    Notification.updateNotifications(notis: notis, successBlock: {}, errorBlock: { _ in });
+                });
             }
             callback()
         })
@@ -39,12 +54,31 @@ class OANotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([UNNotificationPresentationOptions.alert, UNNotificationPresentationOptions.sound])
+        completionHandler([UNNotificationPresentationOptions.alert, UNNotificationPresentationOptions.sound, UNNotificationPresentationOptions.badge])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         // TODO: - Handle notification
-        UserKit.mainInstance().pushNotificationOpened(response.notification.request.content.userInfo)
+        let userInfo = response.notification.request.content.userInfo
+        OANotificationCenter.sharedInstance.receiveNotification(userInfo: userInfo)
+    }
+    
+    func receiveNotification(userInfo: [AnyHashable: Any]) {
+        let titleArr = asJsonArr(userInfo["0"])
+        var title = ""
+        if (titleArr.count > 1) {
+            title = titleArr[1] as? String ?? ""
+        }
+        if (title == "") {
+            title = userInfo["title"] as? String ?? ""
+        }
+        let noti = Notification(jsonObj: ["title": title as Any, "body":asJsonObj(userInfo["aps"])["alert"] as Any])
+        Notification.updateNotification(noti: noti, successBlock: {}, errorBlock: {_ in})
+        UserKit.mainInstance().pushNotificationOpened(userInfo)
+    }
+    
+    @objc func updateBadge(number: NSNumber) {
+        UIApplication.shared.applicationIconBadgeNumber = Int(number)
     }
 }
 

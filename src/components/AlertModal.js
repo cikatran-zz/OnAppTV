@@ -1,8 +1,8 @@
 import React from "react";
-import {StyleSheet, View, Modal, Animated, Image, Dimensions, Easing, TouchableOpacity, Text} from "react-native";
+import {StyleSheet, View, Modal, Animated, Image, Dimensions, Easing, TouchableOpacity, Text, Platform} from "react-native";
 import BlurView from "./BlurView";
 import {getBlurRadius} from "../utils/blurRadius";
-import {rootViewTopPadding} from "../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../utils/rootViewPadding";
 import {colors} from "../utils/themeConfig";
 
 export default class AlertModal extends React.Component {
@@ -24,10 +24,10 @@ export default class AlertModal extends React.Component {
                    onRequestClose={() => {
                        this.setState({isShow: false});
                    }}>
-                <View style={styles.container}>
+                <View style={styles.rootView}>
                     <BlurView style={styles.blurView}
                               blurRadius={getBlurRadius(50)}
-                              overlayColor={1} />
+                              overlayColor={0x75000000} />
                     <TouchableOpacity onPress={()=> {this.setState({isShow: false})}} style={styles.closeButton}>
                         <Image source={require("../assets/listEdit-round.png")} style={{resizeMode: 'stretch'}}/>
                     </TouchableOpacity>
@@ -42,10 +42,18 @@ export default class AlertModal extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    rootView: {
         width: '100%',
         height: '100%',
         backgroundColor: '#00000075'
+    },
+    background: {
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        position: 'absolute',
+        backgroundColor: '#000000'
     },
     blurView: {
         width: '100%',

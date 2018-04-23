@@ -30,26 +30,22 @@ query queryChannel($serviceIDs: [Float]!){
 }`;
 
 const zapperContentQuery = gql`
-query queryChannelById($serviceId: Float!){
+query queryZapperByTime($gtTime: Date, $ltTime: Date){
   viewer{
-    channelOne(filter:{
-        serviceId: $serviceId
-    }) {
-      serviceId
-      lcn
-      epgsData(today: true) {
-        videoId
-        channelId
-        startTime
-        endTime
-        videoData {
-          originalImages {
-            height
-            width
-            url
-            name
-            fileName
-          }
+    epgRange (
+      startTimeBegin:$gtTime,
+      startTimeEnd:$ltTime
+    ) {
+      videoId
+      channelId
+      startTime
+      endTime
+      channelData {
+        lcn
+      }
+      videoData {
+        originalImages {
+          url
         }
       }
     }
@@ -430,8 +426,33 @@ query seriesInfo($id: [MongoID]) {
 }
 `;
 
+const searchBrightcoveQuery = gql`
+query searchBc($id: String) {
+    viewer{
+    brightcoveSearchVideo(contentId: $id) {
+      contentId
+      durationInSeconds
+      publishDate
+      title
+      longDescription
+      shortDescription
+      feature
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      state
+      createdAt
+      updatedAt
+      sources
+    }
+  }
+}
+`;
+
 export default {
-    serverURL: 'http://13.250.57.10:3000/graphql',
+    serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
     queries: {
         BANNER: bannerQuery,
         CHANNEL: channelQuery,
@@ -446,6 +467,7 @@ export default {
         EPG_WITH_GENRES: relatedEpgQuery,
         EPG_WITH_SERIES: seriesEpgQuery,
         SERIES_INFO: seriesInfoQuery,
-        ZAPPER_CONTENT: zapperContentQuery
+        ZAPPER_CONTENT: zapperContentQuery,
+        BRIGHTCOVE_SEARCH : searchBrightcoveQuery
     }
 };

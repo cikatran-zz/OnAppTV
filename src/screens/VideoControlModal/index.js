@@ -6,7 +6,8 @@ function mapStateToProps (state) {
   return {
     video: state.videoModalReducer,
     epg: state.epgsReducer,
-    seriesInfo: state.seriesInfoReducer
+    seriesInfo: state.seriesInfoReducer,
+    bcVideos: state.bcVideosReducer
   }
 }
 
@@ -16,7 +17,8 @@ function mapDispatchToProps(dispatch) {
     getEpgs: (serviceId) => dispatch(actions.getEpgs.getEpgs(serviceId)),
     getEpgWithGenre: (genresIds) => dispatch(actions.getEpgs.getEpgWithGenres(genresIds)),
     getEpgWithSeriesId: (seriesId) => dispatch(actions.getEpgs.getEpgWithSeriesId(seriesId)),
-    getSeriesInfo: (seriesId) => dispatch(actions.getSeriesInfo.getSeriesInfo(seriesId))
+    getSeriesInfo: (seriesId) => dispatch(actions.getSeriesInfo.getSeriesInfo(seriesId)),
+    getBcVideos: (contentId) => dispatch(actions.getBcVideos.getBcVideos(contentId))
   }
 }
 

@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import BrightcovePlayerSDK
+import Kingfisher
+import UserKit
 
 class CustomControlsView: UIView {
     // MARK: - Outlets
@@ -20,6 +22,7 @@ class CustomControlsView: UIView {
     @IBOutlet weak var etrTimeLabel: UILabel!
     @IBOutlet weak var captionButton: UIButton!
     @IBOutlet weak var startOverButton: UIButton!
+    @IBOutlet weak var thumbnailFilmstrip: UIImageView!
     
     // MARK: - Properties
     public var currentTime: TimeInterval = 0
@@ -29,6 +32,13 @@ class CustomControlsView: UIView {
     var isFadedIn: Bool = true
     var isPlayingBeforePan: Bool = true
     var lastTimeInteraction: TimeInterval = Date().timeIntervalSince1970
+    var lastImageResouce: ImageResource? = nil
+    
+    public var playbackRecorder: OnDemandPlaybackEventRecorder? = nil {
+        willSet {
+            playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
+        }
+    }
     
     // MARK: - Blocks
     public var pauseBlock: () -> Void = {}
@@ -38,6 +48,8 @@ class CustomControlsView: UIView {
     public var bufferingBlock: (_ buffering: Bool) -> Void = { buffering in }
     public var fastforwardAnimationBlock: ()-> Void = {}
     public var rewindAnimationBlock: () -> Void = {}
+    public var filmStripImage: ((_ second: Double) -> ImageResource?)?
+    public var continueWatchingBlock: () -> Void = {}
     
     // MARK: - Constructors
     override init(frame: CGRect) {
@@ -61,6 +73,9 @@ class CustomControlsView: UIView {
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         autoHideControls()
         initPanGesture()
+        thumbnailFilmstrip.clipsToBounds = true
+        thumbnailFilmstrip.layer.cornerRadius = 4
+        thumbnailFilmstrip.isHidden = true
     }
     
     fileprivate func setLabelTime(_ time: TimeInterval) {
@@ -86,7 +101,8 @@ extension CustomControlsView {
     }
     
     fileprivate func autoHideControls() {
-        DispatchQueue.global(qos: DispatchQoS.default.qosClass).async {
+        let queue = DispatchQueue(label: "com.onapptv.brightcove", attributes: .concurrent)
+        queue.async {
             while true {
                 Thread.sleep(forTimeInterval: 1.0)
                 if Date().timeIntervalSince1970 - self.lastTimeInteraction > 2.0 && self.isFadedIn {
@@ -139,6 +155,7 @@ extension CustomControlsView {
                 isDragging = true
                 isPlayingBeforePan = isPlaying
             }
+            thumbnailFilmstrip.isHidden = false
         }
         
         if isDragging {
@@ -147,9 +164,17 @@ extension CustomControlsView {
             if tapLocation.x >= 0 && tapLocation.x <= self.frame.width {
                 let translation = sender.translation(in: self)
                 progressWidth.constant = progressWidth.constant + translation.x
+                if (progressWidth.constant <= self.frame.width) {
                 let seekingTime = videoDuration * Double(progressWidth.constant / self.frame.width)
-                setLabelTime(seekingTime)
-                seekingBlock(seekingTime)
+                    setLabelTime(seekingTime)
+                    seekingBlock(seekingTime)
+                    if let imageResource = self.filmStripImage?(seekingTime) {
+                        lastImageResouce = imageResource
+                    }
+                    
+                    thumbnailFilmstrip.kf.setImage(with: lastImageResouce)
+                }
+                
                 sender.setTranslation(.zero, in: self)
             } else {
                 sender.setValue(UIGestureRecognizerState.ended, forKey: "state")
@@ -162,6 +187,7 @@ extension CustomControlsView {
                 playBlock()
             }
             isDragging = false
+            thumbnailFilmstrip.isHidden = true
         }
     }
     
@@ -205,6 +231,14 @@ extension CustomControlsView {
     }
 }
 
+// MARK: - UserKit
+extension CustomControlsView {
+    
+    public func stop() {
+        self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
+    }
+}
+
 // MARK: - Actions
 extension CustomControlsView {
     
@@ -228,6 +262,8 @@ extension CustomControlsView {
 // MARK: - Delegation
 extension CustomControlsView: BCOVPlaybackControllerDelegate {
     
+    
+    
     func playbackController(_ controller: BCOVPlaybackController!, playbackSession session: BCOVPlaybackSession!, didProgressTo progress: TimeInterval) {
         currentTime = (progress != Double.infinity && progress != -Double.infinity) ? progress : currentTime
         if !isDragging {
@@ -237,18 +273,33 @@ extension CustomControlsView: BCOVPlaybackControllerDelegate {
     }
     
     func playbackController(_ controller: BCOVPlaybackController!, playbackSession session: BCOVPlaybackSession!, didReceive lifecycleEvent: BCOVPlaybackSessionLifecycleEvent!) {
+        
+        if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady {
+            continueWatchingBlock()
+        }
+        
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay {
             isPlaying = true
             playbackButton.setImage(UIImage(named: "pause") , for: .normal)
+            if !self.isDragging {
+                self.playbackRecorder?.recordPlayerState(.Play, playhead: currentTime)
+            }
+
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPause {
             isPlaying = false
             playbackButton.setImage(UIImage(named: "play") , for: .normal)
+            if !self.isDragging {
+                self.playbackRecorder?.recordPlayerState(.Pause, playhead: currentTime)
+            }
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty {
             bufferingBlock(true)
+            if !self.isDragging {
+                self.playbackRecorder?.recordPlayerState(.Buffer, playhead: currentTime)
+            }
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackLikelyToKeepUp {
@@ -257,10 +308,13 @@ extension CustomControlsView: BCOVPlaybackControllerDelegate {
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail {
             bufferingBlock(false)
+            let error = lifecycleEvent.properties["error"] as? NSError
+            self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: error)
         }
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate {
             bufferingBlock(false)
+            self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
         }
     }
 }

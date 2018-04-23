@@ -20,6 +20,13 @@ import resolutionReducer from "./resolutionReducer";
 import videoFormatReducer from './videoFormatReducer';
 import wifiInfoReducer from "./wifiInfoReducer";
 import seriesInfoReducer from './seriesInfoReducer'
+import bcVideosReducer from "./bcVideosReducer"
+import usbDirReducer from './usbDirReducer'
+import usbDisksReducer from "./usbDisksReducer";
+import satelliteReducer from "./satelliteReducer";
+import timeShiftLimitSizeReducer from "./timeShiftLimitSizeReducer";
+import notificationReducer from "./notificationReducer"
+import profileInfoReducer from "./profileInfoReducer";
 
 export default combineReducers({
     nav,
@@ -42,5 +49,13 @@ export default combineReducers({
     resolutionReducer,
     videoFormatReducer,
     wifiInfoReducer,
-    seriesInfoReducer
+    seriesInfoReducer,
+    bcVideosReducer,
+    usbDirReducer,
+    seriesInfoReducer,
+    usbDisksReducer,
+    satelliteReducer,
+    timeShiftLimitSizeReducer,
+    notificationReducer,
+    profileInfoReducer
 });

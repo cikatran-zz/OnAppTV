@@ -70,8 +70,7 @@ export default class ChannelModal extends React.Component {
     };
 
     _onFavoriteClick = () => {
-
-        this.props.onFavoriteItem(this.props.channels[this.state.currentIndex].serviceID, (this.state.currentFavorite == "Favorite") ? true : false);
+        this.props.onFavoriteItem(this.props.channels[this.carousel._activeItem].serviceID, (this.state.currentFavorite == "Favorite") ? true : false);
     };
 
     render() {

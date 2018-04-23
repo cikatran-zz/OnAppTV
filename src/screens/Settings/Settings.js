@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions
+    Text, View, StyleSheet, FlatList, SectionList, StatusBar, Platform, Dimensions, NativeModules
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -8,12 +8,15 @@ import SettingItem from '../../components/SettingItem'
 import _ from 'lodash'
 import STBSelfTests from "./STBSelfTests";
 import AlertModal from "../../components/AlertModal";
+import {NavigationActions} from "react-navigation";
 
 export default class Settings extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoggedIn: true
+        };
         this.data = [
             {
                 title: "ON TV",
@@ -72,14 +75,6 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_wifi.png')
                     },
                     {
-                        name: "My subscription",
-                        value: "06X223YT-2017",
-                        canBeNavigated: true,
-                        screen: 'MySubscription',
-                        needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
-                    },
-                    {
                         name: "My messages",
                         value: "",
                         canBeNavigated: true,
@@ -112,8 +107,8 @@ export default class Settings extends React.PureComponent {
                         name: "Antenna configuration",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
-                        needSTB: false,
+                        screen: 'AtennaTests',
+                        needSTB: true,
                         icon: require('../../assets/settings-lock.png')
                     },
                     {
@@ -136,7 +131,7 @@ export default class Settings extends React.PureComponent {
                         name: "Format Hard Disk",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
+                        screen: 'FormatHDD',
                         needSTB: true,
                         icon: require('../../assets/ic_wifi.png'),
                         errorMessage: "No hard disk exists"
@@ -145,8 +140,8 @@ export default class Settings extends React.PureComponent {
                         name: "Timeshift max size on Hard Disk",
                         value: "",
                         canBeNavigated: true,
-                        screen: '',
-                        needSTB: false,
+                        screen: 'TimeShiftConfig',
+                        needSTB: true,
                         icon: require('../../assets/ic_wifi.png')
                     },
                 ]
@@ -280,6 +275,14 @@ export default class Settings extends React.PureComponent {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+                let result = JSON.parse(results[0]);
+                if (result.is_sign_in) {
+                    this.setState({isLoggedIn: true});
+                } else {
+                    this.setState({isLoggedIn: false});
+                }
+            });
         });
     }
 
@@ -292,7 +295,18 @@ export default class Settings extends React.PureComponent {
     _navigateToItem(item) {
         const {navigation} = this.props;
         if (item.canBeNavigated) {
-            navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+            if (item.screen === "PersonalInformation" || item.screen === "Messages") {
+                NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+                    let result = JSON.parse(results[0]);
+                    if (result.is_sign_in) {
+                        navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+                    } else {
+                        navigation.navigate("SignUp");
+                    }
+                });
+            } else {
+                navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
+            }
         } else if (item.errorMessage != null) {
             this._showModal(item.errorMessage);
         }
@@ -303,6 +317,13 @@ export default class Settings extends React.PureComponent {
     };
 
     _renderSettingItem = ({item}) => {
+
+        if (item.screen == "Messages") {
+            return (<SettingItem ref={(settingItem) => {
+                this.changeableItems[item.screen] = settingItem
+            }} showIcon={true} showRightIcon={this.state.isLoggedIn} icon={item.icon} item={item}
+                                 onPress={() => this._navigateToItem(item)}/>)
+        }
         return (<SettingItem ref={(settingItem) => {
             this.changeableItems[item.screen] = settingItem
         }} showIcon={true} showRightIcon={item.canBeNavigated} icon={item.icon} item={item}
@@ -317,7 +338,7 @@ export default class Settings extends React.PureComponent {
                     renderItem={this._renderSettingItem}
                     keyExtractor={this._keyExtractor}
                     ItemSeparatorComponent={() => <View
-                        style={{width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
+                        style={{left: 45, width: "100%", height: 1, backgroundColor: '#DADADE', opacity: 0.41}}/>}
                 />
             </View>
         )
@@ -341,7 +362,7 @@ export default class Settings extends React.PureComponent {
             for (let j = 0; j < newData[i].list.length; j++) {
                 if (newData[i].list[j].needSTB) {
                     newData[i].list[j].canBeNavigated = false;
-                    newData[i].list[j].value = "No STB Connected";
+                    newData[i].list[j].value = "";
                 }
             }
         }
@@ -391,13 +412,18 @@ export default class Settings extends React.PureComponent {
         if (wifi.data != null) {
             let newData = _.cloneDeep(this.data);
             newData[3].list[1].value = (wifi.data.SSID == null) ? "Not found" : wifi.data.SSID;
-            if (settings.data == null || settings.data.HardDiskFile !== "") {
-                newData[2].list[3].errorMessage = null;
-                newData[2].list[3].canBeNavigated = true;
-            } else {
-                newData[2].list[3].errorMessage = "No hard disk exists";
-                newData[2].list[3].canBeNavigated = false;
-            }
+            this.data = newData;
+        }
+
+        if (settings.data !== null && settings.data.HardDiskFile !== "") {
+            let newData = _.cloneDeep(this.data);
+            newData[2].list[3].errorMessage = null;
+            newData[2].list[3].canBeNavigated = true;
+            this.data = newData;
+        } else {
+            let newData = _.cloneDeep(this.data);
+            newData[2].list[3].errorMessage = "No hard disk exists";
+            newData[2].list[3].canBeNavigated = false;
             this.data = newData;
         }
 
@@ -416,6 +442,7 @@ export default class Settings extends React.PureComponent {
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     ListFooterComponent={this._renderListFooter}
+                    bounces={false}
                     sections={this.data.map((section) => {
                         return {
                             data: [section.list],
@@ -438,8 +465,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     sectionListContainer: {
-        marginLeft: 15,
-        marginRight: 15
+        marginLeft: 15
     },
     headerSection: {
         fontSize: 10,

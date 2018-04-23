@@ -6,7 +6,7 @@ import Swiper from 'react-native-swiper'
 import { Dropdown } from 'react-native-material-dropdown';
 import { colors } from '../../../utils/themeConfig'
 import PinkRoundedLabel from '../../../components/PinkRoundedLabel'
-import { rootViewTopPadding } from '../../../utils/rootViewTopPadding'
+import { rootViewTopPadding } from '../../../utils/rootViewPadding'
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 
 export default class SignIn extends React.PureComponent {
