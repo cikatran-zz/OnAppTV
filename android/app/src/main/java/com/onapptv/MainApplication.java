@@ -20,6 +20,9 @@ import java.util.List;
 
 import userkit.sdk.UserKit;
 import userkit.sdk.identity.UserKitIdentity;
+import com.facebook.FacebookSdk;
+import com.facebook.CallbackManager;
+import com.facebook.appevents.AppEventsLogger;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -33,8 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
                     new MainReactPackage(),
-            new FBSDKPackage(),
-            new RNGestureHandlerPackage(),
+                    new FBSDKPackage(mCallbackManager),
+                    new RNGestureHandlerPackage(),
                     new OrientationPackage(),
                     new VectorIconsPackage(),
                     new OnAppTVPackage()
@@ -47,6 +50,12 @@ public class MainApplication extends Application implements ReactApplication {
             return "index";
         }
     };
+
+    private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
+    protected static CallbackManager getCallbackManager() {
+        return mCallbackManager;
+    }
 
     @Override
     public ReactNativeHost getReactNativeHost() {

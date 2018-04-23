@@ -18,6 +18,11 @@ target 'OnAppTV' do
   pod 'UserKitIdentity', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
   pod 'Kingfisher'
   pod 'IQKeyboardManagerSwift', '4.0.13'
+  
+  pod 'FacebookCore'
+  pod 'FacebookLogin'
+  pod 'FacebookShare'
+  pod 'FBSDKPlacesKit'
 
 end
 

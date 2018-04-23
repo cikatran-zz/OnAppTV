@@ -8,6 +8,7 @@ import * as Orientation from "react-native-orientation";
 import AlertModal from "../../../components/AlertModal";
 import IndicatorModal from "../../../components/IndicatorModal";
 import {NavigationActions} from "react-navigation";
+import {facebookLogin} from "../../../utils/facebookLogin";
 
 export default class SignIn extends React.PureComponent {
 
@@ -34,6 +35,26 @@ export default class SignIn extends React.PureComponent {
         this._navListener.remove();
     }
 
+    _goToHomeScreen() {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({
+                    routeName: "Home"
+                })
+            ]
+        });
+        this.props.navigation.dispatch(resetAction);
+    }
+
+    _loginWithFacebook = () => {
+        facebookLogin().then((value)=> {
+            this._goToHomeScreen();
+        }).catch((error)=> {
+            console.log("ERROR", error);
+        });
+    };
+
     _signIn =()=> {
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) {
             this.alertVC.setState({isShow: true, message: "Invalid email"});
@@ -45,16 +66,8 @@ export default class SignIn extends React.PureComponent {
                 this.callbackMessage = JSON.parse(error).message;
                 this.indicatorModal.setState({isShow: false});
             } else {
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({
-                            routeName: "Home"
-                        })
-                    ]
-                });
                 this.indicatorModal.setState({isShow: false});
-                this.props.navigation.dispatch(resetAction);
+                this._goToHomeScreen();
             }
         })
     };
@@ -72,7 +85,7 @@ export default class SignIn extends React.PureComponent {
                 <View style={styles.subView}>
                     <View style={styles.partView}>
                         <Text style={styles.titleText}>LOG IN</Text>
-                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]}>
+                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]} onPress={()=>this._goToHomeScreen()}>
                             <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with Facebook</Text>
                         </TouchableOpacity>
                         <Text style={styles.descriptionText1}>Or sign in with manually</Text>

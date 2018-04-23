@@ -13,6 +13,7 @@ import _ from 'lodash'
 import AlertModal from "../../../components/AlertModal";
 import IndicatorModal from "../../../components/IndicatorModal";
 import {NavigationActions} from "react-navigation";
+import {facebookLogin} from "../../../utils/facebookLogin";
 
 export default class SignUp extends React.PureComponent {
 
@@ -43,6 +44,26 @@ export default class SignUp extends React.PureComponent {
         this._navListener.remove();
     }
 
+    _goToHomeScreen() {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({
+                    routeName: "Home"
+                })
+            ]
+        });
+        this.props.navigation.dispatch(resetAction);
+    }
+
+    _loginWithFacebook = () => {
+        facebookLogin().then((value)=> {
+            this._goToHomeScreen();
+        }).catch((error)=> {
+            console.log("ERROR", error);
+        });
+    };
+
     _signUp() {
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.info.email)) {
             this.alertVC.setState({isShow: true, message: "Invalid email"});
@@ -54,16 +75,8 @@ export default class SignUp extends React.PureComponent {
                 this.callbackMessage = JSON.parse(error).message;
                 this.indicatorModal.setState({isShow: false});
             } else {
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({
-                            routeName: "Home"
-                        })
-                    ]
-                });
                 this.indicatorModal.setState({isShow: false});
-                this.props.navigation.dispatch(resetAction);
+                this._goToHomeScreen();
             }
         })
     }
@@ -82,7 +95,7 @@ export default class SignUp extends React.PureComponent {
                             bounces={false}>
                     <View style={styles.subView}>
                         <Text style={styles.titleText}>SIGN UP</Text>
-                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]}>
+                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]} onPress={()=> this._loginWithFacebook()}>
                             <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with Facebook</Text>
                         </TouchableOpacity>
                         <Text style={styles.descriptionText1}>Or create your account manually</Text>

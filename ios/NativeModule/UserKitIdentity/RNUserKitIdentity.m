@@ -45,7 +45,6 @@ RCT_EXPORT_METHOD(signUpWithEmail: (NSString *)email
 }
 
 RCT_EXPORT_METHOD(signInWithFacebookAccount:(NSString *)facebookAuthToken
-                  setUserToken:(BOOL)setUserToken
                   callback: (RCTResponseSenderBlock)callback) {
     
     [[UserKitIdentityModule sharedInstance] signInWithFacebookAccount:facebookAuthToken

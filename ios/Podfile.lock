@@ -1,5 +1,32 @@
 PODS:
+  - Bolts (1.9.0):
+    - Bolts/AppLinks (= 1.9.0)
+    - Bolts/Tasks (= 1.9.0)
+  - Bolts/AppLinks (1.9.0):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.9.0)
   - Brightcove-Player-Core/dynamic (6.2.2)
+  - FacebookCore (0.3.0):
+    - Bolts (~> 1.8)
+    - FBSDKCoreKit (~> 4.27)
+  - FacebookLogin (0.3.0):
+    - Bolts (~> 1.8)
+    - FacebookCore (~> 0.3)
+    - FBSDKCoreKit (~> 4.27)
+    - FBSDKLoginKit (~> 4.27)
+  - FacebookShare (0.3.0):
+    - Bolts (~> 1.8)
+    - FacebookCore (~> 0.3)
+    - FBSDKCoreKit (~> 4.27)
+    - FBSDKShareKit (~> 4.27)
+  - FBSDKCoreKit (4.30.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.30.0):
+    - FBSDKCoreKit
+  - FBSDKPlacesKit (4.30.0):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.30.0):
+    - FBSDKCoreKit (~> 4.30.0)
   - IQKeyboardManagerSwift (4.0.13)
   - Kingfisher (4.6.1)
   - lottie-ios (2.5.0)
@@ -10,6 +37,10 @@ PODS:
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
+  - FacebookCore
+  - FacebookLogin
+  - FacebookShare
+  - FBSDKPlacesKit
   - IQKeyboardManagerSwift (= 4.0.13)
   - Kingfisher
   - lottie-ios
@@ -34,7 +65,15 @@ CHECKOUT OPTIONS:
     :tag: 0.19.10
 
 SPEC CHECKSUMS:
+  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
+  FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
+  FacebookLogin: 0af839ea858faef99550d16596b87b4a8e8906e6
+  FacebookShare: 0469964297ebd75f052be2c5083389a4208e82b7
+  FBSDKCoreKit: 7c4bba2877781a131ab5d54c0a78c405d4307b62
+  FBSDKLoginKit: fe7a7e82373dc5daad92e1623219e86224ab1fb1
+  FBSDKPlacesKit: 88f3da3d7b608acfbd3d9db6121c561a955639f2
+  FBSDKShareKit: a9427574b51bde4f437262c3f118c4ccfddeef6c
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
   Kingfisher: 1f9157d9c02b380cbd0b7cc890161195164eb634
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
@@ -42,6 +81,6 @@ SPEC CHECKSUMS:
   UserKitIdentity: 92784613ae918091b3d29628639414bbed2895a2
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: d54b570ddfe40e9dd5381f6718665827350f4b05
+PODFILE CHECKSUM: 94fb6145b2412640746206a2b17aa4b656114282
 
 COCOAPODS: 1.4.0

@@ -7,6 +7,7 @@ import {colors} from '../../utils/themeConfig'
 import * as Orientation from "react-native-orientation";
 import {rootViewBottomPadding} from "../../utils/rootViewPadding";
 import {NavigationActions} from "react-navigation";
+import {facebookLogin} from "../../utils/facebookLogin";
 
 export default class Authentication extends React.PureComponent {
 
@@ -38,6 +39,14 @@ export default class Authentication extends React.PureComponent {
         });
         this.props.navigation.dispatch(resetAction);
     }
+
+    _loginWithFacebook = () => {
+        facebookLogin().then((value)=> {
+            this._goToHomeScreen();
+        }).catch((error)=> {
+            console.log("ERROR", error);
+        });
+    };
 
     render() {
 
@@ -85,7 +94,7 @@ export default class Authentication extends React.PureComponent {
 
                     </Swiper>
                 </View>
-                <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3'}]}>
+                <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3'}]} onPress={()=>this._loginWithFacebook()} >
                     <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with Facebook</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.colorButton, {backgroundColor: colors.mainPink}]}
