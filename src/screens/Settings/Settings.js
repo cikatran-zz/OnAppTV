@@ -27,7 +27,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'AudioLanguage',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_audio_lang.png')
                     },
                     {
                         name: "Subtitles",
@@ -38,12 +38,12 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_subtitle_black.png')
                     },
                     {
-                        name: "Resolution",
+                        name: "Video Resolution",
                         value: "1080P",
                         canBeNavigated: true,
                         screen: 'Resolution',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_resolution.png')
                     },
                     {
                         name: "Video Format",
@@ -51,7 +51,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'VideoFormat',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_video_format.png')
                     },
                     {
                         name: "Parental Control",
@@ -59,7 +59,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'ParentalControl',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_control_parental.png')
                     },
                 ]
             },
@@ -72,7 +72,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'PersonalInformation',
                         needSTB: false,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_personal_info.png')
                     },
                     {
                         name: "My messages",
@@ -88,7 +88,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'Privacy',
                         needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_privacy.png')
                     },
                     {
                         name: "Authorization",
@@ -96,7 +96,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'Authorization',
                         needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_lock.png')
                     },
                 ]
             },
@@ -109,7 +109,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'AtennaTests',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_atenna_configure.png')
                     },
                     {
                         name: "Decoder self-check",
@@ -117,7 +117,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'STBSelfTests',
                         needSTB: false,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_self_check.png')
                     },
                     {
                         name: "Rights in my decoder",
@@ -125,7 +125,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'SelectOperator',
                         needSTB: false,
-                        icon: require('../../assets/settings-number1.png')
+                        icon: require('../../assets/ic_rights.png')
                     },
                     {
                         name: "Format Hard Disk",
@@ -133,7 +133,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'FormatHDD',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png'),
+                        icon: require('../../assets/ic_formatHDD.png'),
                         errorMessage: "No hard disk exists"
                     },
                     {
@@ -142,7 +142,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: true,
                         screen: 'TimeShiftConfig',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_Timeshift.png')
                     },
                 ]
             },
@@ -150,12 +150,12 @@ export default class Settings extends React.PureComponent {
                 title: "ABOUT ON",
                 list: [
                     {
-                        name: "ON-MAD Version",
+                        name: "App’s TV Version",
                         value: "1.0",
                         canBeNavigated: false,
                         screen: '',
                         needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Wifi",
@@ -171,7 +171,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'ManufacturerID',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Model ID",
@@ -179,7 +179,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: '',
                         needSTB: false,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Serial Number",
@@ -187,7 +187,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: '',
                         needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Hardware version",
@@ -195,7 +195,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'HardwareVersion',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Boot Loader version",
@@ -203,15 +203,15 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'BootLoaderVersion',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "STB software version",
+                        name: "Decoder software version",
                         value: "",
                         canBeNavigated: false,
                         screen: 'STBSoftwareVersion',
                         needSTB: true,
-                        icon: require('../../assets/settings-numberthree.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Decoder ID",
@@ -219,7 +219,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'DecoderID',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Smartcard",
@@ -227,15 +227,23 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: '',
                         needSTB: false,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "ACS",
+                        name: "ACS Library",
                         value: "5841-6.1.0.9-AS+SC-E80050",
                         canBeNavigated: false,
                         screen: '',
                         needSTB: false,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_info.png')
+                    },
+                    {
+                        name: "CAM",
+                        value: "None",
+                        canBeNavigated: false,
+                        screen: '',
+                        needSTB: false,
+                        icon: require('../../assets/ic_info.png')
                     },
                     {
                         name: "Hard Disk file system",
@@ -243,7 +251,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'HardDiskFile',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_HDDFS.png')
                     },
                     {
                         name: "Hard Disk size",
@@ -251,7 +259,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'HardDiskTotalSize',
                         needSTB: true,
-                        icon: require('../../assets/ic_wifi.png')
+                        icon: require('../../assets/ic_HDDS.png')
                     },
                     {
                         name: "Hard Disk size available",
@@ -259,7 +267,7 @@ export default class Settings extends React.PureComponent {
                         canBeNavigated: false,
                         screen: 'HardDiskFreeSize',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_HDDAS.png')
                     },
                 ]
             }
@@ -301,7 +309,7 @@ export default class Settings extends React.PureComponent {
                     if (result.is_sign_in) {
                         navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
                     } else {
-                        navigation.navigate("SignUp");
+                        navigation.navigate("Authentication");
                     }
                 });
             } else {

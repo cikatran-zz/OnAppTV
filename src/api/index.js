@@ -7,12 +7,17 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
 import _ from 'lodash';
 
+const AUTH_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M';got
 
 const instance = axios.create({
     serverURL: `${config.serverURL}`
 });
 
-const httpLink = new HttpLink({uri: config.serverURL})
+const httpLink = new HttpLink({
+    uri: config.serverURL,
+    headers: {
+        Authorization: AUTH_KEY}
+});
 
 const errorHandler = onError(({networkError}) => {
     switch (networkError.statusCode) {
@@ -734,19 +739,21 @@ export const getSeriesInfo = (seriesId) => {
 export const getNotification = () => {
     return new Promise((resolve, reject) => {
         NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-            NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-                resolve(JSON.parse(result[0]).data)
-            });
-        })
-    })
-}
-
-export const getProfileInfo = () => {
-    return new Promise((resolve, reject) => {
-        NativeModules.RNUserKitIdentity.getProfileInfo((error, result) => {
-            resolve(result[0])
+            resolve(JSON.parse(result[0]).data)
         });
     })
+};
+
+export const getProfileInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.RNUserKit.getProperty("_base_info", (error, result) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve(JSON.parse(result[0]))
+            }
+        });
+    });
 };
 
 export const getBcVideos = (contentId) => {
