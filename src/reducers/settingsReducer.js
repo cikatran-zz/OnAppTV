@@ -12,7 +12,6 @@ export default function settingsReducer(state = initialState, action) {
         case actionTypes.FETCHING_SETTINGS:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_SETTINGS_SUCCESS:

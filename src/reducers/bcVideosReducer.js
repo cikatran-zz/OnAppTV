@@ -12,7 +12,6 @@ export default function bcVideosReducer(state = initialState, action) {
     case actionTypes.FETCHING_BC_VIDEOS:
       return {
         ...state,
-        data: null,
         isFetching: true
       };
     case actionTypes.FETCH_BC_VIDEOS_SUCCESS:

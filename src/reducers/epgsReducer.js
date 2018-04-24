@@ -14,7 +14,6 @@ export default function epgsReducer(state = initialState, action) {
     case actionTypes.FETCHING_EPG_SERIES:
       return {
         ...state,
-        data: action.data,
         isFetching: true
       };
     case actionTypes.FETCH_EPGS_SUCCESS:

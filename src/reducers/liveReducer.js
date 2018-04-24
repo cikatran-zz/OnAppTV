@@ -12,7 +12,6 @@ export default function liveReducer(state = initialState, action) {
     case actionTypes.FETCHING_LIVE:
       return {
         ...state,
-        data: null,
         isFetching: true
       };
     case actionTypes.FETCH_LIVE_SUCCESS:

@@ -12,7 +12,6 @@ export default function vodReducer(state = initialState, action) {
     case actionTypes.FETCHING_VOD:
       return {
         ...state,
-        data: null,
         isFetching: true
       };
     case actionTypes.FETCH_VOD_SUCCESS:

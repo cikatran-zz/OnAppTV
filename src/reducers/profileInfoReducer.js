@@ -12,7 +12,6 @@ export default function profileInfoReducer(state = initialState, action) {
         case actionTypes.FETCHING_PROFILE_INFO:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_PROFILE_INFO_SUCCESS:

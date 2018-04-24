@@ -12,7 +12,6 @@ export default function satelliteReducer(state = initialState, action) {
         case actionTypes.FETCHING_SATELLITE:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_SATELLITE_SUCCESS:

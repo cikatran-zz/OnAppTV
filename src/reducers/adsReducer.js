@@ -12,7 +12,6 @@ export default function adsReducer(state = initialState, action) {
         case actionTypes.FETCHING_ADS:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_ADS_SUCCESS:
