@@ -1,17 +1,16 @@
 package com.onapptv;
 
 import android.app.Application;
-import android.os.Build;
 import android.support.multidex.MultiDex;
 
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactApplication;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.github.yamill.orientation.OrientationPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.github.yamill.orientation.OrientationPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.onapptv.custombrightcoveplayer.MyOkhttpModule;
 
 import java.util.Arrays;
@@ -31,11 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
-                    new MainReactPackage(),
-            new RNGestureHandlerPackage(),
-                    new OrientationPackage(),
-                    new VectorIconsPackage(),
-                    new OnAppTVPackage()
+                new MainReactPackage(),
+                new RNFetchBlobPackage(),
+                new OrientationPackage(),
+                new VectorIconsPackage(),
+                new OnAppTVPackage()
             );
         }
 
