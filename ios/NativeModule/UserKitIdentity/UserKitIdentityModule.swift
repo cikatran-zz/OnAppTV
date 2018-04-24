@@ -67,7 +67,9 @@ class UserKitIdentityModule: NSObject {
             "name": profile?.name ?? "" as Any,
             "email": profile?.customProperties?["_account_email"] ?? "" as Any,
             "age": profile?.customProperties?["age"] ?? "" as Any,
-            "sex": profile?.customProperties?["sex"] ?? "" as Any,
+            "gender": profile?.customProperties?["gender"] ?? "" as Any,
+            "firstName": profile?.customProperties?["firstName"] ?? "" as Any,
+            "lastName": profile?.customProperties?["lastName"] ?? "" as Any,
         ]
         return info
     }

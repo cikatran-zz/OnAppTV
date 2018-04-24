@@ -51,27 +51,38 @@ export default class PersonalInformation extends React.PureComponent {
             return null;
         }
 
-        let age = profile.data.age ? profile.data.age : "";
-        let sex = profile.data.sex ? profile.data.sex : "";
+
 
         let data = [
             {
-                name: "Name",
-                value: (profile.data.name == null) ? "": profile.data.name.toString()
+                name: "First name",
+                value: ""
+            },
+            {
+                name: "Last name",
+                value: ""
             },
             {
                 name: "Email",
-                value: (profile.data.email == null) ? "" : profile.data.email.toString()
+                value: ""
             },
             {
                 name: "Age",
-                value: (age.constructor === Object) ? "" :  age.toString()
+                value: ""
             },
             {
                 name: "Gender",
-                value: (sex.constructor === Object) ? "" : sex.toString()
+                value: ""
             }
         ];
+
+        if (profile.data != null) {
+            data[0].value = profile.data.firstName;
+            data[1].value = profile.data.lastName;
+            data[2].value = profile.data.email;
+            data[3].value = profile.data.age;
+            data[4].value = profile.data.gender;
+        }
 
         return (
             <View style={styles.container}>

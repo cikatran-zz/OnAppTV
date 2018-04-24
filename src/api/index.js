@@ -734,19 +734,21 @@ export const getSeriesInfo = (seriesId) => {
 export const getNotification = () => {
     return new Promise((resolve, reject) => {
         NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-            NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-                resolve(JSON.parse(result[0]).data)
-            });
-        })
-    })
-}
-
-export const getProfileInfo = () => {
-    return new Promise((resolve, reject) => {
-        NativeModules.RNUserKitIdentity.getProfileInfo((error, result) => {
-            resolve(result[0])
+            resolve(JSON.parse(result[0]).data)
         });
     })
+};
+
+export const getProfileInfo = () => {
+    return new Promise((resolve, reject)=> {
+        NativeModules.RNUserKit.getProperty("_base_info", (error, result) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve(JSON.parse(result[0]))
+            }
+        });
+    });
 };
 
 export const getBcVideos = (contentId) => {

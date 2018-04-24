@@ -22,7 +22,7 @@ $(function() {
     })
     //关闭
     $("#closeModal").click(function(){
-    	  this.href = "SignIn.html";
+    	  this.href = "Authentication.html";
     })
 // //点击ALLow跳转
 // $("#Agreed").click(function(){
