@@ -12,7 +12,6 @@ export default function videoFormatReducer(state = initialState, action) {
         case actionTypes.FETCHING_VIDEO_FORMAT:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_VIDEO_FORMAT_SUCCESS:

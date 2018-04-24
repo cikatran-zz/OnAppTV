@@ -1,18 +1,18 @@
 package com.onapptv;
 
 import android.app.Application;
-import android.os.Build;
 import android.support.multidex.MultiDex;
 
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.github.yamill.orientation.OrientationPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
+import com.github.yamill.orientation.OrientationPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.onapptv.custombrightcoveplayer.MyOkhttpModule;
 
 import java.util.Arrays;
@@ -20,10 +20,6 @@ import java.util.List;
 
 import userkit.sdk.UserKit;
 import userkit.sdk.identity.UserKitIdentity;
-import com.facebook.FacebookSdk;
-import com.facebook.CallbackManager;
-import com.facebook.appevents.AppEventsLogger;
-
 public class MainApplication extends Application implements ReactApplication {
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -35,12 +31,13 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
-                    new MainReactPackage(),
-                    new FBSDKPackage(mCallbackManager),
-                    new RNGestureHandlerPackage(),
-                    new OrientationPackage(),
-                    new VectorIconsPackage(),
-                    new OnAppTVPackage()
+                new RNFetchBlobPackage(),
+                new MainReactPackage(),
+                new FBSDKPackage(mCallbackManager),
+//                new RNGestureHandlerPackage(),
+                new OrientationPackage(),
+                new VectorIconsPackage(),
+                new OnAppTVPackage()
             );
         }
 

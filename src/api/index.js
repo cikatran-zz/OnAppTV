@@ -7,12 +7,17 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
 import _ from 'lodash';
 
+const AUTH_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M';
 
 const instance = axios.create({
     serverURL: `${config.serverURL}`
 });
 
-const httpLink = new HttpLink({uri: config.serverURL, headers: {Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M'}})
+const httpLink = new HttpLink({
+    uri: config.serverURL,
+    headers: {
+        Authorization: AUTH_KEY}
+});
 
 const errorHandler = onError(({networkError}) => {
     switch (networkError.statusCode) {

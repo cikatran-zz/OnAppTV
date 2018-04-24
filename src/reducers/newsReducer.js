@@ -12,7 +12,6 @@ export default function newsReducer(state = initialState, action) {
         case actionTypes.FETCHING_NEWS:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_NEWS_SUCCESS:

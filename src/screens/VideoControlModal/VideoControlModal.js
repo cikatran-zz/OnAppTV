@@ -99,6 +99,8 @@ export default class VideoControlModal extends React.Component {
         console.log(nextProps)
 
         let bcVideos = nextProps.bcVideos;
+        if (!bcVideos.data)
+            return false;
         if (!bcVideos.isFetching && !this.state.firstTimePlay) {
             let json = {
                 url: bcVideos.data.sources.filter(x => {
@@ -639,6 +641,8 @@ export default class VideoControlModal extends React.Component {
 
     stopDownload = () => {
         const {bcVideos} = this.props
+        if (!bcVideos.data)
+            return;
         let json = {
             url: bcVideos.data.sources.filter(x => {
                 return !!x.container
@@ -656,7 +660,8 @@ export default class VideoControlModal extends React.Component {
         const {index} = this.state
 
         let videoData = index === -1 ? item : epg[index]
-
+        if (!bcVideos.data)
+            return;
         let json = {
             contentId: bcVideos.data.contentId,
             url: bcVideos.data.sources.filter(x => {
@@ -811,6 +816,8 @@ export default class VideoControlModal extends React.Component {
 
         const {item} = this.props.navigation.state.params
         const {seriesInfo} = this.props;
+        if (!seriesInfo)
+            return null;
 
         if (item.type === 'Episode') {
             return (

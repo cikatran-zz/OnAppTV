@@ -12,7 +12,6 @@ export default function subtitlesReducer(state = initialState, action) {
         case actionTypes.FETCHING_USB_DISKS:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_USB_DISKS_SUCCESS:

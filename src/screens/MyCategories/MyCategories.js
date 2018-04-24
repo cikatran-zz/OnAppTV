@@ -77,6 +77,12 @@ export default class MyCategories extends Component {
 
     render() {
         const {data} = this.props.navigation.state.params;
+        if (!data)
+            return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            );
         if (this.state.toggleState == null) {
             var toggles = {};
             for (var i = 0; i < data.length; i++) {
@@ -145,5 +151,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingTop: 8,
         paddingBottom: 8
-    }
+    },
+    noInternetConnection: {
+        color: colors.greyDescriptionText,
+        textAlign: 'center',
+        flexWrap: "wrap",
+    },
 });

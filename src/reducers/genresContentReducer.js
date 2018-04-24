@@ -12,7 +12,6 @@ export default function genresContentReducer(state = initialState, action) {
         case actionTypes.FETCHING_GENRES_CONTENT:
             return {
                 ...state,
-                data: action.data,
                 isFetching: true
             };
         case actionTypes.FETCH_GENRES_CONTENT_SUCCESS:

@@ -12,7 +12,6 @@ export default function zapperContentReducer(state = initialState, action) {
         case actionTypes.FETCHING_ZAPPER_CONTENT:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_ZAPPER_CONTENT_SUCCESS:
