@@ -2,7 +2,7 @@ import React from "react";
 import {StyleSheet, View, Modal, Animated, Image, Dimensions, Easing, TouchableOpacity, Text} from "react-native";
 import BlurView from "./BlurView";
 import {getBlurRadius} from "../utils/blurRadius";
-import {rootViewTopPadding} from "../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../utils/rootViewPadding";
 import {colors} from "../utils/themeConfig";
 import {DotsLoader} from 'react-native-indicator';
 

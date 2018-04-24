@@ -90,6 +90,16 @@
 		69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */; };
 		69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */; };
 		69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F9A4F020244A9200832440 /* RCTBlurView.m */; };
+		69FE9A03208879AA00310D97 /* database 2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99F9208879A800310D97 /* database 2.xml */; };
+		69FE9A04208879AA00310D97 /* TROPICALISLAND_4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99FA208879A800310D97 /* TROPICALISLAND_4.gif */; };
+		69FE9A05208879AA00310D97 /* TROPICALISLAND_42.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99FB208879A800310D97 /* TROPICALISLAND_42.gif */; };
+		69FE9A06208879AA00310D97 /* database-test.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99FC208879A800310D97 /* database-test.xml */; };
+		69FE9A07208879AA00310D97 /* TROPICALISLAND_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99FD208879A900310D97 /* TROPICALISLAND_4.png */; };
+		69FE9A08208879AA00310D97 /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99FE208879A900310D97 /* database _IBC_2017-2.xml */; };
+		69FE9A09208879AA00310D97 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 69FE99FF208879A900310D97 /* SF-UI-Text-Regular.otf */; };
+		69FE9A0A208879AA00310D97 /* database _IBC_2017.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69FE9A00208879A900310D97 /* database _IBC_2017.xml */; };
+		69FE9A0B208879AA00310D97 /* download_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 69FE9A01208879A900310D97 /* download_list.json */; };
+		69FE9A0C208879AA00310D97 /* 无声.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 69FE9A02208879A900310D97 /* 无声.mp3 */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9D2C60BC2BB342CE83B123C7 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8F10A88BF404C30A23EF581 /* Entypo.ttf */; };
 		A20D31429B8FEED8F2605160 /* Pods_OnAppTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 587810DCB4763890CDC13B4C /* Pods_OnAppTV.framework */; };
@@ -510,6 +520,16 @@
 		69F9A4ED20244A4D00832440 /* RCTBlurViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurViewManager.m; sourceTree = "<group>"; };
 		69F9A4EF20244A9200832440 /* RCTBlurView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBlurView.h; sourceTree = "<group>"; };
 		69F9A4F020244A9200832440 /* RCTBlurView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBlurView.m; sourceTree = "<group>"; };
+		69FE99F9208879A800310D97 /* database 2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database 2.xml"; path = "STBHTML/database 2.xml"; sourceTree = "<group>"; };
+		69FE99FA208879A800310D97 /* TROPICALISLAND_4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TROPICALISLAND_4.gif; path = STBHTML/TROPICALISLAND_4.gif; sourceTree = "<group>"; };
+		69FE99FB208879A800310D97 /* TROPICALISLAND_42.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TROPICALISLAND_42.gif; path = STBHTML/TROPICALISLAND_42.gif; sourceTree = "<group>"; };
+		69FE99FC208879A800310D97 /* database-test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database-test.xml"; path = "STBHTML/database-test.xml"; sourceTree = "<group>"; };
+		69FE99FD208879A900310D97 /* TROPICALISLAND_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TROPICALISLAND_4.png; path = STBHTML/TROPICALISLAND_4.png; sourceTree = "<group>"; };
+		69FE99FE208879A900310D97 /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "STBHTML/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
+		69FE99FF208879A900310D97 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Regular.otf"; path = "STBHTML/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
+		69FE9A00208879A900310D97 /* database _IBC_2017.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017.xml"; path = "STBHTML/database _IBC_2017.xml"; sourceTree = "<group>"; };
+		69FE9A01208879A900310D97 /* download_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = download_list.json; path = STBHTML/download_list.json; sourceTree = "<group>"; };
+		69FE9A02208879A900310D97 /* 无声.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "无声.mp3"; path = "STBHTML/无声.mp3"; sourceTree = "<group>"; };
 		69FF7E6120872DE90078D652 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		69FF7E6320872DE90078D652 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 		69FF7E9D20874C250078D652 /* OnAppTV-prod.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = "OnAppTV-prod.entitlements"; path = "OnAppTV/OnAppTV-prod.entitlements"; sourceTree = "<group>"; };
@@ -874,6 +894,16 @@
 		69D21E9420525DC300DFA90A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				69FE99FE208879A900310D97 /* database _IBC_2017-2.xml */,
+				69FE9A00208879A900310D97 /* database _IBC_2017.xml */,
+				69FE99F9208879A800310D97 /* database 2.xml */,
+				69FE99FC208879A800310D97 /* database-test.xml */,
+				69FE9A01208879A900310D97 /* download_list.json */,
+				69FE99FF208879A900310D97 /* SF-UI-Text-Regular.otf */,
+				69FE99FA208879A800310D97 /* TROPICALISLAND_4.gif */,
+				69FE99FD208879A900310D97 /* TROPICALISLAND_4.png */,
+				69FE99FB208879A800310D97 /* TROPICALISLAND_42.gif */,
+				69FE9A02208879A900310D97 /* 无声.mp3 */,
 				6932A6852082447000C43924 /* spinner.html */,
 				696440AF207F285100215606 /* database _IBC_2017-2.xml */,
 				69644092207F284000215606 /* agents.html */,
@@ -1458,8 +1488,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69FE9A0A208879AA00310D97 /* database _IBC_2017.xml in Resources */,
 				6964409D207F284100215606 /* css in Resources */,
 				696440A3207F284100215606 /* Load_1.html in Resources */,
+				69FE9A07208879AA00310D97 /* TROPICALISLAND_4.png in Resources */,
 				696440A1207F284100215606 /* Parental.html in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				696440AB207F284100215606 /* Antional.html in Resources */,
@@ -1470,7 +1502,12 @@
 				6964409C207F284100215606 /* STB-PIN.html in Resources */,
 				9D2C60BC2BB342CE83B123C7 /* Entypo.ttf in Resources */,
 				330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */,
+				69FE9A0C208879AA00310D97 /* 无声.mp3 in Resources */,
+				69FE9A05208879AA00310D97 /* TROPICALISLAND_42.gif in Resources */,
+				69FE9A04208879AA00310D97 /* TROPICALISLAND_4.gif in Resources */,
 				69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */,
+				69FE9A0B208879AA00310D97 /* download_list.json in Resources */,
+				69FE9A03208879AA00310D97 /* database 2.xml in Resources */,
 				696440A9207F284100215606 /* main.html in Resources */,
 				6932A6AF2082447000C43924 /* spinner.html in Resources */,
 				2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */,
@@ -1489,6 +1526,8 @@
 				69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */,
 				69644097207F284100215606 /* Test.html in Resources */,
 				48D3EB7181F444FA878162B3 /* Ionicons.ttf in Resources */,
+				69FE9A09208879AA00310D97 /* SF-UI-Text-Regular.otf in Resources */,
+				69FE9A06208879AA00310D97 /* database-test.xml in Resources */,
 				69644095207F284100215606 /* Load.html in Resources */,
 				C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */,
 				B40B0805BE5A4CCCA084F1F4 /* MaterialIcons.ttf in Resources */,
@@ -1502,6 +1541,7 @@
 				5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */,
 				696440AE207F284100215606 /* SignIn.html in Resources */,
 				69644099207F284100215606 /* Welcome.html in Resources */,
+				69FE9A08208879AA00310D97 /* database _IBC_2017-2.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,12 +8,15 @@ import SettingItem from '../../components/SettingItem'
 import _ from 'lodash'
 import STBSelfTests from "./STBSelfTests";
 import AlertModal from "../../components/AlertModal";
+import {NavigationActions} from "react-navigation";
 
 export default class Settings extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoggedIn: true
+        };
         this.data = [
             {
                 title: "ON TV",
@@ -272,6 +275,14 @@ export default class Settings extends React.PureComponent {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+                let result = JSON.parse(results[0]);
+                if (result.is_sign_in) {
+                    this.setState({isLoggedIn: true});
+                } else {
+                    this.setState({isLoggedIn: false});
+                }
+            });
         });
     }
 
@@ -290,7 +301,7 @@ export default class Settings extends React.PureComponent {
                     if (result.is_sign_in) {
                         navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
                     } else {
-                        navigation.navigate("LoginScreen");
+                        navigation.navigate("SignUp");
                     }
                 });
             } else {
@@ -306,6 +317,13 @@ export default class Settings extends React.PureComponent {
     };
 
     _renderSettingItem = ({item}) => {
+
+        if (item.screen == "Messages") {
+            return (<SettingItem ref={(settingItem) => {
+                this.changeableItems[item.screen] = settingItem
+            }} showIcon={true} showRightIcon={this.state.isLoggedIn} icon={item.icon} item={item}
+                                 onPress={() => this._navigateToItem(item)}/>)
+        }
         return (<SettingItem ref={(settingItem) => {
             this.changeableItems[item.screen] = settingItem
         }} showIcon={true} showRightIcon={item.canBeNavigated} icon={item.icon} item={item}
@@ -320,7 +338,7 @@ export default class Settings extends React.PureComponent {
                     renderItem={this._renderSettingItem}
                     keyExtractor={this._keyExtractor}
                     ItemSeparatorComponent={() => <View
-                        style={{left: 45, width: "100%", height: 1, backgroundColor: '#DADADE'}}/>}
+                        style={{left: 45, width: "100%", height: 1, backgroundColor: '#DADADE', opacity: 0.41}}/>}
                 />
             </View>
         )
@@ -344,7 +362,7 @@ export default class Settings extends React.PureComponent {
             for (let j = 0; j < newData[i].list.length; j++) {
                 if (newData[i].list[j].needSTB) {
                     newData[i].list[j].canBeNavigated = false;
-                    newData[i].list[j].value = "No STB Connected";
+                    newData[i].list[j].value = "";
                 }
             }
         }
@@ -394,13 +412,18 @@ export default class Settings extends React.PureComponent {
         if (wifi.data != null) {
             let newData = _.cloneDeep(this.data);
             newData[3].list[1].value = (wifi.data.SSID == null) ? "Not found" : wifi.data.SSID;
-            if (settings.data == null || settings.data.HardDiskFile !== "") {
-                newData[2].list[3].errorMessage = null;
-                newData[2].list[3].canBeNavigated = true;
-            } else {
-                newData[2].list[3].errorMessage = "No hard disk exists";
-                newData[2].list[3].canBeNavigated = false;
-            }
+            this.data = newData;
+        }
+
+        if (settings.data !== null && settings.data.HardDiskFile !== "") {
+            let newData = _.cloneDeep(this.data);
+            newData[2].list[3].errorMessage = null;
+            newData[2].list[3].canBeNavigated = true;
+            this.data = newData;
+        } else {
+            let newData = _.cloneDeep(this.data);
+            newData[2].list[3].errorMessage = "No hard disk exists";
+            newData[2].list[3].canBeNavigated = false;
             this.data = newData;
         }
 

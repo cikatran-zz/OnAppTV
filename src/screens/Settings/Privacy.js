@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import {colors} from "../../utils/themeConfig";
 import * as Orientation from "react-native-orientation";
-import {rootViewTopPadding} from "../../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../../utils/rootViewPadding";
 
 export default class Privacy extends Component {
     constructor(props) {

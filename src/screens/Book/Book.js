@@ -4,7 +4,7 @@ import {StyleSheet, View, StatusBar, Platform} from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Bookmark from '../Bookmark/Bookmark'
 import RecordList from '../RecordList/RecordList'
-import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
+import {rootViewTopPadding} from '../../utils/rootViewPadding'
 
 export default class Book extends React.Component {
 

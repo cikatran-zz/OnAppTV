@@ -49,14 +49,25 @@ public class AndroidUserKitIdentityFramework extends ReactContextBaseJavaModule 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(accountProfiles -> {
                     if (accountProfiles.size() == 0) {
-                        callback.invoke(null, new WritableNativeMap());
+                        WritableNativeArray array = new WritableNativeArray();
+                        array.pushMap(new WritableNativeMap());
+                        callback.invoke(null, array);
                     }
                     AccountProfile profile = accountProfiles.get(0);
                     WritableNativeMap map = new WritableNativeMap();
                     map.putString("name",profile.getName());
                     map.putString("email", profile.getAccountEmail());
-                    map.putInt("age", (int)profile.getProperties().getOrDefault("age",0));
-                    map.putString("sex", (String)profile.getProperties().getOrDefault("sex", ""));
+                    if (profile.getProperties().get("age") == null) {
+                        map.putNull("age");
+                    }else {
+                        map.putString("age", profile.getProperties().get("age").toString());
+                    }
+                    if (profile.getProperties().get("sex") == null) {
+                        map.putNull("sex");
+                    } else {
+                        map.putString("sex", (String)profile.getProperties().get("sex"));
+                    }
+
                     WritableNativeArray array = new WritableNativeArray();
                     array.pushMap(map);
                     callback.invoke(null, array);

@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import {colors} from "../../utils/themeConfig";
 import * as Orientation from "react-native-orientation";
-import {rootViewTopPadding} from "../../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../../utils/rootViewPadding";
 
 const text = "ACCEPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
     "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the \n" +

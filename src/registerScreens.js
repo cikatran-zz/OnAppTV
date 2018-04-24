@@ -9,6 +9,9 @@ import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
 import ParentalControlLock from "./screens/Settings/ParentalControlLock";
 import TermAndCondition from "./screens/Settings/TermAndCondition";
+import SignUp from "./screens/SignUp";
+import SignIn from "./screens/SignUp/SignIn";
+import CreateAccount from "./screens/SignUp/CreateAccount";
 
 const TabNav = TabNavigator({
     Home: {
@@ -59,6 +62,15 @@ export const ScreenStack = StackNavigator({
     },
     TermAndCondition: {
         screen: TermAndCondition
+    },
+    SignUp: {
+        screen: SignUp
+    },
+    SignIn: {
+        screen: SignIn
+    },
+    CreateAccount: {
+        screen: CreateAccount
     }
 }, {
     mode: 'modal',
