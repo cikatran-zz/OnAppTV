@@ -24,16 +24,18 @@ export default class IndicatorModal extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <Modal animationType="fade"
                    transparent={true}
                    visible={this.state.isShow}
                    presentationStyle="overFullScreen"
-                   onDismiss={()=> this.props.onDismiss()}>
+                   onDismiss={() => this.props.onDismiss()}
+                   onRequestClose={() => {
+                   }}>
                 <View style={styles.container}>
                     <BlurView style={styles.blurView}
                               blurRadius={getBlurRadius(50)}
-                              overlayColor={0x75000000} />
+                              overlayColor={0x75000000}/>
                     <View style={styles.dots}>
                         <DotsLoader color={colors.textWhitePrimary} size={20} betweenSpace={10}/>
                     </View>
