@@ -23,6 +23,7 @@ import { secondFormatter } from '../../utils/timeUtils'
 import Swiper from 'react-native-swiper'
 import PinkRoundedButton from '../../components/PinkRoundedLabel'
 import { rootViewTopPadding } from '../../utils/rootViewTopPadding'
+import moment from 'moment';
 
 const { width, height } = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
@@ -106,7 +107,7 @@ export default class VideoControlModal extends React.Component {
 
       let progressJson = {
         url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-        destination_path: '/C/Downloads'
+        destination_path: '/C/Downloads/Test'
       }
 
       console.log('Progress json %s', JSON.stringify(progressJson))
@@ -573,11 +574,11 @@ export default class VideoControlModal extends React.Component {
           console.log(recordEnabled)
           if (recordEnabled) {
             // Stop recording current channel
-            // this._stopRecord()
+             this._stopRecord()
           }
           else {
             // Start recording
-            //this._bookExecution(item)
+            this._bookExecution(item)
           }
         }
 
@@ -597,7 +598,7 @@ export default class VideoControlModal extends React.Component {
 
   _stopRecord = () => {
     NativeModules.STBManager.recordPvrStopInJson((error, events) => {
-
+      console.log(events[0])
     })
   }
 
@@ -608,7 +609,7 @@ export default class VideoControlModal extends React.Component {
       remove_flag: 1,
       contentId: bcVideos.data.contentId,
       url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-      destination_path: '/C/Downloads'
+      destination_path: "/C/Downloads/Test"
     }
     NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
       if (!error) console.log('Stop download result %s', events[0])
@@ -635,7 +636,7 @@ export default class VideoControlModal extends React.Component {
     let json = {
       contentId: bcVideos.data.contentId,
       url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-      destination_path: '/C/Downloads'
+      destination_path: "/C/Downloads/Test"
     }
 
     console.log('Download Json')
@@ -669,28 +670,38 @@ export default class VideoControlModal extends React.Component {
     })
   }
 
+  _simpleDataFormat = (time) => {
+    console.log('Time')
+    console.log(moment(time).format("YYYY-MM-DD hh:mm:ss"))
+    return moment(time).format("YYYY-MM-DD hh:mm:ss")
+  }
+
   _bookExecution = (liveItem) => {
+    console.log('Live item')
+    console.log(liveItem)
       let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
 
-      let metaData = {
-        "endtime": liveItem.endTime,
-        "starttime": liveItem.startTime,
-        "title": liveItem.videoData.title,
-        "image": liveItem.videoData.originalImages[0].url,
-        "subTitle": liveItem.genresData.length > 0 ? liveItem.genresData[0] : ""
-      }
 
       let jsonString = {
         "record_parameter": {
-          "startTime" : liveItem.startTime,
+          "startTime" : this._simpleDataFormat(liveItem.startTime),
           "recordMode" : 1,
           "recordName" : liveItem.videoData.title,
-          "lCN" : liveItem.videoData.lcn,
+          "lCN" : liveItem.channelData.lcn,
           "duration" : durationInSeconds
 
         },
-        "metaData": JSON.stringify(metaData)
+        "metaData": {
+          "endtime": liveItem.endTime,
+          "starttime": liveItem.startTime,
+          "title": liveItem.videoData.title,
+          "image": liveItem.videoData.originalImages[0].url,
+          "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
+        }
       }
+
+      console.log('JSON String for record')
+      console.log(JSON.stringify(jsonString))
 
       NativeModules.STBManager.recordPvrStartWithJsonString(JSON.stringify(jsonString), (error, events) => {
         console.log('Record start')

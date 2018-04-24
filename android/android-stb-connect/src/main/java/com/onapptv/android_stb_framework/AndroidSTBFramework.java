@@ -9,13 +9,20 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import tv.hi_global.stbapi.Api;
 import tv.hi_global.stbapi.Model.AudioModel;
 import tv.hi_global.stbapi.Model.BookListModel;
+import tv.hi_global.stbapi.Model.RecordModel;
 import tv.hi_global.stbapi.implementation.Api_Implementation;
 
 /**
@@ -808,10 +815,11 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void recordPvrStartWithJsonString(String jsonString, Callback callback) {
+    public void recordPvrStartWithJsonString(String jsonString, Callback callback) throws ParseException, JSONException {
         Api_Implementation.sharedManager().hIG_RecordPvrStart(jsonString, new Api.OnStringCallbackBlock() {
             @Override
             public void OnStringCallback(String s) {
+                Log.d("RecordPvrStartCallback", s);
                 WritableNativeArray array = new WritableNativeArray();
                 array.pushString(s);
                 callback.invoke(null, array);

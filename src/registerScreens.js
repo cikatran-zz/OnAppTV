@@ -9,6 +9,8 @@ import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
 import ParentalControlLock from "./screens/Settings/ParentalControlLock";
 import TermAndCondition from "./screens/Settings/TermAndCondition";
+import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
+import LowerPageComponent from './screens/LowerPage'
 
 const TabNav = TabNavigator({
     Home: {
@@ -59,6 +61,12 @@ export const ScreenStack = StackNavigator({
     },
     TermAndCondition: {
         screen: TermAndCondition
+    },
+    LocalVideoModal: {
+        screen: LocalVideoModal
+    },
+    LowerPageComponent: {
+        screen: LowerPageComponent
     }
 }, {
     mode: 'modal',

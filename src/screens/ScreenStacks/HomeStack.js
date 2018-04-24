@@ -26,11 +26,5 @@ export default HomeStack = StackNavigator({
             header: null,
             gesturesEnabled: false
         })
-    },
-    LowerPageComponent: {
-        screen: LowerPageComponent,
-        navigationOptions: ({navigation}) => ({
-          header: null
-        })
     }
 });

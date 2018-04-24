@@ -10,13 +10,15 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    NativeModules
 } from 'react-native'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors} from '../../utils/themeConfig'
 import Modal from '../../components/DeleteBookmarModal'
 import {timeFormatter} from '../../utils/timeUtils'
+import { checkInTime } from '../../book-download-util/bookUtils'
 
 export default class Bookmark extends React.Component {
   constructor(props) {
@@ -39,14 +41,19 @@ export default class Bookmark extends React.Component {
     else {
       // Delete
       const {listData, data} = this.state
-      let newArray = listData.slice()
-      let index = newArray.indexOf(data)
-      newArray.splice(index, 1)
+      NativeModules.STBManager.deletePvrBookWithJson(JSON.stringify(data), (error, events) => {
+        if (error) console.log('Delete Pvr in bookmark error %s', error)
+        else {
+          let newArray = listData.slice()
+          let index = newArray.indexOf(data)
+          newArray.splice(index, 1)
 
-      this.setState({
-        openModal: !this.state.openModal,
-        data: {},
-        listData: newArray
+          this.setState({
+            openModal: !this.state.openModal,
+            data: {},
+            listData: newArray
+          })
+        }
       })
     }
 
@@ -82,6 +89,8 @@ export default class Bookmark extends React.Component {
   }
 
   _renderBookmarkItem = ({item}) => {
+    console.log(JSON.stringify(item))
+
     return (
       <View style={{flexDirection: 'row'}}>
         <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
@@ -126,15 +135,21 @@ export default class Bookmark extends React.Component {
       )
   }
 
-  render() {
-    const {books} = this.props;
+  componentWillReceiveProps(nextProps) {
+    const {books} = nextProps
     if (books.data) {
-        if (!this.state.listData || books.data.length < this.state.listData.length) {
-            this.setState({
-              listData: books.data
-            })
-        }
+      if (!this.state.listData || books.data.length < this.state.listData.length) {
+        this.setState({
+          listData: books.data
+        })
+      }
     }
+  }
+
+  render() {
+    const {listData} = this.state
+
+    let recording = listData ? listData.filter(x => checkInTime(x.record.startTime, x.record.duration)) : []
 
     return (
       <View style={styles.container}>
@@ -150,8 +165,8 @@ export default class Bookmark extends React.Component {
           onEndReachedThreshold={20}
           ListFooterComponent={this._renderListFooter}
           sections={[
-            {data: [this.state.listData], renderItem: this._renderListScheduledRecords},
-            {data: [this.state.listData], renderItem: this._renderListBookmarks}
+            {data: [recording], renderItem: this._renderListScheduledRecords},
+            {data: [listData ? listData : []], renderItem: this._renderListBookmarks}
           ]}
         />
       </View>

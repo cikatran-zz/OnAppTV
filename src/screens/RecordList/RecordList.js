@@ -6,7 +6,7 @@ import VideoThumbnail from '../../components/VideoThumbnail'
 import { colors } from '../../utils/themeConfig'
 import { secondFormatter, timeFormatter } from '../../utils/timeUtils'
 
-export default class RecordList extends React.PureComponent {
+export default class RecordList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,10 +14,6 @@ export default class RecordList extends React.PureComponent {
       data: {}
     }
   };
-
-  componentDidMount() {
-
-  }
 
   _toggleModal = (item) => {
 
@@ -43,16 +39,21 @@ export default class RecordList extends React.PureComponent {
 
       NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(target), (error, events) => {
         console.log('MediaRemove')
-        console.log(error)
-        console.log(events)
+        if (JSON.parse(events[0]).return === 1) {
 
-        NativeModules.RNUserKit.storeProperty("download_list", { dataArr: deletedList }, (e, r) => {
-        })
+          NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {
+          })
 
-        this.setState({
-          openModal: !this.state.openModal,
-          data: {}
-        })
+          this.setState({
+            openModal: !this.state.openModal,
+            data: {},
+            dataArr: deletedList
+          })
+        }
+        else {
+          console.log('Stop downloading file falure!')
+          console.log(target)
+        }
       })
     }
   }
@@ -61,9 +62,10 @@ export default class RecordList extends React.PureComponent {
     if (item.type === 'Episode') {
       return 'Season ' + item.seasonIndex + ' - Episode ' + item.episodeIndex
     }
-    else {
-      return item.type
+    else if (item.type === undefined) {
+      return item.subTitle
     }
+    else return item.type
   }
 
   _playPvr = (item) => {
@@ -73,36 +75,61 @@ export default class RecordList extends React.PureComponent {
   _keyExtractor = (item, index) => index
 
   _renderItem = ({item}) => {
-    return (
-      <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
-        <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
-        <View style={{flexDirection: 'column', marginRight: 60}}>
-          <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
-          <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
-          <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
-        </View>
-        <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
-          <Image source={require('../../assets/ic_three_dots.png')}/>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    )
+
+        return (
+          <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
+            <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
+            <View style={{flexDirection: 'column', marginRight: 60}}>
+              <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
+              <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
+              <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
+            </View>
+            <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
+              <Image source={require('../../assets/ic_three_dots.png')}/>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        )
+
   }
 
   _renderListFooter = () => (
     <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
   )
 
-  render() {
-    const {header, books, downloaded, downloadedUserKit} = this.props;
-    const {data} = this.state
-    
-    console.log('Downloaded')
-    console.log(downloaded)
-    console.log(downloadedUserKit)
+  _isInDownloaded = (item, downloadedList) => {
+    if (!item || !downloadedList) return false
+    // Log & Temp file for checking download complete
+    let tempFile = item.fileName + ".tmp"
+    let logFile = item.fileName + ".log"
+    return downloadedList.some((x) => x.fileName === item.fileName) && downloadedList.every((x) => x.fileName !== tempFile && x.fileName !== logFile)
+  }
 
-    let dataArr = downloadedUserKit ? downloadedUserKit.filter(x => x.fileName) : []
-    console.log('on stb videos')
-    console.log(dataArr)
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('ShouldComponentUpdate')
+    console.log(nextProps)
+    console.log(nextState)
+    return true
+  }
+
+  _recordTransform = (item) => {
+    let metaData = JSON.parse(item.metaData)
+    return {
+      title: metaData.title,
+      durationInSeconds: item.duration,
+      originalImages: [{
+        url: metaData.image
+      }],
+      subTitle: metaData.subTitle
+    }
+  }
+
+  render() {
+    const {header, pvrList, downloaded, downloadedUserKit} = this.props;
+    const {data, listRecords} = this.state
+    let dataArr
+
+    if (pvrList) dataArr = pvrList.map(x => this._recordTransform(x))
+    else dataArr = downloadedUserKit ? downloadedUserKit.filter(x => this._isInDownloaded(x, downloaded)) : []
 
     return (
       <View style={styles.container}>
@@ -149,7 +176,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   itemContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   headerLabel: {
     textAlign: 'center',

@@ -17,18 +17,25 @@ export default class Book extends React.Component {
 
   componentDidMount() {
 
-
       this._navListener = this.props.navigation.addListener('didFocus', () => {
           StatusBar.setBarStyle('dark-content');
-          (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+          (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent')
         this.props.getList();
-        this.props.getUsbDirFiles('/C/Downloads')
-        NativeModules.RNUserKit.getProperty("download_list", (e, arr) => {
-          let downloadedArrFromUserKit = JSON.parse(arr).dataArr
-          this.setState({
-            downloadedArr: downloadedArrFromUserKit
-          })
+        this.props.getPvrList();
+        this.props.getUsbDirFiles('/C/Downloads/');
+        NativeModules.STBManager.isConnect((connectStr) => {
+          if (JSON.parse(connectStr).is_connected === true) {
+            NativeModules.RNUserKit.getProperty("download_list", (e, arr) => {
+              if (!e) {
+                let downloadedArrFromUserKit = JSON.parse(arr).dataArr
+                this.setState({
+                  downloadedArr: downloadedArrFromUserKit
+                })
+              }
+            })
+          }
         })
+
       });
   }
 
@@ -39,7 +46,7 @@ export default class Book extends React.Component {
   _keyExtractor = (item, index) => index
 
   render() {
-    const {books, usbDirFiles} = this.props
+    const {books, pvrList, usbDirFiles} = this.props
     const {downloadedArr} = this.state
 
     return (
@@ -50,8 +57,8 @@ export default class Book extends React.Component {
               barStyle='dark-content'/>
         <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
           <Bookmark books={books}/>
-          <RecordList header={"MY RECORDS"} books={books}/>
-          <RecordList header={"MY DOWNLOADS"} books={books} downloaded={usbDirFiles} downloadedUserKit={downloadedArr} navigation={this.props.navigation}/>
+          <RecordList header={"MY RECORDS"} books={books} pvrList={pvrList.data} navigation={this.props.navigation}/>
+          <RecordList header={"MY DOWNLOADS"} books={books} downloaded={usbDirFiles.data} downloadedUserKit={downloadedArr} navigation={this.props.navigation}/>
         </Swiper>
       </View>
     )
