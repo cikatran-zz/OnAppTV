@@ -16,15 +16,25 @@ class HeaderLabel extends React.PureComponent{
     render(){
         if (this.props.position == 'end') {
             return (
-                <Text style={styles.endHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
+                <View style={styles.headerView}>
+                    <View style={[styles.backgroundHeaderView, styles.endHeaderView]}/>
+                    <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
+                </View>
+
             )
         } else if (this.props.position == 'inside') {
             return (
-                <Text style={styles.insideHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
+                <View style={styles.headerView}>
+                    <View style={[styles.backgroundHeaderView, styles.insideHeaderView]}/>
+                    <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
+                </View>
             )
         } else if (this.props.position == 'begin') {
             return (
-                <Text style={styles.beginHeaderLabelStyle}>{this.props.text.toUpperCase()}</Text>
+                <View style={styles.headerView}>
+                    <View style={[styles.backgroundHeaderView, styles.beginHeaderView]}/>
+                    <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
+                </View>
             )
         } else {
             return (
@@ -141,10 +151,12 @@ class CategoryPageView extends React.PureComponent{
                 <View style={styles.headerSection}>
                     <PinkRoundedLabel text={section.title}/>
                 </View>
-            )} else {
-            return null
+            )
+        } else {
+            return <View style={{height: 0}}></View>
         }
-    }
+    };
+
     _renderVODList = ({item}) => (
         <FlatList
             style={{flex: 1}}
@@ -168,7 +180,7 @@ class CategoryPageView extends React.PureComponent{
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
                 <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor}/>
                 <SectionList
-                    style={styles.container}
+                    style={[styles.container, {marginTop: 0}]}
                     keyExtractor={this._keyExtractor}
                     stickySectionHeadersEnabled={false}
                     renderSectionHeader={this._renderSectionHeader}
@@ -176,7 +188,7 @@ class CategoryPageView extends React.PureComponent{
                     bounces={false}
                     ListFooterComponent={this._renderListFooter}
                     sections={[
-                        {data:[this.props.slotMachines], renderItem: this._renderSlotMachines},
+                        {data:[this.props.slotMachines], showHeader: false, renderItem: this._renderSlotMachines},
                         {data:[this.props.epgs], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
                         {data:[this.props.vod], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
@@ -214,41 +226,40 @@ const styles = StyleSheet.create({
         backgroundColor: colors.screenBackground,
         marginTop: 30
     },
-    beginHeaderLabelStyle : {
-        width: '60%',
-        height: 30,
+    headerLabel: {
+        fontSize: 10,
+        alignSelf: 'center',
+        paddingTop: 8,
+        paddingBottom: 7,
+        backgroundColor: colors.mainPink,
+        borderRadius: 15,
         overflow: "hidden",
+        color: colors.whitePrimary,
+        paddingHorizontal: 15
+    },
+    headerView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 17.5,
+        marginBottom: 27
+    },
+    backgroundHeaderView: {
+        backgroundColor: colors.mainPink,
+        position: 'absolute',
+        top: 0,
+        height: '100%'
+    },
+    beginHeaderView : {
         left: '50%',
-        borderRadius: 15,
-        paddingTop: 8,
-        paddingHorizontal: 8,
-        backgroundColor: colors.mainPink,
-        fontSize: 13,
-        color: colors.textWhitePrimary
+        width: '50%'
     },
-    endHeaderLabelStyle : {
-        width: '60%',
-        height: 30,
-        overflow: "hidden",
-        left: '-10%',
-        borderRadius: 15,
-        textAlign: 'right',
-        paddingTop: 8,
-        paddingHorizontal: 8,
-        backgroundColor: colors.mainPink,
-        fontSize: 13,
-        color: colors.textWhitePrimary
-    },
-    insideHeaderLabelStyle : {
-        width: '100%',
-        height: 30,
+    endHeaderView : {
         left: 0,
-        textAlign: 'center',
-        paddingTop: 8,
-        paddingHorizontal: 8,
-        backgroundColor: colors.mainPink,
-        fontSize: 13,
-        color: colors.textWhitePrimary
+        width: '50%'
+    },
+    insideHeaderView : {
+        left: 0,
+        width: '100%'
     },
     liveThumbnailContainer: {
         flexDirection: 'column',

@@ -29,7 +29,8 @@ export default class IndicatorModal extends React.Component {
                    transparent={true}
                    visible={this.state.isShow}
                    presentationStyle="overFullScreen"
-                   onDismiss={()=> this.props.onDismiss()}>
+                   onDismiss={()=> this.props.onDismiss()}
+                   onRequestClose={() => {}}>>
                 <View style={styles.container}>
                     <BlurView style={styles.blurView}
                               blurRadius={getBlurRadius(50)}

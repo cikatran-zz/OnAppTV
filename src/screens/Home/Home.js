@@ -63,7 +63,11 @@ export default class Home extends Component {
             if (result.is_sign_in) {
                 console.log("Already logged in");
             } else {
-                NativeModules.RNUserKitIdentity.signInWithEmail("dev@gmail.com", "00000000", (error, results) => {
+                let mail = "dev@gmail.com";
+                if (Platform.OS === "ios") {
+                    mail = "admin@gmail.com"
+                }
+                NativeModules.RNUserKitIdentity.signInWithEmail(mail, "00000000", (error, results) => {
                     if (error) {
                         console.log(error)
                     } else {
