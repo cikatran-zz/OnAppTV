@@ -12,7 +12,7 @@ const instance = axios.create({
   serverURL: `${config.serverURL}`
 });
 
-const httpLink = new HttpLink({uri: config.serverURL})
+const httpLink = new HttpLink({uri: config.serverURL, headers: {Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M'}})
 
 const errorHandler = onError(({ networkError }) => {
   switch (networkError.statusCode) {

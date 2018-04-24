@@ -42,8 +42,12 @@ export default class Bookmark extends React.Component {
       // Delete
       const {listData, data} = this.state
       NativeModules.STBManager.deletePvrBookWithJson(JSON.stringify(data), (error, events) => {
-        if (error) console.log('Delete Pvr in bookmark error %s', error)
+        if (JSON.parse(events[0]).return !== 1) {
+          console.log('Delete Pvr in bookmark error %s')
+          console.log(data)
+        }
         else {
+          console.log('Delete PVR successfully!')
           let newArray = listData.slice()
           let index = newArray.indexOf(data)
           newArray.splice(index, 1)
@@ -78,12 +82,7 @@ export default class Bookmark extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-        <FlatList
-          style={styles.listBookmarks}
-          horizontal={false}
-          data={item}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderBookmarkItem}/>
+        {this._bookmarkListOrNon(item)}
       </View>
     )
   }
@@ -124,13 +123,7 @@ export default class Bookmark extends React.Component {
   _renderListScheduledRecords = ({item}) => {
       return(
         <View style={{flexDirection: 'column'}}>
-          <FlatList
-            style={styles.listScheduledRecord}
-            horizontal={true}
-            data={item}
-            keyExtractor={this._keyExtractor}
-            showsHorizontalScrollIndicator={false}
-            renderItem={this._renderScheduledItem}/>
+          {this._recordListOrNon(item)}
         </View>
       )
   }
@@ -143,6 +136,56 @@ export default class Bookmark extends React.Component {
           listData: books.data
         })
       }
+    }
+  }
+
+  _recordListOrNon = (item) => {
+    if (item.length === 0) {
+      return (
+        <View style={{flexDirection: 'column', height: 156, marginLeft: 8, alignSelf: 'flex-start', alignItems: 'center'}}>
+            <View style={styles.noBookmarkContainer}>
+              <Text style={{color: colors.blackNoBooking, fontSize: 15}}>NO RECORD</Text>
+            </View>
+            <Text numberOfLines={1} ellipsizeMode={'tail'} style={[styles.textTitle]}>No record</Text>
+        </View>
+      )
+    }
+    else {
+      return (
+        <FlatList
+          style={styles.listScheduledRecord}
+          horizontal={true}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          showsHorizontalScrollIndicator={false}
+          renderItem={this._renderScheduledItem}/>
+      )
+    }
+  }
+
+  _bookmarkListOrNon = (item) => {
+    if (item.length === 0) {
+      return (
+        <View style={{flexDirection: 'row', marginTop: '4%', width: '100%'}}>
+          <View style={styles.noBookmarkContainer}>
+            <Text style={{color: colors.blackNoBooking, fontSize: 15}}>NO BOOKING</Text>
+          </View>
+          <View style={{flexDirection: 'column', width: '100%'}}>
+            <Text style={styles.itemTitle}>No booking</Text>
+            <Text style={styles.itemType}>No details</Text>
+          </View>
+        </View>
+      )
+    }
+    else {
+      return (
+        <FlatList
+          style={styles.listBookmarks}
+          horizontal={false}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderBookmarkItem}/>
+      )
     }
   }
 
@@ -295,6 +338,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: '#ACACAC',
     fontSize: 12
+  },
+  noBookmarkContainer: {
+      borderRadius: 4,
+      borderWidth: 2,
+      overflow: 'hidden',
+      borderColor: "#95989A",
+      width: 150,
+      height: 75,
+      marginVertical: 5,
+      marginHorizontal: 10,
+      justifyContent: 'center',
+      alignItems: 'center'
   }
 })
 

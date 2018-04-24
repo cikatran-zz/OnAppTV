@@ -26,35 +26,59 @@ export default class RecordList extends React.Component {
     }
     else {
       // Delete
-      const {downloaded, downloadedUserKit} = this.props
+      const {pvrList, downloaded, downloadedUserKit} = this.props
       const {data} = this.state
 
-      let deletedList = [].concat(downloadedUserKit).filter(x => x.contentId !== data.contentId)
+      /*
+       Record delete zone
+        */
 
-      let target = {
-        remove_flag: 1,
-        destination_path: data.destination_path,
-        url: data.url
+      if (!pvrList) {
+        let deletedList = [].concat(downloadedUserKit).filter(x => x.contentId !== data.contentId)
+        let target = {
+          path: "/C/Downloads/" + data.fileName
+        }
+
+        NativeModules.STBManager.usbRemoveWithJson(JSON.stringify(target), (error, events) => {
+          if (JSON.parse(events[0]).return === 1) {
+            NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {})
+            this.setState({
+              openModal: !this.state.openModal,
+              data: {},
+              dataArr: deletedList
+            })
+          }
+          else {
+            console.log('Remove file falure!')
+            console.log(target)
+          }
+        })
+      }
+      else {
+        /*
+        Bookmark delete zone
+         */
+        let deletedList = [].concat(pvrList).filter(x => x.record_parameter.recordName !== data.record_parameter.recordName)
+        let target = {
+          recordName: data.record_parameter.recordName
+        }
+        NativeModules.STBManager.deletePvrWithJsonString(JSON.stringify(target), (error, events) => {
+          if (JSON.parse(events[0]).return === 1) {
+            this.setState({
+              openModal: !this.state.openModal,
+              data: {},
+              dataArr: deletedList
+            })
+          }
+          else {
+            console.log('Remove PVR file falure!')
+            console.log(target)
+          }
+        })
       }
 
-      NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(target), (error, events) => {
-        console.log('MediaRemove')
-        if (JSON.parse(events[0]).return === 1) {
 
-          NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {
-          })
 
-          this.setState({
-            openModal: !this.state.openModal,
-            data: {},
-            dataArr: deletedList
-          })
-        }
-        else {
-          console.log('Stop downloading file falure!')
-          console.log(target)
-        }
-      })
     }
   }
 
@@ -125,11 +149,11 @@ export default class RecordList extends React.Component {
 
   render() {
     const {header, pvrList, downloaded, downloadedUserKit} = this.props;
-    const {data, listRecords} = this.state
-    let dataArr
+    const {data, dataArr} = this.state
+    let displayDataArr
 
-    if (pvrList) dataArr = pvrList.map(x => this._recordTransform(x))
-    else dataArr = downloadedUserKit ? downloadedUserKit.filter(x => this._isInDownloaded(x, downloaded)) : []
+    if (pvrList) displayDataArr = pvrList.map(x => this._recordTransform(x))
+    else displayDataArr = dataArr ? dataArr : (downloadedUserKit ? downloadedUserKit.filter(x => this._isInDownloaded(x, downloaded)) : [])
 
     return (
       <View style={styles.container}>
@@ -147,7 +171,7 @@ export default class RecordList extends React.Component {
           style={styles.list}
           horizontal={false}
           keyExtractor={this._keyExtractor}
-          data={dataArr}
+          data={displayDataArr}
           renderItem={this._renderItem}
           ListFooterComponent={this._renderListFooter}
         />

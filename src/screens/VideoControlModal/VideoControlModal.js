@@ -394,7 +394,6 @@ export default class VideoControlModal extends React.Component {
   _renderTopContainer = (epg, index, isLive) => {
     let item = this.state.index === -1 ? epg[index] : epg[this.state.index]
     let data = item
-
     if (item.serviceID) {
       if (!epg.data) {
         return null
@@ -612,17 +611,19 @@ export default class VideoControlModal extends React.Component {
       destination_path: "/C/Downloads/Test"
     }
     NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
-      if (!error) console.log('Stop download result %s', events[0])
-
-      let downloadList = []
-      NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
-        downloadList = downloadList.concat(JSON.parse(obj).dataArr)
-
-        downloadList.splice(downloadList.indexOf(downloadList.filter(x => x.contentId === json.contentId)[0]), 1)
-
-        NativeModules.RNUserKit.storeProperty("download_list", { dataArr: downloadList }, (e, r) => {
+      if (JSON.parse(events[0]).return === 1) {
+        let downloadList = []
+        NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
+          downloadList = downloadList.concat(JSON.parse(obj).dataArr)
+          downloadList.splice(downloadList.indexOf(downloadList.filter(x => x.contentId === json.contentId)[0]), 1)
+          NativeModules.RNUserKit.storeProperty("download_list", {dataArr: downloadList}, (e, r) => {
+          })
         })
-      })
+      }
+      else {
+        console.log('Stop download failure!')
+        console.log(json)
+      }
     })
   }
 
@@ -643,8 +644,8 @@ export default class VideoControlModal extends React.Component {
     console.log(json)
 
     NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(json), (error, events) => {
-      console.log('Download result of id %s is %s', bcVideos.data.contentId, events[0])
       let result = JSON.parse(events[0]).return
+      console.log('Download result of id %s is %s', bcVideos.data.contentId, result)
       if (result === "1") {
         // Start download successfully
         // Add to userkit
