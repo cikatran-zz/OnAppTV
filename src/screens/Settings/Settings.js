@@ -38,12 +38,12 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_subtitle_black.png')
                     },
                     {
-                        name: "Resolution",
+                        name: "Video Resolution",
                         value: "1080P",
                         canBeNavigated: true,
                         screen: 'Resolution',
                         needSTB: true,
-                        icon: require('../../assets/settings-lock.png')
+                        icon: require('../../assets/ic_resolution.png')
                     },
                     {
                         name: "Video Format",
