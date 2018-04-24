@@ -21,7 +21,7 @@ let applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware);
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['navigation'],
+    blacklist: ['nav'],
     stateReconciler: autoMergeLevel2
 }
 
