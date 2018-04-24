@@ -85,7 +85,7 @@ export default class SignIn extends React.PureComponent {
                 <View style={styles.subView}>
                     <View style={styles.partView}>
                         <Text style={styles.titleText}>LOG IN</Text>
-                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]} onPress={()=>this._goToHomeScreen()}>
+                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]} onPress={()=>this._loginWithFacebook()}>
                             <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with Facebook</Text>
                         </TouchableOpacity>
                         <Text style={styles.descriptionText1}>Or sign in with manually</Text>
