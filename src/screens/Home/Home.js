@@ -28,6 +28,7 @@ import {
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
 import Orientation from 'react-native-orientation';
+import _ from 'lodash';
 
 export default class Home extends Component {
 
@@ -257,8 +258,9 @@ export default class Home extends Component {
 
     _navigateToCategory = (cate) => {
         const {navigate} = this.props.navigation;
-
-        navigate('Category', {data: this.state.category.filter((cate) => cate.favorite == 1), fromItem: cate});
+        let data = this.state.category.filter(item => (item.favorite === true || item.favorite === 1.0));
+        console.log("DATA", data);
+        navigate('Category', {data: data, fromItem: cate});
     };
 
     _renderCategoryItem = ({item}) => {
@@ -382,9 +384,7 @@ export default class Home extends Component {
                 }
             }
         }
-        this.state.category = data;
-        console.log("AFTER UPDATE", favorites);
-        this.setState({favoriteCategories: favorites});
+        this.setState({favoriteCategories: favorites, category: data});
     };
 
 
@@ -404,12 +404,13 @@ export default class Home extends Component {
             channelData = [null];
         }
 
-        //if (this.state.favoriteCategories == null) {
-        var categoryData = (category.data == null ? [] : category.data).filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
-        this.state.category = category.data == null ? [] : category.data;
-        categoryData.push({"name": "_ADD"});
-        this.state.favoriteCategories = categoryData;
-        //}
+        if (this.state.favoriteCategories == null) {
+            var categoryData = (category.data == null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
+            this.state.category = category.data == null ? [] : category.data;
+            categoryData.push({"name": "_ADD"});
+            console.log("Favorite category:", categoryData);
+            this.state.favoriteCategories = categoryData;
+        }
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
