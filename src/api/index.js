@@ -12,7 +12,7 @@ const instance = axios.create({
     serverURL: `${config.serverURL}`
 });
 
-const httpLink = new HttpLink({uri: config.serverURL})
+const httpLink = new HttpLink({uri: config.serverURL, headers: {Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M'}})
 
 const errorHandler = onError(({networkError}) => {
     switch (networkError.statusCode) {
@@ -56,170 +56,6 @@ getRecordPvrList = () => {
 
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
-        // resolve([
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 100,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 1,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "MOSAIC",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 200,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 2,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "France 24 (in English)",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 300,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 3,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Orange",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 310,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 4,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "DisneyXD",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 400,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 5,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "UTVSTAR",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 500,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 6,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Nickelodeon",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 600,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 7,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Music India",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 800,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 8,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Disney Channel",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 900,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 9,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Fox Family Movies",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     }
-        // ]);
 
         NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
@@ -447,7 +283,9 @@ export const getGenresContent = (genresIds) => {
                 results[genresIds[i]] = {features: [], VOD: [], EPGs: []};
                 values[i].data.viewer.videoMany.forEach((content) => {
                     if (content.feature) {
-                        results[genresIds[i]].features.push(content)
+                        if (results[genresIds[i]].features.length < 3) {
+                            results[genresIds[i]].features.push(content)
+                        }
                     } else {
                         results[genresIds[i]].VOD.push(content)
                     }

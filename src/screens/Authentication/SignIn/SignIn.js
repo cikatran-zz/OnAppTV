@@ -16,10 +16,8 @@ export default class SignIn extends React.PureComponent {
         super(props);
         this.alertVC = null;
         this.indicatorModal = null;
-        this.state = {
-            email: "",
-            password: ""
-        };
+        this.email = "";
+        this.password = "";
         this.callbackMessage = "";
     }
 
@@ -48,20 +46,20 @@ export default class SignIn extends React.PureComponent {
     }
 
     _loginWithFacebook = () => {
-        facebookLogin().then((value)=> {
+        facebookLogin().then((value) => {
             this._goToHomeScreen();
-        }).catch((error)=> {
+        }).catch((error) => {
             console.log("ERROR", error);
         });
     };
 
-    _signIn =()=> {
-        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) {
+    _signIn = () => {
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
             this.alertVC.setState({isShow: true, message: "Invalid email"});
             return;
         }
         this.indicatorModal.setState({isShow: true});
-        NativeModules.RNUserKitIdentity.signInWithEmail(this.state.email, this.state.password, (error, results) => {
+        NativeModules.RNUserKitIdentity.signInWithEmail(this.email, this.password, (error, results) => {
             if (error != null) {
                 this.callbackMessage = JSON.parse(error).message;
                 this.indicatorModal.setState({isShow: false});
@@ -80,13 +78,19 @@ export default class SignIn extends React.PureComponent {
 
         return (
             <View style={styles.container}>
-                <AlertModal ref={(modal)=>{this.alertVC = modal}}/>
-                <IndicatorModal ref={(modal)=>{this.indicatorModal = modal}} onDismiss={this.onDismissIndicatorModal.bind(this)}/>
+                <AlertModal ref={(modal) => {
+                    this.alertVC = modal
+                }}/>
+                <IndicatorModal ref={(modal) => {
+                    this.indicatorModal = modal
+                }} onDismiss={this.onDismissIndicatorModal.bind(this)}/>
                 <View style={styles.subView}>
                     <View style={styles.partView}>
                         <Text style={styles.titleText}>LOG IN</Text>
-                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]} onPress={()=>this._loginWithFacebook()}>
-                            <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with Facebook</Text>
+                        <TouchableOpacity style={[styles.colorButton, {backgroundColor: '#3765A3', marginTop: 29.8}]}
+                                          onPress={() => this._loginWithFacebook()}>
+                            <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Continue with
+                                Facebook</Text>
                         </TouchableOpacity>
                         <Text style={styles.descriptionText1}>Or sign in with manually</Text>
                     </View>
@@ -95,20 +99,26 @@ export default class SignIn extends React.PureComponent {
                                    placeholder={'E-mail (personal)'}
                                    underlineColorAndroid='rgba(0,0,0,0)'
                                    placeholderTextColor={'black'}
-                                   onChangeText={(text)=> this.setState({email: text})}/>
+                                   onChangeText={(text) => {
+                                       this.email = text
+                                   }}/>
                         <TextInput style={styles.inputText}
                                    placeholder={'Password'}
                                    underlineColorAndroid='rgba(0,0,0,0)'
                                    placeholderTextColor={'black'}
                                    secureTextEntry={true}
-                                   onChangeText={(text)=> this.setState({password: text})}/>
+                                   onChangeText={(text) => {
+                                       this.password = text
+                                   }}/>
                     </View>
                     <View style={styles.partView}>
                         <TouchableOpacity>
-                            <Text style={{textAlign: 'center', color: '#ADABAB', fontSize: 17}}>Forgot your password ?</Text>
+                            <Text style={{textAlign: 'center', color: '#ADABAB', fontSize: 17}}>Forgot your password
+                                ?</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.colorButton, {backgroundColor: colors.mainPink, marginTop: 22.8}]} onPress={()=>this._signIn()}>
+                            style={[styles.colorButton, {backgroundColor: colors.mainPink, marginTop: 22.8}]}
+                            onPress={() => this._signIn()}>
                             <Text style={{textAlign: 'center', color: colors.whitePrimary, fontSize: 17}}>Login</Text>
                         </TouchableOpacity>
                     </View>

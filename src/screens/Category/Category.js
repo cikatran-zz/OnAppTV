@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {StyleSheet, StatusBar, View} from 'react-native';
+import {StyleSheet, StatusBar, View, TouchableOpacity, Image} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 
@@ -20,6 +20,10 @@ export default class Category extends Component {
             this.names[item.id] = item.name;
         });
         this.props.getGenresContent(ids);
+        this.state = {
+            backImage: null,
+            currentIndex: null
+        }
     };
 
     componentDidMount() {
@@ -36,6 +40,14 @@ export default class Category extends Component {
         }
     };
 
+    _onVideoPress = (item, isLive) => {
+        const {navigation} = this.props;
+
+        navigation.navigate('LowerPageComponent', {
+            item: item,
+            isLive: isLive
+        })
+    }
 
     render() {
         const {genresContent} = this.props;
@@ -63,9 +75,12 @@ export default class Category extends Component {
                                                   slotMachines={genresContent.data[key].features}
                                                   vod={genresContent.data[key].VOD}
                                                   epgs={genresContent.data[key].EPGs}
-                                                  key={"category" + index}/>)
+                                                  key={"category" + index}
+                                                  goBack={()=>this.props.navigation.goBack()}
+                                                  onVideoPress={(item, isLive)=> this._onVideoPress(item, isLive)}/>)
                     })}
                 </Swiper>
+
             </View>
         );
     }
@@ -76,6 +91,7 @@ const styles = StyleSheet.create({
 
     pageViewStyle: {
         backgroundColor: colors.screenBackground
-    }
+    },
+
 });
 

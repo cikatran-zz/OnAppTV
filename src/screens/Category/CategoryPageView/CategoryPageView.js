@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions
+    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions, TouchableOpacity
 } from 'react-native'
 import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeConfig'
 import {connect} from "react-redux";
@@ -19,6 +19,9 @@ class HeaderLabel extends React.PureComponent{
                 <View style={styles.headerView}>
                     <View style={[styles.backgroundHeaderView, styles.endHeaderView]}/>
                     <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
+                    <TouchableOpacity onPress={()=>this.props.goBack()} style={styles.backButton}>
+                        <Image source={require('../../../assets/ic_white_left_arrow.png')}/>
+                    </TouchableOpacity>
                 </View>
 
             )
@@ -27,6 +30,10 @@ class HeaderLabel extends React.PureComponent{
                 <View style={styles.headerView}>
                     <View style={[styles.backgroundHeaderView, styles.insideHeaderView]}/>
                     <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
+                    <TouchableOpacity onPress={()=>this.props.goBack()} style={styles.backButton}>
+                        <Image source={require('../../../assets/ic_white_left_arrow.png')}/>
+                    </TouchableOpacity>
+
                 </View>
             )
         } else if (this.props.position == 'begin') {
@@ -34,6 +41,9 @@ class HeaderLabel extends React.PureComponent{
                 <View style={styles.headerView}>
                     <View style={[styles.backgroundHeaderView, styles.beginHeaderView]}/>
                     <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
+                    <TouchableOpacity onPress={()=>this.props.goBack()} style={styles.backButton}>
+                        <Image source={require('../../../assets/ic_left_arrow.png')}/>
+                    </TouchableOpacity>
                 </View>
             )
         } else {
@@ -52,25 +62,45 @@ class CategoryPageView extends React.PureComponent{
     };
     _keyExtractor = (item, index) => item.id;
 
-    _getImage(item) {
+    _getImage = (item) => {
         let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
         return image;
     }
+
+    _getLandscapeImage = (item)=> {
+        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
+        if (item.originalImages.length > 0) {
+            let landscapes = item.originalImages.filter(x=>(x.name === "landscape"));
+            if (landscapes.length > 0 ) {
+                image = landscapes[0].url;
+            } else {
+                image = item.originalImages[0].url;
+            }
+        }
+
+
+        return image;
+    }
+
     _renderSlotMachines = ({item}) => {
         return (
-            <View style={styles.slotMachineContainer}>
-            { item.map((it, index)=> {
-                let image = this._getImage(it);
-                return (<Image
-                    key={ image + index}
-                    style={styles.slotMachineImage}
-                    source={{uri: image}}/>
-                )
-            })}
-            </View>
+
+                <View style={styles.slotMachineContainer}>
+                { item.map((it, index)=> {
+                    let image = this._getLandscapeImage(it);
+                    return (
+                        <TouchableOpacity onPress={()=>this.props.onVideoPress(it,false)}>
+                            <Image
+                                key={image + index}
+                                style={styles.slotMachineImage}
+                                source={{uri: image}}/>
+                        </TouchableOpacity>
+                    )
+                })}
+                </View>
         )
     }
     _renderOnLiveItem = ({item}) => {
@@ -94,13 +124,15 @@ class CategoryPageView extends React.PureComponent{
         var endDate = (new Date(item.endTime)).getTime();
         var progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-            <View style={styles.liveThumbnailContainer}>
-                <VideoThumbnail showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
-                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
-            </View>
+            <TouchableOpacity onPress={()=>this.props.onVideoPress(item,true)}>
+                <View style={styles.liveThumbnailContainer}>
+                    <VideoThumbnail showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
+                    <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+                    <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+                    <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
+                    <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
+                </View>
+            </TouchableOpacity>
         )
     };
 
@@ -115,22 +147,22 @@ class CategoryPageView extends React.PureComponent{
             })
         }
         return (
-            <View style={styles.vodThumbnailContainer}>
-                <View>
+            <TouchableOpacity onPress={()=>this.props.onVideoPress(item,false)}>
+                <View style={styles.vodThumbnailContainer}>
                     <VideoThumbnail showProgress={false} imageUrl={this._getImage(item)} marginHorizontal={20}/>
+                    <View style={{flexDirection: 'column', alignSelf: 'center', marginTop: -9, paddingRight: 14, flex: 1}}>
+                        <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
+                        <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>
+                        <Text numberOfLines={1} style={styles.textVODInfo}>{secondFormatter(item.durationInSeconds)}</Text>
+                    </View>
                 </View>
-                <View style={{alignSelf: 'stretch', flex: 1, alignItems: 'center', justifyContent:'center'}}>
-                    <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
-                    <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>
-                    <Text numberOfLines={1} style={styles.textVODInfo}>{secondFormatter(item.durationInSeconds)}</Text>
-                </View>
-            </View>
+            </TouchableOpacity>
         )
     }
     _renderOnLiveList = ({item}) => {
         if (item == null || item[0] == null) {
             return (
-                <View style={{flex: 1}}>
+                <View style={{flex: 1, marginBottom: 21}}>
                     <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
                 </View>
             )
@@ -178,7 +210,7 @@ class CategoryPageView extends React.PureComponent{
     render(){
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
-                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor}/>
+                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()}/>
                 <SectionList
                     style={[styles.container, {marginTop: 0}]}
                     keyExtractor={this._keyExtractor}
@@ -218,7 +250,8 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         backgroundColor: colors.screenBackground,
-        top: 0
+        top: 0,
+        marginBottom: 36
     },
     container: {
         flexDirection: 'column',
@@ -232,13 +265,14 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 7,
         backgroundColor: colors.mainPink,
-        borderRadius: 15,
+        borderRadius: (Platform.OS === 'ios') ? 15 : 30,
         overflow: "hidden",
         color: colors.whitePrimary,
         paddingHorizontal: 15
     },
     headerView: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'center',
         marginTop: 17.5,
         marginBottom: 27
@@ -264,11 +298,11 @@ const styles = StyleSheet.create({
     liveThumbnailContainer: {
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 21
     },
     textLiveVideoTitle: {
         ...textDarkDefault,
-        marginTop: 21,
         width: 150,
         textAlign: 'center',
     },
@@ -279,27 +313,36 @@ const styles = StyleSheet.create({
     },
     textVODTitle: {
         ...textDarkDefault,
-        width: '100%',//Dimensions.get("window").width - 150,
+        width: '100%',
         textAlign:'left',
     },
     textVODInfo: {
         ...textLightDefault,
-        width: '100%',//Dimensions.get("window").width - 150,
         textAlign:'left',
+        flexWrap: 'wrap',
+        width: '100%'
     },
     headerSection: {
         flexDirection: 'row',
-        marginLeft: 10,
-        marginTop: 20,
-        marginBottom: 15
+        marginLeft: 17,
+        marginTop: 0,
+        marginBottom: 21
     },
     vodThumbnailContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+
     },
     noInternetConnection: {
         color: colors.greyDescriptionText,
         textAlign: 'center',
         flexWrap: "wrap",
     },
+    backButton: {
+        paddingHorizontal: 15,
+        paddingVertical: 6,
+        left: 0,
+        top: 0,
+        position: 'absolute'
+    }
 });
