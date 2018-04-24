@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {StyleSheet, StatusBar, View} from 'react-native';
+import {StyleSheet, StatusBar, View, Text} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 
@@ -13,7 +13,13 @@ export default class Category extends Component {
 
         // Fetch data
         const {data, fromItem} = this.props.navigation.state.params;
-        var ids = [];
+        if (!data || !fromItem)
+            return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            );
+        let ids = [];
         this.startCategory = fromItem;
         data.forEach((item) => {
             ids.push(item.id);
@@ -76,6 +82,11 @@ const styles = StyleSheet.create({
 
     pageViewStyle: {
         backgroundColor: colors.screenBackground
-    }
+    },
+    noInternetConnection: {
+        color: colors.greyDescriptionText,
+        textAlign: 'center',
+        flexWrap: "wrap",
+    },
 });
 
