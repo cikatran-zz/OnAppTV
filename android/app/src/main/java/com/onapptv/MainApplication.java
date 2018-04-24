@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.multidex.MultiDex;
 
 import com.facebook.react.ReactApplication;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -19,6 +20,9 @@ import java.util.List;
 
 import userkit.sdk.UserKit;
 import userkit.sdk.identity.UserKitIdentity;
+import com.facebook.FacebookSdk;
+import com.facebook.CallbackManager;
+import com.facebook.appevents.AppEventsLogger;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -32,7 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
                     new MainReactPackage(),
-            new RNGestureHandlerPackage(),
+                    new FBSDKPackage(mCallbackManager),
+                    new RNGestureHandlerPackage(),
                     new OrientationPackage(),
                     new VectorIconsPackage(),
                     new OnAppTVPackage()
@@ -45,6 +50,12 @@ public class MainApplication extends Application implements ReactApplication {
             return "index";
         }
     };
+
+    private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
+    protected static CallbackManager getCallbackManager() {
+        return mCallbackManager;
+    }
 
     @Override
     public ReactNativeHost getReactNativeHost() {

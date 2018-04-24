@@ -1,9 +1,9 @@
 import Home from "../Home";
 import {StackNavigator} from "react-navigation";
 import defaultNavigationOptions from "../../utils/navigationOption";
-import SignIn from '../SignUp/SignIn'
-import SignUp from '../SignUp'
-import CreateAccount from '../SignUp/CreateAccount'
+import SignIn from '../Authentication/SignIn'
+import SignUp from '../Authentication'
+import CreateAccount from '../Authentication/SignUp'
 
 export default IdentityStack = StackNavigator({
   SignUp: {

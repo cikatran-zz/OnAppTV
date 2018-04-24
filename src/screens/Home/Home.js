@@ -51,31 +51,6 @@ export default class Home extends Component {
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
-        // NativeModules.RNUserKitIdentity.signUpWithEmail("tester@gmail.com", "00000000",{}, (error, results) => {
-        //     if (error) {
-        //         console.log(error)
-        //     } else {
-        //         console.log("Sign up success", results[0]);
-        //     }
-        // });
-        NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
-            let result = JSON.parse(results[0]);
-            if (result.is_sign_in) {
-                console.log("Already logged in");
-            } else {
-                let mail = "dev@gmail.com";
-                if (Platform.OS === "ios") {
-                    mail = "admin@gmail.com"
-                }
-                NativeModules.RNUserKitIdentity.signInWithEmail(mail, "00000000", (error, results) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        console.log("Sign in success", results);
-                    }
-                })
-            }
-        });
 
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');

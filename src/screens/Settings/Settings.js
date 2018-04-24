@@ -309,7 +309,7 @@ export default class Settings extends React.PureComponent {
                     if (result.is_sign_in) {
                         navigation.navigate(item.screen, {onChange: this._onChildChanged.bind(this)})
                     } else {
-                        navigation.navigate("SignUp");
+                        navigation.navigate("Authentication");
                     }
                 });
             } else {
