@@ -23,7 +23,7 @@ export default class STBConnection extends Component {
     }
 
     _onFinished = (event) => {
-        let screen = "SignUp";
+        let screen = "Authentication";
         if (this.isLoggedIn) {
             screen = "Home";
         }

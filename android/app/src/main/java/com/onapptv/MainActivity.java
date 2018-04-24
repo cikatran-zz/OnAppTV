@@ -11,6 +11,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactActivityDelegate;
+import com.facebook.react.ReactRootView;
+import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+import android.content.Intent;
 
 public class MainActivity extends ReactActivity {
 
@@ -18,6 +22,12 @@ public class MainActivity extends ReactActivity {
     private SharedPreferences.Editor mEditor;
     private static final String PREFS_DEBUG_SERVER_HOST_KEY = "debug_http_host";
     private static String HOST_SERVER = "192.168.10.112:8081";
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
