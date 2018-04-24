@@ -208,6 +208,7 @@ class CategoryPageView extends React.PureComponent{
     );
 
     render(){
+        console.log("PAGE",this.props);
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
                 <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()}/>
