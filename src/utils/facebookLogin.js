@@ -10,8 +10,6 @@ export function facebookLogin() {
                     reject({message: "Cancelled"});
                 } else {
                     AccessToken.getCurrentAccessToken().then(value => {
-                        let userId = console.log("UserID", value.getUserId());
-                        console.log("UserID", userId);
                         NativeModules.RNUserKitIdentity.signInWithFacebookAccount(value.accessToken, (error, result)=> {
                             if (error) {
                                 reject(error);
@@ -29,9 +27,8 @@ export function facebookLogin() {
                                                 lastName: result.last_name,
                                                 firstName: result.first_name,
                                                 age: result.age_range.min.toString(),
-                                                email: result.email
+                                                email: result.email ? result.email : ""
                                             };
-                                            console.log("PROFILE",baseInfo);
                                             NativeModules.RNUserKit.storeProperty("_base_info", baseInfo, (error, result) => {});
                                         }
                                     },
