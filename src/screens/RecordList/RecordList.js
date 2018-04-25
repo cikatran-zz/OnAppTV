@@ -40,7 +40,8 @@ export default class RecordList extends React.Component {
         }
 
         NativeModules.STBManager.usbRemoveWithJson(JSON.stringify(target), (error, events) => {
-          if (JSON.parse(events[0]).return === 1) {
+          console.log(events[0])
+          if (JSON.parse(events[0]).return === '1') {
             NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {})
             this.setState({
               openModal: !this.state.openModal,
