@@ -11,6 +11,7 @@ import ParentalControlLock from "./screens/Settings/ParentalControlLock";
 import TermAndCondition from "./screens/Settings/TermAndCondition";
 import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
 import LowerPageComponent from './screens/LowerPage'
+import BrightcovePlayerScreen from './screens/BrightcovePlayer'
 
 const TabNav = TabNavigator({
     Home: {
@@ -67,6 +68,9 @@ export const ScreenStack = StackNavigator({
     },
     LowerPageComponent: {
         screen: LowerPageComponent
+    },
+    BrightcovePlayerScreen: {
+        screen: BrightcovePlayerScreen
     }
 }, {
     mode: 'modal',
