@@ -1,15 +1,15 @@
 import React, {PureComponent} from 'react'
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    Platform,
-    SectionList,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Dimensions,
+  FlatList,
+  Image, Modal,
+  Platform,
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -55,11 +55,14 @@ export default class LowerPageComponent extends React.Component {
 
     let data = isLive === true ? item.videoData : item
       return (
-        <TouchableOpacity style={styles.topContainer} onPress={() => this._onPress(item)}>
-            <View style={styles.bannerThumbnailContainer}>
+        <View style={styles.topContainer} >
+            <TouchableOpacity style={{marginTop: 12, alignSelf: 'flex-start', marginLeft: '4%', width: '20%'}} onPress={() => this.props.navigation.goBack()}>
+              <Image source={require('../../assets/ic_back_details.png')}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bannerThumbnailContainer} onPress={() => this._onPress(item)}>
               <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </View>
       )
   }
 
@@ -236,13 +239,14 @@ const styles = StyleSheet.create({
     height: h,
   },
   topContainer: {
-    flexDirection: 'row',
-    height: 225,
+    flexDirection: 'column',
+    height: 265,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   bannerThumbnailContainer: {
+    marginTop: 20,
     height: '72%',
     width: '92%',
     backgroundColor: colors.whitePrimary,

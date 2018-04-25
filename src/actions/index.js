@@ -20,6 +20,7 @@ import * as getSatellite from "./getSatellite"
 import * as getTimeShiftLimitSize from './getTimeShiftLimitSize'
 import * as getNotification from './getNotification'
 import * as getProfileInfo from './getProfileInfo'
+import * as getPvrList from './getPvrList'
 
 export default actions = {
     getBanner,
@@ -44,5 +45,6 @@ export default actions = {
     getSatellite,
     getTimeShiftLimitSize,
     getNotification,
-    getProfileInfo
+    getProfileInfo,
+    getPvrList
 };
