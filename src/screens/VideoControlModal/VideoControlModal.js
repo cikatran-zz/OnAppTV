@@ -31,9 +31,28 @@ export default class VideoControlModal extends React.Component {
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
     if (width > height) {
-      this.setState({showBrightcove: true})
-    } else {
-      this.setState({showBrightcove: false})
+      const {item} = this.props.navigation.state.params
+      if (item) {
+        let videoId = item.contentId ? item.contentId : '5714823997001'
+        this.props.navigation.navigate('BrightcovePlayerScreen', {
+          videoId: videoId
+        })
+      }
+    }
+  }
+
+  _releaseOrientationCallback = () => {
+    Orientation.unlockAllOrientations()
+  }
+
+  _navigateBrightcovePlayerScreen = () => {
+    const {item} = this.props.navigation.state.params
+    if (item) {
+      let videoId = item.contentId ? item.contentId : '5714823997001'
+      this.props.navigation.navigate('BrightcovePlayerScreen', {
+        videoId: videoId,
+        callback: this._releaseOrientationCallback
+      })
     }
   }
 
@@ -107,7 +126,7 @@ export default class VideoControlModal extends React.Component {
 
       let progressJson = {
         url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-        destination_path: '/C/Downloads/Test'
+        destination_path: '/C/Downloads'
       }
 
       console.log('Progress json %s', JSON.stringify(progressJson))
@@ -409,6 +428,9 @@ export default class VideoControlModal extends React.Component {
         <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
 
         </View>
+        <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._navigateBrightcovePlayerScreen}>
+          <Image source={require('../../assets/ic_change_orientation.png')}/>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -442,11 +464,15 @@ export default class VideoControlModal extends React.Component {
           {this._renderRecordBar(isLive, item.startTime, item.endTime)}
           <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
           </View>
-          <TouchableOpacity style={{position: 'absolute', top: 30, left: 20}} onPress={() => this.props.navigation.goBack(null)}>
-          <PinkRoundedButton text={"Dismiss"} />
+          <TouchableOpacity style={{position: 'absolute', top: 30, left: 20, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
+            <Image source={require('../../assets/ic_dismiss_modal.png')}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._navigateBrightcovePlayerScreen}>
+            <Image source={require('../../assets/ic_change_orientation.png')}/>
           </TouchableOpacity>
         </View>
-      </View>)
+      </View>
+    )
   }
 
   _renderUpperPage = (epg, item) => {
@@ -499,16 +525,6 @@ export default class VideoControlModal extends React.Component {
   _renderModal = () => {
     const {item, epg, isLive} = this.props.navigation.state.params;
 
-    if (this.state.showBrightcove) {
-      return (
-        <BrightcovePlayer
-          onLayout={this.onLayout.bind(this)}
-          style={{width: '100%', height: '100%', left: 0, top: 0, backgroundColor: "#000000"}}
-          videoId= {item.contentId ? item.contentId : '5714823997001'}
-          accountId='5706818955001'
-          policyKey='BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I'
-          />);
-    } else {
       // Right now, Live is just one video, check for one video
       if (isLive) {
         return (
@@ -516,9 +532,6 @@ export default class VideoControlModal extends React.Component {
             onLayout={this.onLayout.bind(this)}
             style={{flex: 1}}>
             {this._renderLive({}, item)}
-            <TouchableOpacity style={{position: 'absolute', top: 30, left: 30}} onPress={() => this.props.navigation.goBack(null)}>
-              <PinkRoundedButton text='DISMISS'/>
-            </TouchableOpacity>
           </View>
         )
       }
@@ -535,13 +548,13 @@ export default class VideoControlModal extends React.Component {
             }
           </Swiper>
           {this._renderTopContainer(epg, index, isLive)}
-          <TouchableOpacity style={{position: 'absolute', top: 30, left: 30}} onPress={() => this.props.navigation.goBack(null)}>
-            <PinkRoundedButton text='DISMISS'/>
+          <TouchableOpacity style={{position: 'absolute', top: 30, left: 30, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
+            <Image source={require('../../assets/ic_dismiss_modal.png')}/>
           </TouchableOpacity>
         </View>
 
       );
-    }
+
   }
 
   _toggleModal = (actionType) => {
@@ -608,7 +621,7 @@ export default class VideoControlModal extends React.Component {
       remove_flag: 1,
       contentId: bcVideos.data.contentId,
       url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-      destination_path: "/C/Downloads/Test"
+      destination_path: "/C/Downloads"
     }
     NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
       if (JSON.parse(events[0]).return === 1) {
@@ -637,7 +650,7 @@ export default class VideoControlModal extends React.Component {
     let json = {
       contentId: bcVideos.data.contentId,
       url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-      destination_path: "/C/Downloads/Test"
+      destination_path: "/C/Downloads"
     }
 
     console.log('Download Json')
@@ -653,7 +666,7 @@ export default class VideoControlModal extends React.Component {
 
         let downloadList = []
         NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
-          downloadList = downloadList.concat(JSON.parse(obj).dataArr)
+          downloadList = downloadList.concat(JSON.parse(obj).dataArr ? JSON.parse(obj).dataArr : [])
 
           let newData = {
             ...videoData,
