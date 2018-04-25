@@ -10,7 +10,7 @@ import {
     NativeModules, Platform
 } from 'react-native';
 import Orientation from 'react-native-orientation';
-import {rootViewTopPadding} from '../../utils/rootViewTopPadding'
+import {rootViewTopPadding} from '../../utils/rootViewPadding'
 import Swiper from 'react-native-swiper';
 import {colors} from "../../utils/themeConfig";
 import ZapperChannel from './ZapperChannel'
@@ -21,6 +21,9 @@ export default class Zappers extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            scrollEnabled: true
+        }
     };
 
     componentWillMount() {
@@ -38,6 +41,10 @@ export default class Zappers extends Component {
         this._navListener.remove();
     }
 
+    _onChangeScrollEnabled = (isEnabled) => {
+        this.setState({scrollEnabled: isEnabled})
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -45,9 +52,9 @@ export default class Zappers extends Component {
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content'/>
-                <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false}>
+                <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false} scrollEnabled={this.state.scrollEnabled}>
                     <ZapperChannel />
-                    <ZapperContent />
+                    <ZapperContent onChangedScrollEnabled={(isEnabled)=>this._onChangeScrollEnabled(isEnabled)}/>
                 </Swiper>
             </View>
         );

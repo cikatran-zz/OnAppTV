@@ -50,7 +50,7 @@ class VideoThumbnail extends React.PureComponent{
 const styles = StyleSheet.create({
   container: {
     width: 150,
-    marginVertical: 5,
+    marginBottom: 18,
     marginHorizontal: 10
   },
   imageContainer: {

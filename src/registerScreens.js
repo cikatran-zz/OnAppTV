@@ -9,6 +9,9 @@ import SettingsStack from "./screens/ScreenStacks/SettingsStack";
 import BookStack from "./screens/ScreenStacks/BookStack";
 import ParentalControlLock from "./screens/Settings/ParentalControlLock";
 import TermAndCondition from "./screens/Settings/TermAndCondition";
+import Authentication from "./screens/Authentication";
+import SignIn from "./screens/Authentication/SignIn";
+import SignUp from "./screens/Authentication/SignUp";
 import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
 import LowerPageComponent from './screens/LowerPage'
 import BrightcovePlayerScreen from './screens/BrightcovePlayer'
@@ -62,6 +65,15 @@ export const ScreenStack = StackNavigator({
     },
     TermAndCondition: {
         screen: TermAndCondition
+    },
+    Authentication: {
+        screen: Authentication
+    },
+    SignIn: {
+        screen: SignIn
+    },
+    SignUp: {
+        screen: SignUp
     },
     LocalVideoModal: {
         screen: LocalVideoModal

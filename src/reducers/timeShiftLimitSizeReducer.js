@@ -12,7 +12,6 @@ export default function timeShiftLimitSizeReducer(state = initialState, action) 
         case actionTypes.FETCHING_TIMESHIFT_LIMITSIZE:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_TIMESHIFT_LIMITSIZE_SUCCESS:

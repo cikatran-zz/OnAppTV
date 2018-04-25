@@ -1,14 +1,26 @@
 import React, {Component} from "react";
 import {Provider} from "react-redux";
-import store from "./configureStore";
+import configureStore from './configureStore'
 import AppNavigator from "./AppNavigator";
+import { PersistGate } from 'redux-persist/integration/react';
+import {Image, View} from 'react-native'
+import {colors} from './utils/themeConfig'
+const { persistor, store } = configureStore();
 
+const onAppIc = require('./assets/ic_on_stb.png')
 export default class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppNavigator />
-      </Provider>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <PersistGate
+                    loading={
+                        <View style={{flex: 1, justifyContent:'center', alignItems:'center', backgroundColor: colors.mainPink}}>
+                            <Image source={onAppIc}/>
+                        </View>
+                    } persistor={persistor}>
+                    <AppNavigator />
+                </PersistGate>
+            </Provider>
+        );
+    }
 }

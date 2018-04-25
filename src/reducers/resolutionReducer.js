@@ -12,7 +12,6 @@ export default function resolutionReducer(state = initialState, action) {
         case actionTypes.FETCHING_RESOLUTION:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_RESOLUTION_SUCCESS:

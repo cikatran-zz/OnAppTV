@@ -12,7 +12,6 @@ export default function seriesInfoReducer(state = initialState, action) {
     case actionTypes.FETCHING_SERIES_INFO:
       return {
         ...state,
-        data: action.data,
         isFetching: true
       };
     case actionTypes.FETCH_SERIES_INFO_SUCCESS:

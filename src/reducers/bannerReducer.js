@@ -12,7 +12,6 @@ export default function bannerReducer(state = initialState, action) {
         case actionTypes.FETCHING_BANNER:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_BANNER_SUCCESS:

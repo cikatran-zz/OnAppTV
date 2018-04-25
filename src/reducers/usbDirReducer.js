@@ -12,7 +12,6 @@ export default function usbDirReducer(state = initialState, action) {
     case actionTypes.FETCHING_FILES_USB_DIR:
       return {
         ...state,
-        data: action.data,
         isFetching: true
       }
     case actionTypes.FETCH_FILES_USB_DIR_SUCCESS:

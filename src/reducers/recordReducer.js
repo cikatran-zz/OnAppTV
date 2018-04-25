@@ -12,7 +12,6 @@ export default function recordReducer(state = initialState, action) {
     case actionTypes.FETCHING_RECORDS_LIST:
       return {
         ...state,
-        data: null,
         isFetching: true
       };
     case actionTypes.FETCH_RECORDS_LIST_SUCCESS:

@@ -4,7 +4,7 @@ import {
     TouchableOpacity, NativeModules, Platform
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
-import {rootViewTopPadding} from "../../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../../utils/rootViewPadding";
 import * as Orientation from "react-native-orientation";
 
 const passwordBase = require('../../assets/ic_pincode.png');
@@ -240,7 +240,8 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         width: '32%',
         flexDirection: 'row',
-        margin: 2.5
+        margin: 2.5,
+        overflow: "hidden"
     },
     numberText: {
         position: 'absolute',

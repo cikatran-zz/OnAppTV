@@ -28,6 +28,7 @@ import {
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
 import Orientation from 'react-native-orientation';
+import _ from 'lodash';
 
 export default class Home extends Component {
 
@@ -51,31 +52,11 @@ export default class Home extends Component {
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
-        // NativeModules.RNUserKitIdentity.signUpWithEmail("dev@gmail.com", "00000000",{}, (error, results) => {
-        //     if (error) {
-        //         console.log(error)
-        //     } else {
-        //         console.log("Sign up success", results[0]);
-        //     }
-        // })
-        NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
-            let result = JSON.parse(results[0]);
-            if (result.is_sign_in) {
-                console.log("Already logged in");
-            } else {
-                NativeModules.RNUserKitIdentity.signInWithEmail("dev@gmail.com", "00000000", (error, results) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        console.log("Sign in success", results[0]);
-                    }
-                })
-            }
-        });
 
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            this.props.getChannel(-1);
         });
     };
 
@@ -84,23 +65,27 @@ export default class Home extends Component {
     }
 
     _renderChannelListItem = ({item}) => {
+        if (item == null) {
+            return null
+        }
         var imageUrl = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
         if (item.image != null) {
             imageUrl = item.image;
         }
-      return (
-        <TouchableOpacity style={styles.itemContainer} onPress={() => this._onChannelPress(item)}>
-            <View style={styles.itemImageContainer}>
-                <Image
-                  style={styles.itemImage}
-                  resizeMode={'cover'}
-                  source={{uri: imageUrl}}/>
-            </View>
-            <Text
-              numberOfLines={1}
-              style={styles.itemLabel}>{item.serviceName == null ? "" : item.serviceName.toString().toUpperCase()}</Text>
-        </TouchableOpacity>
-    )}
+        return (
+            <TouchableOpacity style={styles.itemContainer} onPress={() => this._onChannelPress(item)}>
+                <View style={styles.itemImageContainer}>
+                    <Image
+                        style={styles.itemImage}
+                        resizeMode={'cover'}
+                        source={{uri: imageUrl}}/>
+                </View>
+                <Text
+                    numberOfLines={1}
+                    style={styles.itemLabel}>{item.serviceName == null ? "" : item.serviceName.toString().toUpperCase()}</Text>
+            </TouchableOpacity>
+        )
+    }
 
     _renderChannelListItemSeparator = () => (
         <View style={styles.itemContainerSeparator}/>
@@ -120,29 +105,30 @@ export default class Home extends Component {
         if (item.originalImages.length > 0) {
             image = item.originalImages[0].url;
         }
-      return (
-      <View style={styles.slotMachineContainer}>
-          <Image
-            style={styles.slotMachineImage}
-            source={{uri: image}}/>
-          <View style={styles.labelGroup}>
-              <PinkRoundedLabel text="NEW MOVIE"/>
-              <Text style={styles.bannerTitle}>
-                {item.title}
-              </Text>
-              <Text style={styles.bannerSubtitle}>
-                {item.shortDescription}
-              </Text>
-          </View>
-          <View style={styles.bannerPlayIconGroup}>
-              <BlurView style={styles.bannerPlayIconBackground} blurRadius={getBlurRadius(30)} overlayColor={1}/>
-              <Image
-                resizeMode={'cover'}
-                style={styles.bannerPlayIcon}
-                source={require('../../assets/ic_play_with_border.png')}/>
-          </View>
-      </View>
-    )}
+        return (
+            <View style={styles.slotMachineContainer}>
+                <Image
+                    style={styles.slotMachineImage}
+                    source={{uri: image}}/>
+                <View style={styles.labelGroup}>
+                    <PinkRoundedLabel text="NEW MOVIE"/>
+                    <Text style={styles.bannerTitle}>
+                        {item.title}
+                    </Text>
+                    <Text style={styles.bannerSubtitle}>
+                        {item.shortDescription}
+                    </Text>
+                </View>
+                <View style={styles.bannerPlayIconGroup}>
+                    <BlurView style={styles.bannerPlayIconBackground} blurRadius={getBlurRadius(30)} overlayColor={1}/>
+                    <Image
+                        resizeMode={'cover'}
+                        style={styles.bannerPlayIcon}
+                        source={require('../../assets/ic_play_with_border.png')}/>
+                </View>
+            </View>
+        )
+    }
 
     _renderFooter = ({item}) => {
         if (item == null) {
@@ -166,7 +152,8 @@ export default class Home extends Component {
     };
 
     _renderChannelList = ({item}) => {
-        if (item == null || item[0] == null) {
+        console.log("CHANNEL", item);
+        if (item == null) {
             return (
                 <View style={styles.listHorizontal}>
                     <Text style={styles.noInternetConnection}>No favorite channels</Text>
@@ -174,66 +161,70 @@ export default class Home extends Component {
             )
         }
         return (
-          <FlatList
-            style={styles.listHorizontal}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={this._renderChannelListItemSeparator}
-            data={item}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderChannelListItem} />
+            <FlatList
+                style={styles.listHorizontal}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={this._renderChannelListItemSeparator}
+                data={item}
+                keyExtractor={this._keyExtractor}
+                renderItem={this._renderChannelListItem}/>
         )
     }
 
-  _renderOnLiveItem = ({item}) => {
-      let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
-      if (item.videoData.originalImages.length > 0) {
-          image = item.videoData.originalImages[0].url;
-      }
-      let genres = '';
-      if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
-          item.videoData.genresData.forEach((genre, index) => {
-              if (genres.length != 0) {
-                  genres = genres.concat(", ");
-              }
-              genres = genres.concat(genre.name.toString());
-          })
-      }
-      let timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+    _renderOnLiveItem = ({item}) => {
+        if (item == null) {
+            return null;
+        }
+        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.videoData.originalImages.length > 0) {
+            image = item.videoData.originalImages[0].url;
+        }
+        let genres = '';
+        if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
+            item.videoData.genresData.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        let timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
-      let currentDate = (new Date()).getTime();
-      let startDate = (new Date(item.startTime)).getTime();
-      let endDate = (new Date(item.endTime)).getTime();
-      let progress = (currentDate-startDate)/(endDate - startDate) * 100;
+        let currentDate = (new Date()).getTime();
+        let startDate = (new Date(item.startTime)).getTime();
+        let endDate = (new Date(item.endTime)).getTime();
+        let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-          <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, true)}>
-              <VideoThumbnail showProgress={true} progress={progress +"%"} imageUrl={image} marginHorizontal={10}/>
-              <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData ? item.channelData.title : ""}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
-          </TouchableOpacity>
-      )
-  }
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, true)}>
+                <VideoThumbnail showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+                <Text numberOfLines={1}
+                      style={styles.textLiveVideoInfo}>{item.channelData ? item.channelData.title : ""}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
+            </TouchableOpacity>
+        )
+    }
 
-  _onChannelPress = (item) => {
-      const {navigation} = this.props;
+    _onChannelPress = (item) => {
+        const {navigation} = this.props;
 
-      navigation.navigate('LocalVideoModal', {
-        item: item
-      })
-  }
+        navigation.navigate('VideoControlModal', {
+            item: item
+        })
+    }
 
-  _onVideoPress = (item, isLive) => {
-      const {navigation} = this.props;
+    _onVideoPress = (item, isLive) => {
+        const {navigation} = this.props;
 
-      navigation.navigate('LowerPageComponent', {
-        item: item,
-        isLive: isLive
-      })
-  }
+        navigation.navigate('LowerPageComponent', {
+            item: item,
+            isLive: isLive
+        })
+    }
 
-  _renderVODItem = ({item}) => {
+    _renderVODItem = ({item}) => {
 
 
         let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
@@ -252,10 +243,11 @@ export default class Home extends Component {
         }
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
-              <VideoThumbnail showProgress={false} imageUrl={image} marginHorizontal={10}/>
-              <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
-              <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
+                <VideoThumbnail showProgress={false} imageUrl={image} marginHorizontal={10}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+                <Text numberOfLines={1}
+                      style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
             </TouchableOpacity>)
     };
 
@@ -266,8 +258,9 @@ export default class Home extends Component {
 
     _navigateToCategory = (cate) => {
         const {navigate} = this.props.navigation;
-
-        navigate('Category', {data: this.state.category.filter((cate)=>cate.favorite==1), fromItem: cate});
+        let data = this.state.category.filter(item => (item.favorite === true || item.favorite === 1.0));
+        console.log("DATA", data);
+        navigate('Category', {data: data, fromItem: cate});
     };
 
     _renderCategoryItem = ({item}) => {
@@ -312,7 +305,7 @@ export default class Home extends Component {
     };
 
     _renderOnLiveList = ({item}) => {
-        if (item == null || item[0] == null) {
+        if (item == null) {
             return (
                 <View style={{flex: 1}}>
                     <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
@@ -320,12 +313,12 @@ export default class Home extends Component {
             )
         }
         return (<FlatList
-          style={{flex: 1}}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={item}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderOnLiveItem} />)
+            style={{flex: 1}}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            data={item}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderOnLiveItem}/>)
     };
 
     _renderVODList = ({item}) => {
@@ -343,7 +336,7 @@ export default class Home extends Component {
                 showsHorizontalScrollIndicator={false}
                 data={item}
                 keyExtractor={this._keyExtractor}
-                renderItem={this._renderVODItem} />
+                renderItem={this._renderVODItem}/>
         )
     }
 
@@ -391,9 +384,7 @@ export default class Home extends Component {
                 }
             }
         }
-        this.state.category = data;
-        console.log("AFTER UPDATE", favorites);
-        this.setState({favoriteCategories: favorites});
+        this.setState({favoriteCategories: favorites, category: data});
     };
 
 
@@ -413,10 +404,11 @@ export default class Home extends Component {
             channelData = [null];
         }
 
-        if (this.state.favoriteCategories == null && category.data) {
-            var categoryData = category.data.filter(item => item.favorite == true).map(cate => ({"name": cate.name}));
-            this.state.category = category.data;
+        if (this.state.favoriteCategories == null) {
+            var categoryData = (category.data == null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
+            this.state.category = category.data == null ? [] : category.data;
             categoryData.push({"name": "_ADD"});
+            console.log("Favorite category:", categoryData);
             this.state.favoriteCategories = categoryData;
         }
 

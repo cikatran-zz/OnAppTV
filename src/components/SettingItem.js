@@ -24,7 +24,7 @@ export default class SettingItem extends React.PureComponent {
         const {onPress, item, showIcon, showRightIcon} = this.props;
 
         return (
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onPress} disabled={!showRightIcon}>
                 <View style={styles.settingItemContainer}>
                     {this._renderIcon(showIcon)}
                     <Text style={styles.settingItemName}>{item.name}</Text>

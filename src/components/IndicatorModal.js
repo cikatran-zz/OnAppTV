@@ -2,7 +2,7 @@ import React from "react";
 import {StyleSheet, View, Modal, Animated, Image, Dimensions, Easing, TouchableOpacity, Text} from "react-native";
 import BlurView from "./BlurView";
 import {getBlurRadius} from "../utils/blurRadius";
-import {rootViewTopPadding} from "../utils/rootViewTopPadding";
+import {rootViewTopPadding} from "../utils/rootViewPadding";
 import {colors} from "../utils/themeConfig";
 import {DotsLoader} from 'react-native-indicator';
 
@@ -24,16 +24,18 @@ export default class IndicatorModal extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <Modal animationType="fade"
                    transparent={true}
                    visible={this.state.isShow}
                    presentationStyle="overFullScreen"
-                   onDismiss={()=> this.props.onDismiss()}>
+                   onDismiss={() => this.props.onDismiss()}
+                   onRequestClose={() => {
+                   }}>
                 <View style={styles.container}>
                     <BlurView style={styles.blurView}
                               blurRadius={getBlurRadius(50)}
-                              overlayColor={0x75000000} />
+                              overlayColor={0x75000000}/>
                     <View style={styles.dots}>
                         <DotsLoader color={colors.textWhitePrimary} size={20} betweenSpace={10}/>
                     </View>

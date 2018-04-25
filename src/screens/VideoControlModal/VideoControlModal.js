@@ -19,13 +19,13 @@ import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../../screens/LowerPage/LowerPageComponent"
 import BlurView from '../../components/BlurView'
 import {getBlurRadius} from '../../utils/blurRadius'
-import { secondFormatter } from '../../utils/timeUtils'
+import {secondFormatter} from '../../utils/timeUtils'
 import Swiper from 'react-native-swiper'
 import PinkRoundedButton from '../../components/PinkRoundedLabel'
 import { rootViewTopPadding } from '../../utils/rootViewTopPadding'
 import moment from 'moment';
 
-const { width, height } = Dimensions.get("window")
+const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
 
   onLayout(e) {
@@ -56,62 +56,64 @@ export default class VideoControlModal extends React.Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      showBrightcove: false,
-      recordEnabled: false,
-      favoriteEnabled: false,
-      firstTimePlay: false,
-      isPlaying: true,
-      modalVisibility: false,
-      modalRecordTarget: "none",
-      modalFavoriteTarget: "none",
-      passTime: 0,
-      etrTime: 0,
-      volume: 0,
-      index: -1,
-    }
-  }
-
-  componentWillMount() {
-    Orientation.unlockAllOrientations()
-  }
-
-  _getVodTime = setInterval(() => {
-    const {isLive} = this.props.navigation.state.params;
-    if (!isLive) {
-
-      NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
-        if (!e) {
-          let pos = JSON.parse(r[0]).playPosition
-          this.setState({
-            currentPos: pos
-          })
+    constructor(props) {
+        super(props);
+        this.state = {
+            showBrightcove: false,
+            recordEnabled: false,
+            favoriteEnabled: false,
+            firstTimePlay: false,
+            isPlaying: true,
+            modalVisibility: false,
+            modalRecordTarget: "none",
+            modalFavoriteTarget: "none",
+            passTime: 0,
+            etrTime: 0,
+            volume: 0,
+            index: -1,
+            isScrollEnabled: true
         }
-      })
     }
-  }, 1000)
 
-  _getTimeInterval = setInterval(() => {
-    const {isLive} = this.props.navigation.state.params;
-    const {isConnected} = this.state
-      if (isLive || !isConnected) {
-        if (this.state.isPlaying) {
-          this.setState({
-            currentTime: new Date().getTime()
-          })
+    componentWillMount() {
+        Orientation.unlockAllOrientations()
+    }
+
+    _getVodTime = setInterval(() => {
+        const {isLive} = this.props.navigation.state.params;
+        if (!isLive) {
+
+            NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
+                if (!e) {
+                    let pos = JSON.parse(r[0]).playPosition
+                    this.setState({
+                        currentPos: pos
+                    })
+                }
+            })
         }
-      }
+    }, 1000);
+
+    _getTimeInterval = setInterval(() => {
+        const {isLive} = this.props.navigation.state.params;
+        const {isConnected} = this.state
+        if (isLive || !isConnected) {
+            if (this.state.isPlaying) {
+                this.setState({
+                    currentTime: new Date().getTime()
+                })
+            }
+        }
     }, 1000)
 
-  componentWillUnmount() {
-    clearInterval(this._getTimeInterval)
-    clearInterval(this._getVodTime)
+    componentWillUnmount() {
+        clearInterval(this._getTimeInterval)
+        clearInterval(this._getVodTime)
 
-    NativeModules.STBManager.playMediaStop((error, events) => {})
+        NativeModules.STBManager.playMediaStop((error, events) => {
+        })
 
-  }
+    }
 
   componentWillReceiveProps(nextProps) {
 
@@ -137,9 +139,9 @@ export default class VideoControlModal extends React.Component {
     }
   }
 
-  componentDidMount() {
-    const {item, isLive, epg} = this.props.navigation.state.params
-    console.log(epg)
+    componentDidMount() {
+        const {item, isLive, epg} = this.props.navigation.state.params
+        console.log(epg)
 
     NativeModules.STBManager.isConnect((connectStr) => {
       let json = JSON.parse(connectStr).is_connected
@@ -561,14 +563,14 @@ export default class VideoControlModal extends React.Component {
     const {item, isLive} = this.props.navigation.state.params
     console.log(actionType + " " + item.type)
 
-    if (item.type === 'Episode') {
-      this.setState({
-        modalVisibility: !this.state.modalVisibility,
-        modalContent: actionType
-      })
-    }
-    else {
-      const {recordEnabled, favoriteEnabled} = this.state
+        if (item.type === 'Episode') {
+            this.setState({
+                modalVisibility: !this.state.modalVisibility,
+                modalContent: actionType
+            })
+        }
+        else {
+            const {recordEnabled, favoriteEnabled} = this.state
 
       if (actionType === 'record') {
         if (item.type === 'Standalone') {
@@ -594,19 +596,19 @@ export default class VideoControlModal extends React.Component {
           }
         }
 
-        this.setState({
-          recordEnabled: !recordEnabled
-        })
-      }
-      else {
-        // Use Userkit
+                this.setState({
+                    recordEnabled: !recordEnabled
+                })
+            }
+            else {
+                // Use Userkit
 
-        this.setState({
-          favoriteEnabled: !favoriteEnabled
-        })
-      }
+                this.setState({
+                    favoriteEnabled: !favoriteEnabled
+                })
+            }
+        }
     }
-  }
 
   _stopRecord = () => {
     NativeModules.STBManager.recordPvrStopInJson((error, events) => {

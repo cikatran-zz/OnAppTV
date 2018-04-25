@@ -12,7 +12,6 @@ export default function wifiInfoReducer(state = initialState, action) {
         case actionTypes.FETCHING_WIFI:
             return {
                 ...state,
-                data: null,
                 isFetching: true
             };
         case actionTypes.FETCH_WIFI_SUCCESS:

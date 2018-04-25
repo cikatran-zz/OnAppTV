@@ -12,7 +12,6 @@ export default function bookListReducer(state = initialState, action) {
     case actionTypes.FETCHING_BOOK_LIST:
       return {
         ...state,
-        data: null,
         isFetching: true
       };
     case actionTypes.FETCH_BOOK_LIST_SUCCESS:

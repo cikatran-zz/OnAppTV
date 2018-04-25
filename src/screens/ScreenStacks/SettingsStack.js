@@ -8,7 +8,6 @@ import Subtitles from "../Settings/Subtitles";
 import Settings from "../Settings";
 import {StackNavigator} from "react-navigation";
 import VideoFormat from "../Settings/VideoFormat";
-import SignIn from "../Settings/SignIn";
 import defaultNavigationOptions from "../../utils/navigationOption";
 import Privacy from "../Settings/Privacy";
 import Authorization from "../Settings/Authorization";
@@ -90,12 +89,6 @@ export default SettingsStack = StackNavigator({
         screen: PersonalInformation,
         navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("My personal information", navigation, true)
-        })
-    },
-    SignIn: {
-        screen: SignIn,
-        navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Sign in", navigation, true)
         })
     },
     Privacy: {

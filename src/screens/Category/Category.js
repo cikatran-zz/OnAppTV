@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {StyleSheet, StatusBar, View} from 'react-native';
+import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 
@@ -8,22 +8,21 @@ export default class Category extends Component {
 
     constructor(props) {
         super(props);
-        this.names = {}
-        this.startCategory = ""
-
-        // Fetch data
-        const {data, fromItem} = this.props.navigation.state.params;
-        var ids = [];
-        this.startCategory = fromItem;
-        data.forEach((item) => {
-            ids.push(item.id);
-            this.names[item.id] = item.name;
-        });
-        this.props.getGenresContent(ids);
+        this.names = null;
+        this.startCategory = "";
     };
 
     componentDidMount() {
+        // Fetch data
+        const {data, fromItem} = this.props.navigation.state.params;
 
+        let ids = [];
+
+        data.forEach((item) => {
+            ids.push(item.id);
+
+        });
+        this.props.getGenresContent(ids);
     };
 
     _getPagePosition = (index, length) => {
@@ -36,20 +35,43 @@ export default class Category extends Component {
         }
     };
 
+    _onVideoPress = (item, isLive) => {
+        const {navigation} = this.props;
+
+        navigation.navigate('LowerPageComponent', {
+            item: item,
+            isLive: isLive
+        })
+    };
+
+    _keyExtractor = (item, index) => item.id + index;
 
     render() {
         const {genresContent} = this.props;
         if (!genresContent.fetched || genresContent.isFetching) {
-            return null;
+            return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            );
         }
-        _keyExtractor = (item, index) => item.id + index;
+
+        const {data, fromItem} = this.props.navigation.state.params;
+        this.startCategory = fromItem;
+        this.names = data.reduce((map, obj)=> {
+            map[obj.id] = obj.name;
+            return map;
+        }, {});
+
         let keys = Object.keys(genresContent.data);
+        console.log("GENRES CONTENT",genresContent.data);
         var startIndex = 0;
         keys.forEach((key, index) => {
             if (this.names[key] == this.startCategory) {
                 startIndex = index;
             }
         });
+
         return (
             <View style={{width: '100%', height: '100%'}}>
                 <StatusBar
@@ -58,14 +80,18 @@ export default class Category extends Component {
                     barStyle='dark-content'/>
                 <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false} index={startIndex}>
                     {keys.map((key, index) => {
+                        console.log("NAME", key, "NAMES", this.names);
                         return (<CategoryPageView pagePosition={this._getPagePosition(index, keys.length)}
-                                                  header={this.names[key]}
+                                                  header={this.names[key] ? this.names[key] : ""}
                                                   slotMachines={genresContent.data[key].features}
                                                   vod={genresContent.data[key].VOD}
                                                   epgs={genresContent.data[key].EPGs}
-                                                  key={"category" + index}/>)
+                                                  key={"category" + index}
+                                                  goBack={()=>this.props.navigation.goBack()}
+                                                  onVideoPress={(item, isLive)=> this._onVideoPress(item, isLive)}/>)
                     })}
                 </Swiper>
+
             </View>
         );
     }
@@ -76,6 +102,7 @@ const styles = StyleSheet.create({
 
     pageViewStyle: {
         backgroundColor: colors.screenBackground
-    }
+    },
+
 });
 
