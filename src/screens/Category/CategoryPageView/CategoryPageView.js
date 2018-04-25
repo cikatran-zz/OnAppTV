@@ -222,7 +222,7 @@ class CategoryPageView extends React.PureComponent{
                     ListFooterComponent={this._renderListFooter}
                     sections={[
                         {data:[this.props.slotMachines], showHeader: false, renderItem: this._renderSlotMachines},
-                        {data:[this.props.epgs], title: "On Live", showHeader: true, renderItem: this._renderOnLiveList},
+                        {data:[this.props.epgs], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList},
                         {data:[this.props.vod], title: "VOD", showHeader: true, renderItem: this._renderVODList}
                     ]}
                 />

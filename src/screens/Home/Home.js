@@ -56,7 +56,7 @@ export default class Home extends Component {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
-            this.props.getChannel(-1);
+            //this.props.getChannel(-1);
         });
     };
 

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text} from 'react-native';
+import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text, Platform} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
+import Orientation from "react-native-orientation";
 
 export default class Category extends Component {
 
@@ -23,7 +24,20 @@ export default class Category extends Component {
 
         });
         this.props.getGenresContent(ids);
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('white');
+            this.props.getChannel(-1);
+        });
     };
+
+    componentWillMount() {
+        Orientation.lockToPortrait();
+    }
+
+    componentWillUnmount() {
+        this._navListener.remove();
+    }
 
     _getPagePosition = (index, length) => {
         if (index === 0) {
