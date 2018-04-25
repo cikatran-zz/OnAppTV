@@ -22,7 +22,7 @@ import {getBlurRadius} from '../../../utils/blurRadius'
 import { secondFormatter } from '../../../utils/timeUtils'
 import Swiper from 'react-native-swiper'
 import PinkRoundedButton from '../../../components/PinkRoundedLabel'
-import { rootViewTopPadding } from '../../../utils/rootViewTopPadding'
+import { rootViewTopPadding } from '../../../utils/rootViewPadding'
 
 const { width, height } = Dimensions.get("window")
 export default class LocalVideoModal extends React.Component {
