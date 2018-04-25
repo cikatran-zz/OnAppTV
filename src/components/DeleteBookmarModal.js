@@ -4,6 +4,8 @@ import {Image, Modal, StyleSheet, Switch, Text, TouchableOpacity, View} from 're
 import {colors} from '../utils/themeConfig'
 import BlurView from './BlurView'
 import {getBlurRadius} from '../utils/blurRadius'
+import {DotsLoader} from 'react-native-indicator';
+
 
 export default class DeleteBookmarkModal extends React.PureComponent {
 
@@ -38,39 +40,37 @@ export default class DeleteBookmarkModal extends React.PureComponent {
   }
 
   _renderDeleteScreen = () => {
-      setTimeout(() => {
-        this.setState({
-            deleteSwitch: false
-        })
-        this.props.onClosePress()
-      }, 2000)
-      console.log('delete screen')
+    this.props.onClosePress()
+    console.log('delete screen')
       return (
-        <Text style={{top: '45%', left: '45%', position: 'absolute', fontSize: 15, color: '#9F9F9F'}}>Deleting</Text>
+        <View style={{flexDirection: 'column', alignItems: 'center', position: 'absolute', width: '100%'}}>
+          <Text style={{fontSize: 15, color: colors.whiteBackground, marginBottom: 20}}>Deleting</Text>
+          <DotsLoader color={colors.textWhitePrimary} size={20} betweenSpace={10} style={{width: '100%'}}/>
+        </View>
       )
   }
 
   _renderRecordContent = (data) => {
-    if (!data) return null
+      if (!data) return null
+    if (data.originalImages) {
 
-    let metaData = data.metaData
-
-    if (metaData)
       return (
         <View style={styles.contentContainer}>
-          <Image source={{uri: metaData.image}} style={styles.banner}/>
-          <Text style={styles.title}>{metaData.title}</Text>
+          <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
+          <Text style={styles.title}>{data.title}</Text>
           <View style={styles.deleteRecordContainer}>
             <Text style={styles.deleteText}>Edit the title</Text>
-            <Switch style={styles.switchToggle} value={this.state.editTitle} onValueChange={(value) => { console.log(value) }}/>
+            <Switch style={styles.switchToggle} value={this.state.editTitle}
+                    onValueChange={(value) => { console.log(value) }}/>
           </View>
           <View style={styles.deleteRecordContainer}>
             <Text style={styles.deleteText}>Delete</Text>
-            <Switch style={styles.switchToggle} value={this.state.deleteSwitch} onValueChange={(value) => { this.setState({deleteSwitch: value}) }}/>
+            <Switch style={styles.switchToggle} value={this.state.deleteSwitch}
+                    onValueChange={(value) => { this.setState({deleteSwitch: value}) }}/>
           </View>
         </View>
       )
-    else return null
+    } else return null
   }
 
   _renderContent = () => {
@@ -88,7 +88,7 @@ export default class DeleteBookmarkModal extends React.PureComponent {
       <Modal animationType={this.props.animationType} transparent={this.props.transparent}
       visible={this.props.visible} onRequestClose={() => console.log('Modal close')}>
         <View style={styles.modal}>
-          <BlurView blurRadius={getBlurRadius(30)} style={styles.blurView} overlayColor={1}/>
+          <BlurView blurRadius={getBlurRadius(30)} style={styles.blurView} overlayColor={0x75000000}/>
           <TouchableOpacity style={styles.close} onPress={() => this.props.onClosePress(-1)}>
             <Image source={require('../assets/ic_modal_close.png')} />
           </TouchableOpacity>
@@ -110,9 +110,11 @@ const styles = StyleSheet.create ({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'transparent',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   blurView: {
+    position: 'absolute',
     width: '100%',
     height: '100%'
   },

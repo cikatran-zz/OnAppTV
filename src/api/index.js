@@ -622,5 +622,34 @@ export const readUsbDir = (dir_path) => {
     })
 }
 
+export const getPvrList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrListInJson((error, events) => {
+            resolve(JSON.parse(events[0]))
+
+        })
+    }).then(value => {
+        let promises = value.map(x => {
+          return new Promise((resolve, reject) => {
+            let json = {
+              recordName: x
+            }
+            console.log(json)
+            NativeModules.STBManager.getPvrInfoWithJsonString(JSON.stringify(json), (error, events) => {
+              console.log(events)
+              resolve(JSON.parse(events[0]))
+            })
+          })
+
+        })
+        return new Promise((resolve, reject) => {
+          Promise.all(promises).then(value => {
+              console.log(value)
+              resolve(value)
+          })
+        })
+    })
+}
+
 
 

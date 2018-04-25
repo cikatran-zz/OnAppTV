@@ -23,7 +23,8 @@ export const colors = {
   greyTextBelowParentControl: '#7E7E7E',
   greyTextInputBorder: '#989898',
   greyCloseIconBg: '#B9B9B9',
-  blackDeleteButton: '#393939'
+  blackDeleteButton: '#393939',
+  blackNoBooking: 'rgba(92,92,92,0.73)'
 };
 
 export const textDarkDefault = {

@@ -10,13 +10,15 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    NativeModules
 } from 'react-native'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors} from '../../utils/themeConfig'
 import Modal from '../../components/DeleteBookmarModal'
 import {timeFormatter} from '../../utils/timeUtils'
+import { checkInTime } from '../../book-download-util/bookUtils'
 
 export default class Bookmark extends React.Component {
   constructor(props) {
@@ -39,14 +41,23 @@ export default class Bookmark extends React.Component {
     else {
       // Delete
       const {listData, data} = this.state
-      let newArray = listData.slice()
-      let index = newArray.indexOf(data)
-      newArray.splice(index, 1)
+      NativeModules.STBManager.deletePvrBookWithJson(JSON.stringify(data), (error, events) => {
+        if (JSON.parse(events[0]).return !== 1) {
+          console.log('Delete Pvr in bookmark error %s')
+          console.log(data)
+        }
+        else {
+          console.log('Delete PVR successfully!')
+          let newArray = listData.slice()
+          let index = newArray.indexOf(data)
+          newArray.splice(index, 1)
 
-      this.setState({
-        openModal: !this.state.openModal,
-        data: {},
-        listData: newArray
+          this.setState({
+            openModal: !this.state.openModal,
+            data: {},
+            listData: newArray
+          })
+        }
       })
     }
 
@@ -71,17 +82,14 @@ export default class Bookmark extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-        <FlatList
-          style={styles.listBookmarks}
-          horizontal={false}
-          data={item}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderBookmarkItem}/>
+        {this._bookmarkListOrNon(item)}
       </View>
     )
   }
 
   _renderBookmarkItem = ({item}) => {
+    console.log(JSON.stringify(item))
+
     return (
       <View style={{flexDirection: 'row'}}>
         <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
@@ -105,7 +113,7 @@ export default class Bookmark extends React.Component {
         <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.textTitle}>{item.metaData.title}</Text>
         <Text style={styles.textType}>{item.metaData.subTitle}</Text>
         <Text style={styles.textTime}>{timeFormatter(item.record.startTime)} - {item.metaData.endtime}</Text>
-        <TouchableOpacity style={styles.closeIcon}>
+        <TouchableOpacity style={styles.closeIcon} onPress={() => this._toggleModal(item)}>
           <Image source={require('../../assets/ic_close.png')}/>
         </TouchableOpacity>
       </View>
@@ -115,26 +123,76 @@ export default class Bookmark extends React.Component {
   _renderListScheduledRecords = ({item}) => {
       return(
         <View style={{flexDirection: 'column'}}>
-          <FlatList
-            style={styles.listScheduledRecord}
-            horizontal={true}
-            data={item}
-            keyExtractor={this._keyExtractor}
-            showsHorizontalScrollIndicator={false}
-            renderItem={this._renderScheduledItem}/>
+          {this._recordListOrNon(item)}
         </View>
       )
   }
 
-  render() {
-    const {books} = this.props;
+  componentWillReceiveProps(nextProps) {
+    const {books} = nextProps
     if (books.data) {
-        if (!this.state.listData || books.data.length < this.state.listData.length) {
-            this.setState({
-              listData: books.data
-            })
-        }
+      if (!this.state.listData || books.data.length < this.state.listData.length) {
+        this.setState({
+          listData: books.data
+        })
+      }
     }
+  }
+
+  _recordListOrNon = (item) => {
+    if (item.length === 0) {
+      return (
+        <View style={{flexDirection: 'column', height: 156, marginLeft: 8, alignSelf: 'flex-start', alignItems: 'center'}}>
+            <View style={styles.noBookmarkContainer}>
+              <Text style={{color: colors.blackNoBooking, fontSize: 15}}>NO RECORD</Text>
+            </View>
+            <Text numberOfLines={1} ellipsizeMode={'tail'} style={[styles.textTitle]}>No record</Text>
+        </View>
+      )
+    }
+    else {
+      return (
+        <FlatList
+          style={styles.listScheduledRecord}
+          horizontal={true}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          showsHorizontalScrollIndicator={false}
+          renderItem={this._renderScheduledItem}/>
+      )
+    }
+  }
+
+  _bookmarkListOrNon = (item) => {
+    if (item.length === 0) {
+      return (
+        <View style={{flexDirection: 'row', marginTop: '4%', width: '100%'}}>
+          <View style={styles.noBookmarkContainer}>
+            <Text style={{color: colors.blackNoBooking, fontSize: 15}}>NO BOOKING</Text>
+          </View>
+          <View style={{flexDirection: 'column', width: '100%'}}>
+            <Text style={styles.itemTitle}>No booking</Text>
+            <Text style={styles.itemType}>No details</Text>
+          </View>
+        </View>
+      )
+    }
+    else {
+      return (
+        <FlatList
+          style={styles.listBookmarks}
+          horizontal={false}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderBookmarkItem}/>
+      )
+    }
+  }
+
+  render() {
+    const {listData} = this.state
+
+    let recording = listData ? listData.filter(x => checkInTime(x.record.startTime, x.record.duration)) : []
 
     return (
       <View style={styles.container}>
@@ -150,8 +208,8 @@ export default class Bookmark extends React.Component {
           onEndReachedThreshold={20}
           ListFooterComponent={this._renderListFooter}
           sections={[
-            {data: [this.state.listData], renderItem: this._renderListScheduledRecords},
-            {data: [this.state.listData], renderItem: this._renderListBookmarks}
+            {data: [recording], renderItem: this._renderListScheduledRecords},
+            {data: [listData ? listData : []], renderItem: this._renderListBookmarks}
           ]}
         />
       </View>
@@ -280,6 +338,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: '#ACACAC',
     fontSize: 12
+  },
+  noBookmarkContainer: {
+      borderRadius: 4,
+      borderWidth: 2,
+      overflow: 'hidden',
+      borderColor: "#95989A",
+      width: 150,
+      height: 75,
+      marginVertical: 5,
+      marginHorizontal: 10,
+      justifyContent: 'center',
+      alignItems: 'center'
   }
 })
 

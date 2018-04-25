@@ -6,7 +6,7 @@ import VideoThumbnail from '../../components/VideoThumbnail'
 import { colors } from '../../utils/themeConfig'
 import { secondFormatter, timeFormatter } from '../../utils/timeUtils'
 
-export default class RecordList extends React.PureComponent {
+export default class RecordList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,31 +15,71 @@ export default class RecordList extends React.PureComponent {
     }
   };
 
-  componentDidMount() {
+  _toggleModal = (item) => {
 
-  }
-
-  _toggleModal = (data) => {
-
-    if (data || data === -1) {
+    if (item || item === -1) {
       // Open modal & close modal normally
       this.setState({
         openModal: !this.state.openModal,
-        data: data
+        data: item
       })
     }
     else {
       // Delete
-      const {listData, data} = this.state
-      let newArray = listData.slice()
-      let index = newArray.indexOf(data)
-      newArray.splice(index, 1)
+      const {pvrList, downloaded, downloadedUserKit} = this.props
+      const {data} = this.state
 
-      this.setState({
-        openModal: !this.state.openModal,
-        data: {},
-        listData: newArray
-      })
+      /*
+       Record delete zone
+        */
+
+      if (!pvrList) {
+        let deletedList = [].concat(downloadedUserKit).filter(x => x.contentId !== data.contentId)
+        let target = {
+          path: "/C/Downloads/" + data.fileName
+        }
+
+        NativeModules.STBManager.usbRemoveWithJson(JSON.stringify(target), (error, events) => {
+          console.log(events[0])
+          if (JSON.parse(events[0]).return === '1') {
+            NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {})
+            this.setState({
+              openModal: !this.state.openModal,
+              data: {},
+              dataArr: deletedList
+            })
+          }
+          else {
+            console.log('Remove file falure!')
+            console.log(target)
+          }
+        })
+      }
+      else {
+        /*
+        Bookmark delete zone
+         */
+        let deletedList = [].concat(pvrList).filter(x => x.record_parameter.recordName !== data.record_parameter.recordName)
+        let target = {
+          recordName: data.record_parameter.recordName
+        }
+        NativeModules.STBManager.deletePvrWithJsonString(JSON.stringify(target), (error, events) => {
+          if (JSON.parse(events[0]).return === 1) {
+            this.setState({
+              openModal: !this.state.openModal,
+              data: {},
+              dataArr: deletedList
+            })
+          }
+          else {
+            console.log('Remove PVR file falure!')
+            console.log(target)
+          }
+        })
+      }
+
+
+
     }
   }
 
@@ -47,45 +87,78 @@ export default class RecordList extends React.PureComponent {
     if (item.type === 'Episode') {
       return 'Season ' + item.seasonIndex + ' - Episode ' + item.episodeIndex
     }
-    else {
-      return item.type
+    else if (item.type === undefined) {
+      return item.subTitle
     }
+    else return item.type
+  }
+
+  _playPvr = (item) => {
+    this.props.navigation.navigate('LocalVideoModal', {item: item, epg: [item], isLive: false})
   }
 
   _keyExtractor = (item, index) => index
 
   _renderItem = ({item}) => {
-    return (
-      <View style={styles.itemContainer}>
-        <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
-        <View style={{flexDirection: 'column', marginRight: 60}}>
-          <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
-          <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
-          <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
-        </View>
-        <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
-          <Image source={require('../../assets/ic_three_dots.png')}/>
-        </TouchableOpacity>
-      </View>
-    )
+
+        return (
+          <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
+            <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
+            <View style={{flexDirection: 'column', marginRight: 60}}>
+              <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
+              <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
+              <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
+            </View>
+            <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
+              <Image source={require('../../assets/ic_three_dots.png')}/>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        )
+
   }
 
   _renderListFooter = () => (
     <View style={{width: '100%', height: Dimensions.get("window").height*0.08 + 20, backgroundColor:'transparent'}}/>
   )
 
+  _isInDownloaded = (item, downloadedList) => {
+    if (!item || !downloadedList) return false
+    // Log & Temp file for checking download complete
+    let tempFile = item.fileName + ".tmp"
+    let logFile = item.fileName + ".log"
+    return downloadedList.some((x) => x.fileName === item.fileName) && downloadedList.every((x) => x.fileName !== tempFile && x.fileName !== logFile)
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('ShouldComponentUpdate')
+    console.log(nextProps)
+    console.log(nextState)
+    return true
+  }
+
+  _recordTransform = (item) => {
+    let metaData = JSON.parse(item.metaData)
+    return {
+      title: metaData.title,
+      durationInSeconds: item.duration,
+      originalImages: [{
+        url: metaData.image
+      }],
+      subTitle: metaData.subTitle
+    }
+  }
+
   render() {
-    const {header, books, downloaded} = this.props;
+    const {header, pvrList, downloaded, downloadedUserKit} = this.props;
+    const {data, dataArr} = this.state
+    let displayDataArr
 
-    let dataArr
-
-    NativeModules.RNUserKit.getProperty("download_list", (e) => {
-      console.log(e)
-    })
+    if (pvrList) displayDataArr = pvrList.map(x => this._recordTransform(x))
+    else displayDataArr = dataArr ? dataArr : (downloadedUserKit ? downloadedUserKit.filter(x => this._isInDownloaded(x, downloaded)) : [])
 
     return (
       <View style={styles.container}>
-        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'record'} onClosePress={this._toggleModal} data={this.state.data}/>
+        <Modal animationType={'fade'} transparent={true} visible={this.state.openModal} type={'record'} onClosePress={this._toggleModal} data={data}/>
         <PinkRoundedLabel text={header} style={styles.headerLabel}/>
         <View style={{width: '100%'}}>
         <TextInput style={styles.textInput}
@@ -99,7 +172,7 @@ export default class RecordList extends React.PureComponent {
           style={styles.list}
           horizontal={false}
           keyExtractor={this._keyExtractor}
-          data={dataArr}
+          data={displayDataArr}
           renderItem={this._renderItem}
           ListFooterComponent={this._renderListFooter}
         />
@@ -128,7 +201,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   itemContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   headerLabel: {
     textAlign: 'center',
@@ -166,16 +239,3 @@ const styles = StyleSheet.create({
     fontSize: 12
   }
 })
-
-const fakeData = {
-  url : "http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg",
-  videoData : {
-    title: "Test",
-    type: "Documentary",
-    originalImages: [{
-      url: "http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg"
-    }]
-  }
-}
-
-const fakeList = [fakeData, fakeData, fakeData, fakeData, fakeData]
