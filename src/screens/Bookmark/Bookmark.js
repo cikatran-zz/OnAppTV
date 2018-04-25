@@ -113,7 +113,7 @@ export default class Bookmark extends React.Component {
         <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.textTitle}>{item.metaData.title}</Text>
         <Text style={styles.textType}>{item.metaData.subTitle}</Text>
         <Text style={styles.textTime}>{timeFormatter(item.record.startTime)} - {item.metaData.endtime}</Text>
-        <TouchableOpacity style={styles.closeIcon}>
+        <TouchableOpacity style={styles.closeIcon} onPress={() => this._toggleModal(item)}>
           <Image source={require('../../assets/ic_close.png')}/>
         </TouchableOpacity>
       </View>
