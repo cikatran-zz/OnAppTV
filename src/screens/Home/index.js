@@ -11,7 +11,6 @@ import {getNews} from "../../actions/getNews";
 function mapStateToProps(state) {
     return {
         banner: state.bannerReducer,
-        channel: state.channelReducer,
         live: state.liveReducer,
         vod: state.vodReducer,
         ads: state.adsReducer,
@@ -23,7 +22,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getBanner: () => dispatch(getBanner()),
-        getChannel: (numberOfItems) => dispatch(getChannel(numberOfItems)),
         getLive: (time) => dispatch(getLive(time)),
         getVOD: (page, itemPerPage) => dispatch(getVOD(page, itemPerPage)),
         getAds: () => dispatch(getAds()),
