@@ -28,6 +28,7 @@ import timeShiftLimitSizeReducer from "./timeShiftLimitSizeReducer";
 import notificationReducer from "./notificationReducer"
 import profileInfoReducer from "./profileInfoReducer";
 import pvrListReducer from "./pvrListReducer"
+import epgSameTimeReducer from "./epgSameTimeReducer"
 
 export default combineReducers({
     nav,
@@ -59,5 +60,6 @@ export default combineReducers({
     timeShiftLimitSizeReducer,
     notificationReducer,
     profileInfoReducer,
-    pvrListReducer
+    pvrListReducer,
+    epgSameTimeReducer
 });

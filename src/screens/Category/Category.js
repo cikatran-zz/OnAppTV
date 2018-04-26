@@ -4,6 +4,7 @@ import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text, Platform, Ac
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 import Orientation from "react-native-orientation";
+import {DotsLoader} from "react-native-indicator";
 
 export default class Category extends Component {
 
@@ -51,7 +52,7 @@ export default class Category extends Component {
     _onVideoPress = (item, isLive) => {
         const {navigation} = this.props;
 
-        navigation.navigate('LowerPageComponent', {
+        navigation.navigate('DetailsPage', {
             item: item,
             isLive: isLive
         })
@@ -70,7 +71,7 @@ export default class Category extends Component {
         if (!genresContent.fetched || genresContent.isFetching) {
             return (
                 <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size="large"/>
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             );
         }

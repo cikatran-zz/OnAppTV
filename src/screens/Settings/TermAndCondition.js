@@ -101,13 +101,6 @@ export default class Privacy extends Component {
         const {navigation} = this.props;
         return (
             <View style={styles.container}>
-                <View style={styles.navigationView}>
-                    <Text style={styles.titleText}>Terms & Conditions</Text>
-                    <TouchableOpacity onPress={() => navigation.goBack()}
-                                      style={{marginLeft: 18, paddingVertical: 10, paddingHorizontal: 10}}>
-                        <Image source={require('../../assets/ic_left_arrow.png')}/>
-                    </TouchableOpacity>
-                </View>
                 <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                     <Text style={styles.mainText}>{text}</Text>
                 </ScrollView>
@@ -135,7 +128,7 @@ const styles = StyleSheet.create({
         position: 'absolute'
     },
     scrollView: {
-        top: rootViewTopPadding() + 83,
+        top: 28.5,
         marginLeft: 29,
         marginRight: 29,
         bottom: 50,

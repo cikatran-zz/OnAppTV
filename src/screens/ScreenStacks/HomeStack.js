@@ -3,7 +3,7 @@ import MyCategories from "../MyCategories";
 import {StackNavigator} from "react-navigation";
 import Category from "../Category";
 import defaultNavigationOptions from "../../utils/navigationOption";
-import LowerPageComponent from '../LowerPage'
+import LowerPageComponent from '../DetailsPage'
 import VideoControlModal from '../VideoControlModal'
 
 export default HomeStack = StackNavigator({
