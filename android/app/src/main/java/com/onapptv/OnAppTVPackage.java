@@ -23,6 +23,7 @@ public class OnAppTVPackage implements ReactPackage {
     modules.add(new AndroidSTBFramework(reactContext));
     modules.add(new AndroidUserKitFramework(reactContext));
     modules.add(new AndroidUserKitIdentityFramework(reactContext));
+    modules.add(new BrightcoveFramework(reactContext));
 
     return modules;
   }
