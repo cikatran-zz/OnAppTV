@@ -651,5 +651,12 @@ export const getPvrList = () => {
     })
 }
 
+export const getEpgSameTime = (currentTime, channelId) => {
+    return client.query({
+      query: config.queries.EPG_SAME_TIME,
+      variables: {currentTime: currentTime, id: [channelId]}
+    })
+}
+
 
 

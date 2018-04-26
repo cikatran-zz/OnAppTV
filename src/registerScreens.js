@@ -13,7 +13,7 @@ import Authentication from "./screens/Authentication";
 import SignIn from "./screens/Authentication/SignIn";
 import SignUp from "./screens/Authentication/SignUp";
 import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
-import LowerPageComponent from './screens/LowerPage'
+import DetailsPage from './screens/DetailsPage'
 import BrightcovePlayerScreen from './screens/BrightcovePlayer'
 
 const TabNav = TabNavigator({
@@ -78,8 +78,8 @@ export const ScreenStack = StackNavigator({
     LocalVideoModal: {
         screen: LocalVideoModal
     },
-    LowerPageComponent: {
-        screen: LowerPageComponent
+    DetailsPage: {
+        screen: DetailsPage
     },
     BrightcovePlayerScreen: {
         screen: BrightcovePlayerScreen

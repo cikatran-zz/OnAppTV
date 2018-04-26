@@ -173,9 +173,11 @@ query getLiveEPG($currentTime: Date){
         }
       }
     }) {
+      channelId
       channelData {
         title
         lcn
+        serviceId
       }
       videoData {
         title
@@ -185,6 +187,15 @@ query getLiveEPG($currentTime: Date){
         genresData {
           name
         }
+        title
+        longDescription
+        shortDescription
+        feature
+        seriesId
+        seasonIndex
+        episodeIndex
+        type
+        impression
       }
       startTime
       endTime
@@ -194,9 +205,12 @@ query getLiveEPG($currentTime: Date){
 `;
 
 const epgQuery = gql`
-query getEPGByChannel($channelId: MongoID!){
+query getEPGByChannel($channelId: Float){
   viewer{
-      channelById(_id : $channelId) {
+      channelOne(filter: {
+        serviceId: $channelId
+      }
+      ) {
         title
         longDescription
         shortDescription
@@ -451,6 +465,51 @@ query searchBc($id: String) {
 }
 `;
 
+const queryEpgSameTime = gql`
+query getEpgSameTime($currentTime: Date, $id: [MongoID]){
+  viewer{
+    epgMany(filter: {
+      _operators:{
+        startTime: {
+          lte: $currentTime
+        },
+        endTime:{
+          gte: $currentTime
+        },
+        channelId: {
+          nin: $id
+        }
+      }
+    }) {
+      channelData {
+        title
+        lcn
+        serviceId
+      }
+      videoData {
+        title
+        originalImages {
+          url
+        }
+        genresData {
+          name
+        }
+        title
+        longDescription
+        shortDescription
+        feature
+        seriesId
+        seasonIndex
+        episodeIndex
+        type
+        impression
+      }
+      startTime
+      endTime
+    }
+  }
+}`
+
 export default {
     serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
     queries: {
@@ -468,6 +527,7 @@ export default {
         EPG_WITH_SERIES: seriesEpgQuery,
         SERIES_INFO: seriesInfoQuery,
         ZAPPER_CONTENT: zapperContentQuery,
-        BRIGHTCOVE_SEARCH : searchBrightcoveQuery
+        BRIGHTCOVE_SEARCH : searchBrightcoveQuery,
+        EPG_SAME_TIME: queryEpgSameTime
     }
 };
