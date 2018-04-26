@@ -21,6 +21,7 @@ import * as getTimeShiftLimitSize from './getTimeShiftLimitSize'
 import * as getNotification from './getNotification'
 import * as getProfileInfo from './getProfileInfo'
 import * as getPvrList from './getPvrList'
+import * as getEpgSameTime from './getEpgSameTime'
 
 export default actions = {
     getBanner,
@@ -46,5 +47,6 @@ export default actions = {
     getTimeShiftLimitSize,
     getNotification,
     getProfileInfo,
-    getPvrList
+    getPvrList,
+    getEpgSameTime
 };
