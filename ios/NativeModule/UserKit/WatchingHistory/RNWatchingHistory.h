@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 
-@interface RNWatchingHistory : NSObject
+@interface RNWatchingHistory : NSObject<RCTBridgeModule>
 
 @end
