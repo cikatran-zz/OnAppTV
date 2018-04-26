@@ -1,16 +1,16 @@
 import React from 'react'
 import {
-    Animated,
-    Dimensions,
-    Image,
-    ImageBackground,
-    Modal,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    NativeModules,
-    Share,
-    View
+  Animated,
+  Dimensions,
+  Image,
+  ImageBackground,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  NativeModules,
+  Share,
+  View, PanResponder
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -29,6 +29,9 @@ import AlertModal from '../../components/AlertModal'
 const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
 
+  _currentPosition = 0
+  _offsetRate = 0
+
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
     if (width > height) {
@@ -40,10 +43,6 @@ export default class VideoControlModal extends React.Component {
         })
       }
     }
-  }
-
-  _releaseOrientationCallback = () => {
-    Orientation.unlockAllOrientations()
   }
 
   _showAlertModal = () => {
@@ -71,24 +70,75 @@ export default class VideoControlModal extends React.Component {
             isScrollEnabled: true
         }
 
-        this.alertModal = null
+      this.alertModal = null
+    }
+
+    getCurrentPosition() {
+      return this._currentPosition
+    }
+
+    setPosition(pos) {
+      if (pos > width) {
+        return;
+      }
+      let periodRate = Math.round(pos / this._offsetRate)
+      // Display played area
+      console.log('Dragging to position %s', periodRate)
+      this.setState({
+        currentPos: periodRate < 0 ? 0 : periodRate
+      })
+    }
+
+    setCurrentPosition(newPos) {
+      let pos = this._currentPosition + newPos
+      if (pos < 0)
+        pos = 0
+      if (pos > width)
+        return;
+      this._currentPosition += newPos
+      if (this.state.isConnected) {
+        let json = {
+          playPosition: Math.round(this._currentPosition / this._offsetRate)
+        }
+        NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (e,r) => {})
+      }
+    }
+
+    _onStartShouldSetPanResponder = (event) => {
+      return true;
+    };
+
+    _onPanResponderMove = (event, gestureState) => {
+      this.setState({dragging: true})
+      this._onChangeScrollEnabled(false);
+      this.setPosition(this.getCurrentPosition() + gestureState.dx);
+    };
+
+    _onPanResponderRelease = (event, gestureState) => {
+      this.setState({dragging: false});
+      this._onChangeScrollEnabled(true);
+      this.setCurrentPosition(gestureState.dx);
+      return true;
     }
 
     componentWillMount() {
         Orientation.unlockAllOrientations()
+        this._panResponder = PanResponder.create({
+          onMoveShouldSetPanResponder: this._onStartShouldSetPanResponder,
+          onMoveShouldSetPanResponderCapture: this._onStartShouldSetPanResponder,
+          onPanResponderMove: this._onPanResponderMove,
+          onPanResponderRelease: this._onPanResponderRelease,
+        })
     }
 
     _getVodTime = setInterval(() => {
         const {isLive} = this.props.navigation.state.params;
         if (!isLive) {
-
             NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
-                if (!e) {
-                    let pos = JSON.parse(r[0]).playPosition
-                    this.setState({
-                        currentPos: pos
-                    })
-                }
+                let pos = JSON.parse(r[0]).playPosition
+                this.setState({
+                    currentPos: pos
+                })
             })
         }
     }, 1000);
@@ -108,43 +158,36 @@ export default class VideoControlModal extends React.Component {
     componentWillUnmount() {
         clearInterval(this._getTimeInterval)
         clearInterval(this._getVodTime)
-
-        NativeModules.STBManager.playMediaStop((error, events) => {
-        })
-
     }
 
-  componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
 
-    let bcVideos = nextProps.bcVideos;
-    if (!bcVideos.isFetching && !this.state.firstTimePlay) {
-        let json = {
+      let bcVideos = nextProps.bcVideos;
+      if (!bcVideos.isFetching && !this.state.firstTimePlay) {
+          let json = {
+            url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
+            playPosition: 0
+          }
+        NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
+          })
+
+        let progressJson = {
           url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-          playPosition: 0
+          destination_path: '/C/Downloads'
         }
-      NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
+
+        console.log('Progress json %s', JSON.stringify(progressJson))
+        NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
+          console.log(r[0])
         })
-
-      let progressJson = {
-        url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-        destination_path: '/C/Downloads'
       }
-
-      console.log('Progress json %s', JSON.stringify(progressJson))
-      NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
-        if (e) console.log(e)
-        else console.log(r[0])
-      })
     }
-  }
 
     componentDidMount() {
         const {item, isLive, epg} = this.props.navigation.state.params
-        console.log(epg)
 
         NativeModules.STBManager.isConnect((connectStr) => {
           let json = JSON.parse(connectStr).is_connected
-          console.log("Is connect %s", json)
           this.setState({isConnected: json})
         })
 
@@ -163,16 +206,17 @@ export default class VideoControlModal extends React.Component {
         if (isLive) {
           // Change channel with lcn
           NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lcn}),(error, events) => {
-            if (error) {
-              console.log(error);
-            } else {
               console.log(JSON.parse(events[0]))
-            }
           })
+          // Calculate offsetRate for dragging
+          let durations = (new Date(item.endTime).getTime() - new Date(item.startTime).getTime()) / 1000
+          this._offsetRate = width / durations
         }
         else {
-          //Test play video
           this.props.getBcVideos(item.contentId)
+          // Calculate offsetRate for dragging
+          this._offsetRate = width / item.durationInSeconds
+
         }
 
         Orientation.addOrientationListener(this._orientationDidChange);
@@ -195,16 +239,9 @@ export default class VideoControlModal extends React.Component {
     return returnText
   }
 
-  _onRecordPress = () => {
+  _onRecordPress = () => this._toggleModal('record')
 
-    this._toggleModal('record')
-  }
-
-  _onFavouritePress = () => {
-
-    this._toggleModal('favorite')
-
-  }
+  _onFavouritePress = () => this._toggleModal('favorite')
 
   _onVolumeChange = (newValue) => {
     this.setState({ volume: newValue })
@@ -217,7 +254,7 @@ export default class VideoControlModal extends React.Component {
     })
   }
 
-  _getLivePassedTime = (isLive, timeInSeconds, durationInSeconds) => {
+  _getLivePassedTime = (isLive, timeInSeconds) => {
       if (isLive) {
         let time = this.state.currentTime
         let startTime = new Date(timeInSeconds)
@@ -225,10 +262,7 @@ export default class VideoControlModal extends React.Component {
         if (passed > 0) return secondFormatter(passed.toString())
       }
       else {
-        const {startPoint, currentTime} = this.state
-
-        let passedTime = (currentTime - startPoint) / 1000
-        if (passedTime > 0) return secondFormatter(passedTime.toString())
+        return secondFormatter(this.state.currentPos ? this.state.currentPos : 0)
       }
   }
 
@@ -270,10 +304,59 @@ export default class VideoControlModal extends React.Component {
   }
 
   _getVodProgress = (durationInSeconds) => {
-    const {startPoint, currentTime} = this.state
+    const {currentPos} = this.state
+    return (currentPos / durationInSeconds) * 100 + "%"
+  }
 
-    let passedTime = (currentTime - startPoint) / 1000
-    return (passedTime / durationInSeconds) * 100 + "%"
+  _resetPlayPosition = () => {
+    let json = {
+      playPosition: 0
+    }
+    NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (error, events) => {
+
+    })
+  }
+
+  _backWard = () => {
+    NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+      if (!error) {
+        let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
+        let playPosInJson = "{\n" +
+          "\tplayPosition: \n" + playPos + "}"
+        NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
+
+        })
+      }
+    })
+  }
+
+  _fastForward = () => {
+    NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+      if (!error) {
+        let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
+        let playPosInJson = "{\n" +
+          "\tplayPosition: \n" + playPos + "}"
+        NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
+
+        })
+      }
+    })
+  }
+
+  _playMediaControl = (bcVideos) => {
+    if (bcVideos.data) {
+
+      this.setState({isPlaying: !this.state.isPlaying})
+      if (this.state.isPlaying) {
+        NativeModules.STBManager.playMediaPause((error, events) => {
+
+        })
+      }
+      else {
+        NativeModules.STBManager.playMediaResume((error, events) => {
+        })
+      }
+    }
   }
 
   _renderPlaybackController = (item) => {
@@ -297,14 +380,7 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle} onPress={() => this._shareExecution(item.title, "")}>
             <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle} onPress={() => {
-            let json = {
-              playPosition: 0
-            }
-            NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (error, events) => {
-
-            })
-          }}>
+          <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle} onPress={() => this._resetPlayPosition()}>
             <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}>
@@ -316,51 +392,13 @@ export default class VideoControlModal extends React.Component {
           <Text style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
         </View>
         <View style={[styles.playbackButtons, {opacity: isLive === true ? 0.17 : 1}]}>
-          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => {
-              NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-                if (!error) {
-                  let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
-                  let playPosInJson = "{\n" +
-                    "\tplayPosition: \n" + playPos + "}"
-                  NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
-
-                  })
-                }
-              })
-            }
-          } style={styles.rewindButton}>
+          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._backWard()} style={styles.rewindButton}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>
-          <TouchableOpacity disabled={!this.state.isConnected} style={{ width: '21%', height: '100%', opacity: isLive === true ? 0.17 : 1}} onPress={() => {
-            if (bcVideos.data) {
-
-              this.setState({isPlaying: !this.state.isPlaying})
-              if (this.state.isPlaying) {
-                NativeModules.STBManager.playMediaPause((error, events) => {
-
-                })
-              }
-              else {
-                NativeModules.STBManager.playMediaResume((error, events) => {
-                })
-              }
-            }
-          }
-          }>
+          <TouchableOpacity disabled={!this.state.isConnected} style={{ width: '21%', height: '100%', opacity: isLive === true ? 0.17 : 1}} onPress={() => this._playMediaControl(bcVideos) }>
             <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => {
-            NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-              if (!error) {
-                let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
-                let playPosInJson = "{\n" +
-                  "\tplayPosition: \n" + playPos + "}"
-                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
-
-                })
-              }
-            })
-          }} style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
+          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._fastForward()} style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
             <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
@@ -389,28 +427,6 @@ export default class VideoControlModal extends React.Component {
     else return null
   }
 
-  _onLowerPageScroll = (y) => {
-    console.log("ScrollY", y)
-  }
-
-  _renderLowerPage = (epg, item) => {
-
-    if (!epg.data) {
-      return (<LowerPagerComponent listScrollOffsetY={this._onLowerPageScroll}/>)
-    }
-    let listData = epg.data
-    // use this variable when navigating from channel list
-    let video = listData[0]
-
-    return(
-      <LowerPagerComponent
-        toggleModal={this._toggleModal}
-        videoType={item.serviceID ? 'channel' : item.type}
-        listScrollOffsetY={this._onLowerPageScroll}
-        listData={listData} video={item.serviceID ? video : item}/>
-    )
-  }
-
   _renderTopContainer = (item, isLive) => {
     let data = item
     if (item.serviceID) {
@@ -420,7 +436,7 @@ export default class VideoControlModal extends React.Component {
       data = epg.data[0].videoData
     }
     return (
-      <View style={styles.topContainer}>
+      <View style={styles.topContainer} {...this._panResponder.panHandlers}>
         <ImageBackground style={styles.topVideoControl}
                          resizeMode="cover"
                          source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
@@ -501,15 +517,6 @@ export default class VideoControlModal extends React.Component {
 
   _keyExtractor = (item, index) => index;
 
-  _handleViewableChanged = (viewableItems) => {
-    console.log("on Scroll");
-    // this.videoScroll.scrollToLocation({sectionIndex: 1, itemIndex: 1, viewPosition: 0});
-    Animated.event([
-      { nativeEvent: { contentOffset: { y: this.scrollY } } },
-      { useNativeDriver: true },
-    ])
-  }
-
   _onSwiperIndexChanged = (index) => {
     const {item, isLive, epg} = this.props.navigation.state.params
     if (!isLive) {
@@ -558,7 +565,6 @@ export default class VideoControlModal extends React.Component {
 
   _toggleModal = (actionType) => {
     const {item} = this.props.navigation.state.params
-    console.log(actionType + " " + item.type)
 
         if (item.type === 'Episode') {
             this.setState({
@@ -571,7 +577,6 @@ export default class VideoControlModal extends React.Component {
 
       if (actionType === 'record') {
         if (item.type === 'Standalone') {
-          console.log(recordEnabled)
           if (recordEnabled) {
             // Stop downloading current item
             this.stopDownload()
@@ -582,7 +587,6 @@ export default class VideoControlModal extends React.Component {
           }
         }
         else {
-          console.log(recordEnabled)
           if (recordEnabled) {
             // Stop recording current channel
              this._stopRecord()
@@ -684,14 +688,10 @@ export default class VideoControlModal extends React.Component {
   }
 
   _simpleDataFormat = (time) => {
-    console.log('Time')
-    console.log(moment(time).format("YYYY-MM-DD hh:mm:ss"))
     return moment(time).format("YYYY-MM-DD hh:mm:ss")
   }
 
   _bookExecution = (liveItem) => {
-    console.log('Live item')
-    console.log(liveItem)
       let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
 
 
@@ -718,9 +718,7 @@ export default class VideoControlModal extends React.Component {
 
       NativeModules.STBManager.recordPvrStartWithJsonString(JSON.stringify(jsonString), (error, events) => {
         console.log('Record start')
-        if (error)
-          console.log(error)
-        else console.log(events)
+        console.log(events)
       })
   }
 
@@ -824,7 +822,7 @@ export default class VideoControlModal extends React.Component {
               <Text style={styles.modalTitleText}>{item.title}</Text>
               <Text style={styles.modalShortDes}>{"Series - Episode " + item.seasonIndex}</Text>
               <Text style={styles.modalLongDes}>{item.longDescription}</Text>
-              <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
+              <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}}>
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'item')}>
                   <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: firstButtonImg, borderRadius: 20}}>
                     <Image source={img} style={styles.buttonIconStyle}/>
@@ -833,7 +831,7 @@ export default class VideoControlModal extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'series')}>
                   <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: secondButtonImg, borderRadius: 20}}>
-                  <Image source={img} style={styles.buttonIconStyle}/>
+                    <Image source={img} style={styles.buttonIconStyle}/>
                   </View>
                   <Text>{seriesInfo.data ? seriesInfo.data.title : ""}</Text>
                 </TouchableOpacity>
