@@ -43,7 +43,7 @@ public class AndroidUserKitFramework extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void tract(String name, ReadableMap properties) {
+    public void track(String name, ReadableMap properties) {
         UserKit.getInstance().track(name, properties.toHashMap());
     }
 
