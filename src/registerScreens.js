@@ -63,9 +63,7 @@ export const ScreenStack = StackNavigator({
         screen: ParentalControlLock,
 
     },
-    TermAndCondition: {
-        screen: TermAndCondition
-    },
+
     Authentication: {
         screen: Authentication
     },

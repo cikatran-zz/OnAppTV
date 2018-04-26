@@ -36,7 +36,8 @@ export default class Home extends Component {
         super(props);
         this.state = {
             favoriteCategories: null,
-            category: null
+            category: null,
+
         }
     };
 
