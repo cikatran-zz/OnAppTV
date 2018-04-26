@@ -9,12 +9,15 @@
 import Foundation
 import UserKit
 
-public class WatchingHistory {
+@objc(WatchingHistory)
+public class WatchingHistory: NSObject {
     
     let queue = DispatchQueue(label: "com.onapp.watchingHistory")
     
     public static let sharedInstance = WatchingHistory()
-    private init() {}
+    private override init() {
+        super.init()
+    }
     
     public func remove(id: String, completion: ((Any)-> Void)?,  errorBlock: ((Any)-> Void)?) {
         queue.async {
