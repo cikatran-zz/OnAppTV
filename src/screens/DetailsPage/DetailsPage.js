@@ -263,14 +263,14 @@ export default class DetailsPage extends React.Component {
     if (isLive) {
       // EPG should have channelId
       if (list.length > 0) {
-        return !list[0].channelId
+        return list.every(x => x.channelId)
       }
       else return false
     }
     else {
       // EPG should have contentId
       if (list.length > 0) {
-        return !list[0].contentId
+        return list.every(x => x.contentId)
       }
       else return false
     }
