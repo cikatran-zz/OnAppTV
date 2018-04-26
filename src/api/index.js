@@ -53,11 +53,11 @@ const get = (endpoints) => {
 getRecordPvrList = () => {
     return new Promise((resolve, reject) => {
         NativeModules.STBManager.getPvrListInJson((error, events) => {
-            if (error) reject(error)
+            if (error) reject(error);
             else resolve(JSON.parse(events[0]))
         })
     })
-}
+};
 
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
@@ -81,8 +81,12 @@ getSTBChannel = () => {
                     if (error) {
                         reject(error);
                     } else {
-                        let jsonObj = JSON.parse(result[0]);
-                        resolve(jsonObj.data);
+                        try {
+                            let jsonObj = JSON.parse(result[0]);
+                            resolve(jsonObj.data);
+                        } catch(err) {
+                            reject(err);
+                        }
                     }
                 });
             }
@@ -97,7 +101,13 @@ syncUserKitWithSTBChannels = (channels) => {
             if (error) {
                 reject(error);
             } else {
-                let jsonObj = JSON.parse(result[0]);
+                let jsonObj = null;
+                try {
+                    jsonObj = JSON.parse(result[0]);
+                } catch (err) {
+                    reject(err);
+                    return;
+                }
                 if (jsonObj.data != null) {
                     var userKitResult = new Array(0);
                     for (let i = 0; i < channels.length; i++) {
@@ -124,14 +134,14 @@ syncUserKitWithSTBChannels = (channels) => {
 export const checkStbConnection = () => {
     return new Promise((resolve, reject) => {
         NativeModules.STBManager.isStbConnected((error, events) => {
-            if (error) reject(error)
+            if (error) reject(error);
             else resolve(events)
         })
     })
 };
 
 export const getRecordList = () => {
-    let recordList = null
+    let recordList = null;
     return getRecordPvrList()
         .then((value) => {
             return new Promise((resolve, reject) => {
@@ -577,7 +587,12 @@ export const getSeriesInfo = (seriesId) => {
 export const getNotification = () => {
     return new Promise((resolve, reject) => {
         NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-            resolve(JSON.parse(result[0]).data)
+            try {
+                let json = JSON.parse(result[0]).data
+                resolve(json);
+            } catch (err) {
+                reject(err);
+            }
         });
     })
 };
@@ -588,7 +603,12 @@ export const getProfileInfo = () => {
             if (error) {
                 reject(error)
             } else {
-                resolve(JSON.parse(result[0]))
+                try {
+                    let json = JSON.parse(result[0]);
+                    resolve(json);
+                }catch (err) {
+                    reject(err);
+                }
             }
         });
     });

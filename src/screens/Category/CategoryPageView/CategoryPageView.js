@@ -8,51 +8,7 @@ import VideoThumbnail from '../../../components/VideoThumbnail'
 import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
 import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
-
-class HeaderLabel extends React.PureComponent{
-    constructor(props){
-        super(props);
-    }
-    render(){
-        if (this.props.position == 'end') {
-            return (
-                <View style={styles.headerView}>
-                    <View style={[styles.backgroundHeaderView, styles.endHeaderView]}/>
-                    <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
-                    <TouchableOpacity onPress={()=>this.props.goBack()} style={styles.backButton}>
-                        <Image source={require('../../../assets/ic_white_left_arrow.png')} style={styles.backImage}/>
-                    </TouchableOpacity>
-                </View>
-
-            )
-        } else if (this.props.position == 'inside') {
-            return (
-                <View style={styles.headerView}>
-                    <View style={[styles.backgroundHeaderView, styles.insideHeaderView]}/>
-                    <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
-                    <TouchableOpacity onPress={()=>this.props.goBack()} style={styles.backButton} >
-                        <Image source={require('../../../assets/ic_white_left_arrow.png')} style={styles.backImage}/>
-                    </TouchableOpacity>
-
-                </View>
-            )
-        } else if (this.props.position == 'begin') {
-            return (
-                <View style={styles.headerView}>
-                    <View style={[styles.backgroundHeaderView, styles.beginHeaderView]}/>
-                    <Text style={styles.headerLabel}>{this.props.text.toUpperCase()}</Text>
-                    <TouchableOpacity onPress={()=>this.props.goBack()} style={styles.backButton}>
-                        <Image source={require('../../../assets/ic_left_arrow.png')} style={styles.backImage}/>
-                    </TouchableOpacity>
-                </View>
-            )
-        } else {
-            return (
-                <Text >{this.props.text}</Text>
-            )
-        }
-    }
-}
+import HeaderLabel from "../../../components/HeaderLabel";
 
 class CategoryPageView extends React.PureComponent{
     constructor(props){
@@ -222,7 +178,7 @@ class CategoryPageView extends React.PureComponent{
         }
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
-                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()}/>
+                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()} showBackButton={true}/>
                 <SectionList
                     style={[styles.container, {marginTop: 0, backgroundColor: colors.whiteBackground}]}
                     keyExtractor={this._keyExtractor}
@@ -267,44 +223,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.screenBackground,
         marginTop: 30
-    },
-    headerLabel: {
-        fontSize: 10,
-        alignSelf: 'center',
-        paddingTop: 7,
-        paddingBottom: 6,
-        backgroundColor: colors.mainPink,
-        borderRadius: (Platform.OS === 'ios') ? 13 : 25,
-        overflow: "hidden",
-        color: colors.whitePrimary,
-        paddingHorizontal: 15,
-        height: 25
-    },
-    headerView: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 17.5,
-        marginBottom: 27,
-        height: 25
-    },
-    backgroundHeaderView: {
-        backgroundColor: colors.mainPink,
-        position: 'absolute',
-        top: 0,
-        height: '100%'
-    },
-    beginHeaderView : {
-        left: '50%',
-        width: '50%'
-    },
-    endHeaderView : {
-        left: 0,
-        width: '50%'
-    },
-    insideHeaderView : {
-        left: 0,
-        width: '100%'
     },
     liveThumbnailContainer: {
         flexDirection: 'column',
@@ -354,17 +272,6 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         fontSize: 15,
         marginHorizontal: 15
-    },
-    backButton: {
-        paddingHorizontal: 15,
-        paddingVertical: 6,
-        left: 0,
-        top: 0,
-        position: 'absolute'
-    },
-    backImage: {
-        height: 13,
-        resizeMode: 'cover'
     },
     vodVideo: {
         width: 156,

@@ -13,7 +13,7 @@ export const colors = {
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
   textMainBlack: '#404040',
-  bannerSubtitleColor: '#ffffffab',
+  bannerSubtitleColor: 'rgba(255,255,255,0.47)',
   tabTextInActive: '#ffffff7d',
   greyOpacityBackground: 'rgba(83, 83, 83, 0.2)',
   greySettingLabel: '#777777',
