@@ -220,11 +220,13 @@ export default class Home extends Component {
             image = item.originalImages[0].url;
         }
         return (
-            <View style={styles.notificationContainer}>
-                <Image style={styles.notificationImage} source={{uri: image}}/>
-                <Text style={styles.notificationTitle}>{item.title}</Text>
-                <Text style={styles.notificationSubTitle}>{item.shortDescription}</Text>
-            </View>
+            <TouchableOpacity onPress={()=> Linking.openURL(item.url)}>
+                <View style={styles.notificationContainer}>
+                    <Image style={styles.notificationImage} source={{uri: image}}/>
+                    <Text style={styles.notificationTitle}>{item.title}</Text>
+                    <Text style={styles.notificationSubTitle}>{item.shortDescription}</Text>
+                </View>
+            </TouchableOpacity>
         )
     };
 
@@ -487,11 +489,6 @@ export default class Home extends Component {
         );
     }
 }
-/**
- ,
-
- ,
- */
 
 const styles = StyleSheet.create({
     container: {
