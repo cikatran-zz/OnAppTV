@@ -59,14 +59,24 @@ query{
 		videoOne(filter:{
       feature: true
     }) {
-		  title
-		  shortDescription
+		  contentId
+      durationInSeconds
+      title
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      metadata
       originalImages {
         height
         width
         url
         name
         fileName
+      },
+      genresData {
+        name
       }
 		}
   }
