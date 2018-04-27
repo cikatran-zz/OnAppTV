@@ -490,7 +490,7 @@ export default class VideoControlModal extends React.Component {
           {this._renderRecordBar(isLive, item.startTime, item.endTime)}
           <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
           </View>
-          <TouchableOpacity style={{position: 'absolute', top: 30, left: 20, width: 100, height: 100}} onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity style={{position: 'absolute', top: 30 + rootViewTopPadding(), left: 20, width: 100, height: 100}} onPress={() => this.props.navigation.goBack()}>
             <Image source={require('../../assets/ic_dismiss_modal.png')}/>
           </TouchableOpacity>
           <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._showAlertModal}>
