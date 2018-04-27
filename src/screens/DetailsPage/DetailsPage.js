@@ -50,7 +50,7 @@ export default class DetailsPage extends React.Component {
     const {isLive} = this.props.navigation.state.params
     const {epg, navigation} = this.props
 
-    navigation.navigate('VideoControlModal', {
+    navigation.replace('VideoControlModal', {
       item: item,
       epg: epg.data,
       isLive: isLive
