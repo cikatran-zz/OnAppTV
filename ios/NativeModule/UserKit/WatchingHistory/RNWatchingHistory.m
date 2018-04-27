@@ -37,4 +37,12 @@ RCT_EXPORT_METHOD(updateWatchingHistory: (NSString *) contentid properties: (NSD
                                                        }];
 }
 
+RCT_EXPORT_METHOD(getWatchingHistory: (RCTResponseSenderBlock)callback) {
+    [[WatchingHistory sharedInstance] getWatchingHistoryWithCompletion:^(NSArray * _Nonnull contents) {
+        callback(@[[NSNull null], contents]);
+    } errorBlock:^(id _Nonnull error) {
+        callback(@[@"error", [NSNull null]]);
+    }];
+}
+
 @end

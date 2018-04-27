@@ -71,7 +71,7 @@ export default class DetailsPage extends React.Component {
             epg: epg.data,
             isLive: isLive
         })
-    }
+    };
 
     _renderBanner = ({item}) => {
         const {isLive} = this.props.navigation.state.params

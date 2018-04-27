@@ -30,7 +30,7 @@ import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
-import {getChannel} from "../../api";
+import {getChannel, getWatchingHistory} from "../../api";
 import AlertModal from "../../components/AlertModal";
 import {DotsLoader} from "react-native-indicator";
 
@@ -41,7 +41,8 @@ export default class Home extends Component {
         this.state = {
             favoriteCategories: null,
             category: null,
-            favoriteChannels: [null]
+            favoriteChannels: [null],
+            resumeVOD: [null]
         };
         this.alertVC = null;
     };
@@ -59,6 +60,8 @@ export default class Home extends Component {
         }
     };
 
+
+
     componentDidMount() {
         this.props.getBanner();
         this.props.getAds();
@@ -70,12 +73,19 @@ export default class Home extends Component {
             this._setupFavoriteChannel(response);
         });
 
+        getWatchingHistory().then((response) => {
+            this.setState({resumeVOD: [response]});
+        });
+
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
             Orientation.lockToPortrait();
             getChannel().then((response) => {
                 this._setupFavoriteChannel(response);
+            });
+            getWatchingHistory().then((response) => {
+                this.setState({resumeVOD: response});
             });
         });
     };
@@ -353,6 +363,7 @@ export default class Home extends Component {
     };
 
     _renderCategoryItem = ({item}) => {
+
         if (item.name == "_ADD") {
 
             return (
@@ -377,7 +388,7 @@ export default class Home extends Component {
     _renderCategoryList = ({item}) => {
         return (
             <FlatList
-                style={{flex: 1, marginBottom: 36, marginLeft: 7, marginRight: 8}}
+                style={{marginBottom: 36, marginLeft: 7, marginRight: 8}}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
@@ -387,7 +398,7 @@ export default class Home extends Component {
     };
 
     _renderSectionHeader = ({section}) => {
-        if (section.showHeader) {
+        if (section.showHeader && section.data != null && section.data[0] != null) {
             return (
                 <View style={styles.headerSection}>
                     <PinkRoundedLabel text={section.title} style={{fontSize: 10, color: colors.whitePrimary}}/>
@@ -396,7 +407,7 @@ export default class Home extends Component {
         } else {
             return null
         }
-    }
+    };
 
     //Fix bottom tabbar overlay the List
     _renderListFooter = () => (
@@ -405,7 +416,7 @@ export default class Home extends Component {
             height: Dimensions.get("window").height * 0.08 + 20,
             backgroundColor: 'transparent'
         }}/>
-    )
+    );
 
     _updateFavoriteCategories = (favorites) => {
         favorites.push({"name": "_ADD"});
@@ -419,6 +430,64 @@ export default class Home extends Component {
             }
         }
         this.setState({favoriteCategories: favorites, category: data});
+    };
+
+    // ResumeVOD
+
+    _onResumePress = (item) => {
+        const {navigation} = this.props;
+
+        navigation.navigate('VideoControlModal', {
+            item: item,
+            epg: [item],
+            isLive: false
+        })
+    };
+
+    _renderResumeVODItem = ({item}) => {
+        if (item == null) {
+            return null;
+        }
+        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
+        if (item.originalImages.length > 0) {
+            image = item.originalImages[0].url;
+        }
+        let genres = '';
+        if (item.genres != null && item.genres.length > 0) {
+            item.genres.forEach((genre, index) => {
+                if (genres.length != 0) {
+                    genres = genres.concat(", ");
+                }
+                genres = genres.concat(genre.name.toString());
+            })
+        }
+        let videoLength = item.durationInSeconds ? item.durationInSeconds : 0;
+        let lastPosition = item.stop_position ? item.stop_position : 0;
+        let progress = lastPosition / videoLength * 100;
+        return (
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onResumePress(item)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={image}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
+            </TouchableOpacity>
+        )
+    };
+
+
+    _renderResumeVODList = ({item}) => {
+        if (item == null || item[0] == null) {
+            return null;
+        }
+
+        return (
+            <FlatList
+                style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                data={item}
+                keyExtractor={this._keyExtractor}
+                renderItem={this._renderResumeVODItem}/>
+        )
     };
 
 
@@ -437,15 +506,18 @@ export default class Home extends Component {
             );
 
         if (this.state.favoriteCategories == null) {
-            var categoryData = (category.data == null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
+            let categoryData = (category.data == null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
             this.state.category = category.data == null ? [] : category.data;
             categoryData.push({"name": "_ADD"});
             this.state.favoriteCategories = categoryData;
         }
 
+
+
         let sections = [
             {data: [banner.data], showHeader: false, renderItem: this._renderBanner},
             {data: [this.state.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
+            {data: this.state.resumeVOD, showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
             {data: [ads.data], showHeader: false, renderItem: this._renderAds}
             ];
 
@@ -457,12 +529,7 @@ export default class Home extends Component {
             sections.push({data: [vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList});
         }
 
-        sections.push({
-            data: [this.state.favoriteCategories],
-            title: "BY CATEGORY",
-            showHeader: true,
-            renderItem: this._renderCategoryList
-        });
+        sections.push({ data: [this.state.favoriteCategories], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList});
 
         sections.push({data: [news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter});
 
