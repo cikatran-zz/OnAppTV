@@ -1,5 +1,6 @@
 package com.onapptv;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -82,19 +83,25 @@ public class NotificationHandler extends NotificationListenerService {
 
     }
 
+    @SuppressLint("CheckResult")
     public void saveUserkitProps(HashMap object) {
         UserKit.getInstance().getProfileManager().getProperty("notification", HashMap.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(value -> {
                     if (value.isPresent()) {
-                        ArrayList dataParse = ((ArrayList) ((HashMap) value.get()).get("data"));
-                        dataParse.add(0, object);
-                        JSONObject data = (new JSONObject()).put("data", dataParse);
-                        UserKit.getInstance().getProfileManager().set("notification", data);
+                        ArrayList<Object> dataParse = (ArrayList<Object>) ((HashMap) value.get()).get("data");
+                        if (!dataParse.contains(object)) {
+                            dataParse.add(0, object);
+                            HashMap<String, Object> data = new HashMap<>();
+                            data.put("data", dataParse);
+                            UserKit.getInstance().getProfileManager().set("notification", data);
+                        }
                     } else {
-                        JSONArray dataParse = (new JSONArray()).put(0, object);
-                        JSONObject data = (new JSONObject()).put("data", dataParse);
+                        ArrayList<Object> dataParse = new ArrayList<>();
+                        dataParse.add(0, object);
+                        HashMap<String, Object> data = new HashMap<>();
+                        data.put("data", dataParse);
                         UserKit.getInstance().getProfileManager().set("notification", data);
                     }
 
