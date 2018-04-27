@@ -1,7 +1,7 @@
 import React from 'react'
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import Orientation from 'react-native-orientation';
-import {Dimensions, NativeModules, View, findNodeHandle} from 'react-native'
+import {Dimensions, NativeModules, View} from 'react-native'
 
 export default class BrightcovePlayerScreen extends React.Component {
     onLayout(e) {

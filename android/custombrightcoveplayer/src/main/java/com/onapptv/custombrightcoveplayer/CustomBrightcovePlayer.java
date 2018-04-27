@@ -36,6 +36,10 @@ import com.brightcove.player.util.ErrorUtil;
 import com.brightcove.player.util.StringUtil;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -281,6 +285,8 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private class StopControllerImp implements EventListener {
         @Override
         public void processEvent(Event event) {
+            eventEmitter.emit("storeBrightCove");
+            onFinished();
             try {
                 int position = -1;
                 if (event.properties.containsKey("playheadPosition")) {
@@ -291,6 +297,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 } else {
                     mPlaybackRecorder.stopRecording(position / 1000.0, mPlayerVideoView.getDuration() / 1000.0, null);
                 }
+
             } catch (Exception e) {
                 Log.d(TAG, e.toString());
             }
@@ -835,4 +842,13 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         super.onDetachedFromWindow();
     }
 
+    public void onFinished() {
+        WritableMap event = Arguments.createMap();
+        event.putString("message", "new message");
+        ReactContext reactContext = (ReactContext) getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "finished",
+                event);
+    }
 }
