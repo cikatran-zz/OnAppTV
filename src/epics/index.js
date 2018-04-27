@@ -27,6 +27,7 @@ import getNotificationEpic from "./notificationRequestEpic";
 import getProfileInfoEpic from "./profileInfoRequestEpic";
 import getPvrListEpic from "./getPvrListEpic"
 import epgSameTimeEpic from "./epgSameTImeEpic"
+import getWatchingHistoryEpic from "./watchingHistoryEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -58,7 +59,8 @@ const rootEpic = combineEpics(
     getNotificationEpic,
     getProfileInfoEpic,
     getPvrListEpic,
-    epgSameTimeEpic
+    epgSameTimeEpic,
+    getWatchingHistoryEpic
 );
 
 export default rootEpic;

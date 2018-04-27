@@ -159,7 +159,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                             }, error -> Log.d(TAG, error.toString()));
 
 
-                    mPlaybackRecorder = new OnDemandPlaybackEventRecorder(TrackUserkit.createItemFromBrightcove(metadata));
+                    mPlaybackRecorder = new OnDemandPlaybackEventRecorder(TrackUserkit.createItemFromMetaData(metadata));
                     mPlayerVideoView.add(video);
                     mPlayerVideoView.start();
                 }
