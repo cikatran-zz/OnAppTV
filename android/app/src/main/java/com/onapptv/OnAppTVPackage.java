@@ -15,30 +15,31 @@ import java.util.List;
  */
 
 public class OnAppTVPackage implements ReactPackage {
-  @Override
-  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+    @Override
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
 
-    List<NativeModule> modules = new ArrayList<>();
+        List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new AndroidSTBFramework(reactContext));
-    modules.add(new AndroidUserKitFramework(reactContext));
-    modules.add(new AndroidUserKitIdentityFramework(reactContext));
-    modules.add(new BrightcoveFramework(reactContext));
+        modules.add(new AndroidSTBFramework(reactContext));
+        modules.add(new AndroidUserKitFramework(reactContext));
+        modules.add(new AndroidUserKitIdentityFramework(reactContext));
+        modules.add(new BrightcoveFramework(reactContext));
+        modules.add(new WatchingHistoryFramework(reactContext));
 
-    return modules;
-  }
+        return modules;
+    }
 
-  @Override
-  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
 //    return Collections.<ViewManager>singletonList(
 //        new ReactBlurViewManager()
 //    );
-    List<ViewManager> managerList = new ArrayList<>();
-    managerList.add(new ReactBlurViewManager());
-    managerList.add(new ReactBrightcovePlayerViewManager());
-    managerList.add(new ReactAndroidSTBConnectScreen());
-    return managerList;
-  }
+        List<ViewManager> managerList = new ArrayList<>();
+        managerList.add(new ReactBlurViewManager());
+        managerList.add(new ReactBrightcovePlayerViewManager());
+        managerList.add(new ReactAndroidSTBConnectScreen());
+        return managerList;
+    }
 
 
 }
