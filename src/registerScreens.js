@@ -12,6 +12,9 @@ import TermAndCondition from "./screens/Settings/TermAndCondition";
 import Authentication from "./screens/Authentication";
 import SignIn from "./screens/Authentication/SignIn";
 import SignUp from "./screens/Authentication/SignUp";
+import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
+import DetailsPage from './screens/DetailsPage'
+import BrightcovePlayerScreen from './screens/BrightcovePlayer'
 
 const TabNav = TabNavigator({
     Home: {
@@ -60,9 +63,7 @@ export const ScreenStack = StackNavigator({
         screen: ParentalControlLock,
 
     },
-    TermAndCondition: {
-        screen: TermAndCondition
-    },
+
     Authentication: {
         screen: Authentication
     },
@@ -71,6 +72,15 @@ export const ScreenStack = StackNavigator({
     },
     SignUp: {
         screen: SignUp
+    },
+    LocalVideoModal: {
+        screen: LocalVideoModal
+    },
+    DetailsPage: {
+        screen: DetailsPage
+    },
+    BrightcovePlayerScreen: {
+        screen: BrightcovePlayerScreen
     }
 }, {
     mode: 'modal',

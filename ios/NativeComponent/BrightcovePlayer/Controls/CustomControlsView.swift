@@ -163,9 +163,10 @@ extension CustomControlsView {
             
             if tapLocation.x >= 0 && tapLocation.x <= self.frame.width {
                 let translation = sender.translation(in: self)
-                progressWidth.constant = progressWidth.constant + translation.x
-                if (progressWidth.constant <= self.frame.width) {
-                let seekingTime = videoDuration * Double(progressWidth.constant / self.frame.width)
+                let newWidth = translation.x + progressWidth.constant
+                if (newWidth >= 0 && newWidth <= self.frame.width) {
+                    progressWidth.constant = progressWidth.constant + translation.x
+                    let seekingTime = videoDuration * Double(progressWidth.constant / self.frame.width)
                     setLabelTime(seekingTime)
                     seekingBlock(seekingTime)
                     if let imageResource = self.filmStripImage?(seekingTime) {
@@ -174,7 +175,6 @@ extension CustomControlsView {
                     
                     thumbnailFilmstrip.kf.setImage(with: lastImageResouce)
                 }
-                
                 sender.setTranslation(.zero, in: self)
             } else {
                 sender.setValue(UIGestureRecognizerState.ended, forKey: "state")

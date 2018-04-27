@@ -25,6 +25,9 @@ import getSatelliteEpic from "./satelliteRequestEpic";
 import getTimeShiftLimitSizeEpic from "./timeShiftLimitSizeRequestEpic";
 import getNotificationEpic from "./notificationRequestEpic";
 import getProfileInfoEpic from "./profileInfoRequestEpic";
+import getPvrListEpic from "./getPvrListEpic"
+import epgSameTimeEpic from "./epgSameTImeEpic"
+import getWatchingHistoryEpic from "./watchingHistoryEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -54,7 +57,10 @@ const rootEpic = combineEpics(
     getSatelliteEpic,
     getTimeShiftLimitSizeEpic,
     getNotificationEpic,
-    getProfileInfoEpic
+    getProfileInfoEpic,
+    getPvrListEpic,
+    epgSameTimeEpic,
+    getWatchingHistoryEpic
 );
 
 export default rootEpic;

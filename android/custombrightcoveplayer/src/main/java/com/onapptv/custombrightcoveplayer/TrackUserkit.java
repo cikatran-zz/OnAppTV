@@ -11,7 +11,7 @@ import userkit.sdk.SpecificRequiredItem;
  * Created by henry on 4/10/18.
  */
 public class TrackUserkit {
-    public static SpecificRequiredItem createItemFromBrightcove(Map<String, Object> metadata) {
+    public static SpecificRequiredItem createItemFromMetaData(Map<String, Object> metadata) {
 
         String contentId = "";
         if (metadata.get("contentId") != null) {

@@ -53,178 +53,14 @@ const get = (endpoints) => {
 getRecordPvrList = () => {
     return new Promise((resolve, reject) => {
         NativeModules.STBManager.getPvrListInJson((error, events) => {
-            if (error) reject(error)
+            if (error) reject(error);
             else resolve(JSON.parse(events[0]))
         })
     })
-}
+};
 
 getSTBChannel = () => {
     return new Promise((resolve, reject) => {
-        // resolve([
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 100,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 1,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "MOSAIC",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 200,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 2,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "France 24 (in English)",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 300,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 3,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Orange",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 310,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 4,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "DisneyXD",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 400,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 5,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "UTVSTAR",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 500,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 6,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Nickelodeon",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 600,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 7,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Music India",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 800,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 8,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Disney Channel",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     },
-        //     {
-        //         "favorite" : 0,
-        //         "satelliteID" : 1,
-        //         "scrambled" : 0,
-        //         "transportStreamID" : 1,
-        //         "serviceID" : 900,
-        //         "orginalNetworkID" : 1,
-        //         "invisible" : 0,
-        //         "removed" : 0,
-        //         "carrierID" : 1025,
-        //         "serviceType" : 1,
-        //         "lCN" : 9,
-        //         "transponderIndex" : 1,
-        //         "hDLCN" : 0,
-        //         "serviceName" : "Fox Family Movies",
-        //         "locked" : 0,
-        //         "reserved" : 0
-        //     }
-        // ]);
 
         NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
@@ -245,8 +81,12 @@ getSTBChannel = () => {
                     if (error) {
                         reject(error);
                     } else {
-                        let jsonObj = JSON.parse(result[0]);
-                        resolve(jsonObj.data);
+                        try {
+                            let jsonObj = JSON.parse(result[0]);
+                            resolve(jsonObj.data);
+                        } catch(err) {
+                            reject(err);
+                        }
                     }
                 });
             }
@@ -261,7 +101,13 @@ syncUserKitWithSTBChannels = (channels) => {
             if (error) {
                 reject(error);
             } else {
-                let jsonObj = JSON.parse(result[0]);
+                let jsonObj = null;
+                try {
+                    jsonObj = JSON.parse(result[0]);
+                } catch (err) {
+                    reject(err);
+                    return;
+                }
                 if (jsonObj.data != null) {
                     var userKitResult = new Array(0);
                     for (let i = 0; i < channels.length; i++) {
@@ -288,14 +134,14 @@ syncUserKitWithSTBChannels = (channels) => {
 export const checkStbConnection = () => {
     return new Promise((resolve, reject) => {
         NativeModules.STBManager.isStbConnected((error, events) => {
-            if (error) reject(error)
+            if (error) reject(error);
             else resolve(events)
         })
     })
 };
 
 export const getRecordList = () => {
-    let recordList = null
+    let recordList = null;
     return getRecordPvrList()
         .then((value) => {
             return new Promise((resolve, reject) => {
@@ -452,7 +298,9 @@ export const getGenresContent = (genresIds) => {
                 results[genresIds[i]] = {features: [], VOD: [], EPGs: []};
                 values[i].data.viewer.videoMany.forEach((content) => {
                     if (content.feature) {
-                        results[genresIds[i]].features.push(content)
+                        if (results[genresIds[i]].features.length < 3) {
+                            results[genresIds[i]].features.push(content)
+                        }
                     } else {
                         results[genresIds[i]].VOD.push(content)
                     }
@@ -739,7 +587,12 @@ export const getSeriesInfo = (seriesId) => {
 export const getNotification = () => {
     return new Promise((resolve, reject) => {
         NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-            resolve(JSON.parse(result[0]).data)
+            try {
+                let json = JSON.parse(result[0]).data
+                resolve(json);
+            } catch (err) {
+                reject(err);
+            }
         });
     })
 };
@@ -750,7 +603,12 @@ export const getProfileInfo = () => {
             if (error) {
                 reject(error)
             } else {
-                resolve(JSON.parse(result[0]))
+                try {
+                    let json = JSON.parse(result[0]);
+                    resolve(json);
+                }catch (err) {
+                    reject(err);
+                }
             }
         });
     });
@@ -783,6 +641,56 @@ export const readUsbDir = (dir_path) => {
 
     })
 }
+
+export const getPvrList = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.getPvrListInJson((error, events) => {
+            resolve(JSON.parse(events[0]))
+
+        })
+    }).then(value => {
+        let promises = value.map(x => {
+          return new Promise((resolve, reject) => {
+            let json = {
+              recordName: x
+            }
+            console.log(json)
+            NativeModules.STBManager.getPvrInfoWithJsonString(JSON.stringify(json), (error, events) => {
+              console.log(events)
+              resolve(JSON.parse(events[0]))
+            })
+          })
+
+        })
+        return new Promise((resolve, reject) => {
+          Promise.all(promises).then(value => {
+              console.log(value)
+              resolve(value)
+          })
+        })
+    })
+};
+
+export const getEpgSameTime = (currentTime, channelId) => {
+    return client.query({
+      query: config.queries.EPG_SAME_TIME,
+      variables: {currentTime: currentTime, id: [channelId]}
+    })
+};
+
+export const getWatchingHistory = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.RNUserKit.getProperty("continue_watching", (error, result) => {
+            try {
+                let json = JSON.parse(result[0]);
+                console.log("CONTINUE WATCHING: ", result[0]);
+                resolve(json);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    })
+};
 
 
 

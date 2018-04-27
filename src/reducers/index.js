@@ -27,6 +27,9 @@ import satelliteReducer from "./satelliteReducer";
 import timeShiftLimitSizeReducer from "./timeShiftLimitSizeReducer";
 import notificationReducer from "./notificationReducer"
 import profileInfoReducer from "./profileInfoReducer";
+import pvrListReducer from "./pvrListReducer"
+import epgSameTimeReducer from "./epgSameTimeReducer"
+import watchingHistoryReducer from "./watchingHistoryReducer";
 
 export default combineReducers({
     nav,
@@ -57,5 +60,8 @@ export default combineReducers({
     satelliteReducer,
     timeShiftLimitSizeReducer,
     notificationReducer,
-    profileInfoReducer
+    profileInfoReducer,
+    pvrListReducer,
+    epgSameTimeReducer,
+    watchingHistoryReducer
 });

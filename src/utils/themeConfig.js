@@ -13,7 +13,7 @@ export const colors = {
   greyOpacity:'#a5a5a580',
   progressColor: '#00000080',
   textMainBlack: '#404040',
-  bannerSubtitleColor: '#ffffffab',
+  bannerSubtitleColor: 'rgba(255,255,255,0.47)',
   tabTextInActive: '#ffffff7d',
   greyOpacityBackground: 'rgba(83, 83, 83, 0.2)',
   greySettingLabel: '#777777',
@@ -23,7 +23,8 @@ export const colors = {
   greyTextBelowParentControl: '#7E7E7E',
   greyTextInputBorder: '#989898',
   greyCloseIconBg: '#B9B9B9',
-  blackDeleteButton: '#393939'
+  blackDeleteButton: '#393939',
+  blackNoBooking: 'rgba(92,92,92,0.73)'
 };
 
 export const textDarkDefault = {
