@@ -2,9 +2,9 @@ import React, {PureComponent} from 'react'
 import {
     Dimensions,
     FlatList,
-    Image, Modal,
+    Image, Modal, NativeModules,
     Platform,
-    SectionList,
+    SectionList, Share,
     StatusBar,
     StyleSheet,
     Text,
@@ -17,6 +17,7 @@ import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 import {rootViewTopPadding} from "../../utils/rootViewPadding";
 import {getChannel, getWatchingHistory} from "../../api";
 import Orientation from "react-native-orientation";
+import AlertModal from "../../components/AlertModal";
 
 export default class DetailsPage extends React.Component {
 
@@ -56,14 +57,20 @@ export default class DetailsPage extends React.Component {
     }
 
     _onPress = (item) => {
-        const {isLive} = this.props.navigation.state.params
-        const {epg, navigation} = this.props
-
-        navigation.replace('VideoControlModal', {
+        const {isLive} = this.props.navigation.state.params;
+        const {epg, navigation} = this.props;
+        navigation.goBack();
+        navigation.navigate('VideoControlModal', {
             item: item,
             epg: epg.data,
             isLive: isLive
-        })
+        });
+
+        // navigation.replace('VideoControlModal', {
+        //     item: item,
+        //     epg: epg.data,
+        //     isLive: isLive
+        // })
     }
 
     _renderBanner = ({item}) => {
@@ -79,12 +86,22 @@ export default class DetailsPage extends React.Component {
                 <TouchableOpacity style={styles.bannerThumbnailContainer} onPress={() => this._onPress(item)}>
                     <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={{position: 'absolute', bottom: '8%', left: '6%'}}>
+                <TouchableOpacity style={{position: 'absolute', bottom: 6, left: 21}}>
                     <Image source={require('../../assets/ic_change_orientation.png')}/>
                 </TouchableOpacity>
             </View>
         )
-    }
+    };
+
+    _shareExecution = (title, url) => {
+        content = {
+            message: "",
+            title: title,
+            url: url
+        };
+        Share.share(content, {})
+    };
+
 
     _renderBannerInfo = ({item}) => {
         let data = this._isFromChannel() ? item.videoData : item
@@ -104,7 +121,7 @@ export default class DetailsPage extends React.Component {
                         <TouchableOpacity>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> this._shareExecution(item.title, '')}>
                             <Image source={require('../../assets/share.png')} style={styles.videoShareButton}/>
                         </TouchableOpacity>
                     </View>
@@ -307,6 +324,9 @@ export default class DetailsPage extends React.Component {
                     translucent={true}
                     backgroundColor='#ffffff'
                     barStyle='dark-content'/>
+                <AlertModal ref={(modal) => {
+                    this.alertVC = modal
+                }}/>
                 <SectionList
                     style={styles.container}
                     keyExtractor={this._keyExtractor}
@@ -331,21 +351,20 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         height: h,
+        backgroundColor: colors.whitePrimary
     },
     topContainer: {
         flexDirection: 'column',
-        height: 265,
         width: '100%',
+        marginBottom: 21,
         marginTop: rootViewTopPadding(),
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'center'
     },
     bannerThumbnailContainer: {
-        marginTop: 15,
-        height: '72%',
-        width: '92%',
+        height: 164,
+        paddingHorizontal: 15,
+        width: '100%',
         backgroundColor: colors.whitePrimary,
-        borderRadius: (Platform.OS === 'ios') ? 4 : 8
     },
     list: {
         width: '100%',
@@ -430,7 +449,9 @@ const styles = StyleSheet.create({
     banner: {
         width: '100%',
         height: '100%',
-        backgroundColor: colors.whitePrimary
+        backgroundColor: colors.whitePrimary,
+        borderRadius: (Platform.OS === 'ios') ? 4 : 8,
+        overflow: 'hidden'
     },
     bannerContainer: {
         flexDirection: 'column',
