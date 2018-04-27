@@ -1,6 +1,7 @@
 package com.onapptv;
 
 import android.annotation.SuppressLint;
+
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -8,9 +9,15 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.google.gson.Gson;
 import com.onapptv.custombrightcoveplayer.WatchingHistory;
+
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import userkit.sdk.UserKit;
 import userkit.sdk.model.QueryCommand;
 import userkit.sdk.model.RemoveQueryCommand;
@@ -80,19 +87,14 @@ public class WatchingHistoryFramework extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getWatchingHistory(String id, Callback callback) {
-        UserKit.getInstance().getProfileManager().searchChildInArray(CONTINUE_WATCHING,
-                QueryCommand.eq(ID, id),
-                JSONObject.class).map(data -> {
-            if (data.size() > 0)
-                return ((Map) data.get(0));
-            else
-                return new HashMap();
-        }).subscribe(map -> {
-            callback.invoke(null, gson.toJson(map));
-        }, throwable -> {
-            callback.invoke(gson.toJson(throwable), null);
-        });
+    public void getWatchingHistory(Callback callback) {
+        UserKit.getInstance().getProfileManager().getProperty(CONTINUE_WATCHING, ArrayList.class).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(map -> {
+                    callback.invoke(null, gson.toJson(map));
+                }, throwable -> {
+                    callback.invoke(gson.toJson(throwable), null);
+                });
     }
 
 
