@@ -41,11 +41,16 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
       startTime
       endTime
       channelData {
+        title
         lcn
       }
       videoData {
+        title
         originalImages {
           url
+        }
+        genresData {
+          name
         }
       }
     }

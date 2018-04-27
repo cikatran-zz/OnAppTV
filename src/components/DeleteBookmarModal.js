@@ -52,7 +52,7 @@ export default class DeleteBookmarkModal extends React.PureComponent {
 
   _renderRecordContent = (data) => {
       if (!data) return null
-    if (data.originalImages) {
+    if (data.originalImages && data.originalImages.length > 0) {
 
       return (
         <View style={styles.contentContainer}>
