@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   NativeModules,
   Share,
-  View, PanResponder
+  View,
+  PanResponder
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -364,6 +365,16 @@ export default class VideoControlModal extends React.Component {
     const {bcVideos} = this.props
     const {isLive} = this.props.navigation.state.params;
 
+    let playIconSrc;
+    console.log('It is live')
+    console.log(isLive)
+    if (isLive) {
+      playIconSrc = require('../../assets/ic_on_tv.png')
+    }
+    else {
+      playIconSrc = this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')
+    }
+
     return (
       <View style={styles.playbackContainer}>
         <View style={{height: '11%', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -391,12 +402,12 @@ export default class VideoControlModal extends React.Component {
           <Text style={styles.titleText}>{isLive !== true ? item.title : item.videoData.title}</Text>
           <Text style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
         </View>
-        <View style={[styles.playbackButtons, {opacity: isLive === true ? 0.17 : 1}]}>
-          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._backWard()} style={styles.rewindButton}>
+        <View style={[styles.playbackButtons]}>
+          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._backWard()} style={[styles.rewindButton, {opacity: isLive === true ? 0.17 : 1}]}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>
-          <TouchableOpacity disabled={!this.state.isConnected} style={{ width: '21%', height: '100%', opacity: isLive === true ? 0.17 : 1}} onPress={() => this._playMediaControl(bcVideos) }>
-            <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
+          <TouchableOpacity disabled={!this.state.isConnected} style={{ width: '21%', height: '100%'}} onPress={() => this._playMediaControl(bcVideos) }>
+            <Image source={playIconSrc} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._fastForward()} style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
             <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
@@ -441,8 +452,8 @@ export default class VideoControlModal extends React.Component {
                          resizeMode="cover"
                          source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
         {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-        <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
-        </View>
+        <Animated.View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+        </Animated.View>
         <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._showAlertModal}>
           <Image source={require('../../assets/ic_change_orientation.png')}/>
         </TouchableOpacity>
