@@ -68,6 +68,8 @@ query{
       type
       impression
       metadata
+      shortDescription
+      longDescription
       originalImages {
         height
         width
