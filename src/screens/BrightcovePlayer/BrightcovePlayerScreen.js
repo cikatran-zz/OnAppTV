@@ -1,7 +1,7 @@
 import React from 'react'
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import Orientation from 'react-native-orientation';
-import {Dimensions, NativeModules, View, findNodeHandle} from 'react-native'
+import {Dimensions, NativeModules, View} from 'react-native'
 
 export default class BrightcovePlayerScreen extends React.Component {
     onLayout(e) {
@@ -18,11 +18,10 @@ export default class BrightcovePlayerScreen extends React.Component {
         const {callback} = this.props.navigation.state.params;
 
         if (callback) Orientation.lockToLandscape();
-        this.brightcoveView = findNodeHandle(this.brightcovePlayer)
     }
 
     componentWillUnmount() {
-        NativeModules.RNBrightcove.onEmit(this.brightcovePlayer, "storeBrightCove")
+        //NativeModules.RNBrightcove.onEmit(this.brightcovePlayer, "storeBrightCove")
     }
 
     constructor(props) {

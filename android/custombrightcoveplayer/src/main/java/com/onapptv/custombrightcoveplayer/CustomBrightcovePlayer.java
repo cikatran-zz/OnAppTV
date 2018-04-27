@@ -281,6 +281,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private class StopControllerImp implements EventListener {
         @Override
         public void processEvent(Event event) {
+            eventEmitter.emit("storeBrightCove");
             try {
                 int position = -1;
                 if (event.properties.containsKey("playheadPosition")) {
@@ -291,6 +292,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 } else {
                     mPlaybackRecorder.stopRecording(position / 1000.0, mPlayerVideoView.getDuration() / 1000.0, null);
                 }
+
             } catch (Exception e) {
                 Log.d(TAG, e.toString());
             }
