@@ -8,6 +8,7 @@ let brightcovePlayer = {
         accountId: PropTypes.string,
         policyKey: PropTypes.string,
         metaData: PropTypes.object,
+        onFinished: PropTypes.func,
         ...ViewPropTypes, // include the default view properties
     },
 };

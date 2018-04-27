@@ -46,6 +46,8 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
         }
     }
     
+    public var onFinished: RCTDirectEventBlock = { event in }
+    
     
     fileprivate var playbackService: BCOVPlaybackService?
     fileprivate var playbackController: BCOVPlaybackController?
@@ -140,6 +142,10 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
             let roundedSecond = second.rounded()
             let image: ImageResource? = self.filmstrip[roundedSecond]
             return image
+        }
+        
+        controlsView.stopBlock = {
+            self.onFinished([:])
         }
         
         controlsView.rewindAnimationBlock = {

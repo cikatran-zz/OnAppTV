@@ -431,9 +431,12 @@ export const getCurrentSTBInfo = () => {
 
 export const getWifiInfo = () => {
     return new Promise((resolve, reject) => {
-        NativeModules.STBManager.getMobileWifiInfoInJson((error, results) => {
-            resolve(JSON.parse(results[0]));
-        });
+        // NativeModules.STBManager.getMobileWifiInfoInJson((error, results) => {
+        //     resolve(JSON.parse(results[0]));
+        // });
+        getCurrentSTBInfo().then((value) => {
+            resolve({SSID: value.IPAddress});
+        }).catch((err)=> reject(err));
     })
 };
 

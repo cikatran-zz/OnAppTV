@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     NativeModules,
     Share,
-    View
+    View, StatusBar, Platform
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -24,34 +24,36 @@ import Swiper from 'react-native-swiper'
 import PinkRoundedButton from '../../components/PinkRoundedLabel'
 import {rootViewTopPadding} from '../../utils/rootViewPadding'
 import moment from 'moment';
+import {getChannel, getWatchingHistory} from "../../api";
 
 const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
 
-    onLayout(e) {
-        const {width, height} = Dimensions.get("window")
-        if (width > height) {
-            const {item} = this.props.navigation.state.params
-            if (item) {
-                let videoId = item.contentId ? item.contentId : '5714823997001'
-                this.props.navigation.navigate('BrightcovePlayerScreen', {
-                    videoId: videoId
-                })
-            }
-        }
-    }
+    // onLayout(e) {
+    //     const {width, height} = Dimensions.get("window")
+    //     if (width > height) {
+    //         const {item} = this.props.navigation.state.params
+    //         if (item) {
+    //             let videoId = item.contentId ? item.contentId : '5714823997001'
+    //             this.props.navigation.navigate('BrightcovePlayerScreen', {
+    //                 videoId: videoId
+    //             })
+    //         }
+    //     }
+    // }
 
-    _releaseOrientationCallback = () => {
-        Orientation.unlockAllOrientations()
-    }
+    // _releaseOrientationCallback = () => {
+    //     Orientation.unlockAllOrientations()
+    // }
 
     _navigateBrightcovePlayerScreen = () => {
-        const {item} = this.props.navigation.state.params
-        if (item) {
-            let videoId = item.contentId ? item.contentId : '5714823997001'
+        Orientation.unlockAllOrientations();
+        const {item, isLive} = this.props.navigation.state.params
+        if (item && !isLive) {
+            let videoId = item.contentId ? item.contentId : '5714823997001';
             this.props.navigation.navigate('BrightcovePlayerScreen', {
                 videoId: videoId,
-                callback: this._releaseOrientationCallback
+                //callback: this._releaseOrientationCallback
             })
         }
     }
@@ -73,10 +75,6 @@ export default class VideoControlModal extends React.Component {
             index: -1,
             isScrollEnabled: true
         }
-    }
-
-    componentWillMount() {
-        Orientation.unlockAllOrientations()
     }
 
     _getVodTime = setInterval(() => {
@@ -112,6 +110,7 @@ export default class VideoControlModal extends React.Component {
 
         NativeModules.STBManager.playMediaStop((error, events) => {
         })
+        Orientation.removeSpecificOrientationListener(this._orientationDidChange);
 
     }
 
@@ -180,14 +179,25 @@ export default class VideoControlModal extends React.Component {
         }
 
         Orientation.addOrientationListener(this._orientationDidChange);
-        // PUT YOUR CHANNEL ID HERE
+        Orientation.lockToPortrait();
+
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            Orientation.lockToPortrait();
+        });
     }
 
+
+
     _orientationDidChange = (orientation) => {
+
+        console.log("CONTROL MODAL screen", orientation);
         if (orientation === 'LANDSCAPE' || (width > height)) {
-            this.setState({showBrightcove: true})
+            //this.setState({showBrightcove: true})
+            this._navigateBrightcovePlayerScreen()
         } else {
-            this.setState({showBrightcove: false})
+            //this.setState({showBrightcove: false})
         }
     };
 
@@ -572,7 +582,6 @@ export default class VideoControlModal extends React.Component {
         if (isLive) {
             return (
                 <View
-                    onLayout={this.onLayout.bind(this)}
                     style={{flex: 1}}>
                     {this._renderLive({}, item)}
                 </View>
@@ -583,7 +592,6 @@ export default class VideoControlModal extends React.Component {
 
         return (
             <View
-                onLayout={this.onLayout.bind(this)}
                 style={{flex: 1}}>
                 <Swiper loop={false} loadMinimal={true} loadMinimalSize={1} onIndexChanged={this._onSwiperIndexChanged}
                         showsPagination={false} horizontal={true} style={styles.pageViewStyle}

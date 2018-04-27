@@ -23,7 +23,7 @@ export default class DetailsPage extends React.Component {
 
     constructor(props) {
         super(props);
-
+        this.alertVC
     }
 
     componentDidMount() {
@@ -59,24 +59,22 @@ export default class DetailsPage extends React.Component {
     _onPress = (item) => {
         const {isLive} = this.props.navigation.state.params;
         const {epg, navigation} = this.props;
-        navigation.goBack();
-        navigation.navigate('VideoControlModal', {
+
+        navigation.replace('VideoControlModal', {
             item: item,
             epg: epg.data,
             isLive: isLive
-        });
-
-        // navigation.replace('VideoControlModal', {
-        //     item: item,
-        //     epg: epg.data,
-        //     isLive: isLive
-        // })
+        })
     }
 
     _renderBanner = ({item}) => {
         const {isLive} = this.props.navigation.state.params
 
         let data = isLive === true ? item.videoData : item
+        let url = '';
+        if (data.originalImages != null && data.originalImages.length > 0) {
+            url = data.originalImages[0].url ? data.originalImages[0].url : '';
+        }
         return (
             <View style={styles.topContainer}>
                 <TouchableOpacity style={{padding: 15, alignSelf: 'flex-start'}}
@@ -84,7 +82,7 @@ export default class DetailsPage extends React.Component {
                     <Image source={require('../../assets/ic_back_details.png')}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bannerThumbnailContainer} onPress={() => this._onPress(item)}>
-                    <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
+                    <Image source={{uri: url}} style={styles.banner}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{position: 'absolute', bottom: 6, left: 21}}>
                     <Image source={require('../../assets/ic_change_orientation.png')}/>
@@ -114,11 +112,11 @@ export default class DetailsPage extends React.Component {
                         <Text style={styles.videoTypeText}>{data.type}</Text>
                     </View>
                     <View style={styles.bannerButtonsContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_record.png')}
                                    style={styles.videoPlayButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=> this._shareExecution(item.title, '')}>
@@ -138,18 +136,18 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromChannel()) {
             // isLive
-            return (<PinkRoundedLabel text={"NEXT CHANNEL"}/>)
+            return (<PinkRoundedLabel style={{marginBottom: 21}} text={"NEXT CHANNEL"}/>)
         }
 
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel text={"SEASON " + seasonIndex}/>)
+                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
             }
             case 'Standalone':
-                return (<PinkRoundedLabel text={"RELATED"}/>)
+                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"RELATED"}/>)
             default:
-                return (<PinkRoundedLabel text={"NEXT"}/>)
+                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"NEXT"}/>)
         }
     }
 
@@ -162,11 +160,15 @@ export default class DetailsPage extends React.Component {
     }
 
     _renderNextInChannelItem = ({item}) => {
-
+        let data = item.videoData;
+        let url = '';
+        if (data.originalImages != null && data.originalImages.length > 0) {
+            url = data.originalImages[0].url ? data.originalImages[0].url : '';
+        }
         return (
             <View style={{flexDirection: 'column', marginLeft: 8, alignSelf: 'flex-start', alignItems: 'center'}}>
                 <View style={styles.nextInChannelContainer}>
-                    <Image source={{uri: item.videoData.originalImages[0].url}}
+                    <Image source={{uri: url}}
                            style={{width: '100%', height: '100%'}}/>
                 </View>
                 <Text numberOfLines={1} ellipsizeMode={'tail'}
@@ -272,10 +274,10 @@ export default class DetailsPage extends React.Component {
                             style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
                     </View>
                     <View style={styles.itemActionsContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
                         </TouchableOpacity>
                     </View>
@@ -293,14 +295,14 @@ export default class DetailsPage extends React.Component {
         if (isLive) {
             // EPG should have channelId
             if (list.length > 0) {
-                return list.every(x => x.channelId)
+                return !list.every(x => x.channelId)
             }
             else return false
         }
         else {
             // EPG should have contentId
             if (list.length > 0) {
-                return list.every(x => x.contentId)
+                return !list.every(x => x.contentId)
             }
             else return false
         }
@@ -312,11 +314,11 @@ export default class DetailsPage extends React.Component {
         const {item, isLive} = this.props.navigation.state.params
 
         if (isLive && !item)
-            return null
+            return null;
         else if (!epg || !epg.data || !item)
             return null;
         else if (this._isOldData(epg.data, isLive))
-            return null
+            return null;
 
         return (
             <View style={styles.container}>
@@ -380,8 +382,8 @@ const styles = StyleSheet.create({
         height: 100,
     },
     videoThumnbailContainer: {
-        width: '41%',
-        height: '100%',
+        width: 156,
+        height: 74,
         borderRadius: (Platform.OS === 'ios') ? 4 : 8
     },
     videoThumbnail: {
