@@ -669,14 +669,28 @@ export const getPvrList = () => {
           })
         })
     })
-}
+};
 
 export const getEpgSameTime = (currentTime, channelId) => {
     return client.query({
       query: config.queries.EPG_SAME_TIME,
       variables: {currentTime: currentTime, id: [channelId]}
     })
-}
+};
+
+export const getWatchingHistory = () => {
+    return new Promise((resolve, reject) => {
+        NativeModules.RNUserKit.getProperty("continue_watching", (error, result) => {
+            try {
+                let json = JSON.parse(result[0]);
+                console.log("CONTINUE WATCHING: ", result[0]);
+                resolve(json);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    })
+};
 
 
 

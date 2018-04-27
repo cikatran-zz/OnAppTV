@@ -42,7 +42,7 @@ export default class Home extends Component {
             favoriteCategories: null,
             category: null,
             favoriteChannels: [null]
-        }
+        };
         this.alertVC = null;
     };
 
@@ -73,6 +73,7 @@ export default class Home extends Component {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            Orientation.lockToPortrait();
             getChannel().then((response) => {
                 this._setupFavoriteChannel(response);
             });
