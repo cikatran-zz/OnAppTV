@@ -112,17 +112,22 @@ export default class RecordList extends React.Component {
 
     _renderItem = ({item}) => {
 
+      let iconUrl = ''
+      if (item.originalImages && item.originalImages.length > 0) {
+        iconUrl = item.originalImages[0].url
+      }
+
         return (
-            <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
-                <VideoThumbnail imageUrl={item.originalImages[0].url} marginHorizontal={17}/>
-                <View style={{flexDirection: 'column', marginRight: 60}}>
-                    <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
-                    <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
-                    <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
-                </View>
-                <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
-                    <Image source={require('../../assets/ic_three_dots.png')}/>
-                </TouchableOpacity>
+          <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
+            <VideoThumbnail imageUrl={iconUrl} marginHorizontal={17}/>
+            <View style={{flexDirection: 'column', marginRight: 60}}>
+              <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
+              <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
+              <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
+            </View>
+            <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
+              <Image source={require('../../assets/ic_three_dots.png')}/>
+            </TouchableOpacity>
             </TouchableOpacity>
         )
 
