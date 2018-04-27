@@ -38,6 +38,7 @@ public class OnAppTVPackage implements ReactPackage {
         managerList.add(new ReactBlurViewManager());
         managerList.add(new ReactBrightcovePlayerViewManager());
         managerList.add(new ReactAndroidSTBConnectScreen());
+        managerList.add(new ReactAndroidBrightcove());
         return managerList;
     }
 
