@@ -36,12 +36,18 @@ import com.brightcove.player.util.ErrorUtil;
 import com.brightcove.player.util.StringUtil;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import userkit.sdk.OnDemandPlaybackEventRecorder;
 import userkit.sdk.PlayerState;
 
@@ -91,6 +97,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private Map<String, Object> metadata = new HashMap<>();
     OnDemandPlaybackEventRecorder mPlaybackRecorder = null;
 
+
     public void setVideoKey(String id) {
         this.videoId = id;
         playVideoWithReactParams();
@@ -130,7 +137,16 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
             catalog.findVideoByID(videoId, new VideoListener() {
                 @Override
                 public void onVideo(Video video) {
-                    mPlaybackRecorder = new OnDemandPlaybackEventRecorder(TrackUserkit.createItemFromBrightcove(metadata));
+                    WatchingHistory.getWatchingHistory(videoId).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(stopPosition -> {
+                                mPlayerVideoView.seekTo(stopPosition * 1000);
+                                if (!mPlayerVideoView.isPlaying())
+                                    mPlayerVideoView.start();
+                            }, error -> Log.d(TAG, error.toString()));
+
+
+                    mPlaybackRecorder = new OnDemandPlaybackEventRecorder(TrackUserkit.createItemFromMetaData(metadata));
                     mPlayerVideoView.add(video);
                     mPlayerVideoView.start();
                 }
@@ -248,9 +264,10 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         this.addListener("play", new PlayControllerImp());
         this.addListener("stop", new StopControllerImp());
         this.addListener("pause", new PauseControllerImp());
-        this.addListener("seekTo", new SeekControllerImp());
         this.addListener("error", new ErrorControllerImp());
         // end play controller state
+
+        this.addListener("storeBrightCove", new StoreBrightCoveImp());
     }
 
     private class PlayControllerImp implements EventListener {
@@ -268,6 +285,8 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
     private class StopControllerImp implements EventListener {
         @Override
         public void processEvent(Event event) {
+            eventEmitter.emit("storeBrightCove");
+            onFinished();
             try {
                 int position = -1;
                 if (event.properties.containsKey("playheadPosition")) {
@@ -278,6 +297,7 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 } else {
                     mPlaybackRecorder.stopRecording(position / 1000.0, mPlayerVideoView.getDuration() / 1000.0, null);
                 }
+
             } catch (Exception e) {
                 Log.d(TAG, e.toString());
             }
@@ -293,21 +313,6 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                     position = event.getIntegerProperty("playheadPosition");
                 }
                 mPlaybackRecorder.recordPlayerState(PlayerState.PAUSE, position / 1000.0);
-            } catch (Exception e) {
-                Log.d(TAG, e.toString());
-            }
-        }
-    }
-
-    private class SeekControllerImp implements EventListener {
-        @Override
-        public void processEvent(Event event) {
-            try {
-                int position = -1;
-                if (event.properties.containsKey("seekPosition")) {
-                    position = event.getIntegerProperty("seekPosition");
-                }
-                mPlaybackRecorder.recordPlayerState(PlayerState.SEEK, position / 1000.0);
             } catch (Exception e) {
                 Log.d(TAG, e.toString());
             }
@@ -529,6 +534,12 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                 mCurrTime.setText(StringUtil.stringForTime((long) position));
             }
 
+            try {
+                mPlaybackRecorder.recordPlayerState(PlayerState.SEEK, position / 1000.0);
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
+
         }
     }
 
@@ -616,6 +627,21 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+
+    private class StoreBrightCoveImp implements EventListener {
+        @Override
+        public void processEvent(Event event) {
+            if (mPlayerVideoView != null) {
+                WatchingHistory.storeVideo(getVideoKey(), metadata, mPlayerVideoView.getDuration() / 1000.0, mPlayerVideoView.getCurrentPosition() / 1000.0)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            mPlayerVideoView.stopPlayback();
+                            mPlayerVideoView.clear();
+                        });
             }
         }
     }
@@ -816,4 +842,13 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         super.onDetachedFromWindow();
     }
 
+    public void onFinished() {
+        WritableMap event = Arguments.createMap();
+        event.putString("message", "new message");
+        ReactContext reactContext = (ReactContext) getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "finished",
+                event);
+    }
 }

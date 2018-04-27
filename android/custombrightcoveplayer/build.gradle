@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 ext {
@@ -58,6 +62,8 @@ dependencies {
     debugApi("com.mstage.userkit:identity:${userkitVersionStaging}") {
         transitive = false
     }
+
+    implementation 'com.facebook.react:react-native:+'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

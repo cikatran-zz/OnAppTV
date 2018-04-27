@@ -40,7 +40,7 @@ public class ReactBrightcovePlayerViewManager extends SimpleViewManager<CustomBr
     }
 
     @ReactProp(name = "metaData")
-    public void setMetadata(CustomBrightcovePlayer view, ReadableMap metadata){
+    public void setMetadata(CustomBrightcovePlayer view, ReadableMap metadata) {
         view.setMetadata(metadata.toHashMap());
     }
 }

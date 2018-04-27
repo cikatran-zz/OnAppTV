@@ -15,14 +15,20 @@ import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 
-export default class LowerPageComponent extends React.Component {
+export default class DetailsPage extends React.Component {
 
   constructor(props) {
     super(props);
+
   }
 
   componentDidMount() {
     const {item, isLive} = this.props.navigation.state.params
+
+    console.log('ComponentDidMount')
+    console.log(item)
+    console.log(isLive)
+
     switch (item.type) {
       case 'Standalone': {
         // Find video with related genre
@@ -34,7 +40,8 @@ export default class LowerPageComponent extends React.Component {
         break;
       }
       default: {
-        this.props.getEpgs([item.serviceID])
+        this.props.getEpgs([item.channelData.serviceId])
+        this.props.getEpgSameTime(new Date(), item.channelId)
       }
     }
   }
@@ -43,7 +50,7 @@ export default class LowerPageComponent extends React.Component {
     const {isLive} = this.props.navigation.state.params
     const {epg, navigation} = this.props
 
-    navigation.navigate('VideoControlModal', {
+    navigation.replace('VideoControlModal', {
       item: item,
       epg: epg.data,
       isLive: isLive
@@ -57,10 +64,13 @@ export default class LowerPageComponent extends React.Component {
       return (
         <View style={styles.topContainer} >
             <TouchableOpacity style={{marginTop: 12, alignSelf: 'flex-start', marginLeft: '4%', width: '20%'}} onPress={() => this.props.navigation.goBack()}>
-              <Image source={require('../../assets/ic_back_details.png')}/>
+              <Image source={require('../../assets/ic_back_details.png')} style={{width: '17%', resizeMode: 'contain'}}/>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bannerThumbnailContainer} onPress={() => this._onPress(item)}>
               <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={{position: 'absolute', bottom: '8%', left: '6%'}}>
+              <Image source={require('../../assets/ic_change_orientation.png')}/>
             </TouchableOpacity>
         </View>
       )
@@ -96,11 +106,19 @@ export default class LowerPageComponent extends React.Component {
   }
 
   _renderPinkIndicatorButton = () => {
-      const {videoType} = this.props;
-      switch (videoType) {
-        case 'channel': return (<PinkRoundedLabel text={"NEXT"}/>)
-        case 'episode': return (<PinkRoundedLabel text={"SEASON"}/>)
-        case 'standalone': return (<PinkRoundedLabel text={"RELATED"}/>)
+      const {item} = this.props.navigation.state.params
+
+      if (this._isFromChannel()) {
+        // isLive
+        return (<PinkRoundedLabel text={"NEXT CHANNEL"}/>)
+      }
+
+      switch (item.type) {
+        case 'Episode': {
+          let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
+          return (<PinkRoundedLabel text={"SEASON " + seasonIndex}/>)
+        }
+        case 'Standalone': return (<PinkRoundedLabel text={"RELATED"}/>)
         default: return (<PinkRoundedLabel text={"NEXT"}/>)
       }
   }
@@ -113,27 +131,73 @@ export default class LowerPageComponent extends React.Component {
     }
   }
 
+  _renderNextInChannelItem = ({item}) => {
+    console.log('nextChannelItem')
+    console.log(item)
+
+    return (
+      <View style={{flexDirection: 'column', marginLeft: 8, alignSelf: 'flex-start', alignItems: 'center'}}>
+        <View style={styles.nextInChannelContainer}>
+          <Image source={{uri: item.videoData.originalImages[0].url}} style={{width: '100%', height: '100%'}}/>
+        </View>
+        <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.nextInChannelItemText}>{item.videoData.title}</Text>
+      </View>
+    )
+  }
+
+  _renderListNextInChannel = (item) => {
+    if (!item || item.length === 0) return null
+    return (
+      <View>
+        <View style={styles.listHeader}>
+          <View style={styles.nextButtonContainer}>
+            <PinkRoundedLabel text={"NEXT"}/>
+          </View>
+        </View>
+        <FlatList
+          horizontal={true}
+          data={item}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderNextInChannelItem}
+        />
+      </View>
+    )
+  }
+
+  _renderListApps = (item) => {
+    
+  }
+
+  _renderListEpgInSameTime = ({item}) => {
+    if (!item || item.length === 0) return null
+    return (
+      <View>
+        <View style={styles.listHeader}>
+          <View style={styles.nextButtonContainer}>
+            {this._renderPinkIndicatorButton()}
+          </View>
+        </View>
+        <FlatList
+          style={styles.list}
+          horizontal={false}
+          data={item}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderListVideoItem}/>
+      </View>
+    )
+  }
+
   _keyExtractor = (item, index) => index;
 
-  _renderList = (data) => {
+  _renderList = ({item}) => {
+    console.log('RenderList')
+    console.log(item)
     // data is list of epgs
     if (this._isFromChannel()) {
       return (
         <View>
-          <View style={styles.listHeader}>
-            <View style={styles.nextButtonContainer}>
-              {this._renderPinkIndicatorButton()}
-            </View>
-            <View style={styles.logoContainer}>
-              {/*// TODO: Logo*/}
-            </View>
-          </View>
-          <FlatList
-            style={styles.list}
-            horizontal={false}
-            data={data.item}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderListVideoItem}/>
+          {this._renderListNextInChannel(item)}
         </View>
       )
     }
@@ -148,7 +212,7 @@ export default class LowerPageComponent extends React.Component {
           <FlatList
             style={styles.list}
             horizontal={false}
-            data={data.item}
+            data={item}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderListVideoItem}/>
         </View>
@@ -159,7 +223,6 @@ export default class LowerPageComponent extends React.Component {
   _isFromChannel = () => this.props.navigation.state.params.isLive === true
 
   _renderListVideoItem = ({item}) => {
-
     let videoData = this._isFromChannel() ? item.videoData : item
 
     if (videoData) {
@@ -196,25 +259,41 @@ export default class LowerPageComponent extends React.Component {
     this.props.listScrollOffsetY(e.nativeEvent.contentOffset.y)
   }
 
+  _isOldData = (list, isLive) => {
+    if (isLive) {
+      // EPG should have channelId
+      if (list.length > 0) {
+        return list.every(x => x.channelId)
+      }
+      else return false
+    }
+    else {
+      // EPG should have contentId
+      if (list.length > 0) {
+        return list.every(x => x.contentId)
+      }
+      else return false
+    }
+  }
+
   render() {
     // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-    const {epg} = this.props;
+    const {epg, epgSameTime} = this.props;
     const {item, isLive} = this.props.navigation.state.params
-    console.log(epg)
-    console.log(item)
 
-    if (isLive) {
-      if (!item) return null
-    }
+    if (isLive && !item)
+      return null
     else if (!epg || !epg.data || !item)
       return null;
+    else if (this._isOldData(epg.data, isLive))
+      return null
 
     return (
       <View style={styles.container}>
         <StatusBar
           translucent={true}
           backgroundColor='#00000000'
-          barStyle='light-content' />
+          barStyle='light-content'/>
         <SectionList
           style={styles.container}
           keyExtractor={this._keyExtractor}
@@ -223,7 +302,8 @@ export default class LowerPageComponent extends React.Component {
           sections={[
             {data: [item],showHeader: false, renderItem: this._renderBanner},
             {data: [item], renderItem: this._renderBannerInfo},
-            {data: [epg.data],showHeader: false, renderItem: this._renderList}
+            {data: [epg.data],showHeader: false, renderItem: this._renderList},
+            {data: [epgSameTime.data], showHeader: false, renderItem: this._renderListEpgInSameTime}
           ]}
         />
       </View>
@@ -243,10 +323,10 @@ const styles = StyleSheet.create({
     height: 265,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   bannerThumbnailContainer: {
-    marginTop: 20,
+    marginTop: 15,
     height: '72%',
     width: '92%',
     backgroundColor: colors.whitePrimary,
@@ -392,6 +472,23 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     marginTop: 25
+  },
+  nextInChannelContainer: {
+    borderRadius: 4,
+    borderWidth: 2,
+    overflow: 'hidden',
+    borderColor: "#95989A",
+    width: 150,
+    height: 75,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  nextInChannelItemText: {
+    marginTop: 18,
+    color: colors.textMainBlack,
+    fontSize: 15
   }
 })
 

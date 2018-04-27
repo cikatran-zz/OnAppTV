@@ -17,7 +17,7 @@ import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
 import BrightcovePlayer from "../../components/BrightcovePlayer";
 import VolumeSeeker from "../../components/VolumeSeeker"
-import LowerPagerComponent from "../../screens/LowerPage/LowerPageComponent"
+import LowerPagerComponent from "../DetailsPage/DetailsPage"
 import BlurView from '../../components/BlurView'
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter} from '../../utils/timeUtils'

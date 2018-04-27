@@ -16,6 +16,7 @@ import SelectOperator from "../Settings/SelectOperator";
 import FormatHDD from "../Settings/FormatHDD";
 import AtennaTests from "../Settings/AtennaTests";
 import TimeShiftConfig from "../Settings/TimeShiftConfig";
+import TermAndCondition from "../Settings/TermAndCondition";
 
 export default SettingsStack = StackNavigator({
     Setting: {
@@ -113,6 +114,12 @@ export default SettingsStack = StackNavigator({
         screen: SelectOperator,
         navigationOptions: ({navigation}) => ({
             ...defaultNavigationOptions("Select Operator", navigation, true)
+        })
+    },
+    TermAndCondition: {
+        screen: TermAndCondition,
+        navigationOptions: ({navigation}) => ({
+            ...defaultNavigationOptions("Terms & Conditions", navigation, true)
         })
     },
 });

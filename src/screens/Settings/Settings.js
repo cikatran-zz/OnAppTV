@@ -9,6 +9,7 @@ import _ from 'lodash'
 import STBSelfTests from "./STBSelfTests";
 import AlertModal from "../../components/AlertModal";
 import {NavigationActions} from "react-navigation";
+import {DotsLoader} from "react-native-indicator";
 
 export default class Settings extends React.PureComponent {
 
@@ -116,7 +117,7 @@ export default class Settings extends React.PureComponent {
                         value: "",
                         canBeNavigated: true,
                         screen: 'STBSelfTests',
-                        needSTB: false,
+                        needSTB: true,
                         icon: require('../../assets/ic_self_check.png')
                     },
                     {
@@ -124,7 +125,7 @@ export default class Settings extends React.PureComponent {
                         value: "",
                         canBeNavigated: true,
                         screen: 'SelectOperator',
-                        needSTB: false,
+                        needSTB: true,
                         icon: require('../../assets/ic_rights.png')
                     },
                     {
@@ -408,7 +409,11 @@ export default class Settings extends React.PureComponent {
         const {settings, wifi} = this.props;
 
         if (!settings.fetched || settings.isFetching || !wifi.fetched || wifi.isFetching) {
-            return null;
+            return (
+                <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                </View>
+            );
         }
 
         if (settings.data == null || settings.error) {

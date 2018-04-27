@@ -81,6 +81,12 @@
 		6969BE7B204C32CD00470C97 /* BrightcovePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE7A204C32CD00470C97 /* BrightcovePlayer.swift */; };
 		6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */; };
 		698460F42083620100D1679B /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698460F32083620100D1679B /* String+Extension.swift */; };
+		6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2E1209177A60032D3DA /* VODPlaybackRecorder.swift */; };
+		6993D2E520917C260032D3DA /* RNVODPlaybackRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2E420917C260032D3DA /* RNVODPlaybackRecorder.m */; };
+		6993D2E820917F270032D3DA /* LivePlaybackRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2E720917F270032D3DA /* LivePlaybackRecorder.swift */; };
+		6993D2EB209181050032D3DA /* EPG+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2EA209181050032D3DA /* EPG+Extension.swift */; };
+		6993D2EF209189510032D3DA /* RNLivePlaybackRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2EE209189510032D3DA /* RNLivePlaybackRecorder.m */; };
+		6993D2F220918A8C0032D3DA /* RNWatchingHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2F120918A8C0032D3DA /* RNWatchingHistory.m */; };
 		69A16FD02068DABE00E215B8 /* STBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A16FCF2068DABE00E215B8 /* STBManager.m */; };
 		69A16FD22068DB6600E215B8 /* STBAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69A16FD12068DB6600E215B8 /* STBAPI.framework */; };
 		69BD179D20319DB500E33978 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD179A20319D8900E33978 /* libART.a */; };
@@ -514,6 +520,15 @@
 		6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		698460F32083620100D1679B /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		6989BA412084479100E49F28 /* OnAppTV-sandbox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "OnAppTV-sandbox.entitlements"; path = "OnAppTV/OnAppTV-sandbox.entitlements"; sourceTree = "<group>"; };
+		6993D2E1209177A60032D3DA /* VODPlaybackRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VODPlaybackRecorder.swift; sourceTree = "<group>"; };
+		6993D2E320917C260032D3DA /* RNVODPlaybackRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNVODPlaybackRecorder.h; sourceTree = "<group>"; };
+		6993D2E420917C260032D3DA /* RNVODPlaybackRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNVODPlaybackRecorder.m; sourceTree = "<group>"; };
+		6993D2E720917F270032D3DA /* LivePlaybackRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePlaybackRecorder.swift; sourceTree = "<group>"; };
+		6993D2EA209181050032D3DA /* EPG+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EPG+Extension.swift"; sourceTree = "<group>"; };
+		6993D2ED209189510032D3DA /* RNLivePlaybackRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNLivePlaybackRecorder.h; sourceTree = "<group>"; };
+		6993D2EE209189510032D3DA /* RNLivePlaybackRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNLivePlaybackRecorder.m; sourceTree = "<group>"; };
+		6993D2F020918A8C0032D3DA /* RNWatchingHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNWatchingHistory.h; sourceTree = "<group>"; };
+		6993D2F120918A8C0032D3DA /* RNWatchingHistory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNWatchingHistory.m; sourceTree = "<group>"; };
 		69A16FCE2068DABE00E215B8 /* STBManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STBManager.h; sourceTree = "<group>"; };
 		69A16FCF2068DABE00E215B8 /* STBManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STBManager.m; sourceTree = "<group>"; };
 		69A16FD12068DB6600E215B8 /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
@@ -794,11 +809,13 @@
 		690EEFE2205790F80099484A /* UserKit */ = {
 			isa = PBXGroup;
 			children = (
+				6993D2EC209188450032D3DA /* WatchingHistory */,
+				6993D2E620917F0F0032D3DA /* LivePlaybackRecorder */,
+				6993D2B6209176D40032D3DA /* VODPlaybackRecorder */,
 				6931BE5D2074AE68007DA182 /* Extensions */,
 				690EEFE4205791350099484A /* UserKitModule.swift */,
 				69025A8F2071E90600F66EBE /* RNUserKit.h */,
 				69025A902071E90600F66EBE /* RNUserKit.m */,
-				6932A6B220825FA600C43924 /* WatchingHistory.swift */,
 				6932A6B42082604700C43924 /* Constants.swift */,
 			);
 			path = UserKit;
@@ -834,6 +851,7 @@
 		6931BE5D2074AE68007DA182 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6993D2EA209181050032D3DA /* EPG+Extension.swift */,
 				6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */,
 				6932A6B0208257A200C43924 /* SpecificRequiredItem+Extension.swift */,
 			);
@@ -882,6 +900,36 @@
 				6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		6993D2B6209176D40032D3DA /* VODPlaybackRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				6993D2E1209177A60032D3DA /* VODPlaybackRecorder.swift */,
+				6993D2E320917C260032D3DA /* RNVODPlaybackRecorder.h */,
+				6993D2E420917C260032D3DA /* RNVODPlaybackRecorder.m */,
+			);
+			path = VODPlaybackRecorder;
+			sourceTree = "<group>";
+		};
+		6993D2E620917F0F0032D3DA /* LivePlaybackRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				6993D2E720917F270032D3DA /* LivePlaybackRecorder.swift */,
+				6993D2ED209189510032D3DA /* RNLivePlaybackRecorder.h */,
+				6993D2EE209189510032D3DA /* RNLivePlaybackRecorder.m */,
+			);
+			path = LivePlaybackRecorder;
+			sourceTree = "<group>";
+		};
+		6993D2EC209188450032D3DA /* WatchingHistory */ = {
+			isa = PBXGroup;
+			children = (
+				6932A6B220825FA600C43924 /* WatchingHistory.swift */,
+				6993D2F020918A8C0032D3DA /* RNWatchingHistory.h */,
+				6993D2F120918A8C0032D3DA /* RNWatchingHistory.m */,
+			);
+			path = WatchingHistory;
 			sourceTree = "<group>";
 		};
 		69A16FA52068D9F300E215B8 /* STB */ = {
@@ -1693,6 +1741,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				69025A912071E90600F66EBE /* RNUserKit.m in Sources */,
+				6993D2F220918A8C0032D3DA /* RNWatchingHistory.m in Sources */,
 				6969BE7B204C32CD00470C97 /* BrightcovePlayer.swift in Sources */,
 				6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */,
 				69025AC32071F4C200F66EBE /* ImageUpload+Extension.swift in Sources */,
@@ -1702,21 +1751,26 @@
 				698460F42083620100D1679B /* String+Extension.swift in Sources */,
 				6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */,
 				690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */,
+				6993D2EF209189510032D3DA /* RNLivePlaybackRecorder.m in Sources */,
+				6993D2EB209181050032D3DA /* EPG+Extension.swift in Sources */,
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
 				69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */,
 				6932A6B320825FA600C43924 /* WatchingHistory.swift in Sources */,
 				69025ACB2072303000F66EBE /* RNOANotification.m in Sources */,
 				69A16FD02068DABE00E215B8 /* STBManager.m in Sources */,
 				690EEFE5205791350099484A /* UserKitModule.swift in Sources */,
+				6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */,
 				690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */,
 				69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */,
 				6969BE77204C2A8000470C97 /* SliderMPVolumeView.swift in Sources */,
+				6993D2E820917F270032D3DA /* LivePlaybackRecorder.swift in Sources */,
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */,
 				6928A9DD208E1522001E3D41 /* IQKeyboardManagerObj.swift in Sources */,
 				6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */,
 				6932A6B72082609700C43924 /* JSON.swift in Sources */,
+				6993D2E520917C260032D3DA /* RNVODPlaybackRecorder.m in Sources */,
 				69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */,
 				69025ABE2071F32600F66EBE /* AuthenticationModel+Extension.swift in Sources */,
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,

@@ -10,7 +10,7 @@ export function getEpgs(serviceId) {
 export function getEpgsSuccess(data) {
     return {
         type: actionTypes.FETCH_EPGS_SUCCESS,
-        data: data.viewer.channelMany[0].epgsData
+        data: data.viewer.channelOne.epgsData
     }
 }
 
