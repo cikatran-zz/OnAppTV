@@ -245,7 +245,6 @@ export default class VideoControlModal extends React.Component {
   _onFavouritePress = () => this._toggleModal('favorite')
 
   _onVolumeChange = (newValue) => {
-    this.setState({ volume: newValue })
     let jsonString = {
       volume: newValue
     }
@@ -275,9 +274,9 @@ export default class VideoControlModal extends React.Component {
       if (passed > 0) return "-" + secondFormatter(passed.toString())
     }
     else {
-      const {startPoint, currentTime} = this.state
+      const {currentPos} = this.state
 
-      let etrTime = durationInSeconds - ((currentTime - startPoint) / 1000)
+      let etrTime = durationInSeconds - currentPos
       if (etrTime > 0) return "-" + secondFormatter(etrTime.toString())
     }
   }
@@ -417,7 +416,7 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={styles.volumeLessIcon}>
             <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <VolumeSeeker width={260} thumbSize={16} maxValue={100} value={this.state.volume} onVolumeChange={this._onVolumeChange}
+          <VolumeSeeker width={260} thumbSize={16} maxValue={100} onVolumeChange={this._onVolumeChange}
                         onChangedScrollEnabled={this._onChangeScrollEnabled}/>
           <TouchableOpacity style={styles.volumeMoreIcon}>
             <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
@@ -446,11 +445,24 @@ export default class VideoControlModal extends React.Component {
       }
       data = epg.data[0].videoData
     }
+
+    let iconUrl = ''
+    if (isLive === false) {
+      if (data.originalImages && data.originalImages.length > 0) {
+        iconUrl = data.originalImages[0].url
+      }
+    }
+    else {
+      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
+        iconUrl = data.videoData.originalImages[0].url
+      }
+    }
+
     return (
       <View style={styles.topContainer} {...this._panResponder.panHandlers}>
         <ImageBackground style={styles.topVideoControl}
                          resizeMode="cover"
-                         source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                         source={{uri: iconUrl}}/>
         {this._renderRecordBar(isLive, item.startTime, item.endTime)}
         <Animated.View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
         </Animated.View>
@@ -472,6 +484,18 @@ export default class VideoControlModal extends React.Component {
       data = epg.data[0].videoData
     }
 
+    let iconUrl = ''
+    if (isLive === false) {
+      if (data.originalImages && data.originalImages.length > 0) {
+        iconUrl = data.originalImages[0].url
+      }
+    }
+    else {
+      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
+        iconUrl = data.videoData.originalImages[0].url
+      }
+    }
+
     return (
       <View style={{width: '100%', height: height}} key={item}>
 
@@ -486,7 +510,7 @@ export default class VideoControlModal extends React.Component {
         <View style={styles.topContainer}>
           <ImageBackground style={styles.topVideoControl}
                            resizeMode="cover"
-                           source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                           source={{uri: iconUrl}}/>
           {this._renderRecordBar(isLive, item.startTime, item.endTime)}
           <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
           </View>
@@ -512,6 +536,18 @@ export default class VideoControlModal extends React.Component {
       data = epg.data[0].videoData
     }
 
+    let iconUrl = ''
+    if (isLive === false) {
+      if (data.originalImages && data.originalImages.length > 0) {
+        iconUrl = data.originalImages[0].url
+      }
+    }
+    else {
+      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
+        iconUrl = data.videoData.originalImages[0].url
+      }
+    }
+
     return (
       <View style={{width: '100%', height: height}} key={item}>
 
@@ -519,7 +555,7 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                           source={iconUrl}/>
           {this._renderPlaybackController(data)}
         </View>
         {this._renderTopContainer(item, isLive)}
@@ -802,6 +838,7 @@ export default class VideoControlModal extends React.Component {
 
   _renderRecordModal = () => {
     const {modalContent, modalRecordTarget, modalFavoriteTarget} = this.state
+    const {isLive} = this.props.navigation.state.params
 
     let img = modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
     let firstButtonImg
@@ -819,6 +856,11 @@ export default class VideoControlModal extends React.Component {
     const {item} = this.props.navigation.state.params
     const {seriesInfo} = this.props;
 
+    let iconUrl = ''
+    if (item.originalImages && item.originalImages.length > 0) {
+      iconUrl = item.originalImages[0].url
+    }
+
     if (item.type === 'Episode') {
       return (
         <Modal animationType={'fade'} transparent={true}
@@ -829,7 +871,7 @@ export default class VideoControlModal extends React.Component {
               <Image source={require('../../assets/ic_modal_close.png')} />
             </TouchableOpacity>
             <View style={styles.modalInsideContainer}>
-              <Image source={{uri: item.originalImages[0].url}} style={styles.modalImage}/>
+              <Image source={{uri: iconUrl}} style={styles.modalImage}/>
               <Text style={styles.modalTitleText}>{item.title}</Text>
               <Text style={styles.modalShortDes}>{"Series - Episode " + item.seasonIndex}</Text>
               <Text style={styles.modalLongDes}>{item.longDescription}</Text>
