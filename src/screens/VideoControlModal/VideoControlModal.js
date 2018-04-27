@@ -365,8 +365,6 @@ export default class VideoControlModal extends React.Component {
     const {isLive} = this.props.navigation.state.params;
 
     let playIconSrc;
-    console.log('It is live')
-    console.log(isLive)
     if (isLive) {
       playIconSrc = require('../../assets/ic_on_tv.png')
     }
@@ -417,7 +415,8 @@ export default class VideoControlModal extends React.Component {
             <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
           <VolumeSeeker width={260} thumbSize={16} maxValue={100} onVolumeChange={this._onVolumeChange}
-                        onChangedScrollEnabled={this._onChangeScrollEnabled}/>
+                        onChangedScrollEnabled={this._onChangeScrollEnabled}
+                        disabled={!this.state.isConnected}/>
           <TouchableOpacity style={styles.volumeMoreIcon}>
             <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
@@ -466,11 +465,19 @@ export default class VideoControlModal extends React.Component {
         {this._renderRecordBar(isLive, item.startTime, item.endTime)}
         <Animated.View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
         </Animated.View>
-        <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._showAlertModal}>
+        <TouchableOpacity style={{position: 'absolute', bottom: 20, right: 20}} onPress={this._showAlertModal}>
           <Image source={require('../../assets/ic_change_orientation.png')}/>
         </TouchableOpacity>
       </View>
     )
+  }
+
+  _informationPress = (item, epg, isLive) => {
+    this.props.navigation.replace('DetailsPage', {
+      item: item,
+      epg: epg.data,
+      isLive: isLive
+    })
   }
 
   _renderLive = (epg, item) => {
@@ -503,7 +510,7 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                           source={{uri: iconUrl}}/>
           {this._renderPlaybackController(data)}
         </View>
 
@@ -555,8 +562,11 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={iconUrl}/>
+                           source={{uri: iconUrl}}/>
           {this._renderPlaybackController(data)}
+          <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={() => this._informationPress(item, epg, isLive)}>
+            <Image source={require('../../assets/ic_information.png')} style={styles.infoImage}/>
+          </TouchableOpacity>
         </View>
         {this._renderTopContainer(item, isLive)}
       </View>)
@@ -600,7 +610,6 @@ export default class VideoControlModal extends React.Component {
               epg.map(value => this._renderUpperPage(epg, value))
             }
           </Swiper>
-
           <TouchableOpacity style={{position: 'absolute', top: 30, left: 30, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
             <Image source={require('../../assets/ic_dismiss_modal.png')}/>
           </TouchableOpacity>
@@ -1125,6 +1134,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     backgroundColor: colors.mainPink
+  },
+  infoImage: {
+    width: 27,
+    height: 27,
+    resizeMode: 'cover'
   }
 })
 
