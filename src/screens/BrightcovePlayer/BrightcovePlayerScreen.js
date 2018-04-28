@@ -36,7 +36,7 @@ export default class BrightcovePlayerScreen extends React.Component {
         const {videoId} = this.props.navigation.state.params;
 
         return (
-            <View onLayout={this.onLayout.bind(this)}>
+            <View onLayout={this.onLayout.bind(this)} style={{backgroundColor: 'black'}}>
                 <BrightcovePlayer
                     ref={(brightcove) => this.brightcovePlayer = brightcove}
                     style={{width: '100%', height: '100%'}}
