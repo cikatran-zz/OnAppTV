@@ -64,14 +64,26 @@ query{
 		videoOne(filter:{
       feature: true
     }) {
-		  title
-		  shortDescription
+		  contentId
+      durationInSeconds
+      title
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      metadata
+      shortDescription
+      longDescription
       originalImages {
         height
         width
         url
         name
         fileName
+      },
+      genresData {
+        name
       }
 		}
   }
@@ -513,7 +525,41 @@ query getEpgSameTime($currentTime: Date, $id: [MongoID]){
       endTime
     }
   }
-}`
+}`;
+
+const VODByIds = gql`
+query getVODs($id: [String]!){
+  viewer {
+    videoMany(filter: {
+      _operators: {
+        contentId: {
+          in: $id
+        }
+      }
+    }) {
+      contentId
+      durationInSeconds
+      title
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      metadata
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      },
+      genresData {
+        name
+      }
+    }
+  }
+}
+`;
 
 export default {
     serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
@@ -533,6 +579,7 @@ export default {
         SERIES_INFO: seriesInfoQuery,
         ZAPPER_CONTENT: zapperContentQuery,
         BRIGHTCOVE_SEARCH : searchBrightcoveQuery,
-        EPG_SAME_TIME: queryEpgSameTime
+        EPG_SAME_TIME: queryEpgSameTime,
+        VOD_BY_IDS: VODByIds
     }
 };
