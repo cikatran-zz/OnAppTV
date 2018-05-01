@@ -29,7 +29,8 @@ export default class DetailsPage extends React.Component {
 
     componentDidMount() {
         const {item, isLive} = this.props.navigation.state.params;
-        if (item.type && isLive !== undefined) {
+
+        if (item && isLive !== undefined) {
             if (isLive === true && item.channelData
                                 && item.channelData.serviceId
                                 && item.channelId) {
@@ -40,7 +41,7 @@ export default class DetailsPage extends React.Component {
                 this.props.getEpgs([item.channelData.serviceId])
                 this.props.getEpgSameTime(new Date(), item.channelId)
             }
-            else {
+            else if (item.type) {
                 /*
                 Fetch epg with related content or epg in series
                  */
@@ -262,8 +263,9 @@ export default class DetailsPage extends React.Component {
 
     _renderList = ({item}) => {
         if (this._isFromChannel()) {
-            return
+            return (
                 <View>{this._renderListNextInChannel(item)}</View>
+            )
         }
         else {
             return (
@@ -339,17 +341,17 @@ export default class DetailsPage extends React.Component {
     _isFromChannel = () => this.props.navigation.state.params.isLive === true
 
     _isOldData = (list, isLive) => {
-        if (isLive) {
+        if (isLive === true) {
             // EPG should have channelId
             if (list.length > 0) {
-                return !list.every(x => x.channelId)
+                return !list.some(x => x.channelId)
             }
             else return false
         }
         else {
             // EPG should have contentId
             if (list.length > 0) {
-                return !list.every(x => x.contentId)
+                return !list.some(x => x.contentId)
             }
             else return false
         }
