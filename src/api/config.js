@@ -72,7 +72,6 @@ query{
       episodeIndex
       type
       impression
-      metadata
       shortDescription
       longDescription
       originalImages {
