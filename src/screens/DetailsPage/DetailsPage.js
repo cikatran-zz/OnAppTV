@@ -329,7 +329,7 @@ export default class DetailsPage extends React.Component {
 
         navigation.replace('VideoControlModal', {
             item: item,
-            epg: epg.data,
+            epg: epg.data.length !== 0 ? epg.data : [item],
             isLive: isLive
         })
     }

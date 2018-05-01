@@ -200,9 +200,7 @@ export default class VideoControlModal extends React.Component {
 
 
         NativeModules.STBManager.getVolumeInJson((error, events) => {
-            if (!error) {
-                this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
-            }
+           this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
         })
 
         this.setState({
@@ -593,21 +591,8 @@ export default class VideoControlModal extends React.Component {
   }
 
   _renderModal = () => {
-    const {item, epg, isLive} = this.props.navigation.state.params;
-
-      // Right now, Live is just one video, check for one video
-      if (isLive) {
-        return (
-          <View
-            onLayout={this.onLayout.bind(this)}
-            style={{flex: 1}}>
-            {this._renderLive({}, item)}
-          </View>
-        )
-      }
-
+      const {item, epg} = this.props.navigation.state.params;
       let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
-
       return (
         <View
           onLayout={this.onLayout.bind(this)}
