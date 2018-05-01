@@ -28,22 +28,34 @@ export default class DetailsPage extends React.Component {
 
     componentDidMount() {
         const {item, isLive} = this.props.navigation.state.params;
+        if (item.type && isLive !== undefined) {
 
-        switch (item.type) {
-            case 'Standalone': {
-                // Find video with related genre
-                this.props.getEpgWithGenre(item.genreIds)
-                break;
-            }
-            case 'Episode': {
-                this.props.getEpgWithSeriesId([item.seriesId])
-                break;
-            }
-            default: {
+            if (isLive === true && item.channelData
+                                && item.channelData.serviceId
+                                && item.channelId) {
+                /*
+                  Fetching information about EPG next in channel and EPG which are
+                  at the same time on other channels
+                   */
+
                 this.props.getEpgs([item.channelData.serviceId])
                 this.props.getEpgSameTime(new Date(), item.channelId)
             }
+            else {
+                /*
+                Fetch epg with related content or epg in series
+                 */
+
+                if (item.type === 'Episode') {
+                    this.props.getEpgWithSeriesId([item.seriesId])
+                }
+                else {
+                    this.props.getEpgWithGenre(item.genreIds)
+                }
+            }
         }
+
+
         Orientation.lockToPortrait();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
