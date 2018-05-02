@@ -32,6 +32,8 @@ export default class VideoControlModal extends React.Component {
 
   _currentPosition = 0
   _offsetRate = 0
+    _vodProgress = null
+    _durations = null
 
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
@@ -88,6 +90,22 @@ export default class VideoControlModal extends React.Component {
       this.setState({
         currentPos: periodRate < 0 ? 0 : periodRate
       })
+        this._vodProgress.setNativeProps({
+            style: [styles.vodProgressStyle, {
+                width: (periodRate / this._durations) * 100 + "%"
+            }]
+        })
+    }
+
+    _getVodProgressStyle = () => {
+        const {item, epg, isLive} = this.props.navigation.state.params
+        const {index, currentPos} = this.state
+        let progress = isLive === true ? this._getLiveProgress(epg[index] === undefined ? item.startTime : epg[index].startTime, epg[index] === undefined ? item.endTime : epg[index].endTime)
+                                        : (currentPos / this._durations) * 100 + "%"
+
+      return [styles.vodProgressStyle, {
+          width: progress
+        }]
     }
 
     setCurrentPosition(newPos) {
@@ -105,8 +123,9 @@ export default class VideoControlModal extends React.Component {
       }
     }
 
-    _onStartShouldSetPanResponder = (event) => {
-      return true;
+    _onStartShouldSetPanResponder = (event, gestureState) => {
+        console.log("DY", gestureState.dy, "DX", gestureState.dx);
+        return (gestureState.dx != 0 || gestureState.dy != 0);
     };
 
     _onPanResponderMove = (event, gestureState) => {
@@ -307,11 +326,6 @@ export default class VideoControlModal extends React.Component {
     return (passedTime / durationInMsSecons) * 100 + "%"
   }
 
-  _getVodProgress = (durationInSeconds) => {
-    const {currentPos} = this.state
-    return (currentPos / durationInSeconds) * 100 + "%"
-  }
-
   _resetPlayPosition = () => {
     let json = {
       playPosition: 0
@@ -467,7 +481,8 @@ export default class VideoControlModal extends React.Component {
                          resizeMode="cover"
                          source={{uri: iconUrl}}/>
         {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-        <Animated.View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+        <Animated.View ref={(ref) => this._vodProgress = ref}
+                       style={this._getVodProgressStyle()}>
         </Animated.View>
         <TouchableOpacity style={{position: 'absolute', bottom: 20, right: 20}} onPress={this._showAlertModal}>
           <Image source={require('../../assets/ic_change_orientation.png')}/>
@@ -482,58 +497,6 @@ export default class VideoControlModal extends React.Component {
       epg: epg.data,
       isLive: isLive
     })
-  }
-
-  _renderLive = (epg, item) => {
-    let data = item
-    const {isLive} = this.props.navigation.state.params
-
-    if (item.serviceID) {
-      if (!epg.data) {
-        return null
-      }
-      data = epg.data[0].videoData
-    }
-
-    let iconUrl = ''
-    if (isLive === false) {
-      if (data.originalImages && data.originalImages.length > 0) {
-        iconUrl = data.originalImages[0].url
-      }
-    }
-    else {
-      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
-        iconUrl = data.videoData.originalImages[0].url
-      }
-    }
-
-    return (
-      <View style={{width: '100%', height: height}} key={item}>
-
-        <View style={styles.bottomContainer}>
-          <ImageBackground style={styles.bottomVideoControl}
-                           resizeMode="cover"
-                           blurRadius={10}
-                           source={{uri: iconUrl}}/>
-          {this._renderPlaybackController(data)}
-        </View>
-
-        <View style={styles.topContainer}>
-          <ImageBackground style={styles.topVideoControl}
-                           resizeMode="cover"
-                           source={{uri: iconUrl}}/>
-          {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-          <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
-          </View>
-          <TouchableOpacity style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
-            <Image source={require('../../assets/ic_dismiss_modal.png')}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._showAlertModal}>
-            <Image source={require('../../assets/ic_change_orientation.png')}/>
-          </TouchableOpacity>
-        </View>
-      </View>
-    )
   }
 
   _renderUpperPage = (epg, item) => {
@@ -581,7 +544,8 @@ export default class VideoControlModal extends React.Component {
   _onSwiperIndexChanged = (index) => {
     const {item, isLive, epg} = this.props.navigation.state.params
     if (!isLive) {
-      this.props.getBcVideos(epg[index].contentId)
+        this.props.getBcVideos(epg[index].contentId)
+        this._durations = epg[index] === undefined ? 0 : epg[index].durationInSeconds
       this.setState({
         index: index,
         isPlaying: true,
@@ -592,6 +556,8 @@ export default class VideoControlModal extends React.Component {
 
   _renderModal = () => {
       const {item, epg} = this.props.navigation.state.params;
+
+      this._durations = item.durationInSeconds
       let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
       return (
         <View
@@ -1130,7 +1096,14 @@ const styles = StyleSheet.create({
     width: 27,
     height: 27,
     resizeMode: 'cover'
-  }
+  },
+    vodProgressStyle: {
+        height: '100%',
+        backgroundColor: 'rgba(17,17,19,0.45)',
+        position: 'absolute',
+        top: 0,
+        left: 0
+    }
 })
 
 const jsonString = "{\n" +
