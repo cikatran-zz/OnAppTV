@@ -2,9 +2,9 @@ import React, {PureComponent} from 'react'
 import {
     Dimensions,
     FlatList,
-    Image, Modal,
+    Image, Modal, NativeModules,
     Platform,
-    SectionList,
+    SectionList, Share,
     StatusBar,
     StyleSheet,
     Text,
@@ -15,26 +15,19 @@ import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 import {rootViewTopPadding} from "../../utils/rootViewPadding";
+import {getChannel, getWatchingHistory} from "../../api";
 import Orientation from "react-native-orientation";
-import {getChannel} from "../../api";
+import AlertModal from "../../components/AlertModal";
 
 export default class DetailsPage extends React.Component {
 
     constructor(props) {
         super(props);
-
-    }
-
-    componentWillMount() {
-        Orientation.lockToPortrait();
+        this.alertVC
     }
 
     componentDidMount() {
-        const {item, isLive} = this.props.navigation.state.params
-
-        console.log('ComponentDidMount')
-        console.log(item)
-        console.log(isLive)
+        const {item, isLive} = this.props.navigation.state.params;
 
         switch (item.type) {
             case 'Standalone': {
@@ -51,10 +44,11 @@ export default class DetailsPage extends React.Component {
                 this.props.getEpgSameTime(new Date(), item.channelId)
             }
         }
-
+        Orientation.lockToPortrait();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
-            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('#ffffff');
+            Orientation.lockToPortrait();
         });
     }
 
@@ -63,10 +57,10 @@ export default class DetailsPage extends React.Component {
     }
 
     _onPress = (item) => {
-        const {isLive} = this.props.navigation.state.params
-        const {epg, navigation} = this.props
+        const {isLive} = this.props.navigation.state.params;
+        const {epg, navigation} = this.props;
 
-        navigation.navigate('VideoControlModal', {
+        navigation.replace('VideoControlModal', {
             item: item,
             epg: epg.data,
             isLive: isLive
@@ -77,21 +71,35 @@ export default class DetailsPage extends React.Component {
         const {isLive} = this.props.navigation.state.params
 
         let data = isLive === true ? item.videoData : item
+        let url = '';
+        if (data.originalImages != null && data.originalImages.length > 0) {
+            url = data.originalImages[0].url ? data.originalImages[0].url : '';
+        }
         return (
             <View style={styles.topContainer}>
-                <TouchableOpacity style={{paddingVertical: 15, alignSelf: 'flex-start', paddingHorizontal: 15}}
+                <TouchableOpacity style={{padding: 15, alignSelf: 'flex-start'}}
                                   onPress={() => this.props.navigation.goBack()}>
                     <Image source={require('../../assets/ic_back_details.png')}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bannerThumbnailContainer} onPress={() => this._onPress(item)}>
-                    <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
+                    <Image source={{uri: url}} style={styles.banner}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={{position: 'absolute', bottom: '8%', left: '6%'}}>
+                <TouchableOpacity style={{position: 'absolute', bottom: 6, left: 21}}>
                     <Image source={require('../../assets/ic_change_orientation.png')}/>
                 </TouchableOpacity>
             </View>
         )
-    }
+    };
+
+    _shareExecution = (title, url) => {
+        content = {
+            message: "",
+            title: title,
+            url: url
+        };
+        Share.share(content, {})
+    };
+
 
     _renderBannerInfo = ({item}) => {
         let data = this._isFromChannel() ? item.videoData : item
@@ -104,14 +112,14 @@ export default class DetailsPage extends React.Component {
                         <Text style={styles.videoTypeText}>{data.type}</Text>
                     </View>
                     <View style={styles.bannerButtonsContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_record.png')}
                                    style={styles.videoPlayButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.videoLoveButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> this._shareExecution(item.title, '')}>
                             <Image source={require('../../assets/share.png')} style={styles.videoShareButton}/>
                         </TouchableOpacity>
                     </View>
@@ -128,23 +136,23 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromChannel()) {
             // isLive
-            return (<PinkRoundedLabel text={"NEXT CHANNEL"}/>)
+            return (<PinkRoundedLabel style={{marginBottom: 21}} text={"NEXT CHANNEL"}/>)
         }
 
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel text={"SEASON " + seasonIndex}/>)
+                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
             }
             case 'Standalone':
-                return (<PinkRoundedLabel text={"RELATED"}/>)
+                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"RELATED"}/>)
             default:
-                return (<PinkRoundedLabel text={"NEXT"}/>)
+                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"NEXT"}/>)
         }
     }
 
     _renderLogoChannel = (urlArray) => {
-        let logoUrl
+        let logoUrl;
         if (urlArray && urlArray.length > 0) logoUrl = {uri: urlArray[0].url}
         if (this._isFromChannel() && logoUrl) {
             return (<Image source={logoUrl}/>)
@@ -152,13 +160,15 @@ export default class DetailsPage extends React.Component {
     }
 
     _renderNextInChannelItem = ({item}) => {
-        console.log('nextChannelItem')
-        console.log(item)
-
+        let data = item.videoData;
+        let url = '';
+        if (data.originalImages != null && data.originalImages.length > 0) {
+            url = data.originalImages[0].url ? data.originalImages[0].url : '';
+        }
         return (
             <View style={{flexDirection: 'column', marginLeft: 8, alignSelf: 'flex-start', alignItems: 'center'}}>
                 <View style={styles.nextInChannelContainer}>
-                    <Image source={{uri: item.videoData.originalImages[0].url}}
+                    <Image source={{uri: url}}
                            style={{width: '100%', height: '100%'}}/>
                 </View>
                 <Text numberOfLines={1} ellipsizeMode={'tail'}
@@ -264,10 +274,10 @@ export default class DetailsPage extends React.Component {
                             style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
                     </View>
                     <View style={styles.itemActionsContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
                         </TouchableOpacity>
                     </View>
@@ -285,14 +295,14 @@ export default class DetailsPage extends React.Component {
         if (isLive) {
             // EPG should have channelId
             if (list.length > 0) {
-                return list.every(x => x.channelId)
+                return !list.every(x => x.channelId)
             }
             else return false
         }
         else {
             // EPG should have contentId
             if (list.length > 0) {
-                return list.every(x => x.contentId)
+                return !list.every(x => x.contentId)
             }
             else return false
         }
@@ -301,7 +311,7 @@ export default class DetailsPage extends React.Component {
     render() {
         // EPGs is EPG array, video is an EPG or videoModel depend on videoType
         const {epg, epgSameTime} = this.props;
-        const {item, isLive} = this.props.navigation.state.params;
+        const {item, isLive} = this.props.navigation.state.params
 
         if (isLive && !item)
             return null;
@@ -314,13 +324,17 @@ export default class DetailsPage extends React.Component {
             <View style={styles.container}>
                 <StatusBar
                     translucent={true}
-                    backgroundColor='#00000000'
+                    backgroundColor='#ffffff'
                     barStyle='dark-content'/>
+                <AlertModal ref={(modal) => {
+                    this.alertVC = modal
+                }}/>
                 <SectionList
+                    style={styles.container}
                     keyExtractor={this._keyExtractor}
                     stickySectionHeadersEnabled={false}
-                    bounces={false}
                     showsVerticalScrollIndicator={false}
+                    bounces={false}
                     sections={[
                         {data: [item], showHeader: false, renderItem: this._renderBanner},
                         {data: [item], renderItem: this._renderBannerInfo},
@@ -333,25 +347,26 @@ export default class DetailsPage extends React.Component {
     }
 
 }
+const {w, h} = Dimensions.get("window")
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        height: h,
+        backgroundColor: colors.whitePrimary
     },
     topContainer: {
         flexDirection: 'column',
-        height: 265,
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: rootViewTopPadding()
+        marginBottom: 21,
+        marginTop: rootViewTopPadding(),
+        alignItems: 'center'
     },
     bannerThumbnailContainer: {
-        marginTop: 15,
-        height: '72%',
-        width: '92%',
+        height: 164,
+        paddingHorizontal: 15,
+        width: '100%',
         backgroundColor: colors.whitePrimary,
-        borderRadius: (Platform.OS === 'ios') ? 4 : 8
     },
     list: {
         width: '100%',
@@ -367,8 +382,8 @@ const styles = StyleSheet.create({
         height: 100,
     },
     videoThumnbailContainer: {
-        width: '41%',
-        height: '100%',
+        width: 156,
+        height: 74,
         borderRadius: (Platform.OS === 'ios') ? 4 : 8
     },
     videoThumbnail: {
@@ -437,7 +452,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: colors.whitePrimary,
-        borderRadius: 4,
+        borderRadius: (Platform.OS === 'ios') ? 4 : 8,
         overflow: 'hidden'
     },
     bannerContainer: {

@@ -1,16 +1,17 @@
 import React from 'react'
 import {
-    Animated,
-    Dimensions,
-    Image,
-    ImageBackground,
-    Modal,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    NativeModules,
-    Share,
-    View
+  Animated,
+  Dimensions,
+  Image,
+  ImageBackground,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  NativeModules,
+  Share,
+  View,
+  PanResponder
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -24,9 +25,13 @@ import Swiper from 'react-native-swiper'
 import PinkRoundedButton from '../../components/PinkRoundedLabel'
 import { rootViewTopPadding } from '../../utils/rootViewPadding'
 import moment from 'moment';
+import AlertModal from '../../components/AlertModal'
 
 const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
+
+  _currentPosition = 0
+  _offsetRate = 0
 
   onLayout(e) {
     const { width, height } = Dimensions.get("window")
@@ -41,18 +46,10 @@ export default class VideoControlModal extends React.Component {
     }
   }
 
-  _releaseOrientationCallback = () => {
-    Orientation.unlockAllOrientations()
-  }
-
-  _navigateBrightcovePlayerScreen = () => {
-    const {item} = this.props.navigation.state.params
-    if (item) {
-      let videoId = item.contentId ? item.contentId : '5714823997001'
-      this.props.navigation.navigate('BrightcovePlayerScreen', {
-        videoId: videoId,
-        callback: this._releaseOrientationCallback
-      })
+  _showAlertModal = () => {
+    console.log(this.alertModal.state.isShow)
+    if (!this.alertModal.state.isShow) {
+      this.alertModal.setState({isShow: true, message: "Rotate your device to watch on the phone!"})
     }
   }
 
@@ -73,23 +70,82 @@ export default class VideoControlModal extends React.Component {
             index: -1,
             isScrollEnabled: true
         }
+
+      this.alertModal = null
+    }
+
+    getCurrentPosition() {
+      return this._currentPosition
+    }
+
+    setPosition(pos) {
+      if (pos > width) {
+        return;
+      }
+      let periodRate = Math.round(pos / this._offsetRate)
+      // Display played area
+      console.log('Dragging to position %s', periodRate)
+      this.setState({
+        currentPos: periodRate < 0 ? 0 : periodRate
+      })
+    }
+
+    setCurrentPosition(newPos) {
+      let pos = this._currentPosition + newPos
+      if (pos < 0)
+        pos = 0
+      if (pos > width)
+        return;
+      this._currentPosition += newPos
+      if (this.state.isConnected) {
+        let json = {
+          playPosition: Math.round(this._currentPosition / this._offsetRate)
+        }
+        NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (e,r) => {})
+      }
+    }
+
+    _onStartShouldSetPanResponder = (event) => {
+      return true;
+    };
+
+    _onPanResponderMove = (event, gestureState) => {
+      this.setState({dragging: true})
+      this._onChangeScrollEnabled(false);
+      this.setPosition(this.getCurrentPosition() + gestureState.dx);
+    };
+
+    _onPanResponderRelease = (event, gestureState) => {
+      this.setState({dragging: false});
+      this._onChangeScrollEnabled(true);
+      this.setCurrentPosition(gestureState.dx);
+      return true;
+    }
+
+    _onPanResponderGrant = (event, gestureState) => {
+        this._onChangeScrollEnabled(false);
     }
 
     componentWillMount() {
         Orientation.unlockAllOrientations()
+        Orientation.unlockAllOrientations()
+        this._panResponder = PanResponder.create({
+            onPanResponderGrant: this._onPanResponderGrant,
+          onMoveShouldSetPanResponder: this._onStartShouldSetPanResponder,
+          onMoveShouldSetPanResponderCapture: this._onStartShouldSetPanResponder,
+          onPanResponderMove: this._onPanResponderMove,
+          onPanResponderRelease: this._onPanResponderRelease,
+        })
     }
 
     _getVodTime = setInterval(() => {
         const {isLive} = this.props.navigation.state.params;
         if (!isLive) {
-
             NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
-                if (!e) {
-                    let pos = JSON.parse(r[0]).playPosition
-                    this.setState({
-                        currentPos: pos
-                    })
-                }
+                let pos = JSON.parse(r[0]).playPosition
+                this.setState({
+                    currentPos: pos
+                })
             })
         }
     }, 1000);
@@ -109,74 +165,69 @@ export default class VideoControlModal extends React.Component {
     componentWillUnmount() {
         clearInterval(this._getTimeInterval)
         clearInterval(this._getVodTime)
-
-        NativeModules.STBManager.playMediaStop((error, events) => {
-        })
-
     }
 
-  componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
 
-    let bcVideos = nextProps.bcVideos;
-    if (!bcVideos.isFetching && !this.state.firstTimePlay) {
-        let json = {
+      let bcVideos = nextProps.bcVideos;
+      if (!bcVideos.isFetching && !this.state.firstTimePlay) {
+          let json = {
+            url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
+            playPosition: 0
+          }
+        NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
+          })
+
+        let progressJson = {
           url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-          playPosition: 0
+          destination_path: '/C/Downloads'
         }
-      NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
+
+        console.log('Progress json %s', JSON.stringify(progressJson))
+        NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
+          console.log(r[0])
         })
-
-      let progressJson = {
-        url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-        destination_path: '/C/Downloads'
       }
-
-      console.log('Progress json %s', JSON.stringify(progressJson))
-      NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
-        if (e) console.log(e)
-        else console.log(r[0])
-      })
     }
-  }
 
     componentDidMount() {
         const {item, isLive, epg} = this.props.navigation.state.params
-        console.log(epg)
 
-    NativeModules.STBManager.isConnect((connectStr) => {
-      let json = JSON.parse(connectStr).is_connected
-      if (json === true) this.setState({isConnected: true})
-    })
+        NativeModules.STBManager.isConnect((connectStr) => {
+          let json = JSON.parse(connectStr).is_connected
+          this.setState({isConnected: json})
+        })
 
 
-    NativeModules.STBManager.getVolumeInJson((error, events) => {
-        if (!error) {
-            this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
+        NativeModules.STBManager.getVolumeInJson((error, events) => {
+            if (!error) {
+                this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
+            }
+        })
+
+        this.setState({
+          currentTime: new Date().getTime(),
+          startPoint: new Date().getTime()
+        })
+
+        if (isLive) {
+          // Change channel with lcn
+          NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lcn}),(error, events) => {
+              console.log(JSON.parse(events[0]))
+          })
+          // Calculate offsetRate for dragging
+          let durations = (new Date(item.endTime).getTime() - new Date(item.startTime).getTime()) / 1000
+          this._offsetRate = width / durations
         }
-    })
+        else {
+          this.props.getBcVideos(item.contentId)
+          // Calculate offsetRate for dragging
+          this._offsetRate = width / item.durationInSeconds
 
-    this.setState({
-      currentTime: new Date().getTime(),
-      startPoint: new Date().getTime()
-    })
-
-    if (isLive) {
-      // Change channel with lcn
-      NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lcn}),(error, events) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(JSON.parse(events[0]))
         }
-      })
-    }
-    else {
-      //Test play video
-      this.props.getBcVideos(item.contentId)
-    }
 
-    Orientation.addOrientationListener(this._orientationDidChange);
-    // PUT YOUR CHANNEL ID HERE
+        Orientation.addOrientationListener(this._orientationDidChange);
+        // PUT YOUR CHANNEL ID HERE
   }
 
   _orientationDidChange = (orientation) => {
@@ -195,19 +246,11 @@ export default class VideoControlModal extends React.Component {
     return returnText
   }
 
-  _onRecordPress = () => {
+  _onRecordPress = () => this._toggleModal('record')
 
-    this._toggleModal('record')
-  }
-
-  _onFavouritePress = () => {
-
-    this._toggleModal('favorite')
-
-  }
+  _onFavouritePress = () => this._toggleModal('favorite')
 
   _onVolumeChange = (newValue) => {
-    this.setState({ volume: newValue })
     let jsonString = {
       volume: newValue
     }
@@ -217,7 +260,7 @@ export default class VideoControlModal extends React.Component {
     })
   }
 
-  _getLivePassedTime = (isLive, timeInSeconds, durationInSeconds) => {
+  _getLivePassedTime = (isLive, timeInSeconds) => {
       if (isLive) {
         let time = this.state.currentTime
         let startTime = new Date(timeInSeconds)
@@ -225,10 +268,7 @@ export default class VideoControlModal extends React.Component {
         if (passed > 0) return secondFormatter(passed.toString())
       }
       else {
-        const {startPoint, currentTime} = this.state
-
-        let passedTime = (currentTime - startPoint) / 1000
-        if (passedTime > 0) return secondFormatter(passedTime.toString())
+        return secondFormatter(this.state.currentPos ? this.state.currentPos : 0)
       }
   }
 
@@ -240,9 +280,9 @@ export default class VideoControlModal extends React.Component {
       if (passed > 0) return "-" + secondFormatter(passed.toString())
     }
     else {
-      const {startPoint, currentTime} = this.state
+      const {currentPos} = this.state
 
-      let etrTime = durationInSeconds - ((currentTime - startPoint) / 1000)
+      let etrTime = durationInSeconds - currentPos
       if (etrTime > 0) return "-" + secondFormatter(etrTime.toString())
     }
   }
@@ -270,16 +310,73 @@ export default class VideoControlModal extends React.Component {
   }
 
   _getVodProgress = (durationInSeconds) => {
-    const {startPoint, currentTime} = this.state
+    const {currentPos} = this.state
+    return (currentPos / durationInSeconds) * 100 + "%"
+  }
 
-    let passedTime = (currentTime - startPoint) / 1000
-    return (passedTime / durationInSeconds) * 100 + "%"
+  _resetPlayPosition = () => {
+    let json = {
+      playPosition: 0
+    }
+    NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (error, events) => {
+
+    })
+  }
+
+  _backWard = () => {
+    NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+      if (!error) {
+        let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
+        let playPosInJson = "{\n" +
+          "\tplayPosition: \n" + playPos + "}"
+        NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
+
+        })
+      }
+    })
+  }
+
+  _fastForward = () => {
+    NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
+      if (!error) {
+        let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
+        let playPosInJson = "{\n" +
+          "\tplayPosition: \n" + playPos + "}"
+        NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
+
+        })
+      }
+    })
+  }
+
+  _playMediaControl = (bcVideos) => {
+    if (bcVideos.data) {
+
+      this.setState({isPlaying: !this.state.isPlaying})
+      if (this.state.isPlaying) {
+        NativeModules.STBManager.playMediaPause((error, events) => {
+
+        })
+      }
+      else {
+        NativeModules.STBManager.playMediaResume((error, events) => {
+        })
+      }
+    }
   }
 
   _renderPlaybackController = (item) => {
     const {recordEnabled, favoriteEnabled} = this.state
     const {bcVideos} = this.props
     const {isLive} = this.props.navigation.state.params;
+
+    let playIconSrc;
+    if (isLive) {
+      playIconSrc = require('../../assets/ic_on_tv.png')
+    }
+    else {
+      playIconSrc = this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')
+    }
 
     return (
       <View style={styles.playbackContainer}>
@@ -288,26 +385,19 @@ export default class VideoControlModal extends React.Component {
           <Text style={styles.etrText}>{this._getEtrTime(isLive, item.endTime ? item.endTime : 0, item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
         </View>
         <View style={styles.topButtonsContainer}>
-          <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
+          <TouchableOpacity disabled={!this.state.isConnected} style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onRecordPress}>
             <Image source={require('../../assets/ic_record.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
+          <TouchableOpacity disabled={!this.state.isConnected} style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent' }]} onPress={this._onFavouritePress}>
             <Image source={require('../../assets/ic_heart_with_border.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle} onPress={() => this._shareExecution(item.title, "")}>
+          <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle} onPress={() => this._shareExecution(item.title, "")}>
             <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity disabled={isLive}  style={styles.buttonStyle} onPress={() => {
-            let json = {
-              playPosition: 0
-            }
-            NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (error, events) => {
-
-            })
-          }}>
+          <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle} onPress={() => this._resetPlayPosition()}>
             <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
+          <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}>
             <Image source={require('../../assets/ic_caption.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
@@ -315,52 +405,14 @@ export default class VideoControlModal extends React.Component {
           <Text style={styles.titleText}>{isLive !== true ? item.title : item.videoData.title}</Text>
           <Text style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
         </View>
-        <View style={[styles.playbackButtons, {opacity: isLive === true ? 0.17 : 1}]}>
-          <TouchableOpacity  onPress={() => {
-              NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-                if (!error) {
-                  let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
-                  let playPosInJson = "{\n" +
-                    "\tplayPosition: \n" + playPos + "}"
-                  NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
-
-                  })
-                }
-              })
-            }
-          } style={styles.rewindButton}>
+        <View style={[styles.playbackButtons]}>
+          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._backWard()} style={[styles.rewindButton, {opacity: isLive === true ? 0.17 : 1}]}>
             <Image source={require('../../assets/ic_rewind.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{ width: '21%', height: '100%', opacity: isLive === true ? 0.17 : 1}} onPress={() => {
-            if (bcVideos.data) {
-
-              this.setState({isPlaying: !this.state.isPlaying})
-              if (this.state.isPlaying) {
-                NativeModules.STBManager.playMediaPause((error, events) => {
-
-                })
-              }
-              else {
-                NativeModules.STBManager.playMediaResume((error, events) => {
-                })
-              }
-            }
-          }
-          }>
-            <Image source={this.state.isPlaying !== true ? require('../../assets/ic_play_with_border.png') : require('../../assets/ic_pause.png')} style={styles.buttonIconStyle}/>
+          <TouchableOpacity disabled={!this.state.isConnected} style={{ width: '21%', height: '100%'}} onPress={() => this._playMediaControl(bcVideos) }>
+            <Image source={playIconSrc} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-              if (!error) {
-                let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
-                let playPosInJson = "{\n" +
-                  "\tplayPosition: \n" + playPos + "}"
-                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
-
-                })
-              }
-            })
-          }} style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
+          <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._fastForward()} style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
             <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
         </View>
@@ -368,7 +420,9 @@ export default class VideoControlModal extends React.Component {
           <TouchableOpacity style={styles.volumeLessIcon}>
             <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
-          <VolumeSeeker width={260} thumbSize={16} maxValue={100} value={this.state.volume} onVolumeChange={this._onVolumeChange}/>
+          <VolumeSeeker width={260} thumbSize={16} maxValue={100} onVolumeChange={this._onVolumeChange}
+                        onChangedScrollEnabled={this._onChangeScrollEnabled}
+                        disabled={!this.state.isConnected}/>
           <TouchableOpacity style={styles.volumeMoreIcon}>
             <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
           </TouchableOpacity>
@@ -388,32 +442,7 @@ export default class VideoControlModal extends React.Component {
     else return null
   }
 
-  _onLowerPageScroll = (y) => {
-    console.log("ScrollY", y)
-  }
-
-  _renderLowerPage = (epg, item) => {
-
-    if (!epg.data) {
-      return (<LowerPagerComponent listScrollOffsetY={this._onLowerPageScroll}/>)
-    }
-    let listData = epg.data
-    console.log('listData')
-    console.log(listData)
-    // use this variable when navigating from channel list
-    let video = listData[0]
-
-    return(
-      <LowerPagerComponent
-        toggleModal={this._toggleModal}
-        videoType={item.serviceID ? 'channel' : item.type}
-        listScrollOffsetY={this._onLowerPageScroll}
-        listData={listData} video={item.serviceID ? video : item}/>
-    )
-  }
-
-  _renderTopContainer = (epg, index, isLive) => {
-    let item = this.state.index === -1 ? epg[index] : epg[this.state.index]
+  _renderTopContainer = (item, isLive) => {
     let data = item
     if (item.serviceID) {
       if (!epg.data) {
@@ -421,20 +450,40 @@ export default class VideoControlModal extends React.Component {
       }
       data = epg.data[0].videoData
     }
+
+    let iconUrl = ''
+    if (isLive === false) {
+      if (data.originalImages && data.originalImages.length > 0) {
+        iconUrl = data.originalImages[0].url
+      }
+    }
+    else {
+      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
+        iconUrl = data.videoData.originalImages[0].url
+      }
+    }
+
     return (
-      <View style={styles.topContainer}>
+      <View style={styles.topContainer} {...this._panResponder.panHandlers}>
         <ImageBackground style={styles.topVideoControl}
                          resizeMode="cover"
-                         source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                         source={{uri: iconUrl}}/>
         {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-        <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
-
-        </View>
-        <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._navigateBrightcovePlayerScreen}>
+        <Animated.View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
+        </Animated.View>
+        <TouchableOpacity style={{position: 'absolute', bottom: 20, right: 20}} onPress={this._showAlertModal}>
           <Image source={require('../../assets/ic_change_orientation.png')}/>
         </TouchableOpacity>
       </View>
     )
+  }
+
+  _informationPress = (item, epg, isLive) => {
+    this.props.navigation.replace('DetailsPage', {
+      item: item,
+      epg: epg.data,
+      isLive: isLive
+    })
   }
 
   _renderLive = (epg, item) => {
@@ -448,6 +497,18 @@ export default class VideoControlModal extends React.Component {
       data = epg.data[0].videoData
     }
 
+    let iconUrl = ''
+    if (isLive === false) {
+      if (data.originalImages && data.originalImages.length > 0) {
+        iconUrl = data.originalImages[0].url
+      }
+    }
+    else {
+      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
+        iconUrl = data.videoData.originalImages[0].url
+      }
+    }
+
     return (
       <View style={{width: '100%', height: height}} key={item}>
 
@@ -455,21 +516,21 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                           source={{uri: iconUrl}}/>
           {this._renderPlaybackController(data)}
         </View>
 
         <View style={styles.topContainer}>
           <ImageBackground style={styles.topVideoControl}
                            resizeMode="cover"
-                           source={isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                           source={{uri: iconUrl}}/>
           {this._renderRecordBar(isLive, item.startTime, item.endTime)}
           <View style={{width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds), height: '100%', backgroundColor: 'rgba(17,17,19,0.45)', position: 'absolute', top: 0, left: 0}}>
           </View>
-          <TouchableOpacity style={{position: 'absolute', top: 30, left: 20, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
             <Image source={require('../../assets/ic_dismiss_modal.png')}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._navigateBrightcovePlayerScreen}>
+          <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={this._showAlertModal}>
             <Image source={require('../../assets/ic_change_orientation.png')}/>
           </TouchableOpacity>
         </View>
@@ -488,6 +549,18 @@ export default class VideoControlModal extends React.Component {
       data = epg.data[0].videoData
     }
 
+    let iconUrl = ''
+    if (isLive === false) {
+      if (data.originalImages && data.originalImages.length > 0) {
+        iconUrl = data.originalImages[0].url
+      }
+    }
+    else {
+      if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
+        iconUrl = data.videoData.originalImages[0].url
+      }
+    }
+
     return (
       <View style={{width: '100%', height: height}} key={item}>
 
@@ -495,23 +568,17 @@ export default class VideoControlModal extends React.Component {
           <ImageBackground style={styles.bottomVideoControl}
                            resizeMode="cover"
                            blurRadius={10}
-                           source={ isLive !== true ? {uri: data.originalImages[0].url} : {uri: data.videoData.originalImages[0].url}}/>
+                           source={{uri: iconUrl}}/>
           {this._renderPlaybackController(data)}
+          <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}} onPress={() => this._informationPress(item, epg, isLive)}>
+            <Image source={require('../../assets/ic_information.png')} style={styles.infoImage}/>
+          </TouchableOpacity>
         </View>
-
+        {this._renderTopContainer(item, isLive)}
       </View>)
   }
 
   _keyExtractor = (item, index) => index;
-
-  _handleViewableChanged = (viewableItems) => {
-    console.log("on Scroll");
-    // this.videoScroll.scrollToLocation({sectionIndex: 1, itemIndex: 1, viewPosition: 0});
-    Animated.event([
-      { nativeEvent: { contentOffset: { y: this.scrollY } } },
-      { useNativeDriver: true },
-    ])
-  }
 
   _onSwiperIndexChanged = (index) => {
     const {item, isLive, epg} = this.props.navigation.state.params
@@ -519,7 +586,8 @@ export default class VideoControlModal extends React.Component {
       this.props.getBcVideos(epg[index].contentId)
       this.setState({
         index: index,
-        isPlaying: true
+        isPlaying: true,
+        currentPos: 0
       })
     }
   }
@@ -544,13 +612,12 @@ export default class VideoControlModal extends React.Component {
         <View
           onLayout={this.onLayout.bind(this)}
           style={{flex: 1}}>
-          <Swiper loop={false} loadMinimal={true} loadMinimalSize={1} onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true} style={styles.pageViewStyle} removeClippedSubviews={false} index={index}>
+          <Swiper scrollEnabled={this.state.isScrollEnabled} loop={false} loadMinimal={true} loadMinimalSize={1} onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true} style={styles.pageViewStyle} removeClippedSubviews={false} index={index}>
             {
               epg.map(value => this._renderUpperPage(epg, value))
             }
           </Swiper>
-          {this._renderTopContainer(epg, index, isLive)}
-          <TouchableOpacity style={{position: 'absolute', top: 30, left: 30, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}} onPress={() => this.props.navigation.goBack()}>
             <Image source={require('../../assets/ic_dismiss_modal.png')}/>
           </TouchableOpacity>
         </View>
@@ -560,8 +627,7 @@ export default class VideoControlModal extends React.Component {
   }
 
   _toggleModal = (actionType) => {
-    const {item, isLive} = this.props.navigation.state.params
-    console.log(actionType + " " + item.type)
+    const {item} = this.props.navigation.state.params
 
         if (item.type === 'Episode') {
             this.setState({
@@ -574,7 +640,6 @@ export default class VideoControlModal extends React.Component {
 
       if (actionType === 'record') {
         if (item.type === 'Standalone') {
-          console.log(recordEnabled)
           if (recordEnabled) {
             // Stop downloading current item
             this.stopDownload()
@@ -585,7 +650,6 @@ export default class VideoControlModal extends React.Component {
           }
         }
         else {
-          console.log(recordEnabled)
           if (recordEnabled) {
             // Stop recording current channel
              this._stopRecord()
@@ -687,14 +751,10 @@ export default class VideoControlModal extends React.Component {
   }
 
   _simpleDataFormat = (time) => {
-    console.log('Time')
-    console.log(moment(time).format("YYYY-MM-DD hh:mm:ss"))
     return moment(time).format("YYYY-MM-DD hh:mm:ss")
   }
 
   _bookExecution = (liveItem) => {
-    console.log('Live item')
-    console.log(liveItem)
       let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
 
 
@@ -721,11 +781,13 @@ export default class VideoControlModal extends React.Component {
 
       NativeModules.STBManager.recordPvrStartWithJsonString(JSON.stringify(jsonString), (error, events) => {
         console.log('Record start')
-        if (error)
-          console.log(error)
-        else console.log(events)
+        console.log(events)
       })
   }
+
+  _onChangeScrollEnabled = (isEnabled) => {
+    this.setState({isScrollEnabled: isEnabled})
+  };
 
   _shareExecution = (title, url) => {
     content = {
@@ -776,7 +838,7 @@ export default class VideoControlModal extends React.Component {
 
       }
       this.setState({
-        recordEnabled: modalRecordTarget === secondActionType ? false : true,
+        recordEnabled: modalRecordTarget !== secondActionType,
         modalRecordTarget: modalRecordTarget === secondActionType ? "none" : secondActionType
       })
     }
@@ -784,7 +846,7 @@ export default class VideoControlModal extends React.Component {
       // Use Userkit
 
       this.setState({
-        favoriteEnabled: modalFavoriteTarget === secondActionType ? false : true,
+        favoriteEnabled: modalFavoriteTarget !== secondActionType,
         modalFavoriteTarget: modalFavoriteTarget === secondActionType ? "none" : secondActionType
       })
     }
@@ -792,6 +854,7 @@ export default class VideoControlModal extends React.Component {
 
   _renderRecordModal = () => {
     const {modalContent, modalRecordTarget, modalFavoriteTarget} = this.state
+    const {isLive} = this.props.navigation.state.params
 
     let img = modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
     let firstButtonImg
@@ -809,6 +872,11 @@ export default class VideoControlModal extends React.Component {
     const {item} = this.props.navigation.state.params
     const {seriesInfo} = this.props;
 
+    let iconUrl = ''
+    if (item.originalImages && item.originalImages.length > 0) {
+      iconUrl = item.originalImages[0].url
+    }
+
     if (item.type === 'Episode') {
       return (
         <Modal animationType={'fade'} transparent={true}
@@ -819,11 +887,11 @@ export default class VideoControlModal extends React.Component {
               <Image source={require('../../assets/ic_modal_close.png')} />
             </TouchableOpacity>
             <View style={styles.modalInsideContainer}>
-              <Image source={{uri: item.originalImages[0].url}} style={styles.modalImage}/>
+              <Image source={{uri: iconUrl}} style={styles.modalImage}/>
               <Text style={styles.modalTitleText}>{item.title}</Text>
               <Text style={styles.modalShortDes}>{"Series - Episode " + item.seasonIndex}</Text>
               <Text style={styles.modalLongDes}>{item.longDescription}</Text>
-              <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}} >
+              <View style={{flexDirection: 'row', marginBottom: '11%', marginTop: 'auto'}}>
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'item')}>
                   <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: firstButtonImg, borderRadius: 20}}>
                     <Image source={img} style={styles.buttonIconStyle}/>
@@ -832,7 +900,7 @@ export default class VideoControlModal extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center' ,marginLeft: 11}} onPress={() => this._onModalButtonPress(this.state.modalContent, 'series')}>
                   <View style={{width: 40, height: 40, marginRight: 7, backgroundColor: secondButtonImg, borderRadius: 20}}>
-                  <Image source={img} style={styles.buttonIconStyle}/>
+                    <Image source={img} style={styles.buttonIconStyle}/>
                   </View>
                   <Text>{seriesInfo.data ? seriesInfo.data.title : ""}</Text>
                 </TouchableOpacity>
@@ -848,9 +916,9 @@ export default class VideoControlModal extends React.Component {
   render() {
     return(
       <View style={styles.container}>
+        <AlertModal ref={(modal)=>{this.alertModal = modal}}/>
         {this._renderRecordModal()}
         {this._renderModal()}
-
       </View>
     )
   }
@@ -858,7 +926,6 @@ export default class VideoControlModal extends React.Component {
 
 const styles = StyleSheet.create({
   pageViewStyle: {
-    paddingTop: rootViewTopPadding(),
     backgroundColor: colors.screenBackground
   },
   container: {
@@ -1073,6 +1140,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     backgroundColor: colors.mainPink
+  },
+  infoImage: {
+    width: 27,
+    height: 27,
+    resizeMode: 'cover'
   }
 })
 

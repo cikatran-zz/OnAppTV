@@ -42,6 +42,7 @@ class CustomControlsView: UIView {
     
     // MARK: - Blocks
     public var pauseBlock: () -> Void = {}
+    public var stopBlock: () -> Void = {}
     public var playBlock: () -> Void = {}
     public var openCaptionBlock: () -> Void = {}
     public var seekingBlock: (_ seekTime: TimeInterval) -> Void = { seekTime in }
@@ -314,6 +315,12 @@ extension CustomControlsView: BCOVPlaybackControllerDelegate {
         
         if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate {
             bufferingBlock(false)
+            self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
+        }
+        
+        if lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventEnd {
+            // Stop video
+            stopBlock()
             self.playbackRecorder?.stopRecording(playhead: currentTime, videoLength: videoDuration, error: nil)
         }
     }

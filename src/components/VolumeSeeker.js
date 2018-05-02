@@ -12,6 +12,7 @@ class VolumeSeeker extends React.PureComponent {
         console.log("VALUE", this.props.value);
         return (
             <Slider
+                disabled={this.props.disabled}
                 style={{width: this.props.width, height: 100}}
                 value={this.props.value}
                 maximumValue={100}

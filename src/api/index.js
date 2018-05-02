@@ -431,9 +431,12 @@ export const getCurrentSTBInfo = () => {
 
 export const getWifiInfo = () => {
     return new Promise((resolve, reject) => {
-        NativeModules.STBManager.getMobileWifiInfoInJson((error, results) => {
-            resolve(JSON.parse(results[0]));
-        });
+        // NativeModules.STBManager.getMobileWifiInfoInJson((error, results) => {
+        //     resolve(JSON.parse(results[0]));
+        // });
+        getCurrentSTBInfo().then((value) => {
+            resolve({SSID: value.IPAddress});
+        }).catch((err)=> reject(err));
     })
 };
 
@@ -654,7 +657,6 @@ export const getPvrList = () => {
             let json = {
               recordName: x
             }
-            console.log(json)
             NativeModules.STBManager.getPvrInfoWithJsonString(JSON.stringify(json), (error, events) => {
               console.log(events)
               resolve(JSON.parse(events[0]))
@@ -680,15 +682,39 @@ export const getEpgSameTime = (currentTime, channelId) => {
 
 export const getWatchingHistory = () => {
     return new Promise((resolve, reject) => {
-        NativeModules.RNUserKit.getProperty("continue_watching", (error, result) => {
-            try {
-                let json = JSON.parse(result[0]);
-                console.log("CONTINUE WATCHING: ", result[0]);
-                resolve(json);
-            } catch (err) {
-                reject(err);
+
+        NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+            let result = JSON.parse(results[0]);
+            if (result.is_sign_in) {
+                NativeModules.RNWatchingHistory.getWatchingHistory((error, result) => {
+                    try {
+                        let contentIds = result.map((item)=>item.id);
+                        client.query({
+                            query: config.queries.VOD_BY_IDS,
+                            variables: {id: contentIds}
+                        }).then((values)=>{
+                            let finalRes = [];
+                            result.forEach((item)=> {
+                                let destItems = values.data.viewer.videoMany.filter((it)=> it.contentId === item.id);
+                                if (destItems.length > 0) {
+                                    let destItem = _.cloneDeep(destItems[0]);
+                                    destItem["stop_position"] = item.stop_position;
+                                    finalRes.push(destItem);
+                                }
+                            });
+                            resolve(finalRes);
+                        }).catch((err)=> {
+                            reject(err);
+                        });
+                    }catch (err) {
+                        reject({message: "Not found VOD"})
+                    }
+                });
+            } else {
+                reject({message: "Not logged in"});
             }
         });
+
     })
 };
 

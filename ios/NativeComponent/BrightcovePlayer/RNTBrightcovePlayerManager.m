@@ -20,5 +20,6 @@ RCT_EXPORT_VIEW_PROPERTY(videoId, NSString);
 RCT_EXPORT_VIEW_PROPERTY(accountId, NSString);
 RCT_EXPORT_VIEW_PROPERTY(policyKey, NSString);
 RCT_EXPORT_VIEW_PROPERTY(metaData, NSDictionary);
+RCT_EXPORT_VIEW_PROPERTY(onFinished, RCTDirectEventBlock)
 
 @end

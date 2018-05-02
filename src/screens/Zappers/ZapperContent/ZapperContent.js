@@ -1,13 +1,18 @@
 
 import React, {Component} from 'react';
 import {
-    StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
-    Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules
-} from 'react-native';
+  StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
+  Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules, Modal
+} from 'react-native'
 import ZapperCell from '../../../components/ZapperCell';
 import PinkRoundedLabel from "../../../components/PinkRoundedLabel";
 import {colors} from "../../../utils/themeConfig";
 import moment from 'moment';
+import { getBlurRadius } from '../../../utils/blurRadius'
+import BlurView from '../../../components/BlurView'
+import { rootViewTopPadding } from '../../../utils/rootViewPadding'
+import IndicatorModal from "../../../components/IndicatorModal";
+import AlertModal from "../../../components/AlertModal";
 const minTop = 70;
 const {height} = Dimensions.get('window')
 const maxHeight = height - 100;
@@ -22,12 +27,14 @@ export default class ZapperContent extends Component {
     _offsetRate = 0;
     _currentTime = null;
     _timeAtMove = moment();
+    alertVC = null
     constructor(props) {
         super(props);
         this.state = {
             position: minTop,
             dragging: false,
-            time: ""
+            time: "",
+            recordModalVisibility: false
         };
     };
 
@@ -74,7 +81,7 @@ export default class ZapperContent extends Component {
 
     componentDidMount() {
         // let currentTime = moment().startOf('day');
-        this._currentTime = moment();
+        this._currentTime = moment()
         let time = "Today " + this._currentTime.format("HH:mm");
         console.log("Time Parse ",time);
         this.setState({time: time})
@@ -100,7 +107,7 @@ export default class ZapperContent extends Component {
         let currentTime = moment();
         let showTime = moment(item.startTime);
         if (showTime.isAfter(currentTime)){
-            //Todo show Bookmark Modal here for schedule record
+            this._showRecordModal(item)
         } else {
             NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lCN}),(error, events) => {
                 if (error) {
@@ -185,10 +192,115 @@ export default class ZapperContent extends Component {
         );
     }
 
+    _showRecordModal = (item) => {
+        this.setState({
+          currentEpg: item,
+          recordModalVisibility: true
+        })
+    }
+
+    _dismissRecordModal = () => {
+        this.setState({
+          recordModalVisibility: false
+        })
+    }
+
+    _onBookPress = (liveItem) => {
+      let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
+
+
+      let jsonString = {
+        "record": {
+          "startTime" : this._simpleDataFormat(liveItem.startTime),
+          "recordMode" : 1,
+          "recordName" : liveItem.videoData.title,
+          "lCN" : liveItem.channelData.lcn,
+          "duration" : durationInSeconds
+
+        },
+        "metaData": {
+          "endtime": liveItem.endTime,
+          "starttime": liveItem.startTime,
+          "title": liveItem.videoData.title,
+          "image": liveItem.videoData.originalImages[0].url,
+          "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
+        }
+      }
+
+      console.log('JSON String for record')
+      console.log(JSON.stringify(jsonString))
+
+      NativeModules.STBManager.isConnect((connectStr) => {
+          let isConnected = JSON.parse(connectStr).is_connected
+          if (isConnected) {
+              NativeModules.STBManager.addPvrBooKListWithJson(JSON.stringify(json), (error, events) => {
+                if (JSON.parse(events[0]) === '1') {
+                  if (!this.alertModal.state.isShow) {
+                    this.alertModal.setState({isShow: true, message: "Book successfully"})
+                  }
+                }
+                else {
+                  if (!this.alertModal.state.isShow) {
+                    this.alertModal.setState({isShow: true, message: "Book failure"})
+                  }
+                }
+              })
+
+          }
+      })
+    }
+
+    _renderRecordModal = () => {
+        const {currentEpg} = this.state
+        let epgItem = currentEpg
+
+        let iconUrl = ''
+        let title = 'No data available'
+        if (epgItem && epgItem.originalImages && epgItem.originalImages.length > 0) {
+            iconUrl = epgItem.originalImages[0].url
+        }
+
+        if (epgItem && epgItem.videoData && epgItem.videoData.title) {
+            title = epgItem.videoData.title
+        }
+
+        return (
+          <Modal animationType={'fade'} transparent={true} visible={this.state.recordModalVisibility} onRequestClose={() => console.log('Close')}>
+              <View style={styles.modal}>
+                    <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
+                    <TouchableOpacity style={styles.close} onPress={() => this._dismissRecordModal()}>
+                      <Image source={require('../../../assets/ic_modal_close.png')} />
+                    </TouchableOpacity>
+                    <View style={styles.modalInsideContainer}>
+                      <Image source={iconUrl === '' ? require('../../../assets/ic_on_stb.png') : {uri: iconUrl}} style={styles.modalImage}/>
+                      <Text style={styles.modalTitleText}>{title}</Text>
+                      <Text style={styles.introductionText}>Do you want to record this program?</Text>
+                      <View style={{width: '60%', flexDirection: 'row', justifyContent: 'space-between', margin: 50}}>
+                          <TouchableOpacity style={styles.yesNoButtonContainer} onPress={() => this._onBookPress(epgItem)}>
+                              <Text style={{fontSize: 15, color: 'black'}}>
+                                  Yes
+                              </Text>
+                          </TouchableOpacity>
+                            <TouchableOpacity style={styles.yesNoButtonContainer} onPress={() => this._dismissRecordModal()}>
+                              <Text style={{fontSize: 15, color: 'black'}}>
+                                No
+                              </Text>
+                            </TouchableOpacity>
+                      </View>
+                    </View>
+              </View>
+          </Modal>
+        )
+    }
+
     render() {
 
         return (
             <View style={styles.root}>
+              <AlertModal ref={(modal) => {
+                this.alertVC = modal
+              }}/>
+               {this._renderRecordModal()}
                 <StatusBar
                     translucent={true}
                     backgroundColor='#00000000'
@@ -259,4 +371,67 @@ const styles = StyleSheet.create({
         width: '100%',
         textAlign: 'center'
     },
+    modal: {
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+      width: '100%',
+      height: '100%'
+    },
+    modalBlurView: {
+      width: '100%',
+      height: '100%'
+    },
+  modalInsideContainer: {
+    position: 'absolute',
+    width: '75%',
+    backgroundColor: colors.whitePrimary,
+    top: '20.5%',
+    left: '12.5%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderRadius: 13
+  },
+  modalImage: {
+    marginTop: 50,
+    width: 156,
+    height: 74,
+    alignSelf: 'center',
+    borderRadius: 4
+  },
+  modalTitleText: {
+    marginTop: 15,
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center'
+  },
+  modalShortDes: {
+    fontSize: 12,
+    color: colors.greyParentalControl,
+    textAlign: 'center',
+    marginTop: 4
+  },
+  modalLongDes: {
+    fontSize: 12,
+    color: colors.greyParentalControl,
+    textAlign: 'center',
+    marginTop: 11,
+    marginLeft: 37,
+    marginRight: 37
+  },
+  close: {
+    position: 'absolute',
+    top: 6 + rootViewTopPadding(),
+    right: 20
+  },
+  introductionText: {
+    marginTop: 20,
+    fontSize: 15,
+    color: 'black'
+  },
+  yesNoButtonContainer: {
+    padding: 5
+  }
+
 });
