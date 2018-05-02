@@ -35,14 +35,22 @@ export default class VideoControlModal extends React.Component {
 
     onLayout(e) {
         const {width, height} = Dimensions.get("window")
-        // if (width > height) {
-        //   const {item} = this.props.navigation.state.params
-        //   if (item) {
-        //     let videoId = item.contentId ? item.contentId : '5714823997001';
-        //     console.log("BRIGHTCOVE", NativeModules.RNBrightcoveVC);
-        //     NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I',{});
-        //   }
-        // }
+        if (width > height) {
+            this.setState({
+                showBrightcove: true
+            })
+          const {item} = this.props.navigation.state.params
+          if (item) {
+            let videoId = item.contentId ? item.contentId : '5714823997001';
+            console.log("BRIGHTCOVE", NativeModules.RNBrightcoveVC);
+            NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I',{});
+          }
+        }
+        else {
+            this.setState({
+                showBrightcove: false
+            })
+        }
     }
 
     _showAlertModal = () => {
@@ -639,6 +647,13 @@ export default class VideoControlModal extends React.Component {
 
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
+
+        if (this.state.showBrightcove) {
+            return (
+                <View style={{flex: 1, backgroundColor: 'black'}}
+                        onLayout={this.onLayout.bind(this)}/>
+            )
+        }
 
         // Right now, Live is just one video, check for one video
         if (isLive) {
