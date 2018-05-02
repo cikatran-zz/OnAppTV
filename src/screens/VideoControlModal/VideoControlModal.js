@@ -31,6 +31,7 @@ export default class VideoControlModal extends React.Component {
     _offsetRate = 0
     _vodProgress = null
     _durations = null
+    _swiper = null
 
     onLayout(e) {
         const { width, height } = Dimensions.get("window")
@@ -167,14 +168,15 @@ export default class VideoControlModal extends React.Component {
             return;
         }
         let periodRate = Math.round(pos / this._offsetRate)
+        let currentPos = periodRate < 0 ? 0 : periodRate
         // Display played area
-        console.log('Dragging to position %s', periodRate)
+        console.log('Dragging to position %s', periodRate, currentPos, this._durations)
         this.setState({
-            currentPos: periodRate < 0 ? 0 : periodRate
+            currentPos: currentPos
         })
         this._vodProgress.setNativeProps({
             style: [styles.vodProgressStyle, {
-                width: (periodRate / this._durations) * 100 + "%"
+                width: (currentPos / this._durations) * 100 + "%"
             }]
         })
     }
@@ -220,9 +222,14 @@ export default class VideoControlModal extends React.Component {
         const {item, epg, isLive} = this.props.navigation.state.params
         const {index, currentPos} = this.state
         let progress = isLive === true ? this._getLiveProgress(epg[index] === undefined ? item.startTime : epg[index].startTime, epg[index] === undefined ? item.endTime : epg[index].endTime)
-            : (currentPos / this._durations) * 100 + "%"
+            : (currentPos / this._durations) * 100
+
+        if (isLive !== true && progress >= 100 && index !== epg.length - 1) {
+            this._swiper.scrollBy(1)
+        }
+
         return [styles.vodProgressStyle, {
-            width: progress
+            width: progress + "%"
         }]
     }
 
@@ -231,9 +238,11 @@ export default class VideoControlModal extends React.Component {
         if (!isLive) {
             NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
                 let pos = JSON.parse(r[0]).playPosition
-                this.setState({
-                    currentPos: pos
-                })
+                if (this.state.dragging === undefined || this.state.dragging === false) {
+                    this.setState({
+                        currentPos: pos === 'error' ? this._durations : pos
+                    })
+                }
             })
         }
     }, 1000);
@@ -296,7 +305,7 @@ export default class VideoControlModal extends React.Component {
         const {currentTime} = this.state;
         let durationInMsSecons = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
         let passedTime = currentTime - (new Date(startTime)).getTime();
-        return (passedTime / durationInMsSecons) * 100 + "%"
+        return (passedTime / durationInMsSecons) * 100
     }
 
     _renderPlaybackController = (item) => {
@@ -360,7 +369,8 @@ export default class VideoControlModal extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.mediaInfoContainer}>
-                    <Text style={styles.titleText}>
+                    <Text style={styles.titleText}
+                            >
                         {isLive !== true ? item.title : item.videoData.title}
                     </Text>
                     <Text style={styles.typeText}>
@@ -529,7 +539,8 @@ export default class VideoControlModal extends React.Component {
                         horizontal={true}
                         style={styles.pageViewStyle}
                         removeClippedSubviews={false}
-                        index={index}>
+                        index={index}
+                        ref={(ref) => this._swiper = ref}>
                     { epg.map(value => this._renderUpperPage(epg, value)) }
                 </Swiper>
                 <TouchableOpacity style={{position: 'absolute',
@@ -1107,7 +1118,11 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: colors.whitePrimary,
-    fontSize: 16
+    fontSize: 16,
+      alignSelf: 'center',
+      textAlign: 'center',
+      marginStart: 30,
+      marginEnd: 30
   },
   typeText: {
     color: colors.whitePrimary,
