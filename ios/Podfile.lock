@@ -5,7 +5,7 @@ PODS:
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
-  - Brightcove-Player-Core/dynamic (6.2.2)
+  - Brightcove-Player-Core/dynamic (6.3.1)
   - FacebookCore (0.3.0):
     - Bolts (~> 1.8)
     - FBSDKCoreKit (~> 4.27)
@@ -19,19 +19,18 @@ PODS:
     - FacebookCore (~> 0.3)
     - FBSDKCoreKit (~> 4.27)
     - FBSDKShareKit (~> 4.27)
-  - FBSDKCoreKit (4.30.0):
+  - FBSDKCoreKit (4.33.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.30.0):
+  - FBSDKLoginKit (4.33.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.30.0):
-    - FBSDKCoreKit (~> 4.30.0)
+  - FBSDKShareKit (4.33.0):
+    - FBSDKCoreKit (~> 4.33.0)
   - IQKeyboardManagerSwift (4.0.13)
-  - Kingfisher (4.6.2)
+  - Kingfisher (4.7.0)
   - lottie-ios (2.5.0)
   - UserKit (0.19.10)
   - UserKitIdentity (0.19.10):
     - UserKit
-  - WebViewJavascriptBridge (6.0.3)
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
@@ -43,7 +42,6 @@ DEPENDENCIES:
   - lottie-ios
   - UserKit (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
   - UserKitIdentity (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
-  - WebViewJavascriptBridge (~> 6.0)
 
 EXTERNAL SOURCES:
   UserKit:
@@ -63,20 +61,19 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
+  Brightcove-Player-Core: d1187888c945578b1cd6f07e8a585166093f5162
   FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
   FacebookLogin: 0af839ea858faef99550d16596b87b4a8e8906e6
   FacebookShare: 0469964297ebd75f052be2c5083389a4208e82b7
-  FBSDKCoreKit: 7c4bba2877781a131ab5d54c0a78c405d4307b62
-  FBSDKLoginKit: fe7a7e82373dc5daad92e1623219e86224ab1fb1
-  FBSDKShareKit: a9427574b51bde4f437262c3f118c4ccfddeef6c
+  FBSDKCoreKit: 572b047a7e029bc44542bcf8a59414e7ff2b543e
+  FBSDKLoginKit: 88cb456349cfb3b554427ce4f8b43729d85dfb40
+  FBSDKShareKit: b7b5002833a4104fbecad75e8e4e082e91c7a08a
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
-  Kingfisher: 55b9c395bf8d3949676ad3861111923990ab68cf
+  Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
   UserKit: f55d1a8b5f485d33e0f809cf53665c5f9fe62dd2
   UserKitIdentity: 92784613ae918091b3d29628639414bbed2895a2
-  WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: 2ac1c47c84ceda4d08af01296823251f15362882
+PODFILE CHECKSUM: fb459285ec508ccc639a2f54ac4d64c77e40a3eb
 
 COCOAPODS: 1.4.0
