@@ -13,15 +13,13 @@ target 'OnAppTV' do
   # Pods for OnAppTV
   pod 'Brightcove-Player-Core/dynamic'
   pod 'WebViewJavascriptBridge', '~> 6.0'
-  pod 'UserKit', :path => '../../userkit-iOS-SDK'
-  pod 'UserKitIdentity', :path => '../../userkit-iOS-SDK'
+  pod 'UserKit', :path => '../../mStage-UserKit-iOS-SDK'
+  pod 'UserKitIdentity', :path => '../../mStage-UserKit-iOS-SDK'
   pod 'Kingfisher'
   pod 'IQKeyboardManagerSwift', '4.0.13'
   pod 'FacebookCore'
   pod 'FacebookLogin'
   pod 'FacebookShare'
-  pod 'lottie-ios'
-  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
 
 end
 

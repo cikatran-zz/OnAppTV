@@ -5,7 +5,7 @@ PODS:
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
-  - Brightcove-Player-Core/dynamic (6.2.2)
+  - Brightcove-Player-Core/dynamic (6.3.1)
   - FacebookCore (0.3.0):
     - Bolts (~> 1.8)
     - FBSDKCoreKit (~> 4.27)
@@ -19,17 +19,17 @@ PODS:
     - FacebookCore (~> 0.3)
     - FBSDKCoreKit (~> 4.27)
     - FBSDKShareKit (~> 4.27)
-  - FBSDKCoreKit (4.30.0):
+  - FBSDKCoreKit (4.33.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.30.0):
+  - FBSDKLoginKit (4.33.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.30.0):
-    - FBSDKCoreKit (~> 4.30.0)
+  - FBSDKShareKit (4.33.0):
+    - FBSDKCoreKit (~> 4.33.0)
   - IQKeyboardManagerSwift (4.0.13)
-  - Kingfisher (4.6.2)
-  - lottie-ios (2.5.0)
+  - Kingfisher (4.7.0)
   - UserKit (0.19.11)
   - UserKitIdentity (0.19.11):
+    - UserKit
   - WebViewJavascriptBridge (6.0.3)
 
 DEPENDENCIES:
@@ -39,33 +39,31 @@ DEPENDENCIES:
   - FacebookShare
   - IQKeyboardManagerSwift (= 4.0.13)
   - Kingfisher
-  - lottie-ios
-  - UserKit (from `../../userkit-iOS-SDK`)
-  - UserKitIdentity (from `../../userkit-iOS-SDK`)
+  - UserKit (from `../../mStage-UserKit-iOS-SDK`)
+  - UserKitIdentity (from `../../mStage-UserKit-iOS-SDK`)
   - WebViewJavascriptBridge (~> 6.0)
 
 EXTERNAL SOURCES:
   UserKit:
-    :path: ../../userkit-iOS-SDK
+    :path: ../../mStage-UserKit-iOS-SDK
   UserKitIdentity:
-    :path: ../../userkit-iOS-SDK
+    :path: ../../mStage-UserKit-iOS-SDK
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  Brightcove-Player-Core: d4ec5bdea65922365eb6fea270bfc8228351d449
+  Brightcove-Player-Core: d1187888c945578b1cd6f07e8a585166093f5162
   FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
   FacebookLogin: 0af839ea858faef99550d16596b87b4a8e8906e6
   FacebookShare: 0469964297ebd75f052be2c5083389a4208e82b7
-  FBSDKCoreKit: 7c4bba2877781a131ab5d54c0a78c405d4307b62
-  FBSDKLoginKit: fe7a7e82373dc5daad92e1623219e86224ab1fb1
-  FBSDKShareKit: a9427574b51bde4f437262c3f118c4ccfddeef6c
+  FBSDKCoreKit: 572b047a7e029bc44542bcf8a59414e7ff2b543e
+  FBSDKLoginKit: 88cb456349cfb3b554427ce4f8b43729d85dfb40
+  FBSDKShareKit: b7b5002833a4104fbecad75e8e4e082e91c7a08a
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
-  Kingfisher: 55b9c395bf8d3949676ad3861111923990ab68cf
-  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
+  Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   UserKit: 1d185a4e80d841a1ed67cf052b165498d6c13911
   UserKitIdentity: b766d7fc2b9afa71440f7c03813e9b825ee0e49e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
-PODFILE CHECKSUM: 81443e6d077449dc0c2365a7436b23b262cbce7c
 
+PODFILE CHECKSUM: 045b111f3856ec81269e6ed059faa1f0996a76a2
 
 COCOAPODS: 1.4.0
