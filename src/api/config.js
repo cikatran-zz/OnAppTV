@@ -52,6 +52,7 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
         genresData {
           name
         }
+        custom
       }
     }
   }
@@ -67,6 +68,7 @@ query{
 		  contentId
       durationInSeconds
       title
+      custom
       seriesId
       seasonIndex
       episodeIndex
@@ -137,6 +139,7 @@ query queryVOD($perPage: Int, $page: Int){
         genresData {
           name
         }
+        custom
     	}
     }
   }
@@ -212,6 +215,7 @@ query getLiveEPG($currentTime: Date){
         episodeIndex
         type
         impression
+        custom
       }
       startTime
       endTime
@@ -270,6 +274,7 @@ query getEPGByChannel($channelId: Float){
             state
             createdAt
             updatedAt
+            custom
           }
         }
       }  
@@ -314,6 +319,7 @@ query getRelated($genreIds: [MongoID]){
       impression
       updatedAt
       createdAt
+      custom
     }
   }
 }
@@ -355,6 +361,7 @@ query getSeriesEpg($id: [MongoID]){
       impression
       updatedAt
       createdAt
+      custom
     }
   }
 }
@@ -391,6 +398,7 @@ query genresVOD($genresId: [MongoID]){
         name
         fileName
       }
+      custom
     }
   }
 }
@@ -424,6 +432,7 @@ query genresEPGs($currentTime: Date, $genresId: [MongoID]){
         genresData {
           name
         }
+        custom
       }
       startTime
       endTime
@@ -519,6 +528,7 @@ query getEpgSameTime($currentTime: Date, $id: [MongoID]){
         episodeIndex
         type
         impression
+        custom
       }
       startTime
       endTime
@@ -555,6 +565,7 @@ query getVODs($id: [String]!){
       genresData {
         name
       }
+      custom
     }
   }
 }

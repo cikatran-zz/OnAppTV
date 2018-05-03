@@ -6,6 +6,8 @@ import android.support.multidex.MultiDex;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.airbnb.android.react.lottie.LottiePackage;
+import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -33,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
             return Arrays.asList(
                 new RNFetchBlobPackage(),
                 new MainReactPackage(),
+            new LottiePackage(),
+                new LottiePackage(),
                 new FBSDKPackage(mCallbackManager),
 //                new RNGestureHandlerPackage(),
                 new OrientationPackage(),

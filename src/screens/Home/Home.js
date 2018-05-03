@@ -33,6 +33,7 @@ import _ from 'lodash';
 import {getChannel, getWatchingHistory} from "../../api";
 import AlertModal from "../../components/AlertModal";
 import {DotsLoader} from "react-native-indicator";
+import {getImageFromArray} from "../../utils/images";
 
 export default class Home extends Component {
 
@@ -160,22 +161,14 @@ export default class Home extends Component {
     // BANNER
     _renderBanner = ({item}) => {
         if (item == null) {
-            return (
-                <View style={styles.slotMachineContainer}>
-                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
-                </View>
-            )
-        }
-        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
-        if (item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
+            return null;
         }
         return (
             <TouchableOpacity onPress={() => this._onVideoPress(item, false)}>
                 <View style={styles.slotMachineContainer}>
                     <ImageBackground
                         style={styles.slotMachineImage}
-                        source={{uri: image}}>
+                        source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
                             <PinkRoundedLabel text="NEW MOVIE" style={{alignSelf: 'flex-end', marginBottom: 14}}/>
@@ -195,21 +188,13 @@ export default class Home extends Component {
     // ADS
     _renderAds = ({item}) => {
         if (item == null) {
-            return (
-                <View style={styles.adsContainer}>
-                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
-                </View>
-            )
-        }
-        let image = 'http://bec.edu.vn/rezise/resize?src=http://bec.edu.vn/asset/upload/Marketing-your-home.jpg&w=760&h=400';
-        if (item.originalImages != null && item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
+            return null;
         }
 
         let url = item.url ? item.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
-                <ImageBackground style={styles.adsContainer} source={{uri: image}}>
+                <ImageBackground style={styles.adsContainer} source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
                     <View style={styles.adsLabelContainer}>
                         <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
                     </View>
@@ -220,20 +205,12 @@ export default class Home extends Component {
 
     _renderFooter = ({item}) => {
         if (item == null) {
-            return (
-                <View style={styles.notificationContainer}>
-                    <Text style={styles.noInternetConnection}>No notification found.</Text>
-                </View>
-            )
-        }
-        var image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
-        if (item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
+            return null;
         }
         return (
             <TouchableOpacity onPress={()=> Linking.openURL(item.url)}>
                 <View style={styles.notificationContainer}>
-                    <Image style={styles.notificationImage} source={{uri: image}}/>
+                    <Image style={styles.notificationImage} source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}/>
                     <Text style={styles.notificationTitle}>{item.title}</Text>
                     <Text style={styles.notificationSubTitle}>{item.shortDescription}</Text>
                 </View>
@@ -245,10 +222,6 @@ export default class Home extends Component {
     _renderOnLiveItem = ({item}) => {
         if (item == null) {
             return null;
-        }
-        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
-        if (item.videoData.originalImages.length > 0) {
-            image = item.videoData.originalImages[0].url;
         }
         let genres = '';
         if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
@@ -267,7 +240,7 @@ export default class Home extends Component {
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={image}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.videoData.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
@@ -306,11 +279,6 @@ export default class Home extends Component {
     // ON VOD
     _renderVODItem = ({item}) => {
 
-        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
-        if (item.originalImages != null && item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
-        }
-
         let genres = '';
         if (item.genresData != null && item.genresData.length > 0) {
             item.genresData.forEach((genre, index) => {
@@ -322,7 +290,7 @@ export default class Home extends Component {
         }
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={image}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
@@ -448,10 +416,6 @@ export default class Home extends Component {
         if (item == null) {
             return null;
         }
-        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
-        if (item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
-        }
         let genres = '';
         if (item.genres != null && item.genres.length > 0) {
             item.genres.forEach((genre, index) => {
@@ -466,7 +430,7 @@ export default class Home extends Component {
         let progress = lastPosition / videoLength * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onResumePress(item)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={image}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>

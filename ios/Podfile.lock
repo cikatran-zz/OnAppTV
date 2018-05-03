@@ -26,7 +26,7 @@ PODS:
   - FBSDKShareKit (4.30.0):
     - FBSDKCoreKit (~> 4.30.0)
   - IQKeyboardManagerSwift (4.0.13)
-  - Kingfisher (4.6.1)
+  - Kingfisher (4.6.2)
   - lottie-ios (2.5.0)
   - UserKit (0.19.10)
   - UserKitIdentity (0.19.10):
@@ -71,12 +71,12 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: fe7a7e82373dc5daad92e1623219e86224ab1fb1
   FBSDKShareKit: a9427574b51bde4f437262c3f118c4ccfddeef6c
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
-  Kingfisher: 1f9157d9c02b380cbd0b7cc890161195164eb634
+  Kingfisher: 55b9c395bf8d3949676ad3861111923990ab68cf
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
   UserKit: f55d1a8b5f485d33e0f809cf53665c5f9fe62dd2
   UserKitIdentity: 92784613ae918091b3d29628639414bbed2895a2
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: 44f94aff018e9c8c3e9aaeb1de3393a526ae4d2f
+PODFILE CHECKSUM: 2ac1c47c84ceda4d08af01296823251f15362882
 
 COCOAPODS: 1.4.0
