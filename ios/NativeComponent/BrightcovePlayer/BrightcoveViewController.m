@@ -11,6 +11,11 @@
 
 @interface BrightcoveViewController ()
 @property (weak, nonatomic) IBOutlet BrightcovePlayer *brightcovePlayer;
+@property (strong, nonatomic) NSString *videoId;
+@property (strong, nonatomic) NSString *accountId;
+@property (strong, nonatomic) NSString *policyKey;
+@property (strong, nonatomic) NSDictionary *metaData;
+@property RCTDoneBlock doneBlock;
 
 @end
 
@@ -20,6 +25,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    _brightcovePlayer.videoId = _videoId;
+    _brightcovePlayer.accountId = _accountId;
+    _brightcovePlayer.policyKey = _policyKey;
+    _brightcovePlayer.metaData = _metaData;
+    _brightcovePlayer.onDone = _doneBlock;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -50,16 +60,17 @@
                         metaData:(NSDictionary *)metaData
                           onDone:(RCTDoneBlock)doneCallback{
     
-    _brightcovePlayer.videoId = videoId;
-    _brightcovePlayer.accountId = accountId;
-    _brightcovePlayer.policyKey = policyKey;
-    _brightcovePlayer.metaData = metaData;
-    _brightcovePlayer.onDone = doneCallback;
+    _videoId = videoId;
+    _accountId = accountId;
+    _policyKey = policyKey;
+    _metaData = metaData;
+    _doneBlock = doneCallback;
 }
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if (orientation == UIDeviceOrientationPortrait) {
+        //[[BrightcovePlayerManager sharedInstance] removePlayer];
         [_brightcovePlayer stop];
         [self dismissViewControllerAnimated:YES completion:nil];
     }

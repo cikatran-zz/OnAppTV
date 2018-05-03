@@ -60,6 +60,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     
     fileprivate var filmstrip: [Double: ImageResource] = [Double: ImageResource]()
     fileprivate var lastPosition: Double = 0
+    fileprivate var isStopped: Bool = false
     
     // MARK: - Life cycle
     public override init(frame: CGRect) {
@@ -78,10 +79,12 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     
     deinit {
         self.stop()
+        BrightcovePlayerManagager.sharedInstance.removePlayer()
     }
     
     public override func removeFromSuperview() {
         self.stop()
+        BrightcovePlayerManagager.sharedInstance.removePlayer()
         super.removeFromSuperview()
     }
     
@@ -95,7 +98,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
                 self.playbackController = BCOVPlayerSDKManager.shared().createPlaybackController()
                 self.playbackController?.delegate = self.controlsView
                 self.playbackController?.isAutoAdvance = true
-                self.playbackController?.isAutoPlay = true
+                self.playbackController?.isAutoPlay = false
                 
                 // Set up player view
                 self.playerView = BCOVPUIPlayerView(playbackController: self.playbackController!, options: nil, controlsView: BCOVPUIBasicControlView.withVODLayout())
@@ -134,6 +137,9 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
             self.initTapGestures()
         }
         
+        weak var weakSelf = self
+        BrightcovePlayerManagager.sharedInstance.addPlayer(weakSelf)
+        
         
         // Set up control blocks
         controlsView.pauseBlock = {
@@ -171,6 +177,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
         }
         
         controlsView.stopBlock = {
+            self.isStopped = true
             self.onFinished([:])
             self.onDone()
         }
@@ -274,12 +281,16 @@ extension BrightcovePlayer {
         playbackController?.pause()
         playbackController?.setVideos(NSArray())
         controlsView.stop()
+        self.isStopped = true
         storeVideoToUserKit()
     }
     
     fileprivate func requestVideo() {
         if let playbackService = self.playbackService, let videoId = self.videoId {
             playbackService.findVideo(withVideoID: videoId, parameters: [:], completion: { (video, jsonResponse, error) in
+//                if (self.isStopped) {
+//                    return
+//                }
                 if let v = video {
                     if let cuePoints = video?.cuePoints.array() as? [BCOVCuePoint] {
                         self.setUpCuePoints(cuePoints: cuePoints)
