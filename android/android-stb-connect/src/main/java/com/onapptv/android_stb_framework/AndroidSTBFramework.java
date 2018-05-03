@@ -327,7 +327,9 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getVolumeInJson(Callback callback) {
-        callback.invoke(Api_Implementation.sharedManager().hIG_GetVolumeInJson());
+        WritableNativeArray array = new WritableNativeArray();
+        array.pushString(Api_Implementation.sharedManager().hIG_GetVolumeInJson());
+        callback.invoke(null, array);
     }
 
     @ReactMethod

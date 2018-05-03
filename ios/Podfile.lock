@@ -30,7 +30,6 @@ PODS:
   - lottie-ios (2.5.0)
   - UserKit (0.19.11)
   - UserKitIdentity (0.19.11):
-    - UserKit
   - WebViewJavascriptBridge (6.0.3)
 
 DEPENDENCIES:
@@ -66,7 +65,7 @@ SPEC CHECKSUMS:
   UserKit: 1d185a4e80d841a1ed67cf052b165498d6c13911
   UserKitIdentity: b766d7fc2b9afa71440f7c03813e9b825ee0e49e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
-
 PODFILE CHECKSUM: 81443e6d077449dc0c2365a7436b23b262cbce7c
+
 
 COCOAPODS: 1.4.0
