@@ -5,6 +5,7 @@ import {HttpLink} from 'apollo-link-http';
 import {onError} from 'apollo-link-error'
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
+import {getImageFromArray} from '../utils/images'
 import _ from 'lodash';
 
 const AUTH_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M';
@@ -193,9 +194,7 @@ export const getChannel = (limit) => {
             let shortTitles = {}
             let data = response.data.viewer.channelMany;
             for (let i = 0; i < data.length; i++) {
-                if (data[i].originalImages !== null && data[i].originalImages.length > 0) {
-                    images[data[i].serviceId] = data[i].originalImages[0].url;
-                }
+                images[data[i].serviceId] = getImageFromArray(data[i].originalImages, "logo", "feature");
                 shortTitles[data[i].serviceId] = data[i].shortDescription;
 
             }
