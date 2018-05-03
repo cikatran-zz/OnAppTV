@@ -13,6 +13,8 @@ import BlurView from '../../../components/BlurView'
 import { rootViewTopPadding } from '../../../utils/rootViewPadding'
 import IndicatorModal from "../../../components/IndicatorModal";
 import AlertModal from "../../../components/AlertModal";
+import {getImageFromArray} from '../../../utils/images'
+
 const minTop = 70;
 const {height} = Dimensions.get('window')
 const maxHeight = height - 100;
@@ -98,7 +100,7 @@ export default class ZapperContent extends Component {
         let image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
         //get first Image
         if (item !== undefined) {
-            image = item.videoData.originalImages[0].url;
+            image = getImageFromArray(item.videoData.originalImages, "logo", "feature");
         }
         return image;
     }
@@ -222,7 +224,7 @@ export default class ZapperContent extends Component {
           "endtime": liveItem.endTime,
           "starttime": liveItem.startTime,
           "title": liveItem.videoData.title,
-          "image": liveItem.videoData.originalImages[0].url,
+          "image": getImageFromArray(liveItem.videoData.originalImages, "landscape", "feature"),
           "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
         }
       }
@@ -256,12 +258,11 @@ export default class ZapperContent extends Component {
 
         let iconUrl = ''
         let title = 'No data available'
-        if (epgItem && epgItem.originalImages && epgItem.originalImages.length > 0) {
-            iconUrl = epgItem.originalImages[0].url
-        }
-
-        if (epgItem && epgItem.videoData && epgItem.videoData.title) {
-            title = epgItem.videoData.title
+        if (epgItem !== undefined) {
+            iconUrl = getImageFromArray(epgItem.originalImages, "landscape", "feature");
+            if (epgItem.videoData && epgItem.videoData.title) {
+                title = epgItem.videoData.title
+            }
         }
 
         return (

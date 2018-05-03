@@ -16,6 +16,7 @@ import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors} from '../../utils/themeConfig'
 import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 import HeaderLabel from "../../components/HeaderLabel";
+import { getImageFromArray } from '../../utils/images'
 
 export default class RecordList extends React.Component {
     constructor(props) {
@@ -112,10 +113,7 @@ export default class RecordList extends React.Component {
 
     _renderItem = ({item}) => {
 
-      let iconUrl = ''
-      if (item.originalImages && item.originalImages.length > 0) {
-        iconUrl = item.originalImages[0].url
-      }
+      let iconUrl = getImageFromArray(item.originalImages, "landscape", "feature");
 
         return (
           <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
@@ -147,13 +145,6 @@ export default class RecordList extends React.Component {
         let tempFile = item.fileName + ".tmp"
         let logFile = item.fileName + ".log"
         return downloadedList.some((x) => x.fileName === item.fileName) && downloadedList.every((x) => x.fileName !== tempFile && x.fileName !== logFile)
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log('ShouldComponentUpdate')
-        console.log(nextProps)
-        console.log(nextState)
-        return true
     }
 
     _recordTransform = (item) => {

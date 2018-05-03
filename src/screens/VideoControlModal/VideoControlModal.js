@@ -23,6 +23,7 @@ import Swiper from 'react-native-swiper'
 import { rootViewTopPadding } from '../../utils/rootViewPadding'
 import moment from 'moment';
 import AlertModal from '../../components/AlertModal'
+import {getImageFromArray} from "../../utils/images";
 
 const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
@@ -446,14 +447,10 @@ export default class VideoControlModal extends React.Component {
 
         let iconUrl = ''
         if (isLive === false) {
-            if (data.originalImages && data.originalImages.length > 0) {
-                iconUrl = data.originalImages[0].url
-            }
+            iconUrl = getImageFromArray(data.originalImages, "portrait", "feature");
         }
         else {
-            if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
-                iconUrl = data.videoData.originalImages[0].url
-            }
+            iconUrl = getImageFromArray(data.videoData.originalImages, "portrait", "feature")
         }
 
         return (
@@ -489,14 +486,10 @@ export default class VideoControlModal extends React.Component {
 
         let iconUrl = ''
         if (isLive === false) {
-            if (data.originalImages && data.originalImages.length > 0) {
-                iconUrl = data.originalImages[0].url
-            }
+            iconUrl = getImageFromArray(data.originalImages, "portrait", "feature");
         }
         else {
-            if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
-                iconUrl = data.videoData.originalImages[0].url
-            }
+            iconUrl = getImageFromArray(data.videoData.originalImages, "portrait", "feature")
         }
 
         return (
@@ -577,10 +570,7 @@ export default class VideoControlModal extends React.Component {
         const {item} = this.props.navigation.state.params
         const {seriesInfo} = this.props;
 
-        let iconUrl = ''
-        if (item.originalImages && item.originalImages.length > 0) {
-            iconUrl = item.originalImages[0].url
-        }
+        let iconUrl = getImageFromArray(item.originalImages, "portrait", "feature");
 
         if (item.type === 'Episode') {
             return (
@@ -804,7 +794,7 @@ export default class VideoControlModal extends React.Component {
                 "endtime": liveItem.endTime,
                 "starttime": liveItem.startTime,
                 "title": liveItem.videoData.title,
-                "image": liveItem.videoData.originalImages[0].url,
+                "image": getImageFromArray(liveItem.videoData.originalImages, "portrait", "feature"),
                 "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
             }
         }
