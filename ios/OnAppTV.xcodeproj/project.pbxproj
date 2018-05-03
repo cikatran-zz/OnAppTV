@@ -48,6 +48,9 @@
 		6932A6B72082609700C43924 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932A6B62082609700C43924 /* JSON.swift */; };
 		69399A522049310B005EA1B8 /* CustomVolumeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A512049310B005EA1B8 /* CustomVolumeView.xib */; };
 		69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69399A8020493FBE005EA1B8 /* CustomControlsView.xib */; };
+		6952405A209822BB00934B0D /* BrightcoveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69524059209822BB00934B0D /* BrightcoveViewController.m */; };
+		69524086209822CE00934B0D /* BrightcoveStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69524085209822CE00934B0D /* BrightcoveStoryboard.storyboard */; };
+		695240892098266200934B0D /* RNBrightcoveVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 695240882098266200934B0D /* RNBrightcoveVC.m */; };
 		69644095207F284100215606 /* Load.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407B207F283F00215606 /* Load.html */; };
 		69644096207F284100215606 /* js in Resources */ = {isa = PBXBuildFile; fileRef = 6964407C207F283F00215606 /* js */; };
 		69644097207F284100215606 /* Test.html in Resources */ = {isa = PBXBuildFile; fileRef = 6964407D207F283F00215606 /* Test.html */; };
@@ -485,6 +488,11 @@
 		6932A6B62082609700C43924 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		69399A512049310B005EA1B8 /* CustomVolumeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomVolumeView.xib; sourceTree = "<group>"; };
 		69399A8020493FBE005EA1B8 /* CustomControlsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomControlsView.xib; sourceTree = "<group>"; };
+		69524058209822BB00934B0D /* BrightcoveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrightcoveViewController.h; sourceTree = "<group>"; };
+		69524059209822BB00934B0D /* BrightcoveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightcoveViewController.m; sourceTree = "<group>"; };
+		69524085209822CE00934B0D /* BrightcoveStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BrightcoveStoryboard.storyboard; sourceTree = "<group>"; };
+		695240872098266200934B0D /* RNBrightcoveVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNBrightcoveVC.h; sourceTree = "<group>"; };
+		695240882098266200934B0D /* RNBrightcoveVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNBrightcoveVC.m; sourceTree = "<group>"; };
 		6964407B207F283F00215606 /* Load.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Load.html; path = STBHTML/Load.html; sourceTree = "<group>"; };
 		6964407C207F283F00215606 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; name = js; path = STBHTML/js; sourceTree = "<group>"; };
 		6964407D207F283F00215606 /* Test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Test.html; path = STBHTML/Test.html; sourceTree = "<group>"; };
@@ -1044,6 +1052,11 @@
 				69F9A4E5202418D700832440 /* RNTBrightcovePlayerManager.h */,
 				69F9A4E6202418D700832440 /* RNTBrightcovePlayerManager.m */,
 				6969BE7A204C32CD00470C97 /* BrightcovePlayer.swift */,
+				69524058209822BB00934B0D /* BrightcoveViewController.h */,
+				69524059209822BB00934B0D /* BrightcoveViewController.m */,
+				69524085209822CE00934B0D /* BrightcoveStoryboard.storyboard */,
+				695240872098266200934B0D /* RNBrightcoveVC.h */,
+				695240882098266200934B0D /* RNBrightcoveVC.m */,
 			);
 			path = BrightcovePlayer;
 			sourceTree = "<group>";
@@ -1593,6 +1606,7 @@
 				6964409C207F284100215606 /* STB-PIN.html in Resources */,
 				9D2C60BC2BB342CE83B123C7 /* Entypo.ttf in Resources */,
 				330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */,
+				69524086209822CE00934B0D /* BrightcoveStoryboard.storyboard in Resources */,
 				69FE9A0C208879AA00310D97 /* 无声.mp3 in Resources */,
 				69FE9A05208879AA00310D97 /* TROPICALISLAND_42.gif in Resources */,
 				69FE9A04208879AA00310D97 /* TROPICALISLAND_4.gif in Resources */,
@@ -1759,6 +1773,7 @@
 				69025ACB2072303000F66EBE /* RNOANotification.m in Sources */,
 				69A16FD02068DABE00E215B8 /* STBManager.m in Sources */,
 				690EEFE5205791350099484A /* UserKitModule.swift in Sources */,
+				6952405A209822BB00934B0D /* BrightcoveViewController.m in Sources */,
 				6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */,
 				690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */,
 				69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */,
@@ -1766,6 +1781,7 @@
 				6993D2E820917F270032D3DA /* LivePlaybackRecorder.swift in Sources */,
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				695240892098266200934B0D /* RNBrightcoveVC.m in Sources */,
 				6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */,
 				6928A9DD208E1522001E3D41 /* IQKeyboardManagerObj.swift in Sources */,
 				6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */,
