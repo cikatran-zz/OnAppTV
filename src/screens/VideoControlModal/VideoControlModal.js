@@ -11,7 +11,8 @@ import {
     NativeModules,
     Share,
     View,
-    PanResponder
+    PanResponder,
+    Platform
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -36,9 +37,9 @@ export default class VideoControlModal extends React.Component {
     onLayout(e) {
         const {width, height} = Dimensions.get("window")
         if (width > height) {
-            this.setState({
+            !(Platform.OS === "ios") && this.setState({
                 showBrightcove: true
-            })
+            });
             const {item} = this.props.navigation.state.params
             if (item) {
                 let videoId = item.contentId ? item.contentId : '5714823997001';
@@ -47,7 +48,7 @@ export default class VideoControlModal extends React.Component {
             }
         }
         else {
-            this.setState({
+            !(Platform.OS === "ios") && this.setState({
                 showBrightcove: false
             })
         }
@@ -243,7 +244,7 @@ export default class VideoControlModal extends React.Component {
 
     _orientationDidChange = (orientation) => {
         if (orientation === 'LANDSCAPE') {
-            this.setState({showBrightcove: true})
+            !(Platform.OS === "ios") && this.setState({showBrightcove: true})
             const {item} = this.props.navigation.state.params
             if (item) {
                 let videoId = item.contentId ? item.contentId : '5714823997001';
