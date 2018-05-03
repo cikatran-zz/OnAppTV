@@ -51,9 +51,14 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
+<<<<<<< ours
 *Vscode
 .vscode/
 package-lock.json
 ios/Pods/*
 ios/assets/*
 
+=======
+# Bundle artifact
+*.jsbundle
+>>>>>>> theirs

@@ -34,7 +34,6 @@ class BottomTabbar extends React.PureComponent {
                     key={tab}
                 >
                   <LottieView
-                      style={{width: 150, height: 150}}
                       ref={animation => {
                           this.animation = animation;
                       }}
