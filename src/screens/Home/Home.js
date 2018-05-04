@@ -34,6 +34,7 @@ import {getChannel, getWatchingHistory} from "../../api";
 import AlertModal from "../../components/AlertModal";
 import {DotsLoader} from "react-native-indicator";
 import {getImageFromArray} from "../../utils/images";
+import moment from 'moment';
 
 export default class Home extends Component {
 
@@ -66,7 +67,7 @@ export default class Home extends Component {
     componentDidMount() {
         this.props.getBanner();
         this.props.getAds();
-        this.props.getLive(new Date());
+        this.props.getLive(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true));
         this.props.getVOD(1, 10);
         this.props.getCategory();
         this.props.getNews();
@@ -469,9 +470,9 @@ export default class Home extends Component {
                 </View>
             );
 
-        if (this.state.favoriteCategories == null) {
-            let categoryData = (category.data == null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
-            this.state.category = category.data == null ? [] : category.data;
+        if (this.state.favoriteCategories === null) {
+            let categoryData = (category.data === null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
+            this.state.category = category.data === null ? [] : category.data;
             categoryData.push({"name": "_ADD"});
             this.state.favoriteCategories = categoryData;
         }

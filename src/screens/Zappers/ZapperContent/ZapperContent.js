@@ -56,8 +56,9 @@ export default class ZapperContent extends Component {
             return;
         if (position > maxHeight )
             return;
-        let fiveMinuteMore = this._timeAtMove.add(5, 'minutes');
-        this.props.getZapperContent(this._timeAtMove.toDate(), fiveMinuteMore.toDate());
+        let temp = moment(this._timeAtMove.toDate());
+        let fiveMinuteMore = temp.add(5, 'minutes');
+        this.props.getZapperContent(this._timeAtMove.toISOString(true), fiveMinuteMore.toISOString(true));
         this.currentPosition += newPosition;
     }
 
@@ -86,14 +87,12 @@ export default class ZapperContent extends Component {
         //Temporary hard set time to 1/5/2018 8:00 AM
         this._currentTime = moment("May 1 08:00:00", "MMM DD hh:mm:ss");
         let time = "Now";
-        console.log("Time Parse ",time);
         this.setState({time: time})
         let endOfDay = moment("May 1 08:00:00", "MMM DD hh:mm:ss").endOf('day');
         this._rangeTime = moment.duration(endOfDay.diff(this._currentTime)).asMinutes();
         this._offsetRate  = rangeHeight / this._rangeTime;
-        console.log("Offset Rate: ", this._offsetRate);
         let fiveMinuteMore = moment("May 1 08:00:00", "MMM DD hh:mm:ss").add(5, 'minutes');
-        this.props.getZapperContent(this._currentTime.toDate(), fiveMinuteMore.toDate());
+        this.props.getZapperContent(this._currentTime.toISOString(true), fiveMinuteMore.toISOString(true));
     };
 
 
