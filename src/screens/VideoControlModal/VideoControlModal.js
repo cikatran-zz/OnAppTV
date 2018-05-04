@@ -64,6 +64,12 @@ export default class VideoControlModal extends React.Component {
         }
     }
 
+    _showDownloadModal = () => {
+        if (!this.alertModal.state.isShow) {
+            this.alertModal.setState({isShow: true, message: "Sign in to download videos"})
+        }
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -205,27 +211,31 @@ export default class VideoControlModal extends React.Component {
     componentWillReceiveProps(nextProps) {
 
         let bcVideos = nextProps.bcVideos;
-        if (!bcVideos.isFetching && !this.state.firstTimePlay) {
-            let json = {
-                url: bcVideos.data.sources.filter(x => {
-                    return !!x.container
-                })[0].src,
-                playPosition: 0
-            }
-            NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
-            })
 
-            let progressJson = {
-                url: bcVideos.data.sources.filter(x => {
-                    return !!x.container
-                })[0].src,
-                destination_path: '/C/Downloads'
-            }
+        if (bcVideos && bcVideos.data) {
 
-            console.log('Progress json %s', JSON.stringify(progressJson))
-            NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
-                console.log(r[0])
-            })
+            if (!bcVideos.isFetching && !this.state.firstTimePlay) {
+                let json = {
+                    url: bcVideos.data.sources.filter(x => {
+                        return !!x.container
+                    })[0].src,
+                    playPosition: 0
+                }
+                NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
+                })
+
+                let progressJson = {
+                    url: bcVideos.data.sources.filter(x => {
+                        return !!x.container
+                    })[0].src,
+                    destination_path: '/C/Downloads'
+                }
+
+                console.log('Progress json %s', JSON.stringify(progressJson))
+                NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
+                    console.log(r[0])
+                })
+            }
         }
     }
 
@@ -259,7 +269,9 @@ export default class VideoControlModal extends React.Component {
             this._offsetRate = width / durations
         }
         else {
-            this.props.getBcVideos(item.contentId)
+            if (item.contentId && (Number.parseInt(item.contentId) === +item.contentId)) {
+                this.props.getBcVideos(item.contentId)
+            }
             // Calculate offsetRate for dragging
             this._offsetRate = width / item.durationInSeconds
 
@@ -659,7 +671,10 @@ export default class VideoControlModal extends React.Component {
     _onSwiperIndexChanged = (index) => {
         const {item, isLive, epg} = this.props.navigation.state.params
         if (!isLive) {
-            this.props.getBcVideos(epg[index].contentId)
+            let itemContentId = epg[index].contentId
+            if (Number.parseInt(itemContentId) === +itemContentId) {
+                this.props.getBcVideos(epg[index].contentId)
+            }
             this.setState({
                 index: index,
                 isPlaying: true,
@@ -727,14 +742,26 @@ export default class VideoControlModal extends React.Component {
 
             if (actionType === 'record') {
                 if (item.type === 'Standalone') {
-                    if (recordEnabled) {
-                        // Stop downloading current item
-                        this.stopDownload()
-                    }
-                    else {
-                        // Start or resume downloading current item
-                        this._downloadExecution()
-                    }
+                    NativeModules.RNUserKitIdentity.checkSignIn((error, result) => {
+                        let isSignIn = JSON.parse(result[0]).is_sign_in
+                        if (isSignIn) {
+                            if (recordEnabled) {
+                                // Stop downloading current item
+                                this.stopDownload()
+                            }
+                            else {
+                                // Start or resume downloading current item
+                                this._downloadExecution()
+                            }
+                            this.setState({
+                                recordEnabled: !recordEnabled
+                            })
+                        }
+                        else {
+                            this._showDownloadModal()
+                        }
+                    })
+
                 }
                 else {
                     if (recordEnabled) {
@@ -745,11 +772,13 @@ export default class VideoControlModal extends React.Component {
                         // Start recording
                         this._bookExecution(item)
                     }
+
+                    this.setState({
+                        recordEnabled: !recordEnabled
+                    })
                 }
 
-                this.setState({
-                    recordEnabled: !recordEnabled
-                })
+
             }
             else {
                 // Use Userkit
@@ -770,29 +799,32 @@ export default class VideoControlModal extends React.Component {
     stopDownload = () => {
         const {bcVideos} = this.props
 
-        let json = {
-            remove_flag: 1,
-            contentId: bcVideos.data.contentId,
-            url: bcVideos.data.sources.filter(x => {
-                return !!x.container
-            })[0].src,
-            destination_path: "/C/Downloads"
-        }
-        NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
-            if (JSON.parse(events[0]).return === 1) {
-                let downloadList = []
-                NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
-                    downloadList = downloadList.concat(JSON.parse(obj).dataArr)
-                    downloadList.splice(downloadList.indexOf(downloadList.filter(x => x.contentId === json.contentId)[0]), 1)
-                    NativeModules.RNUserKit.storeProperty("download_list", {dataArr: downloadList}, (e, r) => {
+        if (bcVideos && bcVideos.data) {
+
+            let json = {
+                remove_flag: 1,
+                contentId: bcVideos.data.contentId,
+                url: bcVideos.data.sources.filter(x => {
+                    return !!x.container
+                })[0].src,
+                destination_path: "/C/Downloads"
+            }
+            NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
+                if (JSON.parse(events[0]).return === 1) {
+                    let downloadList = []
+                    NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
+                        downloadList = downloadList.concat(JSON.parse(obj).dataArr)
+                        downloadList.splice(downloadList.indexOf(downloadList.filter(x => x.contentId === json.contentId)[0]), 1)
+                        NativeModules.RNUserKit.storeProperty("download_list", {dataArr: downloadList}, (e, r) => {
+                        })
                     })
-                })
-            }
-            else {
-                console.log('Stop download failure!')
-                console.log(json)
-            }
-        })
+                }
+                else {
+                    console.log('Stop download failure!')
+                    console.log(json)
+                }
+            })
+        }
     }
 
     _downloadExecution = () => {
@@ -802,43 +834,45 @@ export default class VideoControlModal extends React.Component {
 
         let videoData = index === -1 ? item : epg[index]
 
-        let json = {
-            contentId: bcVideos.data.contentId,
-            url: bcVideos.data.sources.filter(x => {
-                return !!x.container
-            })[0].src,
-            destination_path: "/C/Downloads"
-        }
-
-        console.log('Download Json')
-        console.log(json)
-
-        NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(json), (error, events) => {
-            let result = JSON.parse(events[0]).return
-            console.log('Download result of id %s is %s', bcVideos.data.contentId, result)
-            if (result === "1") {
-                // Start download successfully
-                // Add to userkit
-                let pattern = /[a-zA-Z0-9]*\.mp4/
-
-                let downloadList = []
-                NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
-                    downloadList = downloadList.concat(JSON.parse(obj).dataArr ? JSON.parse(obj).dataArr : [])
-
-                    let newData = {
-                        ...videoData,
-                        ...json,
-                        fileName: pattern.exec(json.url)[0]
-                    }
-
-                    let params = downloadList.concat([newData])
-
-                    NativeModules.RNUserKit.storeProperty("download_list", {dataArr: params}, (e, r) => {
-                    })
-                })
+        if (bcVideos && bcVideos.data) {
+            let json = {
+                contentId: bcVideos.data.contentId,
+                url: bcVideos.data.sources.filter(x => {
+                    return !!x.container
+                })[0].src,
+                destination_path: "/C/Downloads"
             }
-            else console.log(result)
-        })
+
+            console.log('Download Json')
+            console.log(json)
+
+            NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(json), (error, events) => {
+                let result = JSON.parse(events[0]).return
+                console.log('Download result of id %s is %s', bcVideos.data.contentId, result)
+                if (result === "1") {
+                    // Start download successfully
+                    // Add to userkit
+                    let pattern = /[a-zA-Z0-9]*\.mp4/
+
+                    let downloadList = []
+                    NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
+                        downloadList = downloadList.concat(JSON.parse(obj).dataArr ? JSON.parse(obj).dataArr : [])
+
+                        let newData = {
+                            ...videoData,
+                            ...json,
+                            fileName: pattern.exec(json.url)[0]
+                        }
+
+                        let params = downloadList.concat([newData])
+
+                        NativeModules.RNUserKit.storeProperty("download_list", {dataArr: params}, (e, r) => {
+                        })
+                    })
+                }
+                else console.log(result)
+            })
+        }
     }
 
     _simpleDataFormat = (time) => {

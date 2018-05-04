@@ -146,11 +146,11 @@ export default class DetailsPage extends React.Component {
                         <Text style={styles.videoTypeText}>{data.type}</Text>
                     </View>
                     <View style={styles.bannerButtonsContainer}>
-                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
                             <Image source={require('../../assets/lowerpage_record.png')}
                                    style={styles.videoPlayButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
+                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
                             <Image source={require('../../assets/lowerpage_heart.png')}
                                    style={styles.videoLoveButton}/>
                         </TouchableOpacity>
