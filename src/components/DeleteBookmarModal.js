@@ -13,7 +13,8 @@ export default class DeleteBookmarkModal extends React.PureComponent {
     super(props)
     this.state = {
       deleteSwitch: false,
-      editTitle: false
+      editTitle: false,
+      errorMessage: null
     }
   }
 
@@ -39,13 +40,30 @@ export default class DeleteBookmarkModal extends React.PureComponent {
     else return null
   }
 
+  _renderLoader = () => {
+      if (this.state.errorMessage !== null) {
+          return null
+      }
+      else return (
+          <DotsLoader color={colors.textWhitePrimary} size={20} betweenSpace={10} style={{width: '100%'}}/>
+      )
+  }
+
   _renderDeleteScreen = () => {
-    this.props.onClosePress()
-    console.log('delete screen')
+      this.props.onClosePress(null, (message) => {
+          this.setState({
+              errorMessage: message
+          })
+          setInterval(() => {
+              this.setState({
+                  deleteSwitch: false
+              })
+          }, 2000)
+      })
       return (
         <View style={{flexDirection: 'column', alignItems: 'center', position: 'absolute', width: '100%'}}>
-          <Text style={{fontSize: 15, color: colors.whiteBackground, marginBottom: 20}}>Deleting</Text>
-          <DotsLoader color={colors.textWhitePrimary} size={20} betweenSpace={10} style={{width: '100%'}}/>
+          <Text style={{fontSize: 15, color: colors.whiteBackground, marginBottom: 20}}> {this.state.errorMessage !== null ? this.state.errorMessage : 'Delete'}</Text>
+            {this._renderLoader()}
         </View>
       )
   }
@@ -89,7 +107,12 @@ export default class DeleteBookmarkModal extends React.PureComponent {
       visible={this.props.visible} onRequestClose={() => console.log('Modal close')}>
         <View style={styles.modal}>
           <BlurView blurRadius={getBlurRadius(30)} style={styles.blurView} overlayColor={0x75000000}/>
-          <TouchableOpacity style={styles.close} onPress={() => this.props.onClosePress(-1)}>
+          <TouchableOpacity style={styles.close} onPress={() => this.props.onClosePress(-1, () => {
+              this.setState({
+                  deleteSwitch: false,
+                  errorMessage: null
+              })
+          })}>
             <Image source={require('../assets/ic_modal_close.png')} />
           </TouchableOpacity>
           {this._renderContent()}

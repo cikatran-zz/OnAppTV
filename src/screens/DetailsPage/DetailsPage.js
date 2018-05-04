@@ -19,6 +19,7 @@ import {getChannel, getWatchingHistory} from "../../api";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
+import { DotsLoader } from 'react-native-indicator'
 
 export default class DetailsPage extends React.Component {
 
@@ -71,12 +72,13 @@ export default class DetailsPage extends React.Component {
         const {epg, epgSameTime} = this.props;
         const {item, isLive} = this.props.navigation.state.params
 
-        if (isLive && !item)
-            return null;
-        if (!epg || !epg.data || !item)
-            return null;
-        if (this._isOldData(epg.data, isLive))
-            return null;
+        if ((isLive && !item) || (!epg || !epg.data || !item) || (this._isOldData(epg.data, isLive))) {
+            return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                </View>
+            )
+        }
 
         return (
             <View style={styles.container}>

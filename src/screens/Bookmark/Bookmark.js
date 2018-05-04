@@ -110,7 +110,7 @@ export default class Bookmark extends React.Component {
 
         return (
             <View style={{flexDirection: 'row'}}>
-                <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
+                <VideoThumbnail style={styles.thumbnailStyle} imageUrl={item.metaData.image} marginHorizontal={17}/>
                 <View style={{flexDirection: 'column', marginRight: 60}}>
                     <Text style={styles.itemTitle}>{item.metaData.title}</Text>
                     <Text style={styles.itemType}>{item.metaData.subTitle}</Text>
@@ -127,7 +127,7 @@ export default class Bookmark extends React.Component {
     _renderScheduledItem = ({item}) => {
         return (
             <View style={styles.horizontalItemContainer}>
-                <VideoThumbnail imageUrl={item.metaData.image} marginHorizontal={17}/>
+                <VideoThumbnail style={styles.scheduledThumbnailStyle} imageUrl={item.metaData.image} marginHorizontal={17}/>
                 <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.textTitle}>{item.metaData.title}</Text>
                 <Text style={styles.textType}>{item.metaData.subTitle}</Text>
                 <Text style={styles.textTime}>{timeFormatter(item.record.startTime)} - {item.metaData.endtime}</Text>
@@ -270,7 +270,8 @@ const styles = StyleSheet.create({
     horizontalItemContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 21
     },
     textTitle: {
         marginTop: 15,
@@ -373,6 +374,18 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    thumbnailStyle: {
+        width: 156,
+        height: 74,
+        marginLeft: 14,
+        marginRight: 15
+    },
+    scheduledThumbnailStyle: {
+        width: 156,
+        height: 74,
+        marginHorizontal: 15,
+        marginBottom: 21
     }
 })
 

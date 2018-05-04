@@ -3,7 +3,7 @@ var optSex;
 $(function() {
 	$("#RegisterModal").css({
 		"width":"100%",
-		"height":"100%"
+		"height":$(window).height()
 	});
 
  mui(".mui-scroll,.menu,.evaluating").on('tap', 'a', function() {
@@ -22,7 +22,7 @@ $(function() {
     })
     //关闭
     $("#closeModal").click(function(){
-    	  this.href = "Authentication.html";
+    	  this.href = "SignIn.html";
     })
 // //点击ALLow跳转
 // $("#Agreed").click(function(){

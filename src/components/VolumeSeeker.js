@@ -13,7 +13,7 @@ class VolumeSeeker extends React.PureComponent {
         return (
             <Slider
                 disabled={this.props.disabled}
-                style={{width: this.props.width, height: 100}}
+                style={{width: this.props.width}}
                 value={this.props.value}
                 maximumValue={100}
                 thumbTintColor={colors.whitePrimary}
@@ -24,6 +24,7 @@ class VolumeSeeker extends React.PureComponent {
                 onSlidingStart={()=> this.props.onChangedScrollEnabled(false)}
                 onSlidingComplete={()=>this.props.onChangedScrollEnabled(true)}
                 minimumTrackTintColor={colors.mainPink}
+                hitSlop={{top: 100, bottom: 30, left: 10, right: 0}}
             />
         )
     }

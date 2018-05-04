@@ -27,7 +27,7 @@ export default class RecordList extends React.Component {
         }
     };
 
-    _toggleModal = (item) => {
+    _toggleModal = (item, callback) => {
 
         if (item || item === -1) {
             // Open modal & close modal normally
@@ -57,14 +57,17 @@ export default class RecordList extends React.Component {
                         NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {
                         })
                         this.setState({
-                            openModal: !this.state.openModal,
+                            openModal: false,
                             data: {},
                             dataArr: deletedList
                         })
                     }
                     else {
-                        console.log('Remove file falure!')
-                        console.log(target)
+                        let mess = 'Remove file failure!'
+                        console.log(mess, target)
+                        if (callback !== null) {
+                            callback(mess)
+                        }
                     }
                 })
             }
@@ -117,13 +120,13 @@ export default class RecordList extends React.Component {
 
         return (
           <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
-            <VideoThumbnail imageUrl={iconUrl} marginHorizontal={17}/>
+            <VideoThumbnail style={styles.thumbnailStyle} imageUrl={iconUrl} marginHorizontal={17}/>
             <View style={{flexDirection: 'column', marginRight: 60}}>
               <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
               <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
               <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
             </View>
-            <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item)}>
+            <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item, null)}>
               <Image source={require('../../assets/ic_three_dots.png')}/>
             </TouchableOpacity>
             </TouchableOpacity>
@@ -214,6 +217,7 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         flexDirection: 'row',
+        marginBottom: 16
     },
     headerLabel: {
         textAlign: 'center',
@@ -249,5 +253,11 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         color: '#ACACAC',
         fontSize: 12
+    },
+    thumbnailStyle: {
+        width: 156,
+        height: 74,
+        marginLeft: 14,
+        marginRight: 15
     }
 })
