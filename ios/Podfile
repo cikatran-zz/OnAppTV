@@ -12,7 +12,6 @@ target 'OnAppTV' do
 
   # Pods for OnAppTV
   pod 'Brightcove-Player-Core/dynamic'
-  pod 'WebViewJavascriptBridge', '~> 6.0'
   pod 'UserKit', :path => '../../mStage-UserKit-iOS-SDK'
   pod 'UserKitIdentity', :path => '../../mStage-UserKit-iOS-SDK'
   pod 'Kingfisher'

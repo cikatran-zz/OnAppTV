@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" name="viewport" content="viewport-fit=cover,width=device-width">
+		<meta content="telephone=no" name="format-detection">
+		<title>AndroidHTML</title>
+		<script>
+			var nums = "First";
+		</script>
+		<!--js-->
+		<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/swiper.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript">
+			var u = navigator.userAgent;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            // if(isAndroid) {
+            document.write("<script type='text/javascript' src='js/getSTB.js'><" + '/' + "script>");
+                $("#picID").attr("src", "img/TROPICALISLAND_42.gif");
+   //          } else if(isiOS) {
+			//  document.write("<script type='text/javascript' src='js/stbIOS.js'><" + '/' + "script>");
+			// $("#picID").attr("src", "TROPICALISLAND_42.gif");
+            // }
+		</script>
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/alert.js"></script>
+		<!--css-->
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" href="css/main.css" />
+		<link rel="stylesheet" href="css/swiper.min.css" />
+		<link rel="stylesheet" href="css/magic-check.css">
+		<!--<link rel="stylesheet" href="css/paramer.css" />-->
+	</head>
+
+	<body>
+		<section class="stb-section stb-login">
+			<div class="animation">
+				<div class="stb-container">
+					<div class="Launch-img">
+						<!--background-img--><img id="picID" border="0" />
+						<!--蒙板效果-->
+						<div class="mask"></div>
+					</div>
+					<!--content-->
+					<div class="stb-container">
+						<div class="stb-content">
+							<!--header-->
+							<div class="stb-content-header">
+								<div class="header-block"></div>
+								<div class="header-content">
+									<div class="">
+										<p>ON<span>STB</span></p>
+									</div>
+								</div>
+							</div>
+							<!--body-->
+							<div class="stb-content-body">
+								<div class="swiper-container on-container">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide">
+											<div class="slide-content">
+												<div class="title">The Best Of TV !</div>
+												<div class="text">Login and start playing on your TV without <br/>your remote control !
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="slide-content">
+												<div class="title">Don't zapp anymore !</div>
+												<div class="text">Thanks to your smartphone, select your
+													<br/> best program in one click !
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="slide-content">
+												<div class="title">Share !</div>
+												<div class="text">Watch on TV or on your Mobile </div>
+											</div>
+										</div>
+									</div>
+									<div class="swiper-pagination swiper-pagination-white"></div>
+								</div>
+							</div>
+							<!--footer-->
+							<div class="stb-content-footer">
+								<!--<div class="stb_button">-->
+								<button class="button-a btn_party">Continue with Facebook</button>
+								<!--</div>-->
+								<!--<div class="stb_button">-->
+								<button class="button-a" data-toggle="modal" href="#ConsentModal" tabindex="-1">Create account</button>
+								<!--</div>-->
+								<div class="line-top">
+									<p>Continue as Guest</p>
+								</div>
+								<div class="footer-line">
+									<div class="footer-left"><span class="left-text">by Elia Media &amp; Technology</span></div>
+									<div class="footer-right "><span>onstb.com</span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--模态框-->
+			<div class="modal fade" id="ConsentModal" tabindex="-1" role="dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="border-bottom: 0px;padding: 10px;">
+						<h6 class="modal-title">ON Would<br/>Like To Send You<br/>Notifications</h6></div>
+					<div class="modal-body">
+						<p>Notifications may include alerts,sounds and icon badges.These can be configured in settings.</p>
+					</div>
+					<div class="modal-footer menu" style="border-top: 0px;">
+						<a class="modal-a stb-modal-allow" id="Agreed" onclick="clickTo()">Allow</a>
+						<a class="modal-a dismissModal stb-modal-disAllow" id="Disagree" onclick="clickTo()">Don’t Allow</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-account">
+			<div class="stb-modal-content  modal-content content">
+				<!--header-->
+				<div class="modal-header stb-modal-header menu">
+					<div class="modal-title">
+						<p>CREATE ACCOUNT</p>
+					</div>
+					<a href="#" id="dismiss-signIn" class="close"></a>
+				</div>
+				<!--content-->
+				<div class="stb-modal-body_account">
+					<div class="modal-form">
+						<div class="LoginForm text-group">
+							<input type="text" class="" placeholder="E-mail" />
+							<input type="password" placeholder="Password" />
+							<input type="text" class="" placeholder="Name" />
+							<input type="text" placeholder="First name" />
+							<select id="age">
+								<option value="" selected="selected">Age</option>
+							</select>
+							<select id="sex">
+								<option value="" selected="selected">Sex</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="stb-modal-footer">
+					<button class="button-a btn-center" id="creatAccount">Login</button>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-signIn">
+			<!--模态框-->
+			<div class="animsition" id="SignInModal" tabindex="-1">
+				<div class="stb-modal-content  modal-content content">
+					<!--header-->
+					<div class="modal-header stb-modal-header menu">
+						<div class="modal-title">
+							<p>SIGN IN</p>
+						</div>
+						<a href="#" id="dismiss-signIn" class="close"></a>
+					</div>
+					<!--body-->
+					<div class="modal-body stb-modal-body">
+						<div class="modal-form">
+							<p>Identify yourself with your subscriber code</p>
+							<div class="LoginForm"><input type="text" class="" placeholder="E-mail" /><input type="password" placeholder="Password" /></div>
+							<div class="ForgotMessage">
+								<p>Forget your password?</p>
+							</div>
+							<div class="modal-button menu">
+								<a class="button-a" id="loginButton">Log In</a>
+								<p id="">A connection problem?</p>
+							</div>
+						</div>
+					</div>
+					<!--footer-->
+					<div class="modal-footer stb-modal-footer">
+						<div class="SelectList">
+							<div class="free">1 MONTH FREE*</div><button class="price">19.99€/month</button>
+							<div class="commitment">Without commitment</div>
+						</div>
+						<!--<img src="img/offre copie.png"/>-->
+						<div class="imgbg"></div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-register">
+			<div class="animsition" id="RegisterModal">
+				<div class="stb-modal-content">
+					<div class="modal-header stb-modal-header menu">
+						<div class="modal-title">
+							<p>SIGN IN</p>
+						</div>
+						<a href="#" id="closeModal" class="close" data-animsition-out="fade-out-left"></a>
+					</div>
+					<!--body-->
+					<div class="stb-modal-body_account">
+						<div class="SubscribeButton"><button id="faceBookLogin">Subscribe With Facebook</button></div>
+						<div class="modal-form register-modal-form">
+							<p>Or create your account manually</p>
+							<div class="SignForm">
+								<div class="radio_group" id="radios">
+									<div class="opt"><input class="magic-radio" type="radio" name="sex" value="Mrs" /><label name="Mrs" for="Mrs">Mrs</label></div>
+									<div class="opt"><input class="magic-radio" type="radio" name="sex" value="Mr." checked="checked" /><label name="Mr." for="Mr.">Mr.</label></div>
+								</div>
+								<div class="text-group"><input type="email" id="Email" placeholder="E-mail (personnel)" />
+									<input type="text" id="name" placeholder="Name" /><input type="text" id="firstName" placeholder="First name" />
+									<select id="age">
+										<option value="" selected="selected">Age</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="stb-modal-footer">
+						<div class="register-modal-footer btn-center">
+							<a class="button-a" id="Validates">Validate Profile</a>
+						<!--<button id="Validate">Validate Profile</button>-->
+						<p>By clicking on registration,you accept the Terms Of Ulitisation and Privacy Policy</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--模态框-->
+			<div class="modal faceModal fade" id="facebookModal" tabindex="-1" role="dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="border-bottom: 0px;padding: 10px;">
+						<h6 class="modal-title">Facebook Would<br/>Like to Confirm<br/>Access</h6></div>
+					<div class="modal-body">
+						<p>Notifications may include alerts,sounds and icon badges.These can be Configured in Settings.</p>
+					</div>
+					<div class="modal-footer menu" style="border-top: 0px;">
+						<a class="modal-a" id="register-Agreed">Allow</a>
+						<a class="modal-a dismissModal" id="register-Disagree">Don’t Allow</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-notification">
+			<div class="selectcoder">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn-gb-1.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="modal fade" id="Notification-model" tabindex="-1" role="dialog">
+					<div class="modal-content">
+						<div class="modal-header" style="border-bottom: 0px;padding: 10px;">
+							<h6 class="modal-title">ON Would<br/>Like To Send You<br/>Notifications</h6></div>
+						<div class="modal-body">
+							<p>Notifications may include alerts,sounds and icon badges.These can be configured in settings.</p>
+						</div>
+						<div class="modal-footer menu" style="border-top: 0px;">
+							<a class="modal-a stb-modal-allow" id="showNotification">Allow</a>
+							<a class="modal-a dismissModal stb-modal-disAllow" id="hideNotification">Don’t Allow</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-profile">
+			<div class="selectcoder">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="HIGContent">
+					<div class="con-body-top profile-blur con-list">
+						<span class="stb-title">Your profile has been created</span>
+						<div class="stb-list">
+							<ul class="profile_list">
+								<li><span class="stb-name">Jean </span>
+									<input type="checkbox" id='obj1' class="mui-switch mui-switch-anim dire" name="WifiName" /></li>
+								<li><span class="stb-name">Kids </span>
+									<input type="checkbox" id='obj1' class="mui-switch mui-switch-anim dire" name="WifiName" /></li>
+							</ul>
+							<div class="">
+								<button class="button-a btn_trans" id="profile">Add profil</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-newPrfile">
+			<div class="stb-modal-content  modal-content content">
+				<!--header-->
+				<div class="modal-header stb-modal-header menu">
+					<div class="modal-title">
+						<p>CREATE ACCOUNT</p>
+					</div>
+					<a href="#" id="dismiss-signIn" class="close"></a>
+				</div>
+				<!--content-->
+				<div class="stb-modal-body_account">
+					<div class="modal-form">
+						<div class="LoginForm text-group">
+							<input type="text" class="" placeholder="Name" />
+							<input type="text" placeholder="First name" />
+							<select id="age">
+								<option value="" selected="selected">Age</option>
+							</select>
+							<select id="sex">
+								<option value="" selected="selected">Sex</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="stb-modal-footer">
+					<button class="button-a btn-center" id="confirmAccount">Confirm</button>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-revolution">
+			<div class="selectcoder">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="HIGContent ">
+					<!--header-->
+					<div class="revolution-header-content Welcome">
+						<p>ON<span>STB</span></p>
+						<div class="body-content">
+						<p>Welcome to<br/>a revolutionary TV app's</p>
+					</div>
+					</div>
+					<div class="footer-content marginTop">
+						<div class="spinner">
+							<div class="bounce1"></div>
+							<div class="bounce2"></div>
+							<div class="bounce3"></div>
+						</div>
+					</div>
+					<!--<button value="点击"onclick="clicktoSend()">点击</button>--></div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-selectSTB">
+			<div class="STBList">
+				<div class="STB-bg"></div>
+				<div class="HIGContent">
+					<div class="con-body-top list-stb con-list">
+						<span class="stb-title">Select STB</span>
+						<div class="stb-list">
+							<ul class="selectedname">
+<!--                                <li><span class="stb_blue"></span><span class="stb-name">03485492</span><input type="checkbox" id="fvecf" class="mui-switch mui-switch-anim dire" name="WifiName" /></li>-->
+<!--                                <li><span class="stb_blue"></span><span class="stb-name">0347a30c</span><input type="checkbox" id="fvecf" class="mui-switch mui-switch-anim dire" name="WifiName" /></li>-->
+							</ul>
+							<ul class="listul">
+<!--                                <li><span class="stb_dark"></span><span class="stb-name">347a30c</span></li>-->
+<!--                                <li><span class="stb_dark"></span><span class="stb-name">0347a30c</span></li>-->
+							</ul>
+						</div>
+					<div class="con-foot menu">
+					<button class="button-a btn-conn" id="btn-conn" value="Add Decoder">Add another STB</button>
+					<!--<button class="btn btn-skip" id="btn-skip" value="skip">Skip</button>-->
+					<div class="con-describe">
+					<span>
+						Disconnect your device to the STB<br>or Standby the STB
+						</span>
+					</div>	
+				</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		</section>
+		<section class="stb-section hide-section stb-selectDocoder">
+			<div class="Selector">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="HIGContent">
+					<div class="body-top">
+						<p>Select decoder</p>
+					</div>
+					<div class="content-body">
+						<div class="body-square"></div>
+						<div class="square-content">
+							<div class="square">
+								<p>No STB installed<br> on your local network !</p>
+							</div>
+						</div>
+					</div>
+					<div class="body-group selectDecoder menu">
+						<div class="btn-center">
+							<a class="button-a" id="Install">Installing a decoder</a>
+						<a class="btn_trans button-a" id="skip">Skip</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-Geographc">
+			<div class="selectcoder">
+				<div class="bg">
+					<div class="LunchImg"></div>
+					<div class="mask"></div>
+					<div class="STBContainer">
+						<div class="STBContainer-body">
+							<div class="content-main"><img src="img/icon-square.png" />
+								<div class="content-message">NATIONAL<br/>GEOGRAPHIC</div>
+							</div>
+						</div>
+						<div class="STBContainer-footer">
+							<div class="footer-button"><button id="Avalible">Is now available</button><span>Without engagement</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-wifiConnectMode">
+			<div class="HIG-Container">
+				<div class="HIGContent">
+					<div class="body-top">
+						<span>STB’s Wifi connection</span>
+					</div>
+					<a class="close" id="closeWifiConnectMode"></a>
+					<div class="HIGContent-body">
+						<div class="swiper-container connect-mode-body">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="title">Select your Wifi connection mode</div>
+										<div class="text mode-text">Does your Wifi router have a WPS key ?</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="HIGContent-footer">
+						<div class="btn-center">
+							<div class="HIG_button menu">
+							<a class="button-a" id="WifiCheck-Mode">Install in WPS mode</a>
+							<a class="button-a bott" id="WifiCheck-manual">Install in manual mode</a>
+						</div>
+						<div class="footer-content">
+							<p>A connection problem ?</p>
+						</div>
+						</div>
+						<div class="bottom-btn">WPS ?</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-conntectStep">
+			<div class="HIG-Container">
+				<div class="HIGContent">
+					<div class="body-top">
+						<span>STB’s Wifi connection</span>
+					</div>
+						<a class="close" id="close"></a>
+						<div class="HIGContent-body">
+						<div class="swiper-container step-container">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="title">
+											Step 1
+										</div>
+										<div class="text">
+											Press on the WPS key of your Wifi router<br>until the LED flashes !
+
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="title">
+											Step 2
+										</div>
+										<div class="text">
+											Press on the WPS key of your STB until the LED flashes !
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="title">
+											Step 3
+										</div>
+										<div class="text">
+										When connected, the LED of your STB become blue !
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="swiper-pagination"></div>
+						</div>
+					</div>
+					<div class="HIGContent-footer">
+						<div class="btn-center">
+							<div class="HIG_button menu">
+							<a class="button-a search" id="search">Search your STB</a>
+							<a class="button-a bott" id="install">Install in manual mode</a>
+						</div>
+						<div class="footer-content">
+							<p>Press here for more details</p>
+						</div>
+						</div>
+						<div class="bottom-btn">WPS ?</div>
+					</div>
+					</div>
+				</div>
+		</section>
+		<section class="stb-section hide-section stb-wifiConnect">
+			<div class="HIG-Container">
+				<div class="HIGContent">
+					<div class="body-top">
+						<span>STB’s Wifi connection</span>
+					</div>
+						<a class="close" id="close"></a>
+					<div class="HIGContent-body">
+						<div class="swiper-container connect-container">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="slide-img" style="visibility: hidden;"></div>
+										<div class="title">
+											Step 1
+										</div>
+										<div class="text">
+											Press on CH+ key of your STB during 3s
+											<br>until the LED flashes
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="slide-img"></div>
+										<div class="title">
+											Step 2
+										</div>
+										<div class="text">
+											Open the Setting Menu of your device 
+											<br>select the WiFi Menu
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="slide-content">
+										<div class="title">
+											Step 3
+										</div>
+										<div class="text">
+											Select the WiFi “STB-HUB”
+										</div>
+										<div class="stb-submit">
+											<div class="WifiBody">
+												<label class="title passwd">
+													WIFI 
+													<span id="CName"></span>
+												</label>
+												<p>WPA2 requires a password.</p>
+												<input type="text" id="wifiName" value="" placeholder="WIFI" />
+												<input type="password" id="Pwd" value="" placeholder="PASSWORD" />
+												<div class="checkSelect">
+													<input type="checkbox" class="showPwd" id="ShowPassword" name="ShowPassword" id="ShowPassword" value="" />
+													<label for="ShowPassword"><p>Show password</p></label>
+												</div>
+											</div>
+											<div class="WifiFooter">
+												<div class="HIG_button menu">
+													<a class="button-a" id="connectWlanAP">Validate</a>
+													<a class="button-a btn_trans changeBtn" id="ChangeWifi">Change Wifi</a>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div class="swiper-pagination"></div>
+						</div>
+					</div>
+					<div class="HIGContent-footer">
+						<div class="btn-center">
+							<div class="HIG_button menu">
+							<a class="button-a search" id="search">Search your decoder</a>
+							<a class="button-a bott" id="install">Install in manual mode</a>
+						</div>
+						<div class="footer-content">
+							<p>A connection problem ?</p>
+						</div>
+						</div>
+						<div class="bottom-btn">WPS ?</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-connectLoad">
+			<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+				<div class="mask"></div>
+			</div>
+			<div class="HIGContent">
+				<!--header-->
+				<div class="body-top"></div>
+				<div class="body-middle Welcome">
+					<div class="header-content">
+						<p class="conn-title">ON<span>STB</span></p>
+					</div>
+					<div class="body-content">
+						<p class="patience">Few more steps !</p>
+					</div>
+				</div>
+				<div class="footer-content marginTop">
+					<div class="spinner">
+						<div class="bounce1"></div>
+						<div class="bounce2"></div>
+						<div class="bounce3"></div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-channelList">
+			<div class="selectcoder">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="HIGContent">
+					<div class="body-top">
+						<p>Antenna Configure</p>
+					</div> 
+					<div class="content-body">
+						<div class="body-square"></div>
+						<div class="square-content">
+							<div class="square list channel">
+								<ul>
+									<li><label>DiSeqC1.0</label>
+										<div class="paramater"><button class="btn-left"></button><label></label><button class="btn-right"></button></div>
+									</li>
+									<li><label>DiSeqC1.1</label>
+										<div class="paramater"><button class="btn-left"></button><label></label><button class="btn-right"></button></div>
+									</li>
+									<li><label>LNB Type</label>
+										<div class="paramater"><button class="btn-left"></button><label></label><button class="btn-right"></button></div>
+									</li>
+									<li><label>22 Khz</label>
+										<div class="paramater"><button class="btn-left"></button><label></label><button class="btn-right"></button></div>
+									</li>
+									<li><label>Transponder</label>
+										<div class="paramater"><button class="btn-left"></button><label></label><button class="btn-right"></button></div>
+									</li>
+								</ul>
+							</div>
+							<div class="progress-group">
+								<ul>
+									<li><label>Signal Strength</label>
+										<div class="progress"><span class="prog Strength"></span></div>
+									</li>
+									<li><label>Signal Quality</label>
+										<div class="progress"><span class="prog Quality"></span></div>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="body-group menu">
+						<!--<div class="">-->
+						<p>If there is no signal or the quality is too low<br/>adjust your antenna using these bargraphs</p>
+						<!--</div>-->
+						<a class="button-a" id="Next">Next</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-PIN">
+			<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+				<div class="mask"></div>
+			</div>
+			<div class="HIGContent enter">
+				<div class="body-top">
+					<p>Create PIN Code</p>
+				</div>
+				<div class="content-body">
+					<div class="body-square"></div>
+					<div class="square-content">
+						<div class="PIN"><label>Enter PIN Code</label><span class="point" id="oldPIN"><u></u><u></u><u></u><u></u></span></div>
+					</div>
+				</div>
+				<div class="Num">
+					<table cellspacing="4" class="num-code"></table>
+				</div>
+			</div>
+			<div class="HIGContent confirm">
+				<div class="body-top">
+					<p>Create PIN Code</p>
+				</div>
+				<div class="content-body">
+					<div class="body-square"></div>
+					<div class="square-content">
+						<div class="PIN"><label>Confirm PIN Code</label><span class="point" id="newPIN"><u></u><u></u><u></u><u></u></span></div>
+					</div>
+				</div>
+				<div class="Num">
+					<table class="num-code"></table>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-parental">
+			<div class="Parental">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="HIGContent">
+					<div class="body-top">
+						<p>Parental Control</p>
+					</div>
+					<div class="content-body">
+						<div class="body-square"></div>
+						<div class="square-content">
+							<div class="square list controls">
+								<ul>
+									<li><label>Parental&nbsp;Control</label><input type="checkbox" class="mui-switch mui-switch-anim" name="WifiName" /></li>
+									<li class="control-round">
+										<ul>
+											<li class="round"><span>18</span></li>
+											<li class="round"><span>16</span></li>
+											<li class="round"><span>12</span></li>
+											<li class="round"><span>10</span></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="body-group menu parent-btn">
+						<a class="button-a" id="Next-conn">Next</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-wifiPwd">
+			<div class="HIG-Container">
+				<div class="HIGContent-header menu">
+					<div class="header-content">
+						<p>Wifi connection</p>
+					</div>
+					<a class="close" id="close-wifi"></a>
+				</div>
+				<div class="WifiBody"><label class="title">WIFI<span id="CName"></span></label>
+					<p>WPA2 requires a password.</p><input type="text" id="wifiName1" value="" placeholder="WIFI" /><input type="text" id="Pwd1" value="" placeholder="PASSWORD" />
+					<div class="checkSelect"><input type="checkbox" class="showPwd" id="ShowPassword" name="ShowPassword" id="ShowPassword" value="" /><label for="ShowPassword"><p>Show password</p></label></div>
+				</div>
+				<div class="WifiFooter">
+					<div class="HIG_button menu">
+						<a class="button-a" id="wifi-connect">Validate</a>
+						<a class="button-a btn_trans changeBtn" id="ChangeWifi">Change Wifi</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<script>
+			$(function() {
+				//				$("#btn-test").click(function(){
+				//					testClick();
+				//					$(".stb-test").addClass("hide-section");
+				//					$(".stb-selectSTB").removeClass("hide-section");
+				//				})
+				$("#creatAccount").click(function() {
+					$(".stb-account").addClass("hide-section");
+					$(".stb-register").removeClass("hide-section");
+					 $(".opt").click(function(){
+					 //判断是否已经选中
+					 if( $(this).find("input")[0].checked){
+   	  	return;
+   	  }else{
+   	  	//获取同级元素
+   	  	var opt = $(".opt");
+   	  	for(var i=0;i<opt.length;i++){
+   	  		//设置所有input的checked为false
+   	  		opt[i].children.sex.checked = false;
+   	  	}
+   	  	//设置点击的input的checked为true
+   	  	$(this).find("input")[0].checked = true;
+   	  	//值
+   	  	optSex = $(this).find("label").html();
+   	  }
+   })
+
+     //获取单选按钮的值
+     var optArray = $(".opt");
+     for(var i=0;i<optArray.length;i++){
+     	//判断radio是否选中
+     	if(optArray[i].children.sex.checked){
+     		optSex = optArray[i].children.sex.value;	
+     	}
+     }
+      //年龄下拉框(计算100岁之内的)
+    var nowDate = new Date();
+    var ageSelect = $("#age");
+    for(var year = 1;year < 150; year++){
+    	  var options = document.createElement('option');
+    	  options.value = year;
+    	  var txt = document.createTextNode( year + " Years ");
+    	  options.appendChild(txt);
+    	  $(ageSelect).append(options);
+    }
+				})
+				$("#dismiss-signIn").click(function() {
+					$(".stb-signIn").addClass("hide-section");
+					$(".stb-login").removeClass("hide-section");
+				});
+				$("#face-Agreed").click(function() {})
+				$("#closeModal").click(function() {
+					$(".stb-register").addClass("hide-section");
+					$(".stb-signIn").removeClass("hide-section");
+				});
+				$("#register-Agreed").click(function() {
+					$(".faceModal").modal("hide");
+					$(".stb-register").addClass("hide-section");
+					$(".stb-revolution").removeClass("hide-section");
+				});
+				$("#register-Disagree").click(function() {
+					$(".faceModal").modal("hide");
+					$(".stb-register").addClass("hide-section");
+					$(".stb-revolution").removeClass("hide-section");
+				});
+				$("#loginButton").click(function() {
+					$(".stb-signIn").addClass("hide-section");
+					$(".stb-register").removeClass("hide-section");
+				});
+				$("#Validates").click(function() {
+					$(".stb-register").addClass("hide-section");
+					$(".stb-notification").removeClass("hide-section");
+					$('#Notification-model').modal('show');
+					//
+				});
+				$("#showNotification").click(function() {
+					$("#Notification-model").modal("hide");
+					$(".stb-notification").addClass("hide-section");
+					$(".stb-profile").removeClass("hide-section");
+					profileSize();
+					selectProfile();
+				})
+				$("#hideNotification").click(function() {
+					$("#Notification-model").modal("hide");
+					$(".stb-notification").addClass("hide-section");
+					$(".stb-profile").removeClass("hide-section");
+					profileSize();
+					selectProfile();
+				})
+				$("#profile").click(function() {
+					$(".stb-profile").addClass("hide-section");
+					$(".stb-newPrfile").removeClass("hide-section");
+					//stbListInfo();
+				})
+				$("#confirmAccount").click(function() {
+					$(".stb-newPrfile").addClass("hide-section");
+					$(".stb-revolution").removeClass("hide-section");
+					stbListInfo();
+				})
+			})
+
+			function clickTo() {
+				$("#ConsentModal").modal("hide");
+				$(".stb-login").addClass("hide-section");
+				$(".stb-account").removeClass("hide-section")
+			}
+		</script>
+	</body>
+</html>

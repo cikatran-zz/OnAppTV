@@ -29,8 +29,8 @@ PODS:
   - Kingfisher (4.7.0)
   - UserKit (0.19.11)
   - UserKitIdentity (0.19.11):
+  - lottie-ios (2.5.0)
     - UserKit
-  - WebViewJavascriptBridge (6.0.3)
 
 DEPENDENCIES:
   - Brightcove-Player-Core/dynamic
@@ -41,7 +41,6 @@ DEPENDENCIES:
   - Kingfisher
   - UserKit (from `../../mStage-UserKit-iOS-SDK`)
   - UserKitIdentity (from `../../mStage-UserKit-iOS-SDK`)
-  - WebViewJavascriptBridge (~> 6.0)
 
 EXTERNAL SOURCES:
   UserKit:
@@ -60,6 +59,7 @@ SPEC CHECKSUMS:
   FBSDKShareKit: b7b5002833a4104fbecad75e8e4e082e91c7a08a
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
+  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
   UserKit: 1d185a4e80d841a1ed67cf052b165498d6c13911
   UserKitIdentity: b766d7fc2b9afa71440f7c03813e9b825ee0e49e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
