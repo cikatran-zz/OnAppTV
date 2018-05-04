@@ -6,7 +6,7 @@ export const timeFormatter = (time) => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
     let day = date.getDate()
-    let month = date.getMonth() + 1
+    let month = date.getMonth()
     return (monthNames[month] + " " + (day < 10 ? '0' + day : day)) + " - " + ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes))
 };
 
