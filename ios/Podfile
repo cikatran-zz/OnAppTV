@@ -12,7 +12,6 @@ target 'OnAppTV' do
 
   # Pods for OnAppTV
   pod 'Brightcove-Player-Core/dynamic'
-  pod 'WebViewJavascriptBridge', '~> 6.0'
   pod 'lottie-ios'
   pod 'UserKit', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
   pod 'UserKitIdentity', :git => 'git@github.com:iamkaiwei/userkit-iOS-SDK.git', :tag => '0.19.10'
