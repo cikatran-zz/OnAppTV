@@ -27,9 +27,9 @@ PODS:
     - FBSDKCoreKit (~> 4.33.0)
   - IQKeyboardManagerSwift (4.0.13)
   - Kingfisher (4.7.0)
+  - UserKit (0.19.11)
+  - UserKitIdentity (0.19.11):
   - lottie-ios (2.5.0)
-  - UserKit (0.19.10)
-  - UserKitIdentity (0.19.10):
     - UserKit
 
 DEPENDENCIES:
@@ -39,25 +39,14 @@ DEPENDENCIES:
   - FacebookShare
   - IQKeyboardManagerSwift (= 4.0.13)
   - Kingfisher
-  - lottie-ios
-  - UserKit (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
-  - UserKitIdentity (from `git@github.com:iamkaiwei/userkit-iOS-SDK.git`, tag `0.19.10`)
+  - UserKit (from `../../mStage-UserKit-iOS-SDK`)
+  - UserKitIdentity (from `../../mStage-UserKit-iOS-SDK`)
 
 EXTERNAL SOURCES:
   UserKit:
-    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
-    :tag: 0.19.10
+    :path: ../../mStage-UserKit-iOS-SDK
   UserKitIdentity:
-    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
-    :tag: 0.19.10
-
-CHECKOUT OPTIONS:
-  UserKit:
-    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
-    :tag: 0.19.10
-  UserKitIdentity:
-    :git: git@github.com:iamkaiwei/userkit-iOS-SDK.git
-    :tag: 0.19.10
+    :path: ../../mStage-UserKit-iOS-SDK
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
@@ -71,9 +60,10 @@ SPEC CHECKSUMS:
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
-  UserKit: f55d1a8b5f485d33e0f809cf53665c5f9fe62dd2
-  UserKitIdentity: 92784613ae918091b3d29628639414bbed2895a2
+  UserKit: 1d185a4e80d841a1ed67cf052b165498d6c13911
+  UserKitIdentity: b766d7fc2b9afa71440f7c03813e9b825ee0e49e
+  WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: fb459285ec508ccc639a2f54ac4d64c77e40a3eb
+PODFILE CHECKSUM: 045b111f3856ec81269e6ed059faa1f0996a76a2
 
 COCOAPODS: 1.4.0
