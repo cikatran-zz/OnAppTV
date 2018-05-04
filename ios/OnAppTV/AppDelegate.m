@@ -15,6 +15,7 @@
 #import "Orientation.h"
 #import "OnAppTV-Swift.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "BrightcoveViewController.h"
 
 @implementation AppDelegate
 
@@ -65,10 +66,6 @@
     [[UserKitModule sharedInstance] addDeviceToken:deviceToken];
 }
 
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    return [Orientation getOrientation];
-}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     [OANotificationCenter.sharedInstance receiveNotificationWithUserInfo: userInfo];
 }
@@ -89,6 +86,22 @@
                                                           openURL:url
                                                 sourceApplication:sourceApplication
                                                        annotation:annotation];
+}
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    UIViewController *presenterViewController = [[window rootViewController] presentedViewController];
+    if ([presenterViewController isKindOfClass:[UINavigationController class]]) {
+        presenterViewController = [[((UINavigationController *)presenterViewController) topViewController] presentedViewController];
+    }
+    
+    if ([presenterViewController isKindOfClass:[BrightcoveViewController class]]) {
+        if ([presenterViewController isBeingDismissed]) {
+            return UIInterfaceOrientationMaskPortrait;
+        }
+        return UIInterfaceOrientationMaskLandscape;
+    }
+    
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

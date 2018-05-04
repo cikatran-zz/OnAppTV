@@ -35,7 +35,6 @@ export default class Book extends React.Component {
                     })
                 }
             })
-
         });
     }
 

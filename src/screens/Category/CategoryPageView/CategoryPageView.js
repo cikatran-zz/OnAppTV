@@ -9,6 +9,7 @@ import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
 import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
+import {getImageFromArray} from "../../../utils/images";
 
 class CategoryPageView extends React.PureComponent{
     constructor(props){
@@ -18,35 +19,12 @@ class CategoryPageView extends React.PureComponent{
     };
     _keyExtractor = (item, index) => item.id;
 
-    _getImage = (item) => {
-        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
-        if (item.originalImages.length > 0) {
-            image = item.originalImages[0].url;
-        }
-        return image;
-    }
-
-    _getLandscapeImage = (item)=> {
-        let image = 'http://www.pixedelic.com/themes/geode/demo/wp-content/uploads/sites/4/2014/04/placeholder4.png';
-        if (item.originalImages.length > 0) {
-            let landscapes = item.originalImages.filter(x=>(x.name === "landscape"));
-            if (landscapes.length > 0 ) {
-                image = landscapes[0].url;
-            } else {
-                image = item.originalImages[0].url;
-            }
-        }
-
-
-        return image;
-    }
-
     _renderSlotMachines = ({item}) => {
         return (
 
                 <View style={styles.slotMachineContainer}>
                 { item.map((it, index)=> {
-                    let image = this._getLandscapeImage(it);
+                    let image = getImageFromArray(item.originalImages, 'feature', 'landscape');
                     return (
                         <TouchableOpacity onPress={()=>this.props.onVideoPress(it,false)}>
                             <Image
@@ -60,10 +38,7 @@ class CategoryPageView extends React.PureComponent{
         )
     }
     _renderOnLiveItem = ({item}) => {
-        let image = 'https://ninjaoutreach.com/wp-content/uploads/2017/03/Advertising-strategy.jpg';
-        if (item.videoData.originalImages.length > 0) {
-            image = item.videoData.originalImages[0].url;
-        }
+        let image = getImageFromArray(item.videoData.originalImages, 'landscape', null);
         let genres = '';
         if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
             item.videoData.genresData.forEach((genre, index) => {
@@ -105,7 +80,7 @@ class CategoryPageView extends React.PureComponent{
         return (
             <TouchableOpacity onPress={()=>this.props.onVideoPress(item,false)}>
                 <View style={styles.vodThumbnailContainer}>
-                    <VideoThumbnail style={styles.vodVideo} showProgress={false} imageUrl={this._getImage(item)}/>
+                    <VideoThumbnail style={styles.vodVideo} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', null)}/>
                     <View style={{flexDirection: 'column', marginTop: 0, paddingRight: 14, flex: 1}}>
                         <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
                         <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>

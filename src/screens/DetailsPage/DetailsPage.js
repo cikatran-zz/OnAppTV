@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react'
 import {
     Dimensions,
     FlatList,
-    Image, Modal, NativeModules,
+    Image, Linking, Modal, NativeModules,
     Platform,
     SectionList, Share,
     StatusBar,
@@ -18,6 +18,7 @@ import {rootViewTopPadding} from "../../utils/rootViewPadding";
 import {getChannel, getWatchingHistory} from "../../api";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
+import {getImageFromArray} from "../../utils/images";
 
 export default class DetailsPage extends React.Component {
 
@@ -194,10 +195,7 @@ export default class DetailsPage extends React.Component {
 
     _renderNextInChannelItem = ({item}) => {
         let data = item.videoData;
-        let url = '';
-        if (data.originalImages != null && data.originalImages.length > 0) {
-            url = data.originalImages[0].url ? data.originalImages[0].url : '';
-        }
+        let url = getImageFromArray(data.originalImages, 'landscape', 'feature');
         return (
             <View style={{flexDirection: 'column',
                             marginLeft: 8,
@@ -269,7 +267,7 @@ export default class DetailsPage extends React.Component {
         }
         else {
             return (
-                <View>
+                <View style={{marginBottom: 36}}>
                     <View style={styles.listHeader}>
                         <View style={styles.nextButtonContainer}>
                             {this._renderPinkIndicatorButton()}
@@ -297,7 +295,7 @@ export default class DetailsPage extends React.Component {
                         onPress={() => this._onPress(item)}>
                         <Image
                             style={styles.videoThumbnail}
-                            source={{uri: videoData.originalImages.length > 0 ? videoData.originalImages[0].url : fakeBannerData.url}}/>
+                            source={{uri: getImageFromArray(videoData.originalImages, 'landscape', 'feature')}}/>
                     </TouchableOpacity>
                     <View style={styles.itemInformationContainer}>
                         <Text style={styles.itemTitle}
@@ -310,10 +308,14 @@ export default class DetailsPage extends React.Component {
                             style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
                     </View>
                     <View style={styles.itemActionsContainer}>
-                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
+                        <TouchableOpacity onPress={() => {
+                            this.alertVC.setState({isShow: true, message: "Comming soon"})
+                        }}>
                             <Image source={require('../../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Comming soon"})}}>
+                        <TouchableOpacity onPress={() => {
+                            this.alertVC.setState({isShow: true, message: "Comming soon"})
+                        }}>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
                         </TouchableOpacity>
                     </View>
@@ -355,7 +357,45 @@ export default class DetailsPage extends React.Component {
             }
             else return false
         }
-    }
+    };
+
+    _renderAppSection = (image, title, description, url) => {
+        return (
+            <View style={{flexDirection: 'column', marginHorizontal: 15, marginBottom: 36, alignItems: 'flex-start'}}>
+                <PinkRoundedLabel style={{marginBottom: 21}} text={"APP'S"}/>
+                <View style={styles.appSectionView}>
+                    <Image source={{uri: (image == null) ? 'https://i.imgur.com/7eKo6Q7.png' : image}} style={styles.appImage}/>
+                    <View style={styles.appTextView}>
+                        <Text style={styles.videoTitleText}>{title}</Text>
+                        <Text style={styles.videoDescription}>{description}</Text>
+                    </View>
+                    <TouchableOpacity onPress={()=> Linking.openURL(url)} style={{marginRight: 0, marginLeft: 'auto', flexDirection: 'row', justifyContent: 'flex-end'}}>
+                        <View style={styles.getButtonView}>
+                            <Text style={styles.getButtonText}>GET</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    };
+
+    // APPS
+    _renderApps = ({item}) => {
+        if (Platform.OS === "ios") {
+            if (item.app_ios_url === "" || item.app_ios_url === null) {
+                return null
+            } else {
+                return this._renderAppSection(item.app_ios_image, item.app_ios_name, item.app_ios_description, item.app_ios_url);
+            }
+        } else {
+            if (item.app_android_url === "" || item.app_android_url === null) {
+                return null
+            } else {
+                return this._renderAppSection(item.app_android_image, item.app_android_name, item.app_android_description, item.app_android_url);
+            }
+        }
+
+    };
 
     _shareExecution = (title, url) => {
         let content = {
@@ -479,7 +519,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 21
     },
     bannerInfoContainer: {
         width: '90%',
@@ -528,8 +569,7 @@ const styles = StyleSheet.create({
     },
     listHeader: {
         width: '100%',
-        flexDirection: 'row',
-        marginTop: 25
+        flexDirection: 'row'
     },
     nextInChannelContainer: {
         borderRadius: 4,
@@ -547,6 +587,37 @@ const styles = StyleSheet.create({
         marginTop: 18,
         color: colors.textMainBlack,
         fontSize: 15
+    },
+    appSectionView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%'
+    },
+    appImage: {
+        width: 87.4,
+        height: 87.4,
+        borderRadius: 22,
+        resizeMode: 'cover'
+    },
+    appTextView: {
+        marginLeft: 17,
+        marginRight: 17,
+        flexDirection: 'column'
+    },
+    getButtonText: {
+        fontSize: 11,
+        color: '#4E4E4E'
+    },
+    getButtonView: {
+        width: 57,
+        height: 26,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 3,
+        overflow: 'hidden',
+        borderColor: 'rgba(78,78,78,0.3)',
+        borderWidth:1
     }
 })
 

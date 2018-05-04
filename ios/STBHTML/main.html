@@ -11,9 +11,20 @@
 		<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
 		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/swiper.min.js"></script>
+		<script type="text/javascript">
+			var u = navigator.userAgent;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if(isAndroid) {
+				document.write("<script type='text/javascript' src='js/getSTB.js'><" + '/' + "script>");
+				$("#picID").attr("src", "img/TROPICALISLAND_42.gif");
+			} else if(isiOS) {
+				document.write("<script type='text/javascript' src='js/stbIOS.js'><" + '/' + "script>");
+				$("#picID").attr("src", "TROPICALISLAND_42.gif");
+			}
+		</script>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/config.js"></script>
-		<script type="text/javascript" src="js/getSTB.js"></script>
 		<script type="text/javascript" src="js/alert.js"></script>
 		<!--css-->
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
@@ -26,6 +37,9 @@
 	</head>
 
 	<body>
+		<section class="stb-section hide-section stb-test">
+			<button id="btn-test"> 点击</button>
+		</section>
 		<section class="stb-section stb-login">
 			<div class="animation">
 				<div class="stb-container">
@@ -48,24 +62,27 @@
 							</div>
 							<!--body-->
 							<div class="stb-content-body">
-								<div class="swiper-container">
+								<div class="swiper-container on-container">
 									<div class="swiper-wrapper">
 										<div class="swiper-slide">
 											<div class="slide-content">
-												<div class="title">The Best Of TV!</div>
-												<div class="text">The best of TV in one click!<br/>New comer?Without further ado,throw your old remote control and join us!</div>
+												<div class="title">The Best Of TV !</div>
+												<div class="text">Login and start playing on your TV without <br/>your remote control !
+												</div>
 											</div>
 										</div>
 										<div class="swiper-slide">
 											<div class="slide-content">
-												<div class="title">Do More Zap!</div>
-												<div class="text">Thanks to your second screen and your personalized guide,select your favorite programs in one click!</div>
+												<div class="title">Don't zapp anymore !</div>
+												<div class="text">Thanks to your smartphone, select your
+													<br/> best program in one click !
+												</div>
 											</div>
 										</div>
 										<div class="swiper-slide">
 											<div class="slide-content">
-												<div class="title">Share It!</div>
-												<div class="text">Don’t look the TV alone anymore,share your favorites or comment what you are watching.Your friends look like you,follow them!</div>
+												<div class="title">Share !</div>
+												<div class="text">Watch on TV or on your Mobile </div>
 											</div>
 										</div>
 									</div>
@@ -74,12 +91,18 @@
 							</div>
 							<!--footer-->
 							<div class="stb-content-footer">
-								<div class="stb_button">
-									<!--<button onclick="SkipTo()">Login</button>--><button data-toggle="modal" href="#ConsentModal" tabindex="-1">Log In</button></div>
-								<div class="line-top"></div>
+								<!--<div class="stb_button">-->
+								<button class="button-a btn_party">Continue with Facebook</button>
+								<!--</div>-->
+								<!--<div class="stb_button">-->
+								<button class="button-a" data-toggle="modal" href="#ConsentModal" tabindex="-1">Create account</button>
+								<!--</div>-->
+								<div class="line-top">
+									<p>Continue as Guest</p>
+								</div>
 								<div class="footer-line">
-									<div class="footer-left"><span class="left-text">©name of the app</span></div>
-									<div class="footer-right "><span>sitedelapp.com</span></div>
+									<div class="footer-left"><span class="left-text">by Elia Media &amp; Technology</span></div>
+									<div class="footer-right "><span>onstb.com</span></div>
 								</div>
 							</div>
 						</div>
@@ -101,19 +124,50 @@
 				</div>
 			</div>
 		</section>
+		<section class="stb-section hide-section stb-account">
+			<div class="stb-modal-content  modal-content content">
+				<!--header-->
+				<div class="modal-header stb-modal-header menu">
+					<div class="modal-title">
+						<p>CREATE ACCOUNT</p>
+					</div>
+					<a href="#" id="dismiss-signIn" class="close"></a>
+				</div>
+				<!--content-->
+				<div class="stb-modal-body_account">
+					<div class="modal-form">
+						<div class="LoginForm text-group">
+							<input type="text" class="" placeholder="E-mail" />
+							<input type="password" placeholder="Password" />
+							<input type="text" class="" placeholder="Name" />
+							<input type="text" placeholder="First name" />
+							<select id="age">
+								<option value="" selected="selected">Age</option>
+							</select>
+							<select id="sex">
+								<option value="" selected="selected">Sex</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="stb-modal-footer">
+					<button class="button-a" id="creatAccount">Login</button>
+				</div>
+			</div>
+		</section>
 		<section class="stb-section hide-section stb-signIn">
 			<!--模态框-->
 			<div class="animsition" id="SignInModal" tabindex="-1">
 				<div class="stb-modal-content  modal-content content">
 					<!--header-->
-					<div class="modal-header sign-header stb-modal-header menu">
+					<div class="modal-header stb-modal-header menu">
 						<div class="modal-title">
 							<p>SIGN IN</p>
 						</div>
 						<a href="#" id="dismiss-signIn" class="close"></a>
 					</div>
 					<!--body-->
-					<div class="modal-body stb-modal-body sign-body">
+					<div class="modal-body stb-modal-body">
 						<div class="modal-form">
 							<p>Identify yourself with your subscriber code</p>
 							<div class="LoginForm"><input type="text" class="" placeholder="E-mail" /><input type="password" placeholder="Password" /></div>
@@ -127,7 +181,7 @@
 						</div>
 					</div>
 					<!--footer-->
-					<div class="modal-footer stb-modal-footer sign-footer">
+					<div class="modal-footer stb-modal-footer">
 						<div class="SelectList">
 							<div class="free">1 MONTH FREE*</div><button class="price">19.99€/month</button>
 							<div class="commitment">Without commitment</div>
@@ -157,7 +211,8 @@
 									<div class="opt"><input class="magic-radio" type="radio" name="sex" value="Mrs" /><label name="Mrs" for="Mrs">Mrs</label></div>
 									<div class="opt"><input class="magic-radio" type="radio" name="sex" value="Mr." checked="checked" /><label name="Mr." for="Mr.">Mr.</label></div>
 								</div>
-								<div class="text-group"><input type="email" id="Email" placeholder="E-mail (personnel)" /><input type="text" id="name" placeholder="Name" /><input type="text" id="firstName" placeholder="First name" />
+								<div class="text-group"><input type="email" id="Email" placeholder="E-mail (personnel)" />
+									<input type="text" id="name" placeholder="Name" /><input type="text" id="firstName" placeholder="First name" />
 									<select id="age">
 										<option value="" selected="selected">Age</option>
 									</select>
@@ -187,10 +242,84 @@
 				</div>
 			</div>
 		</section>
+		<section class="stb-section hide-section stb-notification">
+			<div class="selectcoder">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn-gb-1.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="modal fade" id="Notification-model" tabindex="-1" role="dialog">
+					<div class="modal-content">
+						<div class="modal-header" style="border-bottom: 0px;padding: 10px;">
+							<h6 class="modal-title">ON Would<br/>Like To Send You<br/>Notifications</h6></div>
+						<div class="modal-body">
+							<p>Notifications may include alerts,sounds and icon badges.These can be configured in settings.</p>
+						</div>
+						<div class="modal-footer menu" style="border-top: 0px;">
+							<a class="modal-a stb-modal-allow" id="showNotification">Allow</a>
+							<a class="modal-a dismissModal stb-modal-disAllow" id="hideNotification">Don’t Allow</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-profile">
+			<div class="selectcoder">
+				<!--背景图片-->
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
+					<div class="mask"></div>
+				</div>
+				<div class="HIGContent">
+					<div class="con-body-top profile-blur con-list">
+						<span class="stb-title">Your profile has been created</span>
+						<div class="stb-list">
+							<ul class="profile_list">
+								<li><span class="stb-name">Jean </span>
+									<input type="checkbox" id='obj1' class="mui-switch mui-switch-anim dire" name="WifiName" /></li>
+								<li><span class="stb-name">Kids </span>
+									<input type="checkbox" id='obj1' class="mui-switch mui-switch-anim dire" name="WifiName" /></li>
+							</ul>
+							<div class="">
+								<button class="button-a btn_trans" id="profile">Add profil</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="stb-section hide-section stb-newPrfile">
+			<div class="stb-modal-content  modal-content content">
+				<!--header-->
+				<div class="modal-header stb-modal-header menu">
+					<div class="modal-title">
+						<p>CREATE ACCOUNT</p>
+					</div>
+					<a href="#" id="dismiss-signIn" class="close"></a>
+				</div>
+				<!--content-->
+				<div class="stb-modal-body_account">
+					<div class="modal-form">
+						<div class="LoginForm text-group">
+							<input type="text" class="" placeholder="Name" />
+							<input type="text" placeholder="First name" />
+							<select id="age">
+								<option value="" selected="selected">Age</option>
+							</select>
+							<select id="sex">
+								<option value="" selected="selected">Sex</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="stb-modal-footer">
+					<button class="button-a" id="confirmAccount">Confirm</button>
+				</div>
+			</div>
+		</section>
 		<section class="stb-section hide-section stb-revolution">
 			<div class="selectcoder">
 				<!--背景图片-->
-				<div class="Launch-img"><img src="img/conn_bg.png" id="img7" />
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
 					<div class="mask"></div>
 				</div>
 				<div class="HIGContent ">
@@ -219,10 +348,10 @@
 						<!--<a id="close"class="close"></a>-->
 					</div>
 					<div class="con-body">
-						<div class="con-body-top con-list"><span class="stb-title">Detected STB</span>
+						<div class="con-body-top list-stb con-list"><span class="stb-title">Detected STB</span>
 							<div class="stb-list">
 								<ul class="selectedname">
-									<!--<li><span class="stb-name">02438478</span><input type="checkbox" id='obj1' class="mui-switch mui-switch-anim dire" name="WifiName" /></li>-->
+									<li><span class="stb-name">02438478</span><input type="checkbox" id='obj1' class="mui-switch mui-switch-anim dire" name="WifiName" /></li>
 								</ul>
 							</div>
 						</div>
@@ -231,17 +360,19 @@
 								<ul class="listul"></ul>
 							</div>
 						</div>
-						<div class="con-describe">Push white button to select a STB<br/>or red button to power on a STB</div>
+						<div class="con-describe">Push white button to select a STB<br/> or red button to power on a STB
+						</div>
 					</div>
-					<div class="con-foot menu"><button class="btn-stb" id="btn-conn" value="Add Decoder">Add Decoder</button>
-						<!--<button class="btn btn-skip"id="btn-skip"value="skip">Skip</button>--></div>
+					<div class="con-foot menu">
+						<button class="btn-stb" id="btn-conn" value="Add Decoder">Add Decoder</button>
+					</div>
 				</div>
 			</div>
 		</section>
 		<section class="stb-section hide-section stb-selectDocoder">
 			<div class="Selector">
 				<!--背景图片-->
-				<div class="Launch-img"><img src="img/conn_bg.png" id="img2" />
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
 					<div class="mask"></div>
 				</div>
 				<div class="HIGContent">
@@ -328,7 +459,7 @@
 			</div>
 		</section>
 		<section class="stb-section hide-section stb-connectLoad">
-			<div class="Launch-img"><img src="img/conn_bg.png" id="img3" />
+			<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
 				<div class="mask"></div>
 			</div>
 			<div class="HIGContent">
@@ -354,7 +485,7 @@
 		<section class="stb-section hide-section stb-channelList">
 			<div class="selectcoder">
 				<!--背景图片-->
-				<div class="Launch-img"><img src="img/conn_bg.png" id="img4" />
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
 					<div class="mask"></div>
 				</div>
 				<div class="HIGContent">
@@ -404,7 +535,7 @@
 			</div>
 		</section>
 		<section class="stb-section hide-section stb-PIN">
-			<div class="Launch-img"><img src="img/conn_bg.png" id="img5" />
+			<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
 				<div class="mask"></div>
 			</div>
 			<div class="HIGContent enter">
@@ -439,7 +570,7 @@
 		<section class="stb-section hide-section stb-parental">
 			<div class="Parental">
 				<!--背景图片-->
-				<div class="Launch-img"><img src="img/conn_bg.png" id="img6" />
+				<div class="Launch-img"><img src="img/conn_bg.png" id="img1" />
 					<div class="mask"></div>
 				</div>
 				<div class="HIGContent">
@@ -492,10 +623,20 @@
 		</section>
 		<script>
 			$(function() {
-             	$("#dismiss-signIn").click(function() {
+				//				$("#btn-test").click(function(){
+				//					testClick();
+				//					$(".stb-test").addClass("hide-section");
+				//					$(".stb-selectSTB").removeClass("hide-section");
+				//				})
+				$("#creatAccount").click(function() {
+					$(".stb-account").addClass("hide-section");
+					$(".stb-register").removeClass("hide-section");
+				})
+				$("#dismiss-signIn").click(function() {
 					$(".stb-signIn").addClass("hide-section");
 					$(".stb-login").removeClass("hide-section");
 				});
+				$("#face-Agreed").click(function() {})
 				$("#closeModal").click(function() {
 					$(".stb-register").addClass("hide-section");
 					$(".stb-signIn").removeClass("hide-section");
@@ -516,9 +657,34 @@
 				});
 				$("#Validates").click(function() {
 					$(".stb-register").addClass("hide-section");
+					$(".stb-notification").removeClass("hide-section");
+					$('#Notification-model').modal('show');
+					//					
+				});
+				$("#showNotification").click(function() {
+					$("#Notification-model").modal("hide");
+					$(".stb-notification").addClass("hide-section");
+					$(".stb-profile").removeClass("hide-section");
+					profileSize();
+					selectProfile();
+				})
+				$("#hideNotification").click(function() {
+					$("#Notification-model").modal("hide");
+					$(".stb-notification").addClass("hide-section");
+					$(".stb-profile").removeClass("hide-section");
+					profileSize();
+					selectProfile();
+				})
+				$("#profile").click(function() {
+					$(".stb-profile").addClass("hide-section");
+					$(".stb-newPrfile").removeClass("hide-section");
+					//					stbListInfo();
+				})
+				$("#confirmAccount").click(function() {
+					$(".stb-newPrfile").addClass("hide-section");
 					$(".stb-revolution").removeClass("hide-section");
 					stbListInfo();
-				});
+				})
 				$("#Next").click(function() {
 					$(".stb-channelList").addClass("hide-section");
 					$(".stb-PIN").removeClass("hide-section");
@@ -533,8 +699,7 @@
 			function clickTo() {
 				$("#ConsentModal").modal("hide");
 				$(".stb-login").addClass("hide-section");
-				$(".stb-signIn").removeClass("hide-section");
-				changeResize();
+				$(".stb-account").removeClass("hide-section")
 			}
 		</script>
 	</body>

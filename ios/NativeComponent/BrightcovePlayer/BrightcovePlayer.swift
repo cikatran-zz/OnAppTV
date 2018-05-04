@@ -47,6 +47,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     }
     
     public var onFinished: RCTDirectEventBlock = { event in }
+    public var onDone: ()->Void = {}
     
     
     fileprivate var playbackService: BCOVPlaybackService?
@@ -59,6 +60,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     
     fileprivate var filmstrip: [Double: ImageResource] = [Double: ImageResource]()
     fileprivate var lastPosition: Double = 0
+    fileprivate var isStopped: Bool = false
     
     // MARK: - Life cycle
     public override init(frame: CGRect) {
@@ -77,10 +79,12 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     
     deinit {
         self.stop()
+        BrightcovePlayerManagager.sharedInstance.removePlayer()
     }
     
     public override func removeFromSuperview() {
         self.stop()
+        BrightcovePlayerManagager.sharedInstance.removePlayer()
         super.removeFromSuperview()
     }
     
@@ -89,25 +93,53 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     func setup() {
         
         // Set up playback controller
-        playbackController = BCOVPlayerSDKManager.shared().createPlaybackController()
-        playbackController?.delegate = controlsView
-        playbackController?.isAutoAdvance = true
-        playbackController?.isAutoPlay = true
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.playbackController = BCOVPlayerSDKManager.shared().createPlaybackController()
+                self.playbackController?.delegate = self.controlsView
+                self.playbackController?.isAutoAdvance = true
+                self.playbackController?.isAutoPlay = false
+                
+                // Set up player view
+                self.playerView = BCOVPUIPlayerView(playbackController: self.playbackController!, options: nil, controlsView: BCOVPUIBasicControlView.withVODLayout())
+                self.playerView?.frame = self.bounds
+                self.playerView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                self.playerView?.delegate = self
+                self.playerView?.playbackController = self.playbackController
+                self.playerView?.controlsView.alpha = 0
+                
+                self.addSubview(self.playerView!)
+                
+                self.initControlsView()
+                self.initSpinner()
+                self.initRippleAnimation()
+                self.initTapGestures()
+            }
+        } else {
+            self.playbackController = BCOVPlayerSDKManager.shared().createPlaybackController()
+            self.playbackController?.delegate = self.controlsView
+            self.playbackController?.isAutoAdvance = true
+            self.playbackController?.isAutoPlay = true
+            
+            // Set up player view
+            self.playerView = BCOVPUIPlayerView(playbackController: self.playbackController!, options: nil, controlsView: BCOVPUIBasicControlView.withVODLayout())
+            self.playerView?.frame = self.bounds
+            self.playerView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.playerView?.delegate = self
+            self.playerView?.playbackController = self.playbackController
+            self.playerView?.controlsView.alpha = 0
+            
+            self.addSubview(self.playerView!)
+            
+            self.initControlsView()
+            self.initSpinner()
+            self.initRippleAnimation()
+            self.initTapGestures()
+        }
         
-        // Set up player view
-        playerView = BCOVPUIPlayerView(playbackController: playbackController!, options: nil, controlsView: BCOVPUIBasicControlView.withVODLayout())
-        playerView?.frame = self.bounds
-        playerView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        playerView?.delegate = self
-        playerView?.playbackController = playbackController
-        playerView?.controlsView.alpha = 0
+        weak var weakSelf = self
+        BrightcovePlayerManagager.sharedInstance.addPlayer(weakSelf)
         
-        self.addSubview(playerView!)
-        
-        self.initControlsView()
-        self.initSpinner()
-        self.initRippleAnimation()
-        self.initTapGestures()
         
         // Set up control blocks
         controlsView.pauseBlock = {
@@ -145,7 +177,9 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
         }
         
         controlsView.stopBlock = {
+            self.isStopped = true
             self.onFinished([:])
+            self.onDone()
         }
         
         controlsView.rewindAnimationBlock = {
@@ -243,16 +277,20 @@ extension BrightcovePlayer {
         }
     }
     
-    fileprivate func stop() {
+    public func stop() {
         playbackController?.pause()
         playbackController?.setVideos(NSArray())
         controlsView.stop()
+        self.isStopped = true
         storeVideoToUserKit()
     }
     
     fileprivate func requestVideo() {
         if let playbackService = self.playbackService, let videoId = self.videoId {
             playbackService.findVideo(withVideoID: videoId, parameters: [:], completion: { (video, jsonResponse, error) in
+//                if (self.isStopped) {
+//                    return
+//                }
                 if let v = video {
                     if let cuePoints = video?.cuePoints.array() as? [BCOVCuePoint] {
                         self.setUpCuePoints(cuePoints: cuePoints)

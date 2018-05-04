@@ -121,6 +121,14 @@ public class CustomBrightcovePlayer extends FrameLayout implements Component {
         playVideoWithReactParams();
     }
 
+    public void setIds(String videoKey, String accountId, String policyKey, HashMap<String, Object> metaData) {
+        this.videoId = videoKey;
+        this.accountId = accountId;
+        this.policyKey = policyKey;
+        this.metadata = metaData;
+        playVideoWithReactParams();
+    }
+
     public String getPolicyKey() {
         return policyKey;
     }

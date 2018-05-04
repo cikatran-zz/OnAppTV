@@ -9,13 +9,31 @@
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
 		<script src="bootstrap/js/bootstrap.js"></script>
 		<!--css-->
-		<link type="text/css" rel="stylesheet" href="css/config.css" />
+		<link type="text/css" rel="stylesheet" href="css/main.css" />
 		<!--js-->
-		<script type="text/javascript" src="js/On.js" ></script>
+		<script type="text/javascript" src="js/jquery-2.1.3.min.js" ></script>
+    <script type="text/javascript" src="js/On.js" ></script>
 		<title>On</title>
+    <style type="text/css">
+    .body{position: relative;}
+    .HIGContent-top{height:40px;width: 100%;position: absolute;background: #eeeeee;display:flex;bottom: 0;left: 0;}
+    .top-title{width:33%;text-align: center;vertical-align:middle;line-height: 40px;font-style: toggle(italic,normal);}
+    .checked{background-color: #FC355B;}
+    .HIGContent{height: 95%;height: calc(100% - 40px);height:-webkit-calc(100% - 40px);height:-moz-calc(100% - 40px);}
+    .HIGContent_checked{display: block;}
+    .HIGContent_notCheck{display: none;}
+    .TBContent{width: 100%;height: 100%;background-color: #FFE4B5;}
+    .view{width: 100%;height: 50%;background: #FFFFFF;text-align: center;}
+    .view>p:nth-child(5){ -webkit-appearance:listbox;-moz-appearance:listbox;}
+    .view>p:nth-child(6){ -webkit-appearance:listitem;-moz-appearance:listitem;}
+    .view>p:nth-child(2){-webkit-appearance:searchfield;-moz-appearance:searchfield;}
+    .view>p:nth-child(3){-webkit-appearance:textarea;-moz-appearance:textarea;}
+    .view>p:nth-child(4){-webkit-appearance:menulist;-moz-appearance:menulist;}
+    .view>h1{text-indent: -9999px;background: url(img/back.png) no-repeat 100%;width: 50px;height: 30px;text-align: center;vertical-align: middle;}
+    </style>
 	</head>
 	<body>
-     	<div class="STBContainer">
+     	<div class="STBContainer" style="display:none">
      		<div class="STBContainer-body">
      			<span id="" class="content-main">
      					ON
@@ -50,6 +68,26 @@
               
              
             </div>
-     	</div>	
+     	</div>
+      <div class="HIGContent HIGContent_checked">
+        <div class="TBContent">
+          <div class="view">
+            <pre>标题</pre>
+            <p>显示的界面中的信息</p>
+            <p> 我是一个段落 p 元素</p>
+            <p> 我是一个段落 p 元素</p>
+            <p> 我是一个段落 p 元素</p>
+            <p> 我是一个段落 p 元素</p>
+            <p> 我是一个段落 p 元素</p>
+            <h1></h1>
+          </div>
+          <div></div>
+        </div>
+      </div>
+      <div class="HIGContent-top">
+          <div class="top-title checked">Page1</div>
+          <div class="top-title">Page2</div>
+          <div class="top-title">Page3</div>
+        </div>
 	</body>
 </html>
