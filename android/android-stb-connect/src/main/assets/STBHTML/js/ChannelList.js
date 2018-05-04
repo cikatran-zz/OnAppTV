@@ -20,14 +20,13 @@ var timer;
 var lowIndex;
 var highIndex;
 window.onload = function() {
-	setTimeout('getSatelliteList()',1000);
+	window.WebViewJavascriptBridge.callHandler('Search');
 	timer = setInterval(function() {
 		var jsonobj = {
 			"carrierID": carrierID
 		};
 		var data = JSON.stringify(jsonobj);
-		getTuneTransPorter(data);
-		
+		window.WebViewJavascriptBridge.callHandler('HIG_TuneTransporter', data);
 	}, 1500);
 }
 
@@ -38,9 +37,6 @@ function setupWebViewJavascriptBridge(callback) {
 	if(window.WVJBCallbacks) {
 		return window.WVJBCallbacks.push(callback);
 	}
-	document.addEventListener('WebViewJavascriptBridgeReady', function() {
-		callback(WebViewJavascriptBridge)
-	}, false);
 	window.WVJBCallbacks = [callback];
 	var WVJBIframe = document.createElement('iframe');
 	WVJBIframe.style.display = 'none';
@@ -51,10 +47,9 @@ function setupWebViewJavascriptBridge(callback) {
 	}, 0)
 }
 
-function getSatelliteList(){
-	var Str = "传递给 java 的数据";
-	window.WebViewJavascriptBridge.callHandler("HIG_GetSatelliteList", Str, function(responseData) {
-			var jsonObj = JSON.parse(responseData);
+setupWebViewJavascriptBridge(function(bridge) {
+	bridge.registerHandler('HIG_GetSatelliteList', function(data, responseCallback) {
+		var jsonObj = JSON.parse(data);
 		for(var i = 0; i < jsonObj.length; i++) {
 			if(jsonObj[i].satelliteID == SatelliteID) {
 				StateModal = jsonObj[i];
@@ -83,11 +78,9 @@ function getSatelliteList(){
 				}
 			}
 		}
-	});
-}
-function getTuneTransPorter(datas){
-	window.WebViewJavascriptBridge.callHandler('HIG_TuneTransporter', datas,function(responseData){
-		var Obj = JSON.parse(responseData);
+	})
+	bridge.registerHandler('HIG_GetSignal', function(data, responseCallback) {
+		var Obj = JSON.parse(data);
 		if(Obj.return == "1") {
 			var progressWidth = $(".progress").width();
 			//	   alert(Obj.quality +" vbfv" + Obj.signal);
@@ -96,53 +89,7 @@ function getTuneTransPorter(datas){
 			$(".Strength").width(progressWidth * Obj.signal * 0.01);
 		}
 	})
-}
-function setSatelliteParam(datas){
-	window.WebViewJavascriptBridge.callHandler('HIG_SetSatelliteParam', datas,null);
-}
-//setupWebViewJavascriptBridge(function(bridge) {
-//	bridge.registerHandler('HIG_GetSatelliteList', function(data, responseCallback) {
-//		var jsonObj = JSON.parse(data);
-//		for(var i = 0; i < jsonObj.length; i++) {
-//			if(jsonObj[i].satelliteID == SatelliteID) {
-//				StateModal = jsonObj[i];
-//				listArray.push(StateModal.transponderModelArr);
-//				var list = $(".list li .paramater");
-//				for(var i = 0; i < list.length; i++) {
-//					//var channel =  $(list[i]).find("paramater");
-//					var channelable = $(list[i]).find("label")[0];
-//					var nameLable = StateModal[nameList[i]];
-//					if(i == 2) {
-//						var nameLableList = listArray[i];
-//						var lowLoF = StateModal.lowLOF == 0 ? nameLableList[0][0] : StateModal.lowLOF;
-//						var highLOF = StateModal.highLOF == 0 ? nameLableList[1][0] : StateModal.highLOF;
-//						$(channelable).html(lowLoF + "/" + highLOF);
-//						lowIndex = nameLableList[0].indexOf(lowLoF);
-//						highIndex = nameLableList[1].indexOf(highLOF);
-//						StateModal.lowLOF = lowLoF;
-//						StateModal.highLOF = highLOF;
-//					} else if(i == list.length - 1) {
-//						//			nameLable = stateModel[nameList[i]];
-//						$(channelable).html(listArray[i][0].frequency + "/" + listArray[i][0].symbolRate);
-//					} else {
-//						$(channelable).html(listArray[i][nameLable]);
-//						listLab = listArray[i][listArray[nameLable]];
-//					}
-//				}
-//			}
-//		}
-//	})
-//	bridge.registerHandler('HIG_GetSignal', function(data, responseCallback) {
-//		var Obj = JSON.parse(data);
-//		if(Obj.return == "1") {
-//			var progressWidth = $(".progress").width();
-//			//	   alert(Obj.quality +" vbfv" + Obj.signal);
-//			$(".Quality").width(progressWidth * Obj.quality * 0.01);
-//			//	Strength
-//			$(".Strength").width(progressWidth * Obj.signal * 0.01);
-//		}
-//	})
-//})
+})
 
 $(function() {
 	SatelliteID = $.query.get("list");
@@ -239,12 +186,11 @@ $(function() {
 					}
 					StateModal[nameList[i]] = index;
 					$(channelLable).html(listArray[i][index]);
-					StateModal[nameList[i]] = listArray[i][index];
 				}
 			}
 		}
 		var data = JSON.stringify(StateModal);
-		setSatelliteParam(data);
+		window.WebViewJavascriptBridge.callHandler('HIG_SetSatelliteParam', data);
 	})
 	$(".btn-right").on("tap",function() {
 		var lableTitle = $(this).parent().prev()[0];
@@ -323,6 +269,6 @@ $(function() {
 
 		}
 		var data = JSON.stringify(StateModal);
-		setSatelliteParam(data);
+		window.WebViewJavascriptBridge.callHandler('HIG_SetSatelliteParam', data);
 	})
 })

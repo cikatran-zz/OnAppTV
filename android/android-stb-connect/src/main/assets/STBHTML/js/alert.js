@@ -45,20 +45,20 @@
         $("#mb_msg").css({ padding: '20px', lineHeight: '.4rem',  
             borderBottom: '1px dashed #DDD', fontSize: '.45rem'  
         });  
-        $("#mb_ico").css({ display: 'block', position: 'absolute', right: '5px', top: '5px',  
-            textAlign: 'center', width:"10px",height:"10px",backgroundColor:'transparent',
-            lineHeight: '16px', borderRadius: '12px',  
+        $("#mb_ico").css({ display: 'block', position: 'absolute', right: '5px', top: '5px',  textAlign: 'center', width:"10px",height:"10px",
+            lineHeight: '16px', borderRadius: '20px' 
         });  
+        $(".close").css({right:"0.5rem",position:"absolute","margin-top":'5px'});
         $("#mb_btnbox").css({ margin: '15px 0 10px 0', textAlign: 'center'});  
         $("#mb_btn_ok,#mb_btn_no").css({ width: '2.667rem', height: '0.8rem', fontSize:".377rem",color: 'black', border: 'none'});  
         $("#mb_btn_ok").css({ backgroundColor: '#FC355B',"border-radius":"30px","outline":"none"});  
         $("#mb_btn_no").css({ backgroundColor: 'gray', marginLeft: '20px' });  
-        //右上角关闭按钮hover样式  
-        $("#mb_ico").hover(function () {  
-            $(this).css({ backgroundColor: 'Red', color: 'White' });  
-        }, function () {  
-            $(this).css({ backgroundColor: '#DDD', color: 'black' });  
-        });  
+//      //右上角关闭按钮hover样式  
+//      $("#mb_ico").hover(function () {  
+//          $(this).css({ backgroundColor: 'Red', color: 'White' });  
+//      }, function () {  
+//          $(this).css({ backgroundColor: '#DDD', color: 'black' });  
+//      });  
         var _widht = document.documentElement.clientWidth;  //屏幕宽  
         var _height = document.documentElement.clientHeight; //屏幕高  
         var boxWidth = $("#mb_con").width();  

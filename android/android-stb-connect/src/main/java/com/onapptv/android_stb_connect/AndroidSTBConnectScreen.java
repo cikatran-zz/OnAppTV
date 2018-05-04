@@ -1,7 +1,9 @@
 package com.onapptv.android_stb_connect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -27,6 +29,8 @@ import java.util.Map;
 import tv.hi_global.stbapi.Api;
 import tv.hi_global.stbapi.Model.ConfigureModel;
 import tv.hi_global.stbapi.implementation.Api_Implementation;
+
+import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
 /**
  * Created by oldmen on 3/20/18.
@@ -63,14 +67,15 @@ public class AndroidSTBConnectScreen extends FrameLayout {
         bWebView.getSettings().setJavaScriptEnabled(true);
 //        允许 js 弹窗
         bWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        bWebView.getSettings().setDomStorageEnabled(true);
 
 //        定义一个 Setting 记录App是第几次启动
         SharedPreferences setting = context.getSharedPreferences("com.example.STB", 0);
-        final Boolean userFirst = setting.getBoolean("isStarted", true);
-//        第一次跳转至登录界面
+        Boolean userFirst = setting.getBoolean("isStarted", true);
+////        第一次跳转至登录界面
         if(userFirst){
             setting.edit().putBoolean("isStarted", false).commit();
-            jumpPagetoLogin(false);
+            jumpPagetoLogin(true);
         } else {
             jumpPagetoLogin(false);
         }
@@ -80,19 +85,23 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_GetSTBList", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_GetMobileWifiInfo(new Api.OnMapCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+                System.out.println(data);
+                Api.sharedApi().hIG_GetMobileWifiInfo(new Api.OnMapCallbackBlock() {
                     @Override
                     public void OnMapCallback(Map map) {
-                        String ssid = (String) map.get("SSID");
-                        if ( ssid != null && !ssid.startsWith("STB")) {
-                            Api_Implementation.sharedManager().hIG_UdpOperation();
-                            Api_Implementation.sharedManager().hIG_UdpReceiveMessageInJson(new Api.OnStringCallbackBlock() {
-                                @Override
-                                public void OnStringCallback(String s) {
-                                    function.onCallBack(s);
-                                }
-                            });
+                        if(map.keySet().contains("SSID")) {
+                            String ssid =(String) map.get("SSID");
+                            if(!ssid.startsWith("STB")) {
+                                Api.sharedApi().hIG_UdpOperation();
+                                Api.sharedApi().hIG_UdpReceiveMessageInJson(new Api.OnStringCallbackBlock() {
+                                    @Override
+                                    public void OnStringCallback(String s) {
+                                        System.out.println(s);
+                                        function.onCallBack(s);
+                                    }
+                                });
+                            }
                         }
                     }
                 });
@@ -104,10 +113,11 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_UndiscoveredSTBList", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_UndiscoveredSTBListInJson(new Api.OnStringCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+                Api.sharedApi().hIG_UndiscoveredSTBListInJson(new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
+                        System.out.println(s);
                         function.onCallBack(s);
                     }
                 });
@@ -128,35 +138,40 @@ public class AndroidSTBConnectScreen extends FrameLayout {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Api_Implementation.sharedManager().hIG_ConnectSTB(objects.toString(), new Api.OnStringCallbackBlock() {
+                Api.sharedApi().hIG_ConnectSTB(objects.toString(), new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
-                        final String strings = s;
-                        try {
-                            JSONObject jObject = new JSONObject(s);
-                            if(jObject.get("return").equals("1")) {
-                                Api_Implementation.sharedManager().hIG_ParseXMLLast(context.getAssets().open("database _IBC_2017-2.xml"), new Api.OnStringCallbackBlock() {
-                                    @Override
-                                    public void OnStringCallback(String s) {
-                                        function.onCallBack(strings);
-                                        Api_Implementation.sharedManager().hIG_GetSTBConfigure(new Api.OnConfigureCallbackBlock() {
+                        function.onCallBack(s);
+                    }
+                });
+            }
+        });
+
+        bWebView.registerHandler("HIG_ParseXMLLast", new BridgeHandler() {
+            @Override
+            public void handler(String data, CallBackFunction function) {
+                try {
+                    Api.sharedApi().hIG_ParseXMLLast(context.getAssets().open("database _IBC_2017-2.xml"), new Api.OnStringCallbackBlock() {
+                        @Override
+                        public void OnStringCallback(String s) {
+                            Api.sharedApi().hIG_GetSTBConfigure(new Api.OnConfigureCallbackBlock() {
+                                @Override
+                                public void OnConfigureCallback(ConfigureModel configureModel) {
+                                    if(userFirst) {
+                                        Api.sharedApi().hIG_SetSTBConfigure(configureModel, new Api.OnSuccessCallbackBlock() {
                                             @Override
-                                            public void OnConfigureCallback(ConfigureModel configureModel) {
-                                                if(userFirst) {
-                                                    Api_Implementation.sharedManager().hIG_SetSTBConfigure(configureModel,null);
-                                                }
+                                            public void OnSuccessCallback(Boolean aBoolean, String s) {
+
                                             }
                                         });
                                     }
-                                });
-                            } else {
-                                function.onCallBack(strings);
-                            }
-                        } catch (JSONException | IOException e) {
-                            e.printStackTrace();
+                                }
+                            });
                         }
-                    }
-                });
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -165,8 +180,8 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_GetSatelliteList", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_GetSatelliteListInJson(new Api.OnStringCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+                Api.sharedApi().hIG_GetSatelliteListInJson(new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
                         function.onCallBack(s);
@@ -181,7 +196,7 @@ public class AndroidSTBConnectScreen extends FrameLayout {
         bWebView.registerHandler("HIG_SetSatelliteParam", new BridgeHandler() {
             @Override
             public void handler(String data, CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_SetSatellite(data,null);
+                Api.sharedApi().hIG_SetSatellite(data,null);
             }
         });
 
@@ -190,8 +205,8 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_TuneTransporter", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_GetSignalAfterSetFeTun(data, new Api.OnStringCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+                Api.sharedApi().hIG_GetSignalAfterSetFeTun(data, new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
                         function.onCallBack(s);
@@ -205,8 +220,8 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_GetParentalGuideRating", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_GetSTBConfigure(new Api.OnStringCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+                Api.sharedApi().hIG_GetSTBConfigure(new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
                         function.onCallBack(s);
@@ -221,7 +236,7 @@ public class AndroidSTBConnectScreen extends FrameLayout {
         bWebView.registerHandler("HIG_SetParantalGuideRating", new BridgeHandler() {
             @Override
             public void handler(String data, CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_SetParentalGuideRating(data,null);
+                Api.sharedApi().hIG_SetParentalGuideRating(data,null);
             }
         });
 
@@ -230,10 +245,10 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_CheckSTBPIN", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
+            public void handler(String data, CallBackFunction function) {
                 try {
                     JSONObject jObject = new JSONObject(data);
-                    Api_Implementation.sharedManager().hIG_ResetSTBPIN(Api_Implementation.sharedManager().hIG_GetSTBPIN(), jObject.getString("newPIN"), new Api.OnSuccessCallbackBlock() {
+                    Api.sharedApi().hIG_ResetSTBPIN(Api.sharedApi().hIG_GetSTBPIN(), jObject.getString("newPIN"), new Api.OnSuccessCallbackBlock() {
                         @Override
                         public void OnSuccessCallback(Boolean aBoolean, String s) {
                             if(aBoolean == true) {
@@ -259,24 +274,21 @@ public class AndroidSTBConnectScreen extends FrameLayout {
                 try {
                     JSONObject jObject = new JSONObject(data);
                     onFinished();
-                    if(jObject.getBoolean("connectState")) {
-//                        Intent intents = new Intent(context,TabBarActivity .class);
-//                        context.startActivity(intents);
-                    }
+//                    if(jObject.getBoolean("connectState")) {
+//                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-
         /**
          * 获取手机 WIFI 信息
          */
         bWebView.registerHandler("HIG_GetMobileWifiInfo", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_GetMobileWifiInfoInJson(new Api.OnStringCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+                Api.sharedApi().hIG_GetMobileWifiInfoInJson(new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
                         function.onCallBack(s);
@@ -290,8 +302,9 @@ public class AndroidSTBConnectScreen extends FrameLayout {
          */
         bWebView.registerHandler("HIG_STBWlanAP", new BridgeHandler() {
             @Override
-            public void handler(String data, final CallBackFunction function) {
-                Api_Implementation.sharedManager().hIG_STBWlanAP(data, new Api.OnStringCallbackBlock() {
+            public void handler(String data, CallBackFunction function) {
+//                data = "{\"SSID\": \"Hi-Global\",\"Password\":\"higlobaldvb\"}";
+                Api.sharedApi().hIG_STBWlanAP(data, new Api.OnStringCallbackBlock() {
                     @Override
                     public void OnStringCallback(String s) {
                         function.onCallBack(s);
@@ -304,20 +317,28 @@ public class AndroidSTBConnectScreen extends FrameLayout {
     /**
      * 页面显示的方法
      */
-
     private void jumpPagetoLogin(final boolean bool) {
-        String webName = "";
-        if(bool) {
-            webName = "Login";
-        } else {
-            webName = "Revolution";
-//                            webName = "Login";
-        }
-//                        隐藏启动页
-        launch_View.setVisibility(View.GONE);
-        bWebView.setVisibility(View.VISIBLE);
-//                        加载网页
-        bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                耗时任务,比如网络加载数据
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String webName = "";
+                        if(bool) {
+//                            webName = "main-new";
+                            webName = "page";
+                        } else {
+//                            webName = "agents";
+                            webName = "page";
+                        }
+                        bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
+                        bWebView.setWebViewClient(new LocalWebViewClient(bWebView,launch_View));
+                    }
+                });
+            }
+        }, SPLASH_DELAY_MILLS);
     }
 
     /*

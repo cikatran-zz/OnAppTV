@@ -412,24 +412,24 @@ export default class VideoControlModal extends React.Component {
                     <TouchableOpacity disabled={!this.state.isConnected}
                                       style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent'}]}
                                       onPress={this._onRecordPress}>
-                        <Image source={require('../../assets/ic_record.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_record.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={!this.state.isConnected}
                                       style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent'}]}
                                       onPress={this._onFavouritePress}>
                         <Image source={require('../../assets/ic_heart_with_border.png')}
-                               style={styles.buttonIconStyle}/>
+                               style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}
                                       onPress={() => this._shareExecution(item.title, "")}>
-                        <Image source={require('../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_share.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}
                                       onPress={() => this._resetPlayPosition()}>
-                        <Image source={require('../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_start_over.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}>
-                        <Image source={require('../../assets/ic_caption.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_caption.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.mediaInfoContainer}>
@@ -441,26 +441,26 @@ export default class VideoControlModal extends React.Component {
                     <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._backWard()}
                                       style={[styles.rewindButton, {opacity: isLive === true ? 0.17 : 1}]}>
                         <Image source={require('../../assets/ic_rewind.png')}
-                               style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
+                               style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={!this.state.isConnected} style={{width: '21%', height: '100%'}}
                                       onPress={() => this._playMediaControl(bcVideos)}>
-                        <Image source={playIconSrc} style={styles.buttonIconStyle}/>
+                        <Image source={playIconSrc} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._fastForward()}
                                       style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
-                        <Image source={require('../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_fastforward.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.volumeSeekBarContainer}>
                     <TouchableOpacity style={styles.volumeLessIcon}>
-                        <Image source={require('../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_quieter.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                     <VolumeSeeker width={260} thumbSize={16} maxValue={100} onVolumeChange={this._onVolumeChange}
                                   onChangedScrollEnabled={this._onChangeScrollEnabled}
                                   disabled={!this.state.isConnected}/>
                     <TouchableOpacity style={styles.volumeMoreIcon}>
-                        <Image source={require('../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
+                        <Image source={require('../../assets/ic_louder.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
                 </View>
             </View>)

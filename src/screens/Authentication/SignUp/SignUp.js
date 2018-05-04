@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     Text, View, StyleSheet, TextInput, ImageBackground, Image, Platform, TouchableOpacity, StatusBar, ScrollView,
-    NativeModules
+    NativeModules, Dimensions
 } from 'react-native'
 import {Dropdown} from 'react-native-material-dropdown';
 import {colors} from '../../../utils/themeConfig'
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 31,
         paddingTop: 40.5,
-        width: '100%',
+        width: Dimensions.get('window').width,
         marginTop: rootViewTopPadding(),
         paddingBottom: 60
     },
