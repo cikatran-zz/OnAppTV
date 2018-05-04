@@ -33,6 +33,9 @@ export default class VideoControlModal extends React.Component {
 
     _currentPosition = 0
     _offsetRate = 0
+    _vodProgress = null
+    _durations = null
+    _swiper = null
 
     onLayout(e) {
         const {width, height} = Dimensions.get("window")
@@ -91,11 +94,32 @@ export default class VideoControlModal extends React.Component {
             return;
         }
         let periodRate = Math.round(pos / this._offsetRate)
+        let currentPos = periodRate < 0 ? 0 : periodRate
         // Display played area
         console.log('Dragging to position %s', periodRate)
         this.setState({
-            currentPos: periodRate < 0 ? 0 : periodRate
+            currentPos: currentPos
         })
+        this._vodProgress.setNativeProps({
+            style: [styles.vodProgressStyle, {
+                width: (currentPos / this._durations) * 100 + "%"
+            }]
+        })
+    }
+
+    _getVodProgressStyle = () => {
+        const {item, epg, isLive} = this.props.navigation.state.params
+        const {index, currentPos} = this.state
+        let progress = isLive === true ? this._getLiveProgress(epg[index] === undefined ? item.startTime : epg[index].startTime, epg[index] === undefined ? item.endTime : epg[index].endTime)
+            : (currentPos / this._durations) * 100
+
+        if (isLive !== true && progress >= 100 && index !== epg.length - 1) {
+            this._swiper.scrollBy(1)
+        }
+
+        return [styles.vodProgressStyle, {
+            width: progress + "%"
+        }]
     }
 
     setCurrentPosition(newPos) {
@@ -114,8 +138,9 @@ export default class VideoControlModal extends React.Component {
         }
     }
 
-    _onStartShouldSetPanResponder = (event) => {
-        return true;
+    _onStartShouldSetPanResponder = (event, gestureState) => {
+        console.log("DY", gestureState.dy, "DX", gestureState.dx);
+        return (gestureState.dx != 0 || gestureState.dy != 0);
     };
 
     _onPanResponderMove = (event, gestureState) => {
@@ -150,9 +175,11 @@ export default class VideoControlModal extends React.Component {
         if (!isLive) {
             NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
                 let pos = JSON.parse(r[0]).playPosition
-                this.setState({
-                    currentPos: pos
-                })
+                if (this.state.dragging === undefined || this.state.dragging === false) {
+                    this.setState({
+                        currentPos: pos === 'error' ? this._durations : pos
+                    })
+                }
             })
         }
     }, 1000);
@@ -284,6 +311,7 @@ export default class VideoControlModal extends React.Component {
             if (passed > 0) return secondFormatter(passed.toString())
         }
         else {
+            console.log(this.state.currentPos)
             return secondFormatter(this.state.currentPos ? this.state.currentPos : 0)
         }
     }
@@ -505,14 +533,8 @@ export default class VideoControlModal extends React.Component {
                                  resizeMode="cover"
                                  source={{uri: iconUrl}}/>
                 {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-                <Animated.View style={{
-                    width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds),
-                    height: '100%',
-                    backgroundColor: 'rgba(17,17,19,0.45)',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                }}>
+                <Animated.View ref={(ref) => this._vodProgress = ref}
+                               style={this._getVodProgressStyle()}>
                 </Animated.View>
                 <TouchableOpacity style={{position: 'absolute', bottom: 20, right: 20}} onPress={this._showAlertModal}>
                     <Image source={require('../../assets/ic_change_orientation.png')}/>
@@ -666,7 +688,7 @@ export default class VideoControlModal extends React.Component {
                 </View>
             )
         }
-
+        this._durations = item.durationInSeconds
         let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
 
         return (
@@ -675,7 +697,7 @@ export default class VideoControlModal extends React.Component {
                 style={{flex: 1}}>
                 <Swiper scrollEnabled={this.state.isScrollEnabled} loop={false} loadMinimal={true} loadMinimalSize={1}
                         onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true}
-                        style={styles.pageViewStyle} removeClippedSubviews={false} index={index}>
+                        style={styles.pageViewStyle} removeClippedSubviews={false} index={index} ref={(ref) => this._swiper = ref}>
                     {
                         epg.map(value => this._renderUpperPage(epg, value))
                     }
@@ -1152,7 +1174,11 @@ const styles = StyleSheet.create({
     },
     titleText: {
         color: colors.whitePrimary,
-        fontSize: 16
+        fontSize: 16,
+        alignSelf: 'center',
+        textAlign: 'center',
+        marginStart: 30,
+        marginEnd: 30
     },
     typeText: {
         color: colors.whitePrimary,
@@ -1230,7 +1256,14 @@ const styles = StyleSheet.create({
         width: 27,
         height: 27,
         resizeMode: 'cover'
-    }
+    },
+    vodProgressStyle: {
+        height: '100%',
+        backgroundColor: 'rgba(17,17,19,0.45)',
+        position: 'absolute',
+        top: 0,
+        left: 0
+}
 })
 
 const jsonString = "{\n" +
