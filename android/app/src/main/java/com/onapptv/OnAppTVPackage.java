@@ -1,5 +1,7 @@
 package com.onapptv;
 
+import android.app.Activity;
+
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 
 public class OnAppTVPackage implements ReactPackage {
+
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
 
@@ -40,6 +43,7 @@ public class OnAppTVPackage implements ReactPackage {
         managerList.add(new ReactBrightcovePlayerViewManager());
         managerList.add(new ReactAndroidSTBConnectScreen());
         managerList.add(new ReactAndroidBrightcove());
+        managerList.add(new ReactControlPageViewManager());
         return managerList;
     }
 

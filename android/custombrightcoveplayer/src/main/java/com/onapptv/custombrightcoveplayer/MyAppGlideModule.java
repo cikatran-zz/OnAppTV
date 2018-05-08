@@ -23,7 +23,6 @@ public final class MyAppGlideModule extends AppGlideModule {
     public void applyOptions(@NonNull Context context, @NonNull GlideBuilder builder) {
         super.applyOptions(context, builder);
         long bitmapPoolSizeBytes = 1024 * 1024 * 30; //30mb
-        builder.setDecodeFormat(DecodeFormat.PREFER_RGB_565);
         builder.setBitmapPool(new LruBitmapPool(bitmapPoolSizeBytes));
         builder.setLogLevel(Log.DEBUG);
     }

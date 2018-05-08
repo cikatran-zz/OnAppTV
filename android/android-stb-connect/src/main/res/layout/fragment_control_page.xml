@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/main.banner"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <FrameLayout
+        android:id="@+id/top.banner"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/image.top.banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/progress.layout"
+            android:progressTint="@color/blackScrub"
+            android:progressDrawable="@drawable/progress_bar"
+            android:alpha="0.45"
+            android:progress="0"
+            android:max="100"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+    <FrameLayout
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <SeekBar
+            android:id="@+id/real_volume"
+            android:minHeight="2dp"
+            android:maxHeight="2dp"
+            android:splitTrack="false"
+            android:thumb="@drawable/thumb"
+            android:progressDrawable="@drawable/seekbar"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:id="@+id/fake_volume"
+            android:maxHeight="70dp"
+            android:minHeight="70dp"
+            android:alpha="0"
+            android:splitTrack="false"
+            android:thumb="@drawable/thumb"
+            android:progressDrawable="@drawable/seekbar"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+</FrameLayout>
