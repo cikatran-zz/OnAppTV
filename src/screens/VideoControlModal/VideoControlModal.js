@@ -20,6 +20,7 @@ import BrightcovePlayer from "../../components/BrightcovePlayer";
 import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../DetailsPage/DetailsPage"
 import BlurView from '../../components/BlurView'
+import ControlModal from '../../components/ControlPage'
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter} from '../../utils/timeUtils'
 import Swiper from 'react-native-swiper'
@@ -685,46 +686,62 @@ export default class VideoControlModal extends React.Component {
 
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
+        const {bcVideos} = this.props;
 
-        if (this.state.showBrightcove) {
-            return (
-                <View style={{flex: 1, backgroundColor: 'black'}}
-                      onLayout={this.onLayout.bind(this)}/>
-            )
+        console.log('renderModal', bcVideos);
+        let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+        let url = '';
+
+        if (bcVideos.data !== null) {
+            let url = bcVideos.data.sources.filter(x => {
+                return !!x.container
+            })[0].src
+
+            console.log('renderModal', itemIndex, url);
         }
-
-        // Right now, Live is just one video, check for one video
-        if (isLive) {
-            return (
-                <View
-                    onLayout={this.onLayout.bind(this)}
-                    style={{flex: 1}}>
-                    {this._renderLive({}, item)}
-                </View>
-            )
-        }
-        this._durations = item.durationInSeconds
-        let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
-
         return (
-            <View
-                onLayout={this.onLayout.bind(this)}
-                style={{flex: 1}}>
-                <Swiper scrollEnabled={this.state.isScrollEnabled} loop={false} loadMinimal={true} loadMinimalSize={1}
-                        onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true}
-                        style={styles.pageViewStyle} removeClippedSubviews={false} index={index} ref={(ref) => this._swiper = ref}>
-                    {
-                        epg.map(value => this._renderUpperPage(epg, value))
-                    }
-                </Swiper>
-                <TouchableOpacity
-                    style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}}
-                    onPress={() => this.props.navigation.goBack()}>
-                    <Image source={require('../../assets/ic_dismiss_modal.png')}/>
-                </TouchableOpacity>
-            </View>
+            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}} epg={epg} index={itemIndex} isLive={isLive} videoUrl={url}/>
+        )
 
-        );
+        // if (this.state.showBrightcove) {
+        //     return (
+        //         <View style={{flex: 1, backgroundColor: 'black'}}
+        //               onLayout={this.onLayout.bind(this)}/>
+        //     )
+        // }
+        //
+        // // Right now, Live is just one video, check for one video
+        // if (isLive) {
+        //     return (
+        //         <View
+        //             onLayout={this.onLayout.bind(this)}
+        //             style={{flex: 1}}>
+        //             {this._renderLive({}, item)}
+        //         </View>
+        //     )
+        // }
+        // this._durations = item.durationInSeconds
+        // let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+        //
+        // return (
+        //     <View
+        //         onLayout={this.onLayout.bind(this)}
+        //         style={{flex: 1}}>
+        //         <Swiper scrollEnabled={this.state.isScrollEnabled} loop={false} loadMinimal={true} loadMinimalSize={1}
+        //                 onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true}
+        //                 style={styles.pageViewStyle} removeClippedSubviews={false} index={index} ref={(ref) => this._swiper = ref}>
+        //             {
+        //                 epg.map(value => this._renderUpperPage(epg, value))
+        //             }
+        //         </Swiper>
+        //         <TouchableOpacity
+        //             style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}}
+        //             onPress={() => this.props.navigation.goBack()}>
+        //             <Image source={require('../../assets/ic_dismiss_modal.png')}/>
+        //         </TouchableOpacity>
+        //     </View>
+        //
+        // );
 
     }
 
