@@ -246,6 +246,18 @@ query getEPGByChannel($channelId: Float){
         epgsData {
           videoId
           channelId
+          channelData {
+            title
+            lcn
+            serviceId
+            originalImages {
+              height
+              width
+              url
+              name
+              fileName
+            }
+          }
           startTime
           endTime
           videoData {
