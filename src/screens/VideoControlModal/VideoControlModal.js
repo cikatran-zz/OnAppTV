@@ -20,7 +20,7 @@ import BrightcovePlayer from "../../components/BrightcovePlayer";
 import VolumeSeeker from "../../components/VolumeSeeker"
 import LowerPagerComponent from "../DetailsPage/DetailsPage"
 import BlurView from '../../components/BlurView'
-import ControlModal from '../../components/ControlPage'
+import ControlModal from '../../components/ControlModal'
 import {getBlurRadius} from '../../utils/blurRadius'
 import {secondFormatter} from '../../utils/timeUtils'
 import Swiper from 'react-native-swiper'
@@ -700,7 +700,7 @@ export default class VideoControlModal extends React.Component {
             console.log('renderModal', itemIndex, url);
         }
         return (
-            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}} epg={epg} index={itemIndex} isLive={isLive} videoUrl={url}/>
+            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}} items={epg} index={itemIndex} isLive={isLive} onClose={() => this.props.navigation.goBack()} onDetail={()=>this._informationPress(item, epg, isLive)}/>
         )
 
         // if (this.state.showBrightcove) {
