@@ -62,9 +62,7 @@ export default class Home extends Component {
         }
     };
 
-
-
-    componentDidMount() {
+    fetchData() {
         this.props.getBanner();
         this.props.getAds();
         this.props.getLive(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true));
@@ -78,7 +76,10 @@ export default class Home extends Component {
         getWatchingHistory().then((response) => {
             this.setState({resumeVOD: [response]});
         });
+    }
 
+    componentDidMount() {
+        this.fetchData();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
@@ -458,6 +459,7 @@ export default class Home extends Component {
 
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
+        let refreshing = banner.isFetching || live.isFetching || vod.isFetching || ads.isFetching || category.isFetching || news.isFetching;
         if (!banner.fetched || banner.isFetching ||
             !ads.fetched || ads.isFetching ||
             !vod.fetched || vod.isFetching ||
@@ -471,7 +473,7 @@ export default class Home extends Component {
             );
 
         if (this.state.favoriteCategories === null) {
-            let categoryData = (category.data === null ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
+            let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
             this.state.category = category.data === null ? [] : category.data;
             categoryData.push({"name": "_ADD"});
             this.state.favoriteCategories = categoryData;
@@ -516,6 +518,8 @@ export default class Home extends Component {
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
+                    refreshing={refreshing}
+                    onRefresh={() => this.fetchData()}
                     sections={sections}
                 />
             </View>

@@ -258,7 +258,7 @@ export const getCategory = () => {
                 }
             });
         });
-    });
+    })
 };
 
 export const getNews = () => {
