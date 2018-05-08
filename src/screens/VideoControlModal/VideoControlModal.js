@@ -687,8 +687,6 @@ export default class VideoControlModal extends React.Component {
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
         const {bcVideos} = this.props;
-
-        console.log('renderModal', bcVideos);
         let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
         let url = '';
 
@@ -696,8 +694,6 @@ export default class VideoControlModal extends React.Component {
             let url = bcVideos.data.sources.filter(x => {
                 return !!x.container
             })[0].src
-
-            console.log('renderModal', itemIndex, url);
         }
         return (
             <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}} items={epg} index={itemIndex} isLive={isLive} onClose={() => this.props.navigation.goBack()} onDetail={()=>this._informationPress(item, epg, isLive)}/>
