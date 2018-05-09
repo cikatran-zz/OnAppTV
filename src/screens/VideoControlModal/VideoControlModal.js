@@ -684,6 +684,11 @@ export default class VideoControlModal extends React.Component {
         }
     }
 
+    _onAlertModal = (event) => {
+        this.alertModal.setState({isShow: true, message: event.nativeEvent.message})
+    };
+
+
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
         const {bcVideos} = this.props;
@@ -696,7 +701,14 @@ export default class VideoControlModal extends React.Component {
             })[0].src
         }
         return (
-            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}} items={epg} index={itemIndex} isLive={isLive} onClose={() => this.props.navigation.goBack()} onDetail={()=>this._informationPress(item, epg, isLive)}/>
+            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}}
+                          items={epg}
+                          index={itemIndex}
+                          isLive={isLive}
+                          onClose={() => this.props.navigation.goBack()}
+                          onDetail={()=>this._informationPress(item, epg, isLive)}
+                          onAlert={(event)=>this._onAlertModal(event)}
+                          onShare={(event)=>this._shareExecution(event.nativeEvent)}/>
         )
 
         // if (this.state.showBrightcove) {
@@ -927,14 +939,14 @@ export default class VideoControlModal extends React.Component {
         this.setState({isScrollEnabled: isEnabled})
     };
 
-    _shareExecution = (title, url) => {
-        content = {
-            message: "",
-            title: title,
-            url: url
-        }
+    _shareExecution = (event) => {
+        let content = {
+            message: event.message,
+            title: event.title,
+            url: event.url
+        };
         Share.share(content, {})
-    }
+    };
 
     _onModalButtonPress = (actionType, secondActionType) => {
         const {recordEnabled, favoriteEnabled, modalRecordTarget, modalFavoriteTarget} = this.state
