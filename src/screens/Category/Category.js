@@ -82,7 +82,9 @@ export default class Category extends Component {
             map[obj.id] = obj.name;
             return map;
         }, {});
-
+        if (genresContent.data == null) {
+            return null
+        }
         let keys = Object.keys(genresContent.data);
         var startIndex = 0;
         keys.forEach((key, index) => {

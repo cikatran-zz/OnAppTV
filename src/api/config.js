@@ -584,7 +584,7 @@ query getVODs($id: [String]!){
 `;
 
 export default {
-    serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
+    serverURL: 'https://contentkit-api.mstage.io/graphql',
     queries: {
         BANNER: bannerQuery,
         CHANNEL: channelQuery,
