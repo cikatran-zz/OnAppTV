@@ -708,7 +708,10 @@ export default class VideoControlModal extends React.Component {
                           onClose={() => this.props.navigation.goBack()}
                           onDetail={()=>this._informationPress(item, epg, isLive)}
                           onAlert={(event)=>this._onAlertModal(event)}
-                          onShare={(event)=>this._shareExecution(event.nativeEvent)}/>
+                          onShare={(event)=>this._shareExecution(event.nativeEvent)}
+                          onIndexChanged={(event)=>this._onSwiperIndexChanged(event.nativeEvent.index)}
+                          onBookmark={this._onRecordPress}
+                          onFavorite={this._onFavouritePress}/>
         )
 
         // if (this.state.showBrightcove) {

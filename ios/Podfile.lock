@@ -27,9 +27,19 @@ PODS:
     - FBSDKCoreKit (~> 4.33.0)
   - IQKeyboardManagerSwift (4.0.13)
   - Kingfisher (4.7.0)
+  - PromiseKit (4.5.2):
+    - PromiseKit/Foundation (= 4.5.2)
+    - PromiseKit/QuartzCore (= 4.5.2)
+    - PromiseKit/UIKit (= 4.5.2)
+  - PromiseKit/CorePromise (4.5.2)
+  - PromiseKit/Foundation (4.5.2):
+    - PromiseKit/CorePromise
+  - PromiseKit/QuartzCore (4.5.2):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (4.5.2):
+    - PromiseKit/CorePromise
   - UserKit (0.19.11)
   - UserKitIdentity (0.19.11):
-  - lottie-ios (2.5.0)
     - UserKit
 
 DEPENDENCIES:
@@ -39,6 +49,7 @@ DEPENDENCIES:
   - FacebookShare
   - IQKeyboardManagerSwift (= 4.0.13)
   - Kingfisher
+  - PromiseKit (~> 4.0)
   - UserKit (from `../../mStage-UserKit-iOS-SDK`)
   - UserKitIdentity (from `../../mStage-UserKit-iOS-SDK`)
 
@@ -59,11 +70,10 @@ SPEC CHECKSUMS:
   FBSDKShareKit: b7b5002833a4104fbecad75e8e4e082e91c7a08a
   IQKeyboardManagerSwift: fb399c4cddcd8d9bbcd2d0c7c81ed290b61c088e
   Kingfisher: da6b005aa96d37698e3e4f1ccfe96a5b9bbf27d6
-  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
+  PromiseKit: 743e497a5f505a470d3bbbf4ce0663c1268af0a4
   UserKit: 1d185a4e80d841a1ed67cf052b165498d6c13911
   UserKitIdentity: b766d7fc2b9afa71440f7c03813e9b825ee0e49e
-  WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
 
-PODFILE CHECKSUM: 045b111f3856ec81269e6ed059faa1f0996a76a2
+PODFILE CHECKSUM: 1c9cd8c2b44cabd4ce8002ce91ad6aae5c9b4781
 
 COCOAPODS: 1.4.0
