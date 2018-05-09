@@ -21,6 +21,7 @@ const httpLink = new HttpLink({
 });
 
 const errorHandler = onError(({networkError}) => {
+    console.log()
     switch (networkError.statusCode) {
         case 404:
             return {error: {message: 'Cannot connect to server'}};
