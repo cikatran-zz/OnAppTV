@@ -2,8 +2,10 @@ package com.onapptv.android_control_page;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,10 +20,9 @@ import com.onapptv.android_stb_connect.R;
 
 import tv.hi_global.stbapi.Api;
 
-public class ControlPage extends FrameLayout {
+public class ControlPage extends LimitedViewPager {
     Activity mActivity;
 
-    LimitedViewPager mViewPager;
     ReadableArray mEpg;
     int mIndex = 0;
     Boolean mIsLive;
@@ -47,10 +48,7 @@ public class ControlPage extends FrameLayout {
 
     void initialize(Context context) {
 
-        mViewPager = findViewById(R.id.view_pager);
-        mViewPager.setOffscreenPageLimit(1);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        this.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -70,16 +68,19 @@ public class ControlPage extends FrameLayout {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setIsLive(Boolean isLive) {
         mIsLive = isLive;
         loadViewPager();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setIndex(int index) {
         mIndex = 0;
         loadViewPager();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setEpg(ReadableArray epg) {
         mEpg = epg;
         loadViewPager();
@@ -97,15 +98,16 @@ public class ControlPage extends FrameLayout {
         return videoUrl;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void loadViewPager() {
         Log.v("setIsLive", "Activity " + mActivity);
         if (mEpg != null && mIndex != -1 && mIsLive != null && mActivity != null) {
 
             ControlPageAdapter adapter =
-                    new ControlPageAdapter( (mActivity).getFragmentManager(), mEpg, mIsLive);
-            mViewPager.setAdapter(adapter);
+                    new ControlPageAdapter(mActivity.getFragmentManager(), mEpg.toArrayList(), mIsLive);
+            this.setAdapter(adapter);
 
-            mViewPager.setCurrentItem(mIndex);
+            this.setCurrentItem(mIndex);
         }
     }
 }

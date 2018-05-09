@@ -9,7 +9,8 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    InteractionManager
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -30,30 +31,31 @@ export default class DetailsPage extends React.Component {
     _keyExtractor = (item, index) => index;
 
     componentDidMount() {
-        const {item, isLive} = this.props.navigation.state.params;
+        InteractionManager.runAfterInteractions(() => {
+            const {item, isLive} = this.props.navigation.state.params;
 
-        if (item && isLive !== undefined) {
-            if (isLive === true && item.channelData
-                                && item.channelData.serviceId
-                                && item.channelId) {
-                /*
-                  Fetching information about EPG next in channel and EPG which are
-                  at the same time on other channels
-                   */
-                this.props.getEpgs([item.channelData.serviceId])
-                this.props.getEpgSameTime(new Date(), item.channelId)
+            if (item && isLive !== undefined) {
+                if (isLive === true && item.channelData
+                    && item.channelData.serviceId
+                    && item.channelId) {
+                    /*
+                      Fetching information about EPG next in channel and EPG which are
+                      at the same time on other channels
+                       */
+                    this.props.getEpgs([item.channelData.serviceId])
+                    this.props.getEpgSameTime(new Date(), item.channelId)
+                }
+                else if (item.type) {
+                    /*
+                    Fetch epg with related content or epg in series
+                     */
+                    if (item.type === 'Episode')
+                        this.props.getEpgWithSeriesId([item.seriesId])
+                    else
+                        this.props.getEpgWithGenre(item.genreIds)
+                }
             }
-            else if (item.type) {
-                /*
-                Fetch epg with related content or epg in series
-                 */
-                if (item.type === 'Episode')
-                    this.props.getEpgWithSeriesId([item.seriesId])
-                else
-                    this.props.getEpgWithGenre(item.genreIds)
-            }
-        }
-
+        })
 
         Orientation.lockToPortrait();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
@@ -331,11 +333,25 @@ export default class DetailsPage extends React.Component {
         const {isLive} = this.props.navigation.state.params;
         const {epg, navigation} = this.props;
 
-        navigation.replace('VideoControlModal', {
-            item: item,
-            epg: epg.data.length !== 0 ? epg.data : [item],
-            isLive: isLive
-        })
+
+        if (Platform.OS !== 'ios') {
+            let data = epg.data.length !== 0 ? epg.data : [item]
+            let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+            console.log('Special', data);
+            NativeModules.RNControlPageNavigation
+                .navigateControl(data,
+                    itemIndex,
+                    isLive,
+                    () => { console.log("onDismiss") },
+                    () => { console.log("onDetail") });
+        }
+        else {
+            navigation.replace('VideoControlModal', {
+                item: item,
+                epg: epg.data.length !== 0 ? epg.data : [item],
+                isLive: isLive
+            })
+        }
     }
 
     _onScroll(e) {

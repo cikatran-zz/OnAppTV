@@ -11,10 +11,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.brightcove.player.edge.Catalog;
+import com.brightcove.player.edge.VideoListener;
+import com.brightcove.player.model.DeliveryType;
+import com.brightcove.player.model.Video;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.react.bridge.ReadableMap;
@@ -24,15 +31,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import tv.hi_global.stbapi.Api;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class FragmentControlPage extends Fragment {
+    private final String NO_VIDEO_URL = "no_video_url";
+
     SeekBar mRealSeek, mFakeSeek;
-    FrameLayout mTopContainer;
+    RelativeLayout mTopContainer;
     ImageView mTopBanner, mMainBanner;
     ProgressBar mProgress;
-    HashMap mData;
+    HashMap mData, mDataLive;
+    ImageButton mDetail, mDismiss, mRecord, mFavorite, mShare, mStartOver, mCaption, mPlay, mBackward, mFastward;
+    TextView mTitle, mGenres;
 
+    String videoUrl = NO_VIDEO_URL;
     Boolean isDragging = false;
     int currentProgress = 0;
 
@@ -47,10 +60,36 @@ public class FragmentControlPage extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
     public void onCreate(Bundle onSavedInstanceState) {
         super.onCreate(onSavedInstanceState);
 
-        mData = (HashMap) getArguments().getSerializable("item");
+        if (ControlPageAdapter.isLive()) {
+            mDataLive = (HashMap) getArguments().getSerializable("item");
+        }
+        else {
+            mData = (HashMap) getArguments().getSerializable("item");
+            ControlPageAdapter.getCatalog().findVideoByID(mData.get("contentId").toString(), new VideoListener() {
+                @Override
+                public void onVideo(Video video) {
+                    videoUrl = video.findHighQualitySource(DeliveryType.MP4).getUrl();
+                    if (Api.sharedApi().hIG_IsConnect()) {
+                        Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, new Api.OnSuccessCallbackBlock() {
+                            @Override
+                            public void OnSuccessCallback(Boolean aBoolean, String s) {
+                                Log.v("playMediaOnSuccess", aBoolean.toString());
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -66,15 +105,53 @@ public class FragmentControlPage extends Fragment {
         mTopBanner = rootView.findViewById(R.id.image_top_banner);
         mMainBanner = rootView.findViewById(R.id.main_banner);
         mProgress = rootView.findViewById(R.id.progress_layout);
+        mDetail = rootView.findViewById(R.id.information_btn);
+        mDismiss = rootView.findViewById(R.id.dismiss);
+        mRecord = rootView.findViewById(R.id.record);
+        mFavorite = rootView.findViewById(R.id.favorite);
+        mShare = rootView.findViewById(R.id.share);
+        mStartOver = rootView.findViewById(R.id.start_over);
+        mCaption = rootView.findViewById(R.id.caption);
+        mPlay = rootView.findViewById(R.id.play);
+        mBackward = rootView.findViewById(R.id.backward);
+        mFastward = rootView.findViewById(R.id.fastward);
+        mTitle = rootView.findViewById(R.id.title_tv);
+        mGenres = rootView.findViewById(R.id.genres_tv);
 
+        if (ControlPageAdapter.isLive()) {
+            mPlay.setImageResource(R.mipmap.ic_ontv);
+            mTitle.setText(((HashMap)mDataLive.get("videoData")).get("title").toString());
+            mGenres.setText(getGenresFromArray((ArrayList<HashMap>) ((HashMap) mDataLive.get("videoData")).get("genresData")));
+        }
+        else {
+            mPlay.setImageResource(R.mipmap.ic_play);
+            mTitle.setText((mData.get("title").toString()));
+            mGenres.setText(getGenresFromArray((ArrayList<HashMap>) mData.get("genresData")));
+        }
 
-        Glide.with(getContext())
-                .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
-                .into(mTopBanner);
-        Glide.with(getContext())
-                .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 2)))
-                .into(mMainBanner);
+        if (ControlPageAdapter.isLive()) {
+            Glide.with(getContext())
+                    .load(getImageFromArray((ArrayList<HashMap>) ((HashMap) mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
+                    .into(mTopBanner);
+            Glide.with(getContext())
+                    .load(getImageFromArray((ArrayList<HashMap>) ((HashMap )mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 2)))
+                    .into(mMainBanner);
+        }
+        else {
+            Glide.with(getContext())
+                    .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
+                    .into(mTopBanner);
+            Glide.with(getContext())
+                    .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 2)))
+                    .into(mMainBanner);
+        }
+
+        mDetail.setOnClickListener(v -> {
+
+        });
+
         mFakeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -148,5 +225,14 @@ public class FragmentControlPage extends Fragment {
         }
         if (image == null) image = (String) images.get(0).get("url");
         return image;
+    }
+
+    String getGenresFromArray(ArrayList<HashMap> genres) {
+        String genre = "";
+        for (int i = 0; i < genres.size(); i++) {
+            genre = genre.concat(" ");
+            genre = genre.concat(genres.get(i).get("name").toString());
+        }
+        return genre;
     }
 }

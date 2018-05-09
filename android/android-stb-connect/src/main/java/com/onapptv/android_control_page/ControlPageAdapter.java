@@ -4,55 +4,63 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.brightcove.player.edge.Catalog;
+import com.brightcove.player.event.EventEmitterImpl;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ControlPageAdapter extends android.support.v13.app.FragmentStatePagerAdapter {
-    ReadableArray mEpg;
-    Boolean mIsLive = false;
-    FragmentManager mFm;
+public class ControlPageAdapter extends FragmentStatePagerAdapter {
+    ArrayList mEpg;
+    static Boolean mIsLive = false;
+    ArrayList<View> views = new ArrayList<>();
+    public static Catalog catalog = new Catalog(new EventEmitterImpl(), "5706818955001", "BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I");
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public ControlPageAdapter(FragmentManager fm,
-                              ReadableArray epg,
+                              ArrayList epg,
                               Boolean isLive) {
         super(fm);
-        mFm = fm;
         setEpg(epg);
-        Log.v("mEpgSize", String.valueOf(mEpg.size()));
         mIsLive = isLive;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void setEpg(ReadableArray epg) {
+    public void setEpg(ArrayList epg) {
         mEpg = epg;
-
         notifyDataSetChanged();
     }
 
-//    @Override
-//    public Object instantiateItem(ViewGroup container, int position) {
-//        Fragment temp = mFragments.get(position);
-//        mFm.beginTransaction()
-//                .detach(temp)
-//                .attach(temp)
-//                .commit();
-//        return temp;
-//    }
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public Fragment getItem(int position) {
-        return FragmentControlPage.newInstance(position, "Page " + position, mEpg.getMap(position).toHashMap());
+        return FragmentControlPage.newInstance(position, "Page " + position, ((HashMap) mEpg.get(position)));
+    }
+
+    public static Boolean isLive() {
+        return mIsLive;
+    }
+
+    public static Catalog getCatalog() {
+        return catalog;
     }
 
     @Override
     public int getCount() {
         return mEpg.size();
     }
+
 }

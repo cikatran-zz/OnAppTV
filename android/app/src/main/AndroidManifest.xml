@@ -39,6 +39,7 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
         <activity android:name=".android_stb_connect.TabBarActivity"/>
         <activity android:name=".BrightcoveActivity"/>
+        <activity android:name=".android_control_page.ControlActivity"/>
 
         <service
                 android:name=".NotificationHandler"

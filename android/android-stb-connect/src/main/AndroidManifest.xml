@@ -1,2 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.onapptv.android_stb_connect" />
+    package="com.onapptv.android_stb_connect">
+
+    <application>
+        <activity android:name="com.onapptv.android_control_page.ControlActivity"></activity>
+    </application>
+
+</manifest>

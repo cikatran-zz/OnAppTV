@@ -465,7 +465,7 @@ export default class VideoControlModal extends React.Component {
                                       onPress={() => this._shareExecution(item.title, "")}>
                         <Image source={require('../../assets/ic_share.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}
+                    <TouchableOpacity disabled={!this.state.isConnected} style={styles.bfuttonStyle}
                                       onPress={() => this._resetPlayPosition()}>
                         <Image source={require('../../assets/ic_start_over.png')} style={[styles.buttonIconStyle, { tintColor: this.state.isConnected ? colors.whiteBackground : colors.greyOutController}]}/>
                     </TouchableOpacity>
@@ -700,7 +700,7 @@ export default class VideoControlModal extends React.Component {
             console.log('renderModal', itemIndex, url);
         }
         return (
-            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}} items={epg} index={itemIndex} isLive={isLive} onClose={() => this.props.navigation.goBack()} onDetail={()=>this._informationPress(item, epg, isLive)}/>
+            <ControlModal style={{width: '100%', height: '100%'}} items={epg} index={itemIndex} isLive={isLive} onClose={() => this.props.navigation.goBack()} onDetail={()=>this._informationPress(item, epg, isLive)}/>
         )
 
         // if (this.state.showBrightcove) {
