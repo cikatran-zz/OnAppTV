@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {
     Dimensions,
     FlatList,
@@ -23,10 +23,14 @@ import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
 
-export default class DetailsPage extends React.Component {
+export default class DetailsPage extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            item: null,
+            isLive: false,
+        }
     }
 
     _keyExtractor = (item, index) => index;
@@ -57,9 +61,10 @@ export default class DetailsPage extends React.Component {
             }
         })
 
-        DeviceEventEmitter.addListener('reloadDetailsPage', function(e: Event) {
+        DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
             InteractionManager.runAfterInteractions(() => {
                 const {item, isLive} = e;
+                this.setNewState(item, isLive);
                 if (item && isLive !== undefined) {
                     if (isLive === true && item.channelData
                         && item.channelData.serviceId
@@ -68,17 +73,17 @@ export default class DetailsPage extends React.Component {
                          Fetching information about EPG next in channel and EPG which are
                          at the same time on other channels
                          */
-                        this.props.getEpgs([item.channelData.serviceId])
-                        this.props.getEpgSameTime(new Date(), item.channelId)
+                        this.props.getEpgs([item.channelData.serviceId]);
+                        this.props.getEpgSameTime(new Date(), item.channelId);
                     }
                     else if (item.type) {
                         /*
                          Fetch epg with related content or epg in series
                          */
                         if (item.type === 'Episode')
-                            this.props.getEpgWithSeriesId([item.seriesId])
+                            this.props.getEpgWithSeriesId([item.seriesId]);
                         else
-                            this.props.getEpgWithGenre(item.genreIds)
+                            this.props.getEpgWithGenre(item.genreIds);
                     }
                 };
             })
@@ -92,6 +97,10 @@ export default class DetailsPage extends React.Component {
         });
     }
 
+    setNewState = (item, isLive) => {
+        this.setState({item, isLive})
+    }
+
     componentWillUnmount() {
         this._navListener.remove();
     }
@@ -99,8 +108,11 @@ export default class DetailsPage extends React.Component {
     render() {
         // EPGs is EPG array, video is an EPG or videoModel depend on videoType
         const {epg, epgSameTime} = this.props;
-        const {item, isLive} = this.props.navigation.state.params
-
+        let {item, isLive} = this.state;
+        if (item === null) {
+            item = this.props.navigation.state.params.item;
+            isLive = this.props.navigation.state.params.isLive;
+        }
         if ((isLive && !item) || (!epg || !epg.data || !item) || (this._isOldData(epg.data, isLive))) {
             return (
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
