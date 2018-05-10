@@ -44,10 +44,29 @@ public class FragmentControlPage extends Fragment {
     HashMap mData, mDataLive;
     ImageButton mDetail, mDismiss, mRecord, mFavorite, mShare, mStartOver, mCaption, mPlay, mBackward, mFastward;
     TextView mTitle, mGenres;
+    GetTimer mTimer;
 
     String videoUrl = NO_VIDEO_URL;
     Boolean isDragging = false;
+    Boolean isPlaying = null;
     int currentProgress = 0;
+    float mOffsetRate = 0.0f;
+
+    interface OnPlayFinished {
+        void nextPage();
+    }
+
+    public void setProgress(int progress) {
+        currentProgress = progress;
+        mProgress.setProgress(progress);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        mTimer.cancel(true);
+        super.onDestroy();
+    }
 
     public static FragmentControlPage newInstance(int index, String title, HashMap item) {
         FragmentControlPage mFragment = new FragmentControlPage();
@@ -72,19 +91,12 @@ public class FragmentControlPage extends Fragment {
             mDataLive = (HashMap) getArguments().getSerializable("item");
         }
         else {
+            mTimer = new GetTimer(this);
             mData = (HashMap) getArguments().getSerializable("item");
             ControlPageAdapter.getCatalog().findVideoByID(mData.get("contentId").toString(), new VideoListener() {
                 @Override
                 public void onVideo(Video video) {
                     videoUrl = video.findHighQualitySource(DeliveryType.MP4).getUrl();
-                    if (Api.sharedApi().hIG_IsConnect()) {
-                        Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, new Api.OnSuccessCallbackBlock() {
-                            @Override
-                            public void OnSuccessCallback(Boolean aBoolean, String s) {
-                                Log.v("playMediaOnSuccess", aBoolean.toString());
-                            }
-                        });
-                    }
                 }
             });
         }
@@ -92,12 +104,80 @@ public class FragmentControlPage extends Fragment {
 
     }
 
+    View.OnClickListener backward = v -> {
+        if (Api.sharedApi().hIG_IsConnect()) {
+            Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
+                Api.sharedApi().hIG_PlayMediaSetPosition(i - 10, (aBoolean, s) -> {
+
+                });
+            });
+        }
+    };
+
+    View.OnClickListener forward = v -> {
+        if (Api.sharedApi().hIG_IsConnect()) {
+            Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
+                Api.sharedApi().hIG_PlayMediaSetPosition(i + 10, (aBoolean, s) -> {
+
+                });
+            });
+        }
+    };
+
+    View.OnClickListener startOver = v -> {
+        if (Api.sharedApi().hIG_IsConnect()) {
+            Api.sharedApi().hIG_PlayMediaSetPosition(0, (aBoolean, s) -> {
+
+            });
+        }
+    };
+
+    View.OnClickListener playBtnListener = v -> {
+        if (Api.sharedApi().hIG_IsConnect()) {
+            if (mData != null) {
+                // VOD
+                if (isPlaying == null) {
+                    Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, (aBoolean, s) -> {
+                                Log.v("playMediaOnSuccess", aBoolean.toString());
+                                mTimer.execute();
+                            }
+                    );
+                    mPlay.setImageResource(R.mipmap.ic_pause);
+                    isPlaying = true;
+                } else if (isPlaying) {
+                    Api.sharedApi().hIG_PlayMediaPause(s -> {
+                    });
+                    mPlay.setImageResource(R.mipmap.ic_play);
+                    isPlaying = false;
+                } else {
+                    Api.sharedApi().hIG_PlayMediaResume(s -> {
+                    });
+                    mPlay.setImageResource(R.mipmap.ic_pause);
+                    isPlaying = true;
+                }
+            }
+            else {
+                // LIVE
+                if (isPlaying == null) {
+                    int lcn = Integer.parseInt(((HashMap) mDataLive.get("channelData")).get("lcn").toString());
+                    Api.sharedApi().hIG_SetZap(lcn, (aBoolean, s) -> {
+
+                    });
+                }
+            }
+        }
+    };
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View rootView = inflater.inflate(R.layout.fragment_control_page, container, false);
         int deviceHeight = getContext().getResources().getDisplayMetrics().heightPixels;
         int deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        if (mData != null) {
+            // offset-rate = width / durations
+            mOffsetRate = deviceWidth / (Float.parseFloat(mData.get("durationInSeconds").toString()));
+        }
 
         mRealSeek = rootView.findViewById(R.id.real_volume);
         mFakeSeek = rootView.findViewById(R.id.fake_volume);
@@ -148,9 +228,10 @@ public class FragmentControlPage extends Fragment {
                     .into(mMainBanner);
         }
 
-        mDetail.setOnClickListener(v -> {
-
-        });
+        mPlay.setOnClickListener(playBtnListener);
+        mBackward.setOnClickListener(backward);
+        mFastward.setOnClickListener(forward);
+        mStartOver.setOnClickListener(startOver);
 
         mFakeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -202,6 +283,7 @@ public class FragmentControlPage extends Fragment {
             float distance = (e2.getX() - e1.getX()) / (deviceWidth / 100);
             mProgress.setProgress((int) (currentProgress + distance));
             currentProgress = (int) (currentProgress + distance);
+
             return false;
         }
 
