@@ -10,6 +10,7 @@ import android.view.OrientationEventListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.onapptv.R;
 import com.onapptv.custombrightcoveplayer.CustomBrightcovePlayer;
 
 import java.util.HashMap;

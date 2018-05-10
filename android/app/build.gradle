@@ -177,7 +177,7 @@ ext {
 }
 
 dependencies {
-    compile project(':lottie-react-native')
+    implementation project(':lottie-react-native')
     implementation project(':lottie-react-native')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-orientation')
@@ -241,6 +241,16 @@ dependencies {
     }
     // From node_modules
     implementation project(':android-stb-connect')
+
+    implementation('com.github.bumptech.glide:glide:4.6.1') {
+        exclude group: "com.android.support"
+    }
+    implementation('jp.wasabeef:glide-transformations:3.3.0') {
+        exclude group: "com.android.support"
+    }
+    implementation('com.brightcove.player:exoplayer2:6.0.2') {
+        exclude group: "com.android.support"
+    }
     implementation project(':android-stb-connect-lib')
 }
 
