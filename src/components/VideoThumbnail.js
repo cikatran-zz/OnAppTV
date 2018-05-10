@@ -33,7 +33,7 @@ class VideoThumbnail extends React.PureComponent {
     render() {
 
         let source = require('../assets/bg_category.png');
-        if (this.props.imageUrl !== null) {
+        if (this.props.imageUrl != null) {
             source = {uri: this.props.imageUrl};
         }
         return (

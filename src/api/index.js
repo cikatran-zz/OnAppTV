@@ -193,7 +193,7 @@ export const getChannel = (limit) => {
         .then((response) => {
             let images = {};
             let shortTitles = {}
-            let data = response.data.viewer.channelMany;
+            let data = response.data.viewer.channelPagination.items;
             for (let i = 0; i < data.length; i++) {
                 images[data[i].serviceId] = getImageFromArray(data[i].originalImages, "logo", "feature");
                 shortTitles[data[i].serviceId] = data[i].shortDescription;

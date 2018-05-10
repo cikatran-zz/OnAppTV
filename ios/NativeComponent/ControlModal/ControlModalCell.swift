@@ -109,6 +109,9 @@ class ControlModalCell: UICollectionViewCell {
         onTVButtonView.layer.cornerRadius = 21
         onTVButtonView.clipsToBounds = true
         onTVLabelColor = onTVLabel.textColor
+        blurImage.clipsToBounds = true
+        progressImage.clipsToBounds = true
+        redBar.isHidden = true
     }
     
     func setUpVolumeSlider() {
@@ -127,7 +130,7 @@ extension ControlModalCell {
         if (data?.isLive ?? false) {
             // Show logo channel + red line
             channelImage.isHidden = false
-            redBar.isHidden = false
+            redBar.isHidden = true
             // Hide orientation button
             orientationButton.isHidden = true
         } else {
@@ -231,6 +234,16 @@ extension ControlModalCell {
         }
         isDragging = false
     }
+    
+    public func changeVolume(_ sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: progressView)
+        let newVolume = (translation.x + volumeSlider.frame.width * CGFloat(volumeSlider.value)) / (volumeSlider.frame.width)
+        if (newVolume >= 0 && newVolume <= 1) {
+            volumeSlider.value = Float(newVolume)
+            self.volumeSliderChanged(volumeSlider)
+        }
+        sender.setTranslation(.zero, in: self)
+    }
 }
 
 // MARK: - ControlModalDataDelegate
@@ -311,6 +324,7 @@ extension ControlModalCell: ControlModalDataDelegate {
                 playbackButton.isEnabled = false
                 bookmarkButton.isEnabled = false
                 captionButton.isEnabled = false
+                volumeSlider.isEnabled = false
             }
         }
     }
