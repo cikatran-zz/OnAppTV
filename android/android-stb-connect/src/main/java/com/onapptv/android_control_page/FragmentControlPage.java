@@ -1,6 +1,7 @@
 package com.onapptv.android_control_page;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,13 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.model.DeliveryType;
 import com.brightcove.player.model.Video;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.react.bridge.ReadableMap;
 import com.onapptv.android_stb_connect.R;
 
 import java.util.ArrayList;
@@ -150,6 +148,15 @@ public class FragmentControlPage extends Fragment {
 
         mDetail.setOnClickListener(v -> {
 
+            Intent data = new Intent();
+            data.putExtra("isLive",ControlPageAdapter.isLive());
+            if (ControlPageAdapter.isLive()) {
+                data.putExtra("item",mDataLive);
+            } else {
+                data.putExtra("item",mData);
+            }
+            getActivity().setResult(getActivity().RESULT_OK,data);
+            getActivity().finish();
         });
 
         mFakeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
