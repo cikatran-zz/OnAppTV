@@ -1,6 +1,7 @@
 package com.onapptv.android_control_page;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,13 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.model.DeliveryType;
 import com.brightcove.player.model.Video;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.react.bridge.ReadableMap;
 import com.onapptv.android_stb_connect.R;
 
 import java.util.ArrayList;
@@ -51,6 +49,8 @@ public class FragmentControlPage extends Fragment {
     Boolean isPlaying = null;
     int currentProgress = 0;
     float mOffsetRate = 0.0f;
+    int deviceHeight;
+    int deviceWidth;
 
     interface OnPlayFinished {
         void nextPage();
@@ -58,8 +58,8 @@ public class FragmentControlPage extends Fragment {
 
     public void setProgress(int progress) {
         currentProgress = progress;
-        mProgress.setProgress(progress);
-
+        float percent = progress / mOffsetRate;
+        mProgress.setProgress((int) (percent / (deviceWidth / 100)));
     }
 
     @Override
@@ -172,11 +172,12 @@ public class FragmentControlPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View rootView = inflater.inflate(R.layout.fragment_control_page, container, false);
-        int deviceHeight = getContext().getResources().getDisplayMetrics().heightPixels;
-        int deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        deviceHeight  = getContext().getResources().getDisplayMetrics().heightPixels;
+        deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+
         if (mData != null) {
             // offset-rate = width / durations
-            mOffsetRate = deviceWidth / (Float.parseFloat(mData.get("durationInSeconds").toString()));
+            mOffsetRate = (Float.parseFloat(mData.get("durationInSeconds").toString())) / deviceWidth;
         }
 
         mRealSeek = rootView.findViewById(R.id.real_volume);
@@ -232,7 +233,18 @@ public class FragmentControlPage extends Fragment {
         mBackward.setOnClickListener(backward);
         mFastward.setOnClickListener(forward);
         mStartOver.setOnClickListener(startOver);
+        mDetail.setOnClickListener(v -> {
 
+            Intent data = new Intent();
+            data.putExtra("isLive",ControlPageAdapter.isLive());
+            if (ControlPageAdapter.isLive()) {
+                data.putExtra("item", mDataLive);
+            } else {
+                data.putExtra("item", mData);
+            }
+            getActivity().setResult(getActivity().RESULT_OK,data);
+            getActivity().finish();
+        });
         mFakeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -283,7 +295,9 @@ public class FragmentControlPage extends Fragment {
             float distance = (e2.getX() - e1.getX()) / (deviceWidth / 100);
             mProgress.setProgress((int) (currentProgress + distance));
             currentProgress = (int) (currentProgress + distance);
+            Api.sharedApi().hIG_PlayMediaSetPosition((int) (currentProgress * mOffsetRate), (aBoolean, s) -> {
 
+            });
             return false;
         }
 

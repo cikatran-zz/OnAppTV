@@ -3,6 +3,7 @@ package com.onapptv.android_control_page;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -41,6 +42,7 @@ public class GetTimer extends AsyncTask<Void, Integer, Boolean> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
+        Log.v("onProgressUpdate", String.valueOf(values[0]));
         mFragment.get().setProgress(values[0]);
     }
 
