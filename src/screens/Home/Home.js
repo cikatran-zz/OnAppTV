@@ -18,7 +18,8 @@ import {
     NativeModules,
     TouchableOpacity,
     StatusBar,
-    Linking
+    Linking,
+    InteractionManager
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -63,19 +64,21 @@ export default class Home extends Component {
     };
 
     fetchData() {
-        this.props.getBanner();
-        this.props.getAds();
-        this.props.getLive(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true));
-        this.props.getVOD(2, 10);
-        this.props.getCategory();
-        this.props.getNews();
-        getChannel().then((response) => {
-            this._setupFavoriteChannel(response);
-        });
+        InteractionManager.runAfterInteractions(() => {
+            this.props.getBanner();
+            this.props.getAds();
+            this.props.getLive(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true));
+            this.props.getVOD(1, 10);
+            this.props.getCategory();
+            this.props.getNews();
+            getChannel().then((response) => {
+                this._setupFavoriteChannel(response);
+            });
 
-        getWatchingHistory().then((response) => {
-            this.setState({resumeVOD: [response]});
-        });
+            getWatchingHistory().then((response) => {
+                this.setState({resumeVOD: [response]});
+            });
+        })
     }
 
     componentDidMount() {
@@ -162,23 +165,36 @@ export default class Home extends Component {
 
     // BANNER
     _renderBanner = ({item}) => {
-        if (item == null) {
-            return null;
+        if (item.isFetching) {
+            return (
+                <View
+                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <DotsLoader color={colors.textGrey} size={10} betweenSpace={10}/>
+                </View>
+            )
+        }
+        if (item.data === null) {
+            return (
+                <View
+                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <Text style={styles.errorMessage}>Cannot load data. Please check your internet connection</Text>
+                </View>
+            );
         }
         return (
-            <TouchableOpacity onPress={() => this._onVideoPress(item, false)}>
+            <TouchableOpacity onPress={() => this._onVideoPress(item.data, false)}>
                 <View style={styles.slotMachineContainer}>
                     <ImageBackground
                         style={styles.slotMachineImage}
-                        source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
+                        source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
                             <PinkRoundedLabel text="NEW MOVIE" style={{alignSelf: 'flex-end', marginBottom: 14}}/>
                             <Text style={styles.bannerTitle}>
-                                {item.title}
+                                {item.data.title}
                             </Text>
                             <Text style={styles.bannerSubtitle}>
-                                {item.shortDescription}
+                                {item.data.shortDescription}
                             </Text>
                         </View>
                     </ImageBackground>
@@ -189,16 +205,31 @@ export default class Home extends Component {
 
     // ADS
     _renderAds = ({item}) => {
-        if (item == null) {
-            return null;
+        if (item.isFetching) {
+            return (
+                <View
+                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <DotsLoader color={colors.textGrey} size={10} betweenSpace={10}/>
+                </View>
+            )
+        }
+        if (item.data === null) {
+            return (
+                <View
+                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <Text style={styles.errorMessage}>Can't load image</Text>
+                </View>
+            );
         }
 
-        let url = item.url ? item.url : 'https://www.hi-global.tv';
+        let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
-                <ImageBackground style={styles.adsContainer} source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
+                <ImageBackground
+                    style={styles.adsContainer}
+                    source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}>
                     <View style={styles.adsLabelContainer}>
-                        <PinkRoundedLabel text={item.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
+                        <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
                     </View>
                 </ImageBackground>
             </TouchableOpacity>
@@ -206,15 +237,29 @@ export default class Home extends Component {
     };
 
     _renderFooter = ({item}) => {
-        if (item == null) {
-            return null;
+        if (item.isFetching) {
+            return (
+                <View
+                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                </View>
+            )
+        }
+
+        if (item.data === null) {
+            return (
+                <View
+                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <Text style={styles.errorMessage}>Can't load image</Text>
+                </View>
+            );
         }
         return (
-            <TouchableOpacity onPress={()=> Linking.openURL(item.url)}>
+            <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}>
                 <View style={styles.notificationContainer}>
-                    <Image style={styles.notificationImage} source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}/>
-                    <Text style={styles.notificationTitle}>{item.title}</Text>
-                    <Text style={styles.notificationSubTitle}>{item.shortDescription}</Text>
+                    <Image style={styles.notificationImage} source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}/>
+                    <Text style={styles.notificationTitle}>{item.data.title}</Text>
+                    <Text style={styles.notificationSubTitle}>{item.data.shortDescription}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -460,18 +505,6 @@ export default class Home extends Component {
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
         let refreshing = banner.isFetching || live.isFetching || vod.isFetching || ads.isFetching || category.isFetching || news.isFetching;
-        if (!banner.fetched || banner.isFetching ||
-            !ads.fetched || ads.isFetching ||
-            !vod.fetched || vod.isFetching ||
-            !category.fetched || category.isFetching ||
-            !news.fetched || news.isFetching ||
-            !live.fetched || live.isFetching)
-            return (
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            );
-
         if (this.state.favoriteCategories === null) {
             let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
             this.state.category = category.data === null ? [] : category.data;
@@ -482,23 +515,23 @@ export default class Home extends Component {
 
 
         let sections = [
-            {data: [banner.data], showHeader: false, renderItem: this._renderBanner},
+            {data: [banner], showHeader: false, renderItem: this._renderBanner},
             {data: [this.state.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
             {data: this.state.resumeVOD, showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
-            {data: [ads.data], showHeader: false, renderItem: this._renderAds}
+            {data: [ads], showHeader: false, renderItem: this._renderAds}
             ];
 
-        if (live.data != null && live.data.length > 0) {
+        if (live.data !== null && live.data.length > 0) {
             sections.push({data: [live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
         }
 
-        if (vod.data != null && vod.data.length > 0) {
+        if (vod.data !== null && vod.data.length > 0) {
             sections.push({data: [vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList});
         }
 
         sections.push({ data: [this.state.favoriteCategories], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList});
 
-        sections.push({data: [news.data], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter});
+        sections.push({data: [news], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter});
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
@@ -568,7 +601,7 @@ const styles = StyleSheet.create({
     },
     slotMachineImage: {
         width: '100%',
-        height: '100%'
+        height: '100%',
     },
     bannerPlayIconGroup: {
         alignSelf: 'center',
@@ -712,5 +745,13 @@ const styles = StyleSheet.create({
     videoThumbnail: {
         width: 156,
         height: 74
-    }
+    },
+    errorMessage: {
+        marginTop: 100,
+        color: colors.whiteBackground,
+        fontSize: 20,
+        width: '100%',
+        paddingHorizontal: 40,
+        textAlign: 'center'
+    },
 });
