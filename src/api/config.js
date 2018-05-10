@@ -60,33 +60,13 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
 `
 
 const bannerQuery = gql`
-query{
+query {
   viewer{
-		videoOne(filter:{
-      feature: true
+    playlistOne(filter: {
+      title: "highlights"
     }) {
-		  contentId
-      durationInSeconds
-      title
-      custom
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      shortDescription
-      longDescription
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      },
-      genresData {
-        name
-      }
-		}
+      mediaData
+    }
   }
 }
 `;
