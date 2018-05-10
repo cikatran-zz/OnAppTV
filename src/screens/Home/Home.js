@@ -66,7 +66,7 @@ export default class Home extends Component {
         this.props.getBanner();
         this.props.getAds();
         this.props.getLive(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true));
-        this.props.getVOD(1, 10);
+        this.props.getVOD(2, 10);
         this.props.getCategory();
         this.props.getNews();
         getChannel().then((response) => {

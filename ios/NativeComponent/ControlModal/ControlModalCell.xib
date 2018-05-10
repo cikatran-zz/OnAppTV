@@ -48,7 +48,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="test_controlmodalbackground" translatesAutoresizingMaskIntoConstraints="NO" id="ApK-gY-v04">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="test_controlmodalbackground" translatesAutoresizingMaskIntoConstraints="NO" id="ApK-gY-v04">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                 </imageView>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZD7-5O-zvy">
@@ -60,7 +60,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qWz-tA-wI5" userLabel="Wrapper Progress View">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="343.33333333333331"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="test_controlmodalbackground" translatesAutoresizingMaskIntoConstraints="NO" id="6Gd-uh-M2d">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="test_controlmodalbackground" translatesAutoresizingMaskIntoConstraints="NO" id="6Gd-uh-M2d">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="343.33333333333331"/>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="test_channel_logo" translatesAutoresizingMaskIntoConstraints="NO" id="JvG-id-hb9" userLabel="channelImage">

@@ -65,6 +65,7 @@ class ControlModalCell: UICollectionViewCell {
     var onTVDarkerLabelColor: UIColor = .darkGray
     
     var needUpdateAll = true
+    var isDragging = false
     
     public var isSTBConnected: Bool = true {
         didSet {
@@ -161,9 +162,7 @@ extension ControlModalCell {
     }
     
     func updateSTBConnectedState() {
-        if (isSTBConnected) {
-            data?.playState = .notPlayed
-        } else {
+        if (!isSTBConnected) {
             data?.playState = .disconnect
         }
     }
@@ -204,7 +203,8 @@ extension ControlModalCell {
         if (data?.isLive ?? false) {
             
         } else {
-            if (newWidth >= 0 && newWidth <= progressView.frame.width && (data?.playState ?? .notPlayed) == .currentPlaying) {
+            let playState = (data?.playState ?? .notPlayed)
+            if (newWidth >= 0 && newWidth <= progressView.frame.width &&  (playState == .currentPlaying || playState == .pause)) {
                 progressWidth.constant = progressWidth.constant + translation.x
                 let durationInSeconds = data?.durationInSeconds ?? 0
                 let progress = progressWidth.constant / progressView.frame.width
@@ -212,6 +212,7 @@ extension ControlModalCell {
                 updateLabelsWith(currentTime)
             }
         }
+        isDragging = true
         sender.setTranslation(.zero, in: self)
     }
     
@@ -228,6 +229,7 @@ extension ControlModalCell {
                 }
             }
         }
+        isDragging = false
     }
 }
 
@@ -236,6 +238,9 @@ extension ControlModalCell: ControlModalDataDelegate {
     
     func progressChanged(controlModalData: ControlModalData) {
         // Update progress view
+        if (isDragging) {
+            return
+        }
         progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
         
         // Update label
@@ -247,10 +252,12 @@ extension ControlModalCell: ControlModalDataDelegate {
         } else {
             let totalTime = data?.durationInSeconds ?? 0
             updateLabelsWith((data?.currentProgress ?? 0) * totalTime)
-            if ((data?.currentProgress ?? 0) >= 0.98) {
-                playNext?()
-            }
         }
+    }
+    
+    func playReachEnd(controlModalData: ControlModalData) {
+        data?.playState = .pause
+        playNext?()
     }
     
     func playStateChanged(controlModalData: ControlModalData) {
@@ -289,7 +296,7 @@ extension ControlModalCell: ControlModalDataDelegate {
                 playOverButton.isEnabled = false
                 rewindButton.isEnabled = false
                 fastforwardButton.isEnabled = false
-            } else if (playState == .pause) {
+            } else if (playState == .currentPlaying) {
                 self.playbackButton.setImage(UIImage(named: "ic_pause"), for: .normal)
                 if (needUpdateAll) {
                     self.onPlayMedia?()
@@ -354,13 +361,16 @@ extension ControlModalCell {
     }
     
     @IBAction func onPlayOverTouched(_ sender: UIButton) {
-        Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: data?.videoUrl ?? "") { (isSuccess, error) in
-            if !isSuccess {
-                print(error ?? "")
-            } else {
-                self.data?.currentProgress = 0
+        
+        data?.getVideoUrl(callback: { (url) in
+            Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url) { (isSuccess, error) in
+                if !isSuccess {
+                    print(error ?? "")
+                } else {
+                    self.data?.currentProgress = 0
+                }
             }
-        }
+        })
     }
     
     @IBAction func infoButtonTouched(_ sender: UIButton) {
@@ -400,7 +410,7 @@ extension ControlModalCell {
         } else {
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
-                Api.shared().hIG_PlayPvrResume { (isSuccess, error) in
+                Api.shared().hIG_PlayMediaResume { (isSuccess, error) in
                     if !isSuccess {
                         print(error ?? "")
                     } else {
@@ -408,21 +418,23 @@ extension ControlModalCell {
                     }
                 }
             } else if (playState == .notPlayed) {
-                Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: data?.videoUrl ?? "") { (isSuccess, error) in
-                    if !isSuccess {
-                        print(error ?? "")
-                    } else {
-                        self.data?.playState = .currentPlaying
+                data?.getVideoUrl(callback: { (url) in
+                    Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url) { (isSuccess, error) in
+                        if !isSuccess {
+                            print(error ?? "")
+                        } else {
+                            self.data?.playState = .currentPlaying
+                        }
                     }
-                }
+                })
             } else {
-                Api.shared().hIG_PlayPvrPause { (isSuccess, error) in
+                Api.shared().hIG_PlayMediaPause({ (isSuccess, error) in
                     if !isSuccess {
                         print(error ?? "")
                     } else {
                         self.data?.playState = .pause
                     }
-                }
+                })
             }
         }
         
