@@ -23,6 +23,9 @@ import * as getProfileInfo from './getProfileInfo'
 import * as getPvrList from './getPvrList'
 import * as getEpgSameTime from './getEpgSameTime'
 import * as getWatchingHistory from './getWatchingHistory'
+import * as getEPGByGenres from './getEPGByGenres'
+import * as getVODByGenres from './getVODByGenres'
+import * as getLatestVODByGenres from './getLatestVODByGenres'
 
 export default actions = {
     getBanner,
@@ -42,7 +45,6 @@ export default actions = {
     getSeriesInfo,
     getBcVideos,
     readUsbDir,
-    getSeriesInfo,
     getUSBDisks,
     getSatellite,
     getTimeShiftLimitSize,
@@ -50,5 +52,8 @@ export default actions = {
     getProfileInfo,
     getPvrList,
     getEpgSameTime,
-    getWatchingHistory
+    getWatchingHistory,
+    getEPGByGenres,
+    getVODByGenres,
+    getLatestVODByGenres
 };

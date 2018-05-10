@@ -165,36 +165,24 @@ export default class Home extends Component {
 
     // BANNER
     _renderBanner = ({item}) => {
-        if (item.isFetching) {
-            return (
-                <View
-                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                    <DotsLoader color={colors.textGrey} size={10} betweenSpace={10}/>
-                </View>
-            )
+        if (item == null) {
+            return null
         }
-        if (item.data === null) {
-            return (
-                <View
-                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                    <Text style={styles.errorMessage}>Cannot load data. Please check your internet connection</Text>
-                </View>
-            );
-        }
+        console.log(item);
         return (
-            <TouchableOpacity onPress={() => this._onVideoPress(item.data, false)}>
+            <TouchableOpacity onPress={() => this._onBannerPress(item, false)}>
                 <View style={styles.slotMachineContainer}>
                     <ImageBackground
                         style={styles.slotMachineImage}
-                        source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}>
+                        source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
                             <PinkRoundedLabel text="NEW MOVIE" style={{alignSelf: 'flex-end', marginBottom: 14}}/>
                             <Text style={styles.bannerTitle}>
-                                {item.data.title}
+                                {item.title}
                             </Text>
                             <Text style={styles.bannerSubtitle}>
-                                {item.data.shortDescription}
+                                {item.shortDescription}
                             </Text>
                         </View>
                     </ImageBackground>
@@ -323,6 +311,16 @@ export default class Home extends Component {
         })
     };
 
+    _onBannerPress = (item) => {
+        const {navigation} = this.props;
+        navigation.navigate('VideoControlModal', {
+            item: item,
+            epg: [item],
+            isLive: false
+        })
+
+    };
+
     // ON VOD
     _renderVODItem = ({item}) => {
 
@@ -335,6 +333,7 @@ export default class Home extends Component {
                 genres = genres.concat(genre.name.toString());
             })
         }
+
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
@@ -513,9 +512,9 @@ export default class Home extends Component {
         }
 
 
-
+        let bannerData = (banner.data == null || banner.data.length == 0) ? null : banner.data[0]
         let sections = [
-            {data: [banner], showHeader: false, renderItem: this._renderBanner},
+            {data: [bannerData], showHeader: false, renderItem: this._renderBanner},
             {data: [this.state.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
             {data: this.state.resumeVOD, showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
             {data: [ads], showHeader: false, renderItem: this._renderAds}

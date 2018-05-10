@@ -276,6 +276,20 @@ export const getEpgs = (serviceId) => {
     })
 };
 
+export const getVODByGenres = (genresId, limit, skip) => {
+    return client.query({
+        query: config.queries.VOD_BY_GENRES,
+        variables: {genresId: genresId, limit: limit, skip: skip}
+    })
+};
+
+export const getEPGByGenres = (genresId, currentTime, limit, skip) => {
+    return client.query({
+        query: config.queries.GENRES_EPG,
+        variables: {genresId: genresId, limit: limit, skip: skip, currentTime: currentTime}
+    })
+};
+
 export const getGenresContent = (genresIds) => {
     let promises = [];
 

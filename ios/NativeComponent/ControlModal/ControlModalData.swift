@@ -20,6 +20,7 @@ enum PlayState {
 protocol ControlModalDataDelegate {
     func progressChanged(controlModalData: ControlModalData)
     func playStateChanged(controlModalData: ControlModalData)
+    func playReachEnd(controlModalData: ControlModalData)
 }
 
 class ControlModalData {
@@ -73,6 +74,12 @@ class ControlModalData {
                             Api.shared().hIG_PlayMediaGetPosition({ (isSuccess, currentSeconds) in
                                 if (isSuccess) {
                                     self.currentProgress = Double(currentSeconds)/self.durationInSeconds
+                                } else {
+                                    DispatchQueue.main.async {
+                                        if (oldValue != self.playState) {
+                                            self.delegate?.playReachEnd(controlModalData: self)
+                                        }
+                                    }
                                 }
                             })
                         } else {
@@ -100,6 +107,7 @@ class ControlModalData {
     public var redBarEndPoint: Double = 0           // 0.0 - 1.0
     
     public var isLive = false
+    public var contentId = ""
     
     var delegate: ControlModalDataDelegate? = nil
     
@@ -143,10 +151,7 @@ class ControlModalData {
             self.durationInSeconds = (json[JSONKeys.durationInSeconds] as? Double) ?? 0
             self.title = (json[JSONKeys.title] as? String) ?? ""
             parseGenres(asJsonArr(json[JSONKeys.genresData]))
-            let contentId = json[JSONKeys.contentId] as? String ?? ""
-            BrightcoveRequestVideo.shared.getMP4URLOf(contentId: contentId) { (sourceUrl) in
-                self.videoUrl = sourceUrl ?? ""
-            }
+            self.contentId = json[JSONKeys.contentId] as? String ?? ""
         }
         
         
@@ -170,6 +175,17 @@ class ControlModalData {
                 genres += ", "
             }
             genres += (asJsonObj(genre)[JSONKeys.name] as? String) ?? ""
+        }
+    }
+    
+    func getVideoUrl(callback: @escaping (String)-> Void) {
+        if (videoUrl != "") {
+            callback(videoUrl)
+        } else {
+            BrightcoveRequestVideo.shared.getMP4URLOf(contentId: self.contentId) { (sourceUrl) in
+                self.videoUrl = sourceUrl ?? ""
+                callback(self.videoUrl)
+            }
         }
     }
     

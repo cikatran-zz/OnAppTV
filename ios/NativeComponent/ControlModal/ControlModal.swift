@@ -21,6 +21,7 @@ class ControlModal: UIView {
     @IBOutlet weak var collectionView: UICollectionView!
     var draggingState: DraggingState = .none
     var onceOnly = false
+    var autoScroll = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,7 +71,11 @@ class ControlModal: UIView {
     
     var isSTBConnected: Bool {
         get {
-            return Api.shared().hIG_IsConnect()
+            let result = Api.shared().hIG_IsConnect()
+            if !result {
+                onAlert(["message": "Disconnect from STB"])
+            }
+            return result
         }
         set {
             
@@ -179,8 +184,9 @@ extension ControlModal: UICollectionViewDataSource {
             
             if (itemIndex != indexPath.item) {
                 let indexToScrollTo = IndexPath(item: itemIndex, section: 0)
+                
                 self.collectionView.scrollToItem(at: indexToScrollTo, at: .centeredHorizontally, animated: true)
-                self.videosData[itemIndex].playState = .currentPlaying
+                self.autoScroll = true
             }
         }
         cell.onAlert = { message in
@@ -211,7 +217,6 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
         if !onceOnly {
             let indexToScrollTo = IndexPath(item: index.intValue, section: 0)
             self.collectionView.scrollToItem(at: indexToScrollTo, at: .centeredHorizontally, animated: false)
-            
             // Zap or play media
             if (isSTBConnected) {
                 if (self.videosData[index.intValue].isLive) {
@@ -223,18 +228,24 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         }
                     }
                 } else {
-                    Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: self.videosData[index.intValue].videoUrl) { (isSuccess, error) in
-                        if !isSuccess {
-                            print(error ?? "")
-                        } else {
-                            self.videosData[self.index.intValue].playState = .currentPlaying
+                    self.videosData[index.intValue].getVideoUrl { (url) in
+                        Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url) { (isSuccess, error) in
+                            if !isSuccess {
+                                print(error ?? "")
+                            } else {
+                                self.videosData[self.index.intValue].playState = .currentPlaying
+                            }
                         }
                     }
+                    
                 }
             }
             onceOnly = true
         }
-        
+        if (autoScroll) {
+            autoScroll = false
+            (cell as? ControlModalCell)?.playBackButtonTouched(UIButton())
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
