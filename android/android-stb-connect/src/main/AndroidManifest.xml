@@ -3,7 +3,8 @@
     package="com.onapptv.android_stb_connect">
 
     <application>
-        <activity android:name="com.onapptv.android_control_page.ControlActivity"></activity>
+        <activity android:name="com.onapptv.ControlActivity"
+            android:configChanges="orientation"></activity>
     </application>
 
 </manifest>

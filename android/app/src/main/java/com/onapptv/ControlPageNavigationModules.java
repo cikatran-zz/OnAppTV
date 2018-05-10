@@ -17,7 +17,6 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
-import com.onapptv.android_control_page.ControlActivity;
 
 import java.util.HashMap;
 
@@ -53,14 +52,18 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
             if (requestCode == DETAILS_PAGE_REQUEST) {
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle extras = data.getExtras();
-                    boolean isLive = extras.getBoolean("isLive");
-                    HashMap item = (HashMap) extras.getSerializable("item");
-                    WritableMap params = Arguments.createMap();
-                    params.putBoolean("isLive", isLive);
-                    Gson gson = new Gson();
-                    String itemJson = gson.toJson(item);
-                    params.putString("item", itemJson);
-                    sendEvent(getReactApplicationContext(), "reloadDetailsPage", params);
+                    boolean isDismiss = extras.getBoolean("dismiss");
+                    if (isDismiss) sendEvent(getReactApplicationContext(), "dismissControlPage", null);
+                    else {
+                        boolean isLive = extras.getBoolean("isLive");
+                        HashMap item = (HashMap) extras.getSerializable("item");
+                        WritableMap params = Arguments.createMap();
+                        params.putBoolean("isLive", isLive);
+                        Gson gson = new Gson();
+                        String itemJson = gson.toJson(item);
+                        params.putString("item", itemJson);
+                        sendEvent(getReactApplicationContext(), "reloadDetailsPage", params);
+                    }
                 }
             }
         }
