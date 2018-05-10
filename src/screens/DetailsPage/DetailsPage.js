@@ -335,8 +335,9 @@ export default class DetailsPage extends React.Component {
         if (isLive) {
             data = epgSameTime;
             data.data = data.data.concat([item])
+        } else {
+
         }
-        console.log("DETAIL PAGE",data.data);
         navigation.replace('VideoControlModal', {
             item: item,
             epg: data.data.length !== 0 ? data.data : [item],

@@ -421,6 +421,7 @@ query genresVOD($genresId: MongoID, $limit: Int, $skip: Int){
       genresData {
         name
       }
+      genreIds
       durationInSeconds
       originalImages {
         height
