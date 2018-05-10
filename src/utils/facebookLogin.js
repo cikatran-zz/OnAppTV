@@ -1,5 +1,6 @@
 import {LoginManager, AccessToken, GraphRequest, GraphRequestManager} from 'react-native-fbsdk'
 import {NativeModules} from 'react-native'
+import _ from 'lodash'
 
 export function facebookLogin() {
     return new Promise((resolve, reject)=> {
@@ -26,7 +27,7 @@ export function facebookLogin() {
                                                 gender: (result.gender === "female") ? "Female" : "Male",
                                                 lastName: result.last_name,
                                                 firstName: result.first_name,
-                                                age: result.age_range.min.toString(),
+                                                age: _.get(result, 'age_range.min',0).toString(),
                                                 email: result.email ? result.email : ""
                                             };
                                             NativeModules.RNUserKit.storeProperty("_base_info", baseInfo, (error, result) => {});

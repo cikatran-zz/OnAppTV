@@ -9,6 +9,7 @@ import {NativeModules, Platform, StatusBar, StyleSheet} from 'react-native';
 import STBConnectionView from '../../components/STBConnectionView'
 import Orientation from 'react-native-orientation';
 import {NavigationActions} from "react-navigation";
+import ControlModal from "../../components/ControlModal";
 
 export default class STBConnection extends Component {
 

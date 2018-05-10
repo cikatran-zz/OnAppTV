@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {
     Dimensions,
     FlatList,
@@ -22,8 +22,9 @@ import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
+import moment from "moment/moment";
 
-export default class DetailsPage extends Component {
+export default class DetailsPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -92,7 +93,7 @@ export default class DetailsPage extends Component {
         Orientation.lockToPortrait();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
-            (Platform.OS !== 'ios') && StatusBar.setBackgroundColor('#ffffff');
+            (Platform.OS != 'ios') && StatusBar.setBackgroundColor('#ffffff');
             Orientation.lockToPortrait();
         });
     }

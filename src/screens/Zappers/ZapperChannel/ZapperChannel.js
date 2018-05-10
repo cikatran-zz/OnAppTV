@@ -208,6 +208,8 @@ export default class ZapperChannel extends Component {
                               showsVerticalScrollIndicator={false}
                               keyExtractor={(item, index) => index}
                               renderItem={this._renderItem}
+                              refreshing={channel.isFetching}
+                              onRefresh={() => this.props.getChannel(-1)}
                               ListFooterComponent={this._renderListFooter}/>
                 </ImageBackground>
             </View>

@@ -28,6 +28,9 @@ import getProfileInfoEpic from "./profileInfoRequestEpic";
 import getPvrListEpic from "./getPvrListEpic"
 import epgSameTimeEpic from "./epgSameTImeEpic"
 import getWatchingHistoryEpic from "./watchingHistoryEpic";
+import getEPGByGenresEpic from "./epgByGenresRequestEpic";
+import getVODByGenresEpic from "./vodByGenresRequestEpic";
+import getLatestVODByGenresEpic from "./latestVODByGenresRequestEpic";
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -60,7 +63,10 @@ const rootEpic = combineEpics(
     getProfileInfoEpic,
     getPvrListEpic,
     epgSameTimeEpic,
-    getWatchingHistoryEpic
+    getWatchingHistoryEpic,
+    getEPGByGenresEpic,
+    getVODByGenresEpic,
+    getLatestVODByGenresEpic
 );
 
 export default rootEpic;

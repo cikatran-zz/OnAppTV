@@ -3,27 +3,29 @@ import gql from "graphql-tag";
 
 const channelQuery = gql`
 query queryChannel($serviceIDs: [Float]!){
-  viewer{
-    channelMany(filter:{
+  viewer {
+    channelPagination(perPage: 60, page: 1, filter:{
       _operators: {
         serviceId: {
           in: $serviceIDs
         }
       }
     }) {
-      serviceId
-      lcn
-      title
-      longDescription
-      shortDescription
-      createdAt
-      updatedAt
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
+      items {
+        serviceId
+        lcn
+        title
+        longDescription
+        shortDescription
+        createdAt
+        updatedAt
+        originalImages {
+          height
+          width
+          url
+          name
+          fileName
+        }
       }
     }
   }
@@ -60,33 +62,13 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
 `
 
 const bannerQuery = gql`
-query{
+query {
   viewer{
-		videoOne(filter:{
-      feature: true
+    playlistOne(filter: {
+      title: "HIGHLIGHT"
     }) {
-		  contentId
-      durationInSeconds
-      title
-      custom
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      shortDescription
-      longDescription
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      },
-      genresData {
-        name
-      }
-		}
+      mediaData
+    }
   }
 }
 `;
@@ -416,8 +398,45 @@ query genresVOD($genresId: [MongoID]){
 }
 `;
 
+const vodByGenres = gql`
+query genresVOD($genresId: MongoID, $limit: Int, $skip: Int){
+  viewer{
+    videoMany(filter: {
+      _operators: {
+        genreIds: {
+          in: [$genresId]
+        }
+      }
+    }, limit: $limit, skip: $skip) {
+      contentId
+      durationInSeconds
+      title
+      feature
+      seriesId
+      seasonIndex
+      episodeIndex
+      type
+      impression
+      state
+      genresData {
+        name
+      }
+      durationInSeconds
+      originalImages {
+        height
+        width
+        url
+        name
+        fileName
+      }
+      custom
+    }
+  }
+}
+`;
+
 const genresEPGs = gql`
-query genresEPGs($currentTime: Date, $genresId: [MongoID]){
+query genresEPGs($currentTime: Date, $genresId: MongoID, $limit: Int, $skip: Int){
   viewer{
     epgMany(filter: {
       _operators:{
@@ -428,27 +447,40 @@ query genresEPGs($currentTime: Date, $genresId: [MongoID]){
           gte: $currentTime
         },
         genreIds: {
-          in: $genresId
+          in: [$genresId]
         }
       }
     
-    }) {
+    }, skip: $skip, limit: $limit) {
+      startTime
+      endTime
       channelData {
+        serviceId
+        lcn
         title
+        state
       }
       videoData {
+        contentId
+        durationInSeconds
         title
-        originalImages {
-          url
-        }
+        longDescription
+        shortDescription
+        seriesId
+        seasonIndex
+        episodeIndex
+        type
         genresData {
           name
         }
-        custom
-      }
-      startTime
-      endTime
-      genreIds
+        originalImages {
+          height
+          width
+          url
+          name
+          fileName
+        }
+      } 
     }
   }
 }
@@ -584,7 +616,7 @@ query getVODs($id: [String]!){
 `;
 
 export default {
-    serverURL: 'http://contentkit-prod.ap-southeast-1.elasticbeanstalk.com/graphql',
+    serverURL: 'https://contentkit-api.mstage.io/graphql',
     queries: {
         BANNER: bannerQuery,
         CHANNEL: channelQuery,
@@ -602,6 +634,8 @@ export default {
         ZAPPER_CONTENT: zapperContentQuery,
         BRIGHTCOVE_SEARCH : searchBrightcoveQuery,
         EPG_SAME_TIME: queryEpgSameTime,
-        VOD_BY_IDS: VODByIds
+        VOD_BY_IDS: VODByIds,
+        VOD_BY_GENRES: vodByGenres,
+
     }
 };

@@ -4,7 +4,7 @@ import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text, Platform, Ac
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 import Orientation from "react-native-orientation";
-import {DotsLoader} from "react-native-indicator";
+import _ from 'lodash'
 
 export default class Category extends Component {
 
@@ -15,16 +15,6 @@ export default class Category extends Component {
     };
 
     componentDidMount() {
-        // Fetch data
-        const {data, fromItem} = this.props.navigation.state.params;
-
-        let ids = [];
-
-        data.forEach((item) => {
-            ids.push(item.id);
-
-        });
-        this.props.getGenresContent(ids);
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('white');
@@ -67,29 +57,8 @@ export default class Category extends Component {
     };
 
     render() {
-        const {genresContent} = this.props;
-        if (!genresContent.fetched || genresContent.isFetching) {
-            return (
-                <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            );
-        }
-
         const {data, fromItem} = this.props.navigation.state.params;
-        this.startCategory = fromItem;
-        this.names = data.reduce((map, obj)=> {
-            map[obj.id] = obj.name;
-            return map;
-        }, {});
-
-        let keys = Object.keys(genresContent.data);
-        var startIndex = 0;
-        keys.forEach((key, index) => {
-            if (this.names[key] == this.startCategory) {
-                startIndex = index;
-            }
-        });
+        let startIndex = _.findIndex(data, {'name': fromItem})
 
         return (
             <View style={{width: '100%', height: '100%'}}>
@@ -98,12 +67,10 @@ export default class Category extends Component {
                     backgroundColor='white'
                     barStyle='dark-content'/>
                 <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false} index={startIndex}>
-                    {keys.map((key, index) => {
-                        return (<CategoryPageView pagePosition={this._getPagePosition(index, keys.length)}
-                                                  header={this.names[key] ? this.names[key] : ""}
-                                                  slotMachines={genresContent.data[key].features}
-                                                  vod={genresContent.data[key].VOD}
-                                                  epgs={genresContent.data[key].EPGs}
+                    {data.map((genres, index) => {
+                        return (<CategoryPageView pagePosition={this._getPagePosition(index, data.length)}
+                                                  header={genres.name}
+                                                  genresId={genres.id}
                                                   key={"category" + index}
                                                   goBack={()=>{this._goBack()}}
                                                   onVideoPress={(item, isLive)=> this._onVideoPress(item, isLive)}/>)

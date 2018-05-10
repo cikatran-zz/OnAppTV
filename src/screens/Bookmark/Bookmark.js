@@ -245,7 +245,8 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        backgroundColor: colors.screenBackground
     },
     myScheduledRecordLabel: {
         width: 479,
