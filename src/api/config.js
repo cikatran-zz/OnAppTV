@@ -63,7 +63,7 @@ const bannerQuery = gql`
 query {
   viewer{
     playlistOne(filter: {
-      title: "highlights"
+      title: "HIGHLIGHT"
     }) {
       mediaData
     }
