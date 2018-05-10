@@ -13,6 +13,7 @@ enum DraggingState {
     case none
     case page
     case progress
+    case volume
 }
 
 class ControlModal: UIView {
@@ -106,6 +107,8 @@ class ControlModal: UIView {
                 draggingState = .page
             } else if (tapLocation.y < 0) {
                 draggingState = .progress
+            } else if (tapLocation.y >= maxYPage) {
+                draggingState = .volume
             } else {
                 draggingState = .none
             }
@@ -126,6 +129,10 @@ class ControlModal: UIView {
         
         if (draggingState == .progress) {
             (collectionView.visibleCells.first as? ControlModalCell)?.changeProgressView(sender)
+        }
+        
+        if (draggingState == .volume) {
+            (collectionView.visibleCells.first as? ControlModalCell)?.changeVolume(sender)
         }
         
         if sender.state == .ended {

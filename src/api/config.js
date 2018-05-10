@@ -3,27 +3,29 @@ import gql from "graphql-tag";
 
 const channelQuery = gql`
 query queryChannel($serviceIDs: [Float]!){
-  viewer{
-    channelMany(filter:{
+  viewer {
+    channelPagination(perPage: 60, page: 1, filter:{
       _operators: {
         serviceId: {
           in: $serviceIDs
         }
       }
     }) {
-      serviceId
-      lcn
-      title
-      longDescription
-      shortDescription
-      createdAt
-      updatedAt
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
+      items {
+        serviceId
+        lcn
+        title
+        longDescription
+        shortDescription
+        createdAt
+        updatedAt
+        originalImages {
+          height
+          width
+          url
+          name
+          fileName
+        }
       }
     }
   }
