@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.onapptv.android_stb_connect.R;
 
-import jp.wasabeef.blurry.Blurry;
-
 public class OTVDialog extends DialogFragment {
 
     public static OTVDialog shareInstance(String message) {
@@ -29,7 +27,7 @@ public class OTVDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout to use as dialog or embedded fragment
         View rootView = inflater.inflate(R.layout.stb_dialog, container, false);
-        Blurry.with(getActivity()).radius(25).sampling(2).onto((ViewGroup) rootView);
+//        Blurry.with(getActivity()).radius(25).sampling(2).onto((ViewGroup) rootView);
         TextView errorText = rootView.findViewById(R.id.error_txt);
         String message = getArguments().getString("message");
         errorText.setText(message);
