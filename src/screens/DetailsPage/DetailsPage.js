@@ -62,6 +62,10 @@ export default class DetailsPage extends React.Component {
             }
         })
 
+        DeviceEventEmitter.addListener('dismissControlPage', (e) => {
+                this.props.navigation.replace("Home");
+        })
+
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
             InteractionManager.runAfterInteractions(() => {
                 const {item, isLive} = e;
