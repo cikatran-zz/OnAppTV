@@ -193,7 +193,7 @@ export const getChannel = (limit) => {
         .then((response) => {
             let images = {};
             let shortTitles = {}
-            let data = response.data.viewer.channelMany;
+            let data = response.data.viewer.channelPagination.items;
             for (let i = 0; i < data.length; i++) {
                 images[data[i].serviceId] = getImageFromArray(data[i].originalImages, "logo", "feature");
                 shortTitles[data[i].serviceId] = data[i].shortDescription;
@@ -259,7 +259,7 @@ export const getCategory = () => {
                 }
             });
         });
-    });
+    })
 };
 
 export const getNews = () => {
@@ -273,6 +273,20 @@ export const getEpgs = (serviceId) => {
     return client.query({
         query: config.queries.EPG,
         variables: {id: serviceId}
+    })
+};
+
+export const getVODByGenres = (genresId, limit, skip) => {
+    return client.query({
+        query: config.queries.VOD_BY_GENRES,
+        variables: {genresId: genresId, limit: limit, skip: skip}
+    })
+};
+
+export const getEPGByGenres = (genresId, currentTime, limit, skip) => {
+    return client.query({
+        query: config.queries.GENRES_EPG,
+        variables: {genresId: genresId, limit: limit, skip: skip, currentTime: currentTime}
     })
 };
 

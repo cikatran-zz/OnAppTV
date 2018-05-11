@@ -24,9 +24,6 @@
 		1EE00015034747ECB3577192 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F73B5AC3F8114036B7B1C791 /* Octicons.ttf */; };
 		2B8F7827209AFEF70051A514 /* libLottie.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C03E209AFD5100A87460 /* libLottie.a */; };
 		2B8F785A209B00480051A514 /* libLottieReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B8F7857209B002D0051A514 /* libLottieReactNative.a */; };
-		2BC6C03F209AFD6400A87460 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C038209AFD5100A87460 /* Lottie.framework */; };
-		2BC6C040209AFD7100A87460 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C038209AFD5100A87460 /* Lottie.framework */; };
-		2BC6C041209AFD7100A87460 /* Lottie.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C038209AFD5100A87460 /* Lottie.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0BD0D00A72CE4807AEA0F5E3 /* Feather.ttf */; };
 		330EE504823445CA80C01149 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 10F2F5E842A3410188C08878 /* EvilIcons.ttf */; };
 		48D3EB7181F444FA878162B3 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E05E5C2F22A40968E5DA132 /* Ionicons.ttf */; };
@@ -41,6 +38,9 @@
 		69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC42072149200F66EBE /* UKIError+Extension.swift */; };
 		69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69025AC72072287C00F66EBE /* OANotificationCenter.swift */; };
 		69025ACB2072303000F66EBE /* RNOANotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 69025ACA2072303000F66EBE /* RNOANotification.m */; };
+		690DB8AE20A1922F0021B634 /* ControlModalData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DB8AD20A1922F0021B634 /* ControlModalData.swift */; };
+		690DB8F520A1F0070021B634 /* BrightcoveRequestVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DB8F420A1F0070021B634 /* BrightcoveRequestVideo.swift */; };
+		690DB92420A296230021B634 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DB92320A296230021B634 /* Date.swift */; };
 		690EEFE5205791350099484A /* UserKitModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE4205791350099484A /* UserKitModule.swift */; };
 		690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFE62057915E0099484A /* UserKitIdentityModule.swift */; };
 		690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690EEFF62057B75F0099484A /* NotificationCenter.swift */; };
@@ -60,7 +60,6 @@
 		6927DD0C209B555100FFA275 /* SelectSTB.html in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE3209B554C00FFA275 /* SelectSTB.html */; };
 		6927DD0D209B555100FFA275 /* Register.html in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE4209B554C00FFA275 /* Register.html */; };
 		6927DD0E209B555100FFA275 /* Parental.html in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE5209B554C00FFA275 /* Parental.html */; };
-		6927DD0F209B555100FFA275 /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE6209B554C00FFA275 /* database _IBC_2017-2.xml */; };
 		6927DD10209B555100FFA275 /* page.html in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE7209B554D00FFA275 /* page.html */; };
 		6927DD11209B555100FFA275 /* download_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE8209B554D00FFA275 /* download_list.json */; };
 		6927DD12209B555100FFA275 /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6927DCE9209B554D00FFA275 /* SF-UI-Text-Regular.otf */; };
@@ -90,6 +89,14 @@
 		6927DD34209B56D000FFA275 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6927DD2C209B56D000FFA275 /* WKWebViewJavascriptBridge.m */; };
 		6927DD35209B56D000FFA275 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6927DD2D209B56D000FFA275 /* WebViewJavascriptBridge.m */; };
 		6927DD36209B56D000FFA275 /* WebViewJavascriptBridge_JS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6927DD30209B56D000FFA275 /* WebViewJavascriptBridge_JS.m */; };
+		6927DE32209C47A100FFA275 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C038209AFD5100A87460 /* Lottie.framework */; };
+		6927DE33209C47A800FFA275 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C038209AFD5100A87460 /* Lottie.framework */; };
+		6927DE34209C47A800FFA275 /* Lottie.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC6C038209AFD5100A87460 /* Lottie.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6927DF7020A0399D00FFA275 /* ControlModalCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6927DF6F20A0399D00FFA275 /* ControlModalCell.xib */; };
+		6927DF7220A063A700FFA275 /* ControlModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6927DF7120A063A700FFA275 /* ControlModal.swift */; };
+		6927DF7420A063BF00FFA275 /* ControlModal.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6927DF7320A063BF00FFA275 /* ControlModal.xib */; };
+		6927DF8820A0690900FFA275 /* ControlModalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6927DF8720A0690900FFA275 /* ControlModalCell.swift */; };
+		6927DFBA20A10FE300FFA275 /* RNControlModalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6927DFB920A10FE300FFA275 /* RNControlModalManager.m */; };
 		6928A9DD208E1522001E3D41 /* IQKeyboardManagerObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6928A9DC208E1522001E3D41 /* IQKeyboardManagerObj.swift */; };
 		6931BE872074AE82007DA182 /* ErrorModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */; };
 		6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932A6B0208257A200C43924 /* SpecificRequiredItem+Extension.swift */; };
@@ -234,13 +241,6 @@
 			remoteGlobalIDString = 84FE12EF1E4C1485009B157C;
 			remoteInfo = LottieLibraryIOS;
 		};
-		2BC6C042209AFD7100A87460 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2BC6C030209AFD5100A87460 /* Lottie.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 62CA59B71E3C173B002D7188;
-			remoteInfo = Lottie_iOS;
-		};
 		2D16E6711FA4F8DC00B85C8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -367,6 +367,13 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		6927DE35209C47A800FFA275 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BC6C030209AFD5100A87460 /* Lottie.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 62CA59B71E3C173B002D7188;
+			remoteInfo = Lottie_iOS;
+		};
 		6928AA19208E1F01001E3D41 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8DEEBED0DA0D46D6A1FBFED2 /* RCTFBSDK.xcodeproj */;
@@ -482,13 +489,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2B7BA17C2099A3FE00854192 /* Embed Frameworks */ = {
+		6927DE37209C47A800FFA275 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2BC6C041209AFD7100A87460 /* Lottie.framework in Embed Frameworks */,
+				6927DE34209C47A800FFA275 /* Lottie.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -551,6 +558,9 @@
 		69025AC72072287C00F66EBE /* OANotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OANotificationCenter.swift; sourceTree = "<group>"; };
 		69025AC92072303000F66EBE /* RNOANotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNOANotification.h; sourceTree = "<group>"; };
 		69025ACA2072303000F66EBE /* RNOANotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNOANotification.m; sourceTree = "<group>"; };
+		690DB8AD20A1922F0021B634 /* ControlModalData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlModalData.swift; sourceTree = "<group>"; };
+		690DB8F420A1F0070021B634 /* BrightcoveRequestVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightcoveRequestVideo.swift; sourceTree = "<group>"; };
+		690DB92320A296230021B634 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		690EEFE4205791350099484A /* UserKitModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitModule.swift; sourceTree = "<group>"; };
 		690EEFE62057915E0099484A /* UserKitIdentityModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserKitIdentityModule.swift; sourceTree = "<group>"; };
 		690EEFF62057B75F0099484A /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
@@ -570,7 +580,6 @@
 		6927DCE3209B554C00FFA275 /* SelectSTB.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = SelectSTB.html; path = STBHTML/SelectSTB.html; sourceTree = "<group>"; };
 		6927DCE4209B554C00FFA275 /* Register.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Register.html; path = STBHTML/Register.html; sourceTree = "<group>"; };
 		6927DCE5209B554C00FFA275 /* Parental.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = Parental.html; path = STBHTML/Parental.html; sourceTree = "<group>"; };
-		6927DCE6209B554C00FFA275 /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "STBHTML/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
 		6927DCE7209B554D00FFA275 /* page.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = page.html; path = STBHTML/page.html; sourceTree = "<group>"; };
 		6927DCE8209B554D00FFA275 /* download_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = download_list.json; path = STBHTML/download_list.json; sourceTree = "<group>"; };
 		6927DCE9209B554D00FFA275 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-UI-Text-Regular.otf"; path = "STBHTML/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
@@ -604,6 +613,12 @@
 		6927DD30209B56D000FFA275 /* WebViewJavascriptBridge_JS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge_JS.m; sourceTree = "<group>"; };
 		6927DD31209B56D000FFA275 /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.h; sourceTree = "<group>"; };
 		6927DD32209B56D000FFA275 /* WKWebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKWebViewJavascriptBridge.h; sourceTree = "<group>"; };
+		6927DF6F20A0399D00FFA275 /* ControlModalCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ControlModalCell.xib; sourceTree = "<group>"; };
+		6927DF7120A063A700FFA275 /* ControlModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlModal.swift; sourceTree = "<group>"; };
+		6927DF7320A063BF00FFA275 /* ControlModal.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ControlModal.xib; sourceTree = "<group>"; };
+		6927DF8720A0690900FFA275 /* ControlModalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlModalCell.swift; sourceTree = "<group>"; };
+		6927DFB820A10FE300FFA275 /* RNControlModalManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNControlModalManager.h; sourceTree = "<group>"; };
+		6927DFB920A10FE300FFA275 /* RNControlModalManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNControlModalManager.m; sourceTree = "<group>"; };
 		6928A9DC208E1522001E3D41 /* IQKeyboardManagerObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IQKeyboardManagerObj.swift; sourceTree = "<group>"; };
 		6931BE862074AE82007DA182 /* ErrorModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ErrorModel+Extension.swift"; sourceTree = "<group>"; };
 		6932A6B0208257A200C43924 /* SpecificRequiredItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpecificRequiredItem+Extension.swift"; sourceTree = "<group>"; };
@@ -677,17 +692,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6927DE32209C47A100FFA275 /* Lottie.framework in Frameworks */,
 				2B8F785A209B00480051A514 /* libLottieReactNative.a in Frameworks */,
 				2B8F7827209AFEF70051A514 /* libLottie.a in Frameworks */,
-				2BC6C03F209AFD6400A87460 /* Lottie.framework in Frameworks */,
 				69BD17D82032988000E33978 /* libRCTOrientation.a in Frameworks */,
 				69BD179D20319DB500E33978 /* libART.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
-				2BC6C040209AFD7100A87460 /* Lottie.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
+				6927DE33209C47A800FFA275 /* Lottie.framework in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
@@ -975,6 +990,21 @@
 			path = WebViewJavascriptBridge;
 			sourceTree = "<group>";
 		};
+		6927DF3F20A0382800FFA275 /* ControlModal */ = {
+			isa = PBXGroup;
+			children = (
+				6927DF8720A0690900FFA275 /* ControlModalCell.swift */,
+				6927DF6F20A0399D00FFA275 /* ControlModalCell.xib */,
+				6927DF7120A063A700FFA275 /* ControlModal.swift */,
+				6927DF7320A063BF00FFA275 /* ControlModal.xib */,
+				6927DFB820A10FE300FFA275 /* RNControlModalManager.h */,
+				6927DFB920A10FE300FFA275 /* RNControlModalManager.m */,
+				690DB8AD20A1922F0021B634 /* ControlModalData.swift */,
+				690DB8F420A1F0070021B634 /* BrightcoveRequestVideo.swift */,
+			);
+			path = ControlModal;
+			sourceTree = "<group>";
+		};
 		6928A9B2208E14EF001E3D41 /* IQKeyboardManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1006,6 +1036,7 @@
 			children = (
 				6932A6B62082609700C43924 /* JSON.swift */,
 				698460F32083620100D1679B /* String+Extension.swift */,
+				690DB92320A296230021B634 /* Date.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1123,7 +1154,6 @@
 				6927DCF7209B554F00FFA275 /* ChannelList.html */,
 				6927DCFD209B555000FFA275 /* ConnectLoad.html */,
 				6927DCE1209B554C00FFA275 /* css */,
-				6927DCE6209B554C00FFA275 /* database _IBC_2017-2.xml */,
 				6927DCFE209B555000FFA275 /* database _IBC_2017.xml */,
 				6927DCD7209B554B00FFA275 /* database 2.xml */,
 				6927DCF2209B554E00FFA275 /* database-test.xml */,
@@ -1172,6 +1202,7 @@
 		69F9A4BC2024166600832440 /* NativeComponent */ = {
 			isa = PBXGroup;
 			children = (
+				6927DF3F20A0382800FFA275 /* ControlModal */,
 				69A16FA52068D9F300E215B8 /* STB */,
 				69D21DF8205259E300DFA90A /* STBConnection */,
 				6969BED1204E4A4900470C97 /* Extension */,
@@ -1315,13 +1346,13 @@
 				E631A31DE68C03960D5759B3 /* [CP] Embed Pods Frameworks */,
 				9C6AF8FAFAEA40208CCD6F2A /* [CP] Copy Pods Resources */,
 				69FF7E9C20872DE90078D652 /* Embed App Extensions */,
-				2B7BA17C2099A3FE00854192 /* Embed Frameworks */,
+				6927DE37209C47A800FFA275 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				2B8F7859209B003F0051A514 /* PBXTargetDependency */,
-				2BC6C043209AFD7100A87460 /* PBXTargetDependency */,
+				6927DE36209C47A800FFA275 /* PBXTargetDependency */,
 			);
 			name = OnAppTV;
 			productName = "Hello World";
@@ -1816,9 +1847,9 @@
 				69399A8120493FBE005EA1B8 /* CustomControlsView.xib in Resources */,
 				6927DD0C209B555100FFA275 /* SelectSTB.html in Resources */,
 				48D3EB7181F444FA878162B3 /* Ionicons.ttf in Resources */,
-				6927DD0F209B555100FFA275 /* database _IBC_2017-2.xml in Resources */,
 				6927DD18209B555100FFA275 /* On.html in Resources */,
 				6927DD11209B555100FFA275 /* download_list.json in Resources */,
+				6927DF7420A063BF00FFA275 /* ControlModal.xib in Resources */,
 				6927DD0B209B555100FFA275 /* Plantagenet Cherokee.ttf in Resources */,
 				C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */,
 				6927DD1F209B555100FFA275 /* SelectDecoder.html in Resources */,
@@ -1828,6 +1859,7 @@
 				6927DD01209B555100FFA275 /* Load.html in Resources */,
 				6927DD02209B555100FFA275 /* js in Resources */,
 				6927DD0D209B555100FFA275 /* Register.html in Resources */,
+				6927DF7020A0399D00FFA275 /* ControlModalCell.xib in Resources */,
 				B40B0805BE5A4CCCA084F1F4 /* MaterialIcons.ttf in Resources */,
 				6927DD21209B555100FFA275 /* main.html in Resources */,
 				1EE00015034747ECB3577192 /* Octicons.ttf in Resources */,
@@ -1908,10 +1940,9 @@
 				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 				"${BUILT_PRODUCTS_DIR}/UserKit/UserKit.framework",
 				"${BUILT_PRODUCTS_DIR}/UserKitIdentity/UserKitIdentity.framework",
-				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
-				"${BUILT_PRODUCTS_DIR}/WebViewJavascriptBridge/WebViewJavascriptBridge.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -1925,10 +1956,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UserKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UserKitIdentity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebViewJavascriptBridge.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1969,18 +1999,24 @@
 				6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */,
 				690EEFF72057B75F0099484A /* NotificationCenter.swift in Sources */,
 				6927DD35209B56D000FFA275 /* WebViewJavascriptBridge.m in Sources */,
+				6927DFBA20A10FE300FFA275 /* RNControlModalManager.m in Sources */,
 				69025AC52072149200F66EBE /* UKIError+Extension.swift in Sources */,
 				6969BE77204C2A8000470C97 /* SliderMPVolumeView.swift in Sources */,
+				690DB8F520A1F0070021B634 /* BrightcoveRequestVideo.swift in Sources */,
 				6993D2E820917F270032D3DA /* LivePlaybackRecorder.swift in Sources */,
+				690DB8AE20A1922F0021B634 /* ControlModalData.swift in Sources */,
 				69F9A4EE20244A4D00832440 /* RCTBlurViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				6927DF8820A0690900FFA275 /* ControlModalCell.swift in Sources */,
 				695240892098266200934B0D /* RNBrightcoveVC.m in Sources */,
 				6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */,
 				6928A9DD208E1522001E3D41 /* IQKeyboardManagerObj.swift in Sources */,
 				6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */,
+				690DB92420A296230021B634 /* Date.swift in Sources */,
 				6932A6B72082609700C43924 /* JSON.swift in Sources */,
 				6993D2E520917C260032D3DA /* RNVODPlaybackRecorder.m in Sources */,
 				69F9A4F120244A9200832440 /* RCTBlurView.m in Sources */,
+				6927DF7220A063A700FFA275 /* ControlModal.swift in Sources */,
 				69025ABE2071F32600F66EBE /* AuthenticationModel+Extension.swift in Sources */,
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,
 				69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */,
@@ -1998,10 +2034,10 @@
 			name = LottieReactNative;
 			targetProxy = 2B8F7858209B003F0051A514 /* PBXContainerItemProxy */;
 		};
-		2BC6C043209AFD7100A87460 /* PBXTargetDependency */ = {
+		6927DE36209C47A800FFA275 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Lottie_iOS;
-			targetProxy = 2BC6C042209AFD7100A87460 /* PBXContainerItemProxy */;
+			targetProxy = 6927DE35209C47A800FFA275 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

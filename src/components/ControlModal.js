@@ -9,10 +9,15 @@ let controlModal = {
         items: PropTypes.array,
         onClose: PropTypes.func,
         onDetail: PropTypes.func,
+        onAlert: PropTypes.func,
+        onShare: PropTypes.func,
+        onIndexChanged: PropTypes.func,
+        onBookmark: PropTypes.func,
+        onFavorite: PropTypes.func,
         ...ViewPropTypes, // include the default view properties
     },
 };
 
 module.exports = requireNativeComponent('RNControlModal', controlModal, {
-    nativeOnly: {onClose: true, onDetail: true}
+    nativeOnly: {onClose: true, onDetail: true, onAlert: true, onShare: true, onIndexChanged: true, onBookmark: true, onFavorite: true }
 });

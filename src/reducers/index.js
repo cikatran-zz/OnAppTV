@@ -30,6 +30,9 @@ import profileInfoReducer from "./profileInfoReducer";
 import pvrListReducer from "./pvrListReducer"
 import epgSameTimeReducer from "./epgSameTimeReducer"
 import watchingHistoryReducer from "./watchingHistoryReducer";
+import epgByGenresReducer from "./epgByGenresReducer";
+import vodByGenresReducer from "./vodByGenresReducer";
+import latestVODByGenresReducer from "./latestVODByGenresReducer";
 
 export default combineReducers({
     nav,
@@ -55,7 +58,6 @@ export default combineReducers({
     seriesInfoReducer,
     bcVideosReducer,
     usbDirReducer,
-    seriesInfoReducer,
     usbDisksReducer,
     satelliteReducer,
     timeShiftLimitSizeReducer,
@@ -63,5 +65,8 @@ export default combineReducers({
     profileInfoReducer,
     pvrListReducer,
     epgSameTimeReducer,
-    watchingHistoryReducer
+    watchingHistoryReducer,
+    epgByGenresReducer,
+    vodByGenresReducer,
+    latestVODByGenresReducer
 });

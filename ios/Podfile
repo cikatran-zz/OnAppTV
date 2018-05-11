@@ -19,6 +19,7 @@ target 'OnAppTV' do
   pod 'FacebookCore'
   pod 'FacebookLogin'
   pod 'FacebookShare'
+  pod 'PromiseKit', '~> 4.0'
 
 end
 

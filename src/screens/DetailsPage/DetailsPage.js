@@ -22,6 +22,7 @@ import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
+import moment from "moment/moment";
 
 export default class DetailsPage extends Component {
 
@@ -47,7 +48,7 @@ export default class DetailsPage extends Component {
                      at the same time on other channels
                      */
                     this.props.getEpgs([item.channelData.serviceId])
-                    this.props.getEpgSameTime(new Date(), item.channelId)
+                    this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
                 }
                 else if (item.type) {
                     /*
@@ -370,7 +371,12 @@ export default class DetailsPage extends Component {
 
     _onPress = (item) => {
         const {isLive} = this.props.navigation.state.params;
-        const {epg, navigation} = this.props;
+        const {epg, navigation, epgSameTime} = this.props;
+        let data = epg;
+        if (isLive) {
+            data = epgSameTime;
+            data.data = data.data.concat([item])
+        }
 
 
         if (Platform.OS !== 'ios') {
