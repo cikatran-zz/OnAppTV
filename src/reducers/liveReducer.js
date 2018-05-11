@@ -7,7 +7,7 @@ const initialState = {
     error: false,
 };
 
-export default function liveReducer(state = initialState, action, page) {
+export default function liveReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.FETCHING_LIVE:
             return {
@@ -16,7 +16,7 @@ export default function liveReducer(state = initialState, action, page) {
             };
         case actionTypes.FETCH_LIVE_SUCCESS:
             let tempData = null;
-            if (page === 1) {
+            if (action.page === 1) {
                 tempData = action.data
             } else {
                 tempData = [...state.data, action.data];
