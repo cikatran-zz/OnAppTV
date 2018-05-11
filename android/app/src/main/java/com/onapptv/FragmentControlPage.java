@@ -1,5 +1,6 @@
 package com.onapptv;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -25,6 +26,7 @@ import com.brightcove.player.model.Video;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.onapptv.R;
+import com.onapptv.android_control_page.OTVDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +46,7 @@ public class FragmentControlPage extends Fragment {
     ImageButton mDetail, mDismiss, mRecord, mFavorite, mShare, mStartOver, mCaption, mPlay, mBackward, mFastward;
     TextView mTitle, mGenres, mPassedTv, mEtrTime;
     GetTimer mTimer;
+    Activity activity;
 
     String videoUrl = NO_VIDEO_URL;
     Boolean isDragging = false;
@@ -56,6 +59,12 @@ public class FragmentControlPage extends Fragment {
 
     interface OnPlayFinished {
         void nextPage();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
     }
 
     public void setProgress(int progress) {
@@ -291,7 +300,7 @@ public class FragmentControlPage extends Fragment {
                     .into(mTopBanner);
             Glide.with(getContext())
                     .load(getImageFromArray((ArrayList<HashMap>) ((HashMap )mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 2)))
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
                     .into(mMainBanner);
         }
         else {
@@ -300,7 +309,7 @@ public class FragmentControlPage extends Fragment {
                     .into(mTopBanner);
             Glide.with(getContext())
                     .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 2)))
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
                     .into(mMainBanner);
         }
 
@@ -378,6 +387,7 @@ public class FragmentControlPage extends Fragment {
 
     String getGenresFromArray(ArrayList<HashMap> genres) {
         String genre = "";
+        if (genres == null) return genre;
         for (int i = 0; i < genres.size(); i++) {
             genre = genre.concat(" ");
             genre = genre.concat(genres.get(i).get("name").toString());
