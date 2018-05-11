@@ -39,6 +39,7 @@ import moment from 'moment';
 
 export default class Home extends Component {
     _livePage = 1;
+    _vodPage = 1;
     constructor(props) {
         super(props);
         this.state = {
@@ -258,7 +259,7 @@ export default class Home extends Component {
         if (item.epgsData == null) {
             return null;
         }
-        let genres = '';
+        let genres = "N/A";
         if (item.epgsData.videoData.genres != null && item.epgsData.videoData.genres.length > 0) {
             item.epgsData.videoData.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -279,7 +280,7 @@ export default class Home extends Component {
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData.videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
-                      style={styles.textLiveVideoInfo}>{item ? item.title : ""}</Text>
+                      style={styles.textLiveVideoInfo}>{item ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
             </TouchableOpacity>
         )
@@ -288,6 +289,11 @@ export default class Home extends Component {
     _fetchMoreLive = () => {
         this._livePage++;
         this.props.getLive(true, this._livePage, 20);
+    }
+
+    _fetchMoreVOD = () => {
+        this._vodPage++;
+        this.props.getVOD(true, this._vodPage, 10);
     }
 
     _renderOnLiveList = ({item}) => {
@@ -331,7 +337,7 @@ export default class Home extends Component {
     // ON VOD
     _renderVODItem = ({item}) => {
 
-        let genres = '';
+        let genres = "N/A";
         if (item.genresData != null && item.genresData.length > 0) {
             item.genresData.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -344,7 +350,7 @@ export default class Home extends Component {
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
-                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
                       style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
@@ -365,6 +371,8 @@ export default class Home extends Component {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
+                onEndReachedThreshold={5}
+                onEndReached={this._fetchMoreVOD}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderVODItem}/>
         )

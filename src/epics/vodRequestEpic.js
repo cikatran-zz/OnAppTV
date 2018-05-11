@@ -8,7 +8,7 @@ const getVODEpic = (action$) =>
   action$.ofType(actionTypes.FETCHING_VOD)
     .mergeMap(action =>
       Observable.from(getVOD(action.page, action.itemPerPage))
-        .map(response => getVODSuccess(response.data))
+        .map(response => getVODSuccess(response.data, action.page))
         .catch(error => Observable.of(getVODFailure(error)))
     );
 
