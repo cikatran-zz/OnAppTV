@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class ControlPageAdapter extends FragmentStatePagerAdapter {
     ArrayList mEpg;
     static Boolean mIsLive = false;
+    static FragmentManager mFm;
     public static Catalog catalog = new Catalog(new EventEmitterImpl(), "5706818955001", "BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I");
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -24,6 +25,7 @@ public class ControlPageAdapter extends FragmentStatePagerAdapter {
         super(fm);
         setEpg(epg);
         mIsLive = isLive;
+        mFm = fm;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -44,6 +46,10 @@ public class ControlPageAdapter extends FragmentStatePagerAdapter {
 
     public static Catalog getCatalog() {
         return catalog;
+    }
+
+    public static FragmentManager getmFm() {
+        return mFm;
     }
 
     @Override

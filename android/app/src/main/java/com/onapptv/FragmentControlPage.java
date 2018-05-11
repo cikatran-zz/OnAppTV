@@ -1,6 +1,7 @@
 package com.onapptv;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -24,7 +25,6 @@ import com.brightcove.player.model.DeliveryType;
 import com.brightcove.player.model.Video;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.onapptv.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -324,6 +324,13 @@ public class FragmentControlPage extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void showDialogWithMessage(String message) {
+        FragmentTransaction transaction = ControlPageAdapter.getmFm().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(android.R.id.content, OTVDialog.shareInstance(message))
+                .addToBackStack(null).commit();
     }
 
     public GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
