@@ -1,4 +1,4 @@
-import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import app from './reducers';
 import devTools from 'remote-redux-devtools';
 
@@ -9,9 +9,7 @@ import {createReactNavigationReduxMiddleware} from "react-navigation-redux-helpe
 import { persistStore, persistReducer } from 'redux-persist'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'
-import epgByGenresReducer from "./reducers/epgByGenresReducer";
-import latestVODByGenresReducer from "./reducers/latestVODByGenresReducer";
-import vodByGenresReducer from "./reducers/vodByGenresReducer";
+import createFilter from 'redux-persist-transform-filter';
 
 const navMiddleware = createReactNavigationReduxMiddleware(
     "root",
@@ -21,11 +19,14 @@ const navMiddleware = createReactNavigationReduxMiddleware(
 const epicMiddleware = createEpicMiddleware(rootEpic);
 let applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware);
 
+const appReducerFilter = createFilter('app', ['data'])
+
 const persistConfig = {
     key: 'root',
     storage,
     blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer'],
-    stateReconciler: autoMergeLevel2
+    stateReconciler: autoMergeLevel2,
+    transforms: [appReducerFilter]
 }
 
 const persistedReducer = persistReducer(persistConfig, app)
@@ -43,6 +44,6 @@ const enhancer = compose(
 
 export default () => {
     let store = createStore(persistedReducer, enhancer);
-    let persistor = persistStore(store)
+    let persistor = persistStore(store);
     return {store, persistor}
 };
