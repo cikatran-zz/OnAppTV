@@ -10,19 +10,13 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import tv.hi_global.stbapi.Api;
-import tv.hi_global.stbapi.Model.AudioModel;
-import tv.hi_global.stbapi.Model.BookListModel;
-import tv.hi_global.stbapi.Model.RecordModel;
 import tv.hi_global.stbapi.implementation.Api_Implementation;
 
 /**
@@ -55,16 +49,6 @@ public class AndroidSTBFramework extends ReactContextBaseJavaModule {
         }
         array.pushString(isConnected);
         callback.invoke(array);
-    }
-
-    @ReactMethod
-    public void isStbConnected(Callback callback) {
-        WritableNativeArray array = new WritableNativeArray();
-        if (Api_Implementation.sharedManager().getCurrentSTBInfo() != null) {
-            array.pushBoolean(true);
-        }
-        else array.pushBoolean(false);
-        callback.invoke(null, array);
     }
 
     @ReactMethod

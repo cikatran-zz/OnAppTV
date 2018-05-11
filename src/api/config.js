@@ -160,52 +160,69 @@ query{
   }
 }
 `;
-
-const liveQuery = gql`
-query getLiveEPG($currentTime: Date){
+const firstGQL = `query getLiveEPG($page: Int, $perPage: Int, $currentTime: Boolean){
   viewer{
-    epgMany(filter: {
-      _operators:{
-        startTime: {
-          lte: $currentTime
-        },
-        endTime:{
-          gte: $currentTime
-        }
-      }
+    channelPagination(page: $page, perPage: $perPage, filter: {
+      _operators: {`;
+const lastGQL = `}
     }) {
-      channelId
-      channelData {
-        title
-        lcn
+      count
+      items {
         serviceId
-      }
-      genreIds
-      videoData {
-        title
-        originalImages {
-          url
-        }
-        genresData {
-          name
-        }
+        lcn
+        ipLink
         title
         longDescription
         shortDescription
-        feature
-        seriesId
-        seasonIndex
-        episodeIndex
-        type
-        impression
+        epgsData(current: $currentTime) {
+          videoId
+          videoData {
+            contentId
+            durationInSeconds
+            publishDate
+            title
+            longDescription
+            shortDescription
+            feature
+            genres {
+              name
+            }
+            seriesId
+            seasonIndex
+            episodeIndex
+            type
+            impression
+            state
+            custom
+            createdAt
+            updatedAt
+            projectId
+          }
+          channelId
+          startTime
+          endTime
+          state
+          createdAt
+          updatedAt
+          projectId
+        }
+        state
         custom
+        createdAt
+        updatedAt
+        projectId
       }
-      startTime
-      endTime
     }
   }
-}
-`;
+}`;
+
+const ipLinkParam = `ipLink: {
+          ne: ""
+        }`;
+const liveQuerySTB = gql`${firstGQL}${lastGQL}`;
+
+const liveQueryNoSTB = gql`${firstGQL}${ipLinkParam}${lastGQL}`;
+
 
 const epgQuery = gql`
 query getEPGByChannel($channelId: Float){
@@ -624,7 +641,8 @@ export default {
         CHANNEL: channelQuery,
         ADS: adsQuery,
         CATEGORY: categoryQuery,
-        LIVE: liveQuery,
+        LIVESTB: liveQuerySTB,
+        LIVENOSTB:liveQueryNoSTB,
         VOD: vodQuery,
         NEWS: newsQuery,
         EPG: epgQuery,

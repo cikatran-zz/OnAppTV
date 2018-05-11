@@ -38,7 +38,7 @@ import {getImageFromArray} from "../../utils/images";
 import moment from 'moment';
 
 export default class Home extends Component {
-
+    _livePage = 1;
     constructor(props) {
         super(props);
         this.state = {
@@ -67,7 +67,7 @@ export default class Home extends Component {
         InteractionManager.runAfterInteractions(() => {
             this.props.getBanner();
             this.props.getAds();
-            this.props.getLive(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true));
+            this.props.getLive(true, 1, 20);
             this.props.getVOD(1, 10);
             this.props.getCategory();
             this.props.getNews();
@@ -255,12 +255,12 @@ export default class Home extends Component {
 
     // ON LIVE
     _renderOnLiveItem = ({item}) => {
-        if (item == null) {
+        if (item.epgsData == null) {
             return null;
         }
         let genres = '';
-        if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
-            item.videoData.genresData.forEach((genre, index) => {
+        if (item.epgsData.videoData.genres != null && item.epgsData.videoData.genres.length > 0) {
+            item.epgsData.videoData.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
                     genres = genres.concat(", ");
                 }
@@ -275,15 +275,20 @@ export default class Home extends Component {
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.videoData.originalImages, 'landscape', 'feature')}/>
-                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData.videoData.originalImages, 'landscape', 'feature')}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData.videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
-                      style={styles.textLiveVideoInfo}>{item.channelData ? item.channelData.title : ""}</Text>
+                      style={styles.textLiveVideoInfo}>{item ? item.title : ""}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
             </TouchableOpacity>
         )
     };
+
+    _fetchMoreLive = () => {
+        this._livePage++;
+        this.props.getLive(true, this._livePage, 20);
+    }
 
     _renderOnLiveList = ({item}) => {
         if (item == null) {
@@ -298,6 +303,8 @@ export default class Home extends Component {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={item}
+            onEndReachedThreshold={5}
+            onEndReached={this._fetchMoreLive}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderOnLiveItem}/>)
     };
@@ -539,7 +546,9 @@ export default class Home extends Component {
             ];
 
         if (live.data !== null && live.data.length > 0) {
-            sections.push({data: [live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
+            let epgsDataArray = _.filter(live.data, (item) =>  {item.epgsData != null});
+            if (epgsDataArray.length > 0)
+                sections.push({data: [live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
         }
 
         if (vod.data !== null && vod.data.length > 0) {

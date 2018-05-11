@@ -1,17 +1,18 @@
 import * as actionTypes from './actionTypes';
 
-export function getLive(currentTime) {
+export function getLive(currentTime, page, perPage) {
   return {
     type: actionTypes.FETCHING_LIVE,
-      currentTime: currentTime
+      currentTime: currentTime,
+      page: page,
+      perPage: perPage
   }
 }
 
 export function getLiveSuccess(data) {
-    console.log(data)
   return {
     type: actionTypes.FETCH_LIVE_SUCCESS,
-    data: data.viewer.epgMany
+    data: data.viewer.channelPagination.items
   }
 }
 

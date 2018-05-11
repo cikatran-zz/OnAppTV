@@ -133,13 +133,14 @@ syncUserKitWithSTBChannels = (channels) => {
     });
 };
 
-export const checkStbConnection = () => {
-    return new Promise((resolve, reject) => {
-        NativeModules.STBManager.isStbConnected((error, events) => {
-            if (error) reject(error);
-            else resolve(events)
-        })
-    })
+export const checkStbConnection = async () => {
+    try {
+        let {isSTBConnect} = await NativeModules.STBManager.isStbConnected();
+        return isSTBConnect;
+    } catch (e) {
+        return false;
+    }
+
 };
 
 export const getRecordList = () => {
@@ -221,11 +222,25 @@ export const getAds = () => {
     });
 };
 
-export const getLive = (currentTime) => {
-    return client.query({
-        query: config.queries.LIVE,
-        variables: {currentTime: currentTime}
+export const getLive = (currentTime, page, itemPerPage) => {
+    return new Promise((resolve, reject) => {
+        NativeModules.STBManager.isConnect((connectString) => {
+            let connected = JSON.parse(connectString).is_connected;
+            if (connected) {
+                resolve(client.query({
+                    query: config.queries.LIVESTB,
+                    variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
+                }));
+            } else {
+                resolve(client.query({
+                    query: config.queries.LIVESTB,
+                    variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
+                }));
+            }
+
+        });
     });
+
 };
 export const getVOD = (page, itemPerPage) => {
     return client.query({
