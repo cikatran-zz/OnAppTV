@@ -261,7 +261,8 @@ public class FragmentControlPage extends Fragment {
                 if (isPlaying == null) {
                     Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, (aBoolean, s) -> {
                                 Log.v("playMediaOnSuccess", aBoolean.toString());
-                                mTimer.execute();
+                                if (mData.get("durationInSeconds") != null)
+                                    mTimer.execute();
                             }
                     );
                     mPlay.setImageResource(R.mipmap.ic_pause);
