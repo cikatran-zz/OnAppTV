@@ -37,30 +37,30 @@ export default class DetailsPage extends React.Component {
     _keyExtractor = (item, index) => index;
 
     componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            const {item, isLive} = this.props.navigation.state.params;
-            if (item && isLive !== undefined) {
-                if (isLive === true && item.channelData
-                    && item.channelData.serviceId
-                    && item.channelId) {
-                    /*
-                     Fetching information about EPG next in channel and EPG which are
-                     at the same time on other channels
-                     */
-                    this.props.getEpgs([item.channelData.serviceId])
-                    this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                }
-                else if (item.type) {
-                    /*
-                     Fetch epg with related content or epg in series
-                     */
-                    if (item.type === 'Episode')
-                        this.props.getEpgWithSeriesId([item.seriesId])
-                    else
-                        this.props.getEpgWithGenre(item.genreIds)
-                }
+        console.log('componentDidMount')
+        const {item, isLive} = this.props.navigation.state.params;
+        if (item && isLive !== undefined) {
+            if (isLive === true ) {
+                /*
+                 Fetching information about EPG next in channel and EPG which are
+                 at the same time on other channels
+                 */
+                this.props.getEpgs([item.channelData.serviceId])
+                this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
             }
-        })
+            else if (item.type) {
+                /*
+                 Fetch epg with related content or epg in series
+                 */
+                if (item.type === 'Episode')
+                    this.props.getEpgWithSeriesId([item.seriesId])
+                else
+                    this.props.getEpgWithGenre(item.genreIds)
+            }
+        }
+        // InteractionManager.runAfterInteractions(() => {
+        //
+        // })
 
         DeviceEventEmitter.addListener('dismissControlPage', (e) => {
                 this.props.navigation.replace("Home");
@@ -119,7 +119,10 @@ export default class DetailsPage extends React.Component {
             isLive = this.props.navigation.state.params.isLive;
         }
 
-        if ((isLive && !item) || (!epg || !epg.data || !item)) {
+        console.log(item)
+        console.log(epg)
+
+        if ((!epg || !epg.data || !item)) {
             return (
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
