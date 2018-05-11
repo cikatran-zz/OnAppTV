@@ -385,6 +385,8 @@ public class FragmentControlPage extends Fragment {
 
     String getGenresFromArray(ArrayList<HashMap> genres) {
         String genre = "";
+        if (genres == null)
+            return genre;
         for (int i = 0; i < genres.size(); i++) {
             genre = genre.concat(" ");
             genre = genre.concat(genres.get(i).get("name").toString());
