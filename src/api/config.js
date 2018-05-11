@@ -180,6 +180,7 @@ query getLiveEPG($currentTime: Date){
         lcn
         serviceId
       }
+      genreIds
       videoData {
         title
         originalImages {

@@ -114,11 +114,12 @@ export default class DetailsPage extends React.Component {
         // EPGs is EPG array, video is an EPG or videoModel depend on videoType
         const {epg, epgSameTime} = this.props;
         let {item, isLive} = this.state;
-        if (item === null) {
+        if (!item) {
             item = this.props.navigation.state.params.item;
             isLive = this.props.navigation.state.params.isLive;
         }
-        if ((isLive && !item) || (!epg || !epg.data || !item) || (this._isOldData(epg.data, isLive))) {
+
+        if ((isLive && !item) || (!epg || !epg.data || !item)) {
             return (
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
@@ -391,6 +392,7 @@ export default class DetailsPage extends React.Component {
                 .navigateControl(data,
                     itemIndex,
                     isLive,
+                    false,
                     () => { console.log("onDismiss") },
                     () => { console.log("onDetail") });
         }
@@ -408,23 +410,6 @@ export default class DetailsPage extends React.Component {
     }
 
     _isFromChannel = () => this.props.navigation.state.params.isLive === true
-
-    _isOldData = (list, isLive) => {
-        if (isLive === true) {
-            // EPG should have channelId
-            if (list.length > 0) {
-                return !list.some(x => x.channelId)
-            }
-            else return false
-        }
-        else {
-            // EPG should have contentId
-            if (list.length > 0) {
-                return !list.some(x => x.contentId)
-            }
-            else return false
-        }
-    };
 
     _renderAppSection = (image, title, description, url) => {
         return (

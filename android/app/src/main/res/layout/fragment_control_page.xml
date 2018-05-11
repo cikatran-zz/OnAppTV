@@ -12,6 +12,10 @@
         android:id="@+id/top.banner"
         android:layout_width="match_parent"
         android:layout_height="300dp">
+        <WebView
+            android:id="@+id/webView.top.banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
         <ImageView
             android:scaleType="centerCrop"
             android:id="@+id/image.top.banner"
@@ -28,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <ImageButton
+            android:id="@+id/change_orientation_btn"
             android:src="@mipmap/ic_change_orientation"
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"
@@ -96,9 +101,8 @@
             android:layout_height="@dimen/buttonSize" />
         <ImageButton
             android:id="@+id/favorite"
-
             android:layout_margin="@dimen/buttonMargin"
-            android:background="@android:color/transparent"
+            android:background="@drawable/information_btn_bg"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_favorite"
             android:layout_width="@dimen/buttonSize"

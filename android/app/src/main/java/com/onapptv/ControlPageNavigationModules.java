@@ -35,11 +35,12 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void navigateControl(ReadableArray epg, int index, boolean isLive, Callback onDismiss, Callback onDetails) {
+    public void navigateControl(ReadableArray epg, int index, boolean isLive, boolean isFromBanner, Callback onDismiss, Callback onDetails) {
         Intent intent = new Intent(getReactApplicationContext(), ControlActivity.class);
         Bundle arguments = new Bundle();
         arguments.putInt("index", index);
         arguments.putBoolean("isLive", isLive);
+        arguments.putBoolean("isFromBanner", isFromBanner);
         arguments.putSerializable("epg", epg.toArrayList());
         intent.putExtra("control_page", arguments);
         getCurrentActivity().startActivityForResult(intent, DETAILS_PAGE_REQUEST);
@@ -52,8 +53,14 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
             if (requestCode == DETAILS_PAGE_REQUEST) {
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle extras = data.getExtras();
+                    boolean isFromBanner = extras.getBoolean("isFromBanner");
+                    if (isFromBanner) {
+                        // NOTHING TO DO, JUST RETURN
+                        return;
+                    }
                     boolean isDismiss = extras.getBoolean("dismiss");
-                    if (isDismiss) sendEvent(getReactApplicationContext(), "dismissControlPage", null);
+                    if (isDismiss)
+                        sendEvent(getReactApplicationContext(), "dismissControlPage", null);
                     else {
                         boolean isLive = extras.getBoolean("isLive");
                         HashMap item = (HashMap) extras.getSerializable("item");

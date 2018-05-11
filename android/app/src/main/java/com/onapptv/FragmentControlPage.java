@@ -5,8 +5,12 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -14,6 +18,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,15 +32,30 @@ import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.model.DeliveryType;
 import com.brightcove.player.model.Video;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.onapptv.R;
-import com.onapptv.android_control_page.OTVDialog;
+import com.onapptv.OTVDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import tv.hi_global.stbapi.Api;
+
+import static com.liulishuo.filedownloader.model.FileDownloadStatus.progress;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class FragmentControlPage extends Fragment {
@@ -45,9 +67,11 @@ public class FragmentControlPage extends Fragment {
     ProgressBar mProgress;
     HashMap mData, mDataLive;
     ImageButton mDetail, mDismiss, mRecord, mFavorite, mShare, mStartOver, mCaption, mPlay, mBackward, mFastward;
+    ImageButton mOrientationButton;
     TextView mTitle, mGenres, mPassedTv, mEtrTime;
     GetTimer mTimer;
     Activity activity;
+    WebView mLoading;
 
     String videoUrl = NO_VIDEO_URL;
     Boolean isDragging = false;
@@ -57,6 +81,10 @@ public class FragmentControlPage extends Fragment {
     float mOffsetRate = 0.0f;
     int deviceHeight;
     int deviceWidth;
+    Boolean isRecorded = false;
+    Boolean isFavorite = false;
+    Boolean disConnected = false;
+    Boolean isFromBanner = false;
 
     interface OnPlayFinished {
         void nextPage();
@@ -73,14 +101,14 @@ public class FragmentControlPage extends Fragment {
             currentProgress = progress;
             float percent = progress / mOffsetRate;
             mProgress.setProgress((int) (percent / (deviceWidth / 100)));
-            int minutes = progress / (60 * 1000);
-            int seconds = (progress / 1000) % 60;
-            String str = String.format("%02d:%02d", minutes, seconds);
+            int minutes = progress / 60;
+            int seconds = progress % 60;
+            String str = String.format("%02d:%02d:%02d", minutes, seconds);
             mPassedTv.setText(str);
             int etr_time = (int) durations;
             if (durations > progress) {
                 etr_time = (int) (durations - progress);
-                String etr = "-" + String.format("%02d:%02d", minutes, seconds).toString();
+                String etr = "-" + String.format("$02d:%02d:%02d", etr_time / 60, etr_time % 60).toString();
                 mEtrTime.setText(etr);
             }
         }
@@ -88,7 +116,8 @@ public class FragmentControlPage extends Fragment {
 
     @Override
     public void onDestroy() {
-        mTimer.cancel(true);
+        if (mTimer != null)
+            mTimer.cancel(true);
         super.onDestroy();
     }
 
@@ -107,12 +136,64 @@ public class FragmentControlPage extends Fragment {
         super.onDetach();
     }
 
+    Handler liveTimeHandler;
+
     @Override
     public void onCreate(Bundle onSavedInstanceState) {
         super.onCreate(onSavedInstanceState);
 
+        if (!Api.sharedApi().hIG_IsConnect()) {
+            showDialogWithMessage("Disconnected from STB");
+            disConnected = true;
+        }
+        else {
+            final Handler h = new Handler();
+            h.postDelayed(new Runnable()
+            {
+                private long time = 0;
+
+                @Override
+                public void run()
+                {
+                    // do stuff then
+                    // can call h again after work!
+                    if (!Api.sharedApi().hIG_IsConnect() && !disConnected) {
+                        showDialogWithMessage("Disconnected from STB");
+                    }
+                    time += 30000;
+                    h.postDelayed(this, 30000);
+                }
+            }, 1000); // 1 second delay (takes millis)
+        }
+
         if (ControlPageAdapter.isLive()) {
             mDataLive = (HashMap) getArguments().getSerializable("item");
+            liveTimeHandler = new Handler();
+            liveTimeHandler.postDelayed(new Runnable() {
+                private long time = 0;
+                @Override
+                public void run() {
+                    time += 1000;
+                    try {
+                        Date date = new Date();
+                        Date start = fromISO8601UTC(mDataLive.get("startTime").toString());
+                        Date end = fromISO8601UTC(mDataLive.get("endTime").toString());
+                        long current = date.getTime() - start.getTime();
+                        long etr = end.getTime() - date.getTime();
+                        int minutes = (int) (current / 60);
+                        int seconds = (int) (current % 60);
+                        String str = String.format("%02d:%02d", minutes, seconds);
+                        mPassedTv.setText(str);
+                        String etrText = "-" + String.format("%02d:%02d", etr / 60, etr % 60);
+                        mEtrTime.setText(etrText);
+                        mProgress.setProgress((int) (current / (current + etr)) * 100);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    liveTimeHandler.postDelayed(this, 1000);
+                }
+            }, 1000);
         }
         else {
             mTimer = new GetTimer(this);
@@ -123,6 +204,7 @@ public class FragmentControlPage extends Fragment {
                     videoUrl = video.findHighQualitySource(DeliveryType.MP4).getUrl();
                 }
             });
+            isFromBanner = getArguments().getBoolean("isFromBanner");
 
             int currentOrientation = getResources().getConfiguration().orientation;
             if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -135,7 +217,13 @@ public class FragmentControlPage extends Fragment {
             }
         }
 
+    }
 
+    public Date fromISO8601UTC(String dateStr) throws ParseException {
+        dateStr = dateStr.substring(0, dateStr.length()-5);
+        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date date = inFormat.parse(dateStr);  //where dateString is a date in ISO-8601 format
+        return date;
     }
 
     View.OnClickListener backward = v -> {
@@ -235,6 +323,8 @@ public class FragmentControlPage extends Fragment {
         mGenres = rootView.findViewById(R.id.genres_tv);
         mPassedTv = rootView.findViewById(R.id.passed_time);
         mEtrTime = rootView.findViewById(R.id.etr_time);
+        mOrientationButton = rootView.findViewById(R.id.change_orientation_btn);
+        mLoading = rootView.findViewById(R.id.webView_top_banner);
 
         if (!Api.sharedApi().hIG_IsConnect()) {
             mRecord.setAlpha(0.5f);
@@ -282,6 +372,36 @@ public class FragmentControlPage extends Fragment {
             mBackward.setOnClickListener(backward);
             mFastward.setOnClickListener(forward);
             mStartOver.setOnClickListener(startOver);
+
+            mRecord.setOnClickListener(v -> {
+                if (isRecorded) {
+                    Api.sharedApi().hIG_RecordPvrStop((aBoolean, s) -> {
+                        if (aBoolean) isRecorded = true;
+                    });
+                    mRecord.setBackgroundColor(getResources().getColor(R.color.mainPinkColor));
+                }
+                else {
+                    if (mDataLive != null) {
+                        try {
+                            record();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else download();
+                }
+            });
+
+            mFavorite.setOnClickListener(v -> {
+                if (isFavorite) {
+                    mFavorite.setBackgroundColor(Color.TRANSPARENT);
+                    isFavorite = false;
+                }
+                else {
+                    mFavorite.setBackgroundColor(getResources().getColor(R.color.mainPinkColor));
+                    isFavorite = true;
+                }
+            });
         }
 
         if (ControlPageAdapter.isLive()) {
@@ -316,6 +436,7 @@ public class FragmentControlPage extends Fragment {
 
         mDetail.setOnClickListener(v -> {
             Intent data = new Intent();
+            data.putExtra("isFromBanner", isFromBanner);
             data.putExtra("isLive",ControlPageAdapter.isLive());
             if (ControlPageAdapter.isLive()) {
                 data.putExtra("item", mDataLive);
@@ -329,11 +450,62 @@ public class FragmentControlPage extends Fragment {
         mDismiss.setOnClickListener(v -> {
             Intent data = new Intent();
             data.putExtra("dismiss", true);
+            data.putExtra("isFromBanner", isFromBanner);
             getActivity().setResult(getActivity().RESULT_OK, data);
             getActivity().finish();
         });
 
+        mOrientationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogWithMessage("Rotate your device to watch on the phone");
+            }
+        });
+
+        setProgress(0);
+
         return rootView;
+    }
+
+    void download() {
+        showDialogWithMessage("Coming soon");
+    }
+
+    void record() throws JSONException {
+        String title = ((HashMap) mDataLive.get("videoData")).get("title").toString();
+        int lcn = Integer.parseInt(((HashMap) mDataLive.get("channelData")).get("lcn").toString());
+
+        JSONObject recordObj = new JSONObject();
+        JSONObject recordParams = new JSONObject();
+        recordParams.put("startTime", "");
+        recordParams.put("recordMode", 1);
+        recordParams.put("recordName", title);
+        recordParams.put("lCN", lcn);
+        recordParams.put("duration", 10000);
+        JSONObject metaData = new JSONObject();
+        metaData.put("endtime",mDataLive.get("endTime").toString());
+        metaData.put("starttime", mDataLive.get("startTime").toString());
+        metaData.put("title", title);
+        metaData.put("image", getImageFromArray((ArrayList) ((HashMap) mDataLive.get("videoData")).get("originalImages"), "landscape", "feature"));
+        metaData.put("subTitle", getGenresFromArray((ArrayList<HashMap>) ((HashMap) mDataLive.get("videoData")).get("genresData")));
+        recordObj.put("record_parameter", recordParams);
+        recordObj.put("metaData", metaData);
+
+        Api.sharedApi().hIG_RecordPvrStart(recordObj.toString(), s -> {
+            try {
+                JSONObject result = new JSONObject(s);
+                if (result.getInt("return") != 1) {
+                    showDialogWithMessage("Record fail!");
+                }
+                else {
+                    isRecorded = true;
+                    mRecord.setBackgroundColor(Color.TRANSPARENT);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        });
     }
 
     private void showDialogWithMessage(String message) {

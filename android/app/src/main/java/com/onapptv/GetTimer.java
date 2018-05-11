@@ -49,6 +49,6 @@ public class GetTimer extends AsyncTask<Void, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
-        ((ControlActivity )mFragment.get().activity).nextPage();
+        ((ControlActivity ) mFragment.get().activity).nextPage();
     }
 }

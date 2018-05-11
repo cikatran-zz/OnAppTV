@@ -305,19 +305,37 @@ export default class Home extends Component {
     _onVideoPress = (item, isLive) => {
         const {navigation} = this.props;
         console.log(item);
-        navigation.navigate('DetailsPage', {
-            item: item,
-            isLive: isLive
-        })
+        NativeModules.RNControlPageNavigation
+            .navigateControl([item],
+                0,
+                isLive,
+                true,
+                () => { console.log("onDismiss") },
+                () => { console.log("onDetail") });
+        // navigation.navigate('DetailsPage', {
+        //     item: item,
+        //     isLive: isLive
+        // })
     };
 
     _onBannerPress = (item) => {
         const {navigation} = this.props;
-        navigation.navigate('VideoControlModal', {
-            item: item,
-            epg: [item],
-            isLive: false
-        })
+        if (Platform.OS !== 'ios') {
+            NativeModules.RNControlPageNavigation
+                .navigateControl([item],
+                    0,
+                    false,
+                    true,
+                    () => { console.log("onDismiss") },
+                    () => { console.log("onDetail") });
+        }
+        else {
+            navigation.navigate('VideoControlModal', {
+                item: item,
+                epg: [item],
+                isLive: false
+            })
+        }
 
     };
 
