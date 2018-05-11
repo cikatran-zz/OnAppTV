@@ -11,7 +11,7 @@ export function getLiveSuccess(data) {
     console.log(data)
   return {
     type: actionTypes.FETCH_LIVE_SUCCESS,
-    data: data.viewer.epgMany
+    data: data.viewer.channelPagination.items
   }
 }
 
