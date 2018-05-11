@@ -7,7 +7,7 @@ const initialState = {
     error: false,
 };
 
-export default function vodReducer(state = initialState, action, page) {
+export default function vodReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.FETCHING_VOD:
             return {
@@ -16,7 +16,7 @@ export default function vodReducer(state = initialState, action, page) {
             };
         case actionTypes.FETCH_VOD_SUCCESS:
             let tempData = null;
-            if (page === 1) {
+            if (action.page === 1) {
                 tempData = action.data
             } else {
                 tempData = [...state.data, action.data];
