@@ -103,12 +103,12 @@ public class FragmentControlPage extends Fragment {
             mProgress.setProgress((int) (percent / (deviceWidth / 100)));
             int minutes = progress / 60;
             int seconds = progress % 60;
-            String str = String.format("%02d:%02d:%02d", minutes, seconds);
+            String str = String.format("%02d:%02d", minutes, seconds);
             mPassedTv.setText(str);
             int etr_time = (int) durations;
             if (durations > progress) {
                 etr_time = (int) (durations - progress);
-                String etr = "-" + String.format("$02d:%02d:%02d", etr_time / 60, etr_time % 60).toString();
+                String etr = "-" + String.format("%02d:%02d", etr_time / 60, etr_time % 60).toString();
                 mEtrTime.setText(etr);
             }
         }
@@ -142,29 +142,10 @@ public class FragmentControlPage extends Fragment {
     public void onCreate(Bundle onSavedInstanceState) {
         super.onCreate(onSavedInstanceState);
 
-        if (!Api.sharedApi().hIG_IsConnect()) {
-            showDialogWithMessage("Disconnected from STB");
-            disConnected = true;
-        }
-        else {
-            final Handler h = new Handler();
-            h.postDelayed(new Runnable()
-            {
-                private long time = 0;
-
-                @Override
-                public void run()
-                {
-                    // do stuff then
-                    // can call h again after work!
-                    if (!Api.sharedApi().hIG_IsConnect() && !disConnected) {
-                        showDialogWithMessage("Disconnected from STB");
-                    }
-                    time += 30000;
-                    h.postDelayed(this, 30000);
-                }
-            }, 1000); // 1 second delay (takes millis)
-        }
+            if (!Api.sharedApi().hIG_IsConnect()) {
+                showDialogWithMessage("Disconnected from STB");
+                disConnected = true;
+            }
 
         if (ControlPageAdapter.isLive()) {
             mDataLive = (HashMap) getArguments().getSerializable("item");

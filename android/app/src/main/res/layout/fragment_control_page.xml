@@ -69,7 +69,7 @@
         android:textColor="@android:color/white"
         android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
-        android:text="0:00"
+        android:text="00:00"
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/etr_time"
@@ -78,7 +78,7 @@
         android:textSize="12sp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
-        android:text="-0:00"
+        android:text="-00:00"
         android:layout_below="@id/top.banner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
