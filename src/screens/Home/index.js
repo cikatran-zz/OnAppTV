@@ -23,7 +23,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getBanner: () => dispatch(getBanner()),
-        getLive: (time) => dispatch(getLive(time)),
+        getLive: (time, page, perPage) => dispatch(getLive(time, page, perPage)),
         getVOD: (page, itemPerPage) => dispatch(getVOD(page, itemPerPage)),
         getAds: () => dispatch(getAds()),
         getCategory: () => dispatch(getCategory()),

@@ -222,19 +222,19 @@ export const getAds = () => {
     });
 };
 
-export const getLive = (currentTime) => {
+export const getLive = (currentTime, page, itemPerPage) => {
     return new Promise((resolve, reject) => {
         NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
                 resolve(client.query({
                     query: config.queries.LIVESTB,
-                    variables: {currentTime: currentTime}
+                    variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
                 }));
             } else {
                 resolve(client.query({
                     query: config.queries.LIVESTB,
-                    variables: {currentTime: currentTime}
+                    variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
                 }));
             }
 

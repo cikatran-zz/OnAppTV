@@ -38,7 +38,7 @@ import {getImageFromArray} from "../../utils/images";
 import moment from 'moment';
 
 export default class Home extends Component {
-
+    _livePage = 1;
     constructor(props) {
         super(props);
         this.state = {
@@ -67,7 +67,7 @@ export default class Home extends Component {
         InteractionManager.runAfterInteractions(() => {
             this.props.getBanner();
             this.props.getAds();
-            this.props.getLive(true);
+            this.props.getLive(true, 1, 20);
             this.props.getVOD(1, 10);
             this.props.getCategory();
             this.props.getNews();
@@ -285,6 +285,11 @@ export default class Home extends Component {
         )
     };
 
+    _fetchMoreLive = () => {
+        this._livePage++;
+        this.props.getLive(true, this._livePage, 20);
+    }
+
     _renderOnLiveList = ({item}) => {
         if (item == null) {
             return (
@@ -298,6 +303,8 @@ export default class Home extends Component {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={item}
+            onEndReachedThreshold={5}
+            onEndReached={this._fetchMoreLive}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderOnLiveItem}/>)
     };

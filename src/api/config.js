@@ -160,9 +160,9 @@ query{
   }
 }
 `;
-const firstGQL = `query getLiveEPG($currentTime: Boolean){
+const firstGQL = `query getLiveEPG($page: Int, $perPage: Int, $currentTime: Boolean){
   viewer{
-    channelPagination(filter: {
+    channelPagination(page: $page, perPage: $perPage, filter: {
       _operators: {`;
 const lastGQL = `}
     }) {
