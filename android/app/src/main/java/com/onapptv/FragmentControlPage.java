@@ -2,6 +2,7 @@ package com.onapptv;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -335,6 +336,13 @@ public class FragmentControlPage extends Fragment {
         return rootView;
     }
 
+    private void showDialogWithMessage(String message) {
+        FragmentTransaction transaction = ControlPageAdapter.getmFm().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(android.R.id.content, OTVDialog.shareInstance(message))
+                .addToBackStack(null).commit();
+    }
+
     public GestureDetector mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
 
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -387,7 +395,8 @@ public class FragmentControlPage extends Fragment {
 
     String getGenresFromArray(ArrayList<HashMap> genres) {
         String genre = "";
-        if (genres == null) return genre;
+        if (genres == null)
+            return genre;
         for (int i = 0; i < genres.size(); i++) {
             genre = genre.concat(" ");
             genre = genre.concat(genres.get(i).get("name").toString());
