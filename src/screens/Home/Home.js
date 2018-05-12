@@ -259,7 +259,7 @@ export default class Home extends Component {
         if (item.epgsData == null) {
             return null;
         }
-        let genres = "N/A";
+        let genres = "";
         if (item.epgsData.videoData.genres != null && item.epgsData.videoData.genres.length > 0) {
             item.epgsData.videoData.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -267,6 +267,8 @@ export default class Home extends Component {
                 }
                 genres = genres.concat(genre.name.toString());
             })
+        } else {
+            genres = "N/A";
         }
         let timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
@@ -293,7 +295,7 @@ export default class Home extends Component {
 
     _fetchMoreVOD = () => {
         this._vodPage++;
-        this.props.getVOD(true, this._vodPage, 10);
+        this.props.getVOD(this._vodPage, 10);
     }
 
     _renderOnLiveList = ({item}) => {
@@ -347,7 +349,7 @@ export default class Home extends Component {
     // ON VOD
     _renderVODItem = ({item}) => {
 
-        let genres = "N/A";
+        let genres = "";
         if (item.genresData != null && item.genresData.length > 0) {
             item.genresData.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -355,6 +357,8 @@ export default class Home extends Component {
                 }
                 genres = genres.concat(genre.name.toString());
             })
+        } else {
+            genres = "N/A";
         }
 
         return (
