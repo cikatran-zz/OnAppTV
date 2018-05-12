@@ -1,5 +1,5 @@
 import React from 'react'
-import {Platform, StyleSheet, Text} from 'react-native'
+import {Platform, StyleSheet, Text, View} from 'react-native'
 import {colors} from '../utils/themeConfig'
 
 class PinkRoundedButton extends React.PureComponent {
@@ -9,9 +9,11 @@ class PinkRoundedButton extends React.PureComponent {
 
     render() {
         return (
-            <Text style={[styles.labelStyle, this.props.style]}>
-                {this.props.text}
-            </Text>
+            <View style={[styles.labelStyle, this.props.style]}>
+                <Text style={styles.textStyle}>
+                    {this.props.text}
+                </Text>
+            </View>
 
         )
     }
@@ -20,15 +22,17 @@ class PinkRoundedButton extends React.PureComponent {
 const styles = StyleSheet.create({
     labelStyle: {
         borderRadius: (Platform.OS === 'ios') ? 13 : 25,
-        paddingTop: 7,
-        paddingBottom: 6,
         paddingHorizontal: 15,
         backgroundColor: colors.mainPink,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 25,
+        overflow: "hidden",
+    },
+    textStyle: {
         fontSize: 10,
         color: colors.textWhitePrimary,
-        overflow: "hidden",
-        height: 25
-    },
+    }
 });
 
 export default PinkRoundedButton;
