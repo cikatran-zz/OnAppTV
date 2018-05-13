@@ -46,7 +46,7 @@ export default class Home extends Component {
             favoriteCategories: null,
             category: null,
             favoriteChannels: [null],
-            resumeVOD: [null]
+            resumeVOD: [null],
         };
         this.alertVC = null;
     };
@@ -538,7 +538,6 @@ export default class Home extends Component {
 
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
-        let refreshing = banner.isFetching || live.isFetching || vod.isFetching || ads.isFetching || category.isFetching || news.isFetching;
         if (this.state.favoriteCategories === null) {
             let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
             this.state.category = category.data === null ? [] : category.data;
@@ -587,8 +586,6 @@ export default class Home extends Component {
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
-                    refreshing={refreshing}
-                    onRefresh={() => this.fetchData()}
                     sections={sections}
                 />
             </View>
