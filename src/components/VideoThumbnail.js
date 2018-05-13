@@ -38,6 +38,9 @@ class VideoThumbnail extends React.PureComponent {
         }
         return (
             <View style={[this.props.style]}>
+                <View style={styles.placeHolder}>
+                    <Text style={styles.textPlaceHolder}>On App TV</Text>
+                </View>
                 <ImageBackground imageStyle={{borderRadius: 3}} style={styles.imageContainer} source={source}>
                     <View style={[styles.progressView, this._runProgressView()]}/>
                     <Text style={styles.textCenter}>{this.props.textCenter}</Text>
@@ -79,6 +82,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         alignSelf: 'center',
         width: 150
+    },
+    placeHolder: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: -1,
+        borderWidth: 0.5,
+        borderColor: colors.textGrey,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textPlaceHolder: {
+        color: colors.textGrey
     }
 });
 

@@ -214,6 +214,9 @@ export default class Home extends Component {
         let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
+                <View style={[styles.placeHolder,{bottom: 0}]}>
+                    <Text style={styles.textPlaceHolder}>On App TV</Text>
+                </View>
                 <ImageBackground
                     style={styles.adsContainer}
                     source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}>
@@ -246,6 +249,9 @@ export default class Home extends Component {
         return (
             <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}>
                 <View style={styles.notificationContainer}>
+                    <View style={styles.placeHolder}>
+                        <Text style={styles.textPlaceHolder}>On App TV</Text>
+                    </View>
                     <Image style={styles.notificationImage} source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}/>
                     <Text style={styles.notificationTitle}>{item.data.title}</Text>
                     <Text style={styles.notificationSubTitle}>{item.data.shortDescription}</Text>
@@ -784,4 +790,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         textAlign: 'center'
     },
+    placeHolder: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 50,
+        zIndex: -1,
+        borderWidth: 0.5,
+        borderColor: colors.textGrey,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textPlaceHolder: {
+        color: colors.textGrey
+    }
 });
