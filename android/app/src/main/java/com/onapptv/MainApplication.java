@@ -10,6 +10,7 @@ import com.airbnb.android.react.lottie.LottiePackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
@@ -23,6 +24,10 @@ import java.util.List;
 import userkit.sdk.UserKit;
 import userkit.sdk.identity.UserKitIdentity;
 public class MainApplication extends Application implements ReactApplication {
+
+    public ReactContext getReactContext() {
+        return mReactNativeHost.getReactInstanceManager().getCurrentReactContext();
+    }
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
         @Override

@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import com.google.gson.Gson;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,6 +37,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.facebook.react.ReactApplication;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.onapptv.R;
 import com.onapptv.OTVDialog;
 
@@ -438,7 +443,26 @@ public class FragmentControlPage extends Fragment {
             } else {
                 data.putExtra("item", mData);
             }
-            getActivity().setResult(getActivity().RESULT_OK,data);
+            if (ControlPageAdapter.isFromBanner()) {
+                WritableMap params = Arguments.createMap();
+                Gson gson = new Gson();
+                String itemJson = gson.toJson(mData);
+                params.putString("item", itemJson);
+                params.putBoolean("isLive", ControlPageAdapter.isLive());
+                sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
+                        "bannerDetailsPage",
+                        params);
+            }
+            else {
+                WritableMap params = Arguments.createMap();
+                Gson gson = new Gson();
+                String itemJson = gson.toJson(mDataLive);
+                params.putString("item", itemJson);
+                params.putBoolean("isLive", ControlPageAdapter.isLive());
+                sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
+                        "reloadDetailsPage",
+                        params);
+            }
             getActivity().finish();
         });
 
@@ -446,7 +470,12 @@ public class FragmentControlPage extends Fragment {
             Intent data = new Intent();
             data.putExtra("dismiss", true);
             data.putExtra("isFromBanner", ControlPageAdapter.isFromBanner());
-            getActivity().setResult(getActivity().RESULT_OK, data);
+            WritableMap params = Arguments.createMap();
+            params.putBoolean("isFromBanner", ControlPageAdapter.isFromBanner());
+            params.putBoolean("dismiss", true);
+            sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
+                    "dismissControlPage",
+                    params);
             getActivity().finish();
         });
 
@@ -460,6 +489,14 @@ public class FragmentControlPage extends Fragment {
         setProgress(0);
 
         return rootView;
+    }
+
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 
     void download() {

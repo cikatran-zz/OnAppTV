@@ -64,32 +64,30 @@ export default class DetailsPage extends React.Component {
         })
 
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
-            InteractionManager.runAfterInteractions(() => {
-                const {item, isLive} = e;
-                console.log('reloadDetailsPage', item, isLive)
-                this.setNewState(item, isLive);
-                if (item && isLive !== undefined) {
-                    if (isLive === true && item.channelData
-                        && item.channelData.serviceId
-                        && item.channelId) {
-                        /*
-                         Fetching information about EPG next in channel and EPG which are
-                         at the same time on other channels
-                         */
-                        this.props.getEpgs([item.channelData.serviceId]);
-                        this.props.getEpgSameTime(new Date(), item.channelId);
-                    }
-                    else if (item.type) {
-                        /*
-                         Fetch epg with related content or epg in series
-                         */
-                        if (item.type === 'Episode')
-                            this.props.getEpgWithSeriesId([item.seriesId]);
-                        else
-                            this.props.getEpgWithGenre(item.genreIds);
-                    }
-                };
-            })
+            const {item, isLive} = e;
+            console.log('reloadDetailsPage', item, isLive)
+            this.setNewState(item, isLive);
+            if (item && isLive !== undefined) {
+                if (isLive === true && item.channelData
+                    && item.channelData.serviceId
+                    && item.channelId) {
+                    /*
+                     Fetching information about EPG next in channel and EPG which are
+                     at the same time on other channels
+                     */
+                    this.props.getEpgs([item.channelData.serviceId]);
+                    this.props.getEpgSameTime(new Date(), item.channelId);
+                }
+                else if (item.type) {
+                    /*
+                     Fetch epg with related content or epg in series
+                     */
+                    if (item.type === 'Episode')
+                        this.props.getEpgWithSeriesId([item.seriesId]);
+                    else
+                        this.props.getEpgWithGenre(item.genreIds);
+                }
+            };
         });
 
         Orientation.lockToPortrait();
