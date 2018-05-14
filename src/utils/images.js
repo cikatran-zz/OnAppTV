@@ -7,14 +7,12 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
         if (item.name === firstImageName) {
             let scaledImages = item.scaledImage
             if (scaledImages != null) {
-                console.log(scaledImages[scaledImages.length - 1].url)
                 image = scaledImages[scaledImages.length - 1].url;
             }
         }
         if (image == null && item.name === secondImageName) {
             let scaledImages = item.scaledImage
             if (scaledImages != null) {
-                console.log(scaledImages[scaledImages.length - 1].url)
                 image = scaledImages[scaledImages.length - 1].url;
             }
         }
