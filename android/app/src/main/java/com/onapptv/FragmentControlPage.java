@@ -99,14 +99,18 @@ public class FragmentControlPage extends Fragment {
             currentProgress = progress;
             float percent = progress / mOffsetRate;
             mProgress.setProgress((int) (percent / (deviceWidth / 100)));
-            int minutes = progress / 60;
-            int seconds = progress % 60;
-            String str = String.format("%02d:%02d", minutes, seconds);
+            int hours = progress / 3600;
+            int minutes = (progress % 3600) / 60;
+            int seconds = progress - hours * 3600 - minutes * 60;
+            String str = String.format("%02d:%02d:%02d",hours, minutes, seconds);
             mPassedTv.setText(str);
             int etr_time = (int) durations;
             if (durations > progress) {
                 etr_time = (int) (durations - progress);
-                String etr = "-" + String.format("%02d:%02d", etr_time / 60, etr_time % 60).toString();
+                int etr_hours = etr_time / 3600;
+                int etr_minutes = (etr_time % 3600) / 60;
+                int etr_seconds = etr_time - etr_hours * 3600 - etr_minutes * 60;
+                String etr = "-" + String.format("%02d:%02d:%02d", etr_hours, etr_minutes, etr_seconds).toString();
                 mEtrTime.setText(etr);
             }
         }
@@ -153,12 +157,17 @@ public class FragmentControlPage extends Fragment {
                         Date start = fromISO8601UTC(mDataLive.get("startTime").toString());
                         Date end = fromISO8601UTC(mDataLive.get("endTime").toString());
                         long current = date.getTime() - start.getTime();
-                        long etr = end.getTime() - date.getTime();
-                        int minutes = (int) (current / 60);
-                        int seconds = (int) (current % 60);
-                        String str = String.format("%02d:%02d", minutes, seconds);
+                        int hours = (int) (current / 3600);
+                        int minutes = (int) (current % 60) / 60;
+                        int seconds = (int) (current - hours * 3600 - minutes * 60);
+                        String str = String.format("%02d:%02d:%02d", hours,minutes, seconds);
                         mPassedTv.setText(str);
-                        String etrText = "-" + String.format("%02d:%02d", etr / 60, etr % 60);
+
+                        long etr = end.getTime() - date.getTime();
+                        int etr_hours = (int) (etr / 3600);
+                        int etr_minutes = (int) ((etr % 3600) / 60);
+                        int etr_seconds = (int) (etr - etr_hours * 3600 - etr_minutes * 60);
+                        String etrText = "-" + String.format("%02d:%02d:%02d", etr_hours, etr_minutes, etr_seconds);
                         mEtrTime.setText(etrText);
                         mProgress.setProgress((int) (current / (current + etr)) * 100);
                     } catch (ParseException e) {
@@ -202,9 +211,15 @@ public class FragmentControlPage extends Fragment {
     View.OnClickListener backward = v -> {
         if (Api.sharedApi().hIG_IsConnect()) {
             Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
-                Api.sharedApi().hIG_PlayMediaSetPosition(i - 10, (aBoolean, s) -> {
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("playPosition", i - 10);
+                    Api.sharedApi().hIG_PlayMediaSetPosition(obj.toString(), s -> {
 
-                });
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             });
         }
     };
@@ -212,9 +227,15 @@ public class FragmentControlPage extends Fragment {
     View.OnClickListener forward = v -> {
         if (Api.sharedApi().hIG_IsConnect()) {
             Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
-                Api.sharedApi().hIG_PlayMediaSetPosition(i + 10, (aBoolean, s) -> {
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("playPosition", i + 10);
+                    Api.sharedApi().hIG_PlayMediaSetPosition(obj.toString(), s -> {
 
-                });
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             });
         }
     };
@@ -509,11 +530,17 @@ public class FragmentControlPage extends Fragment {
             isDragging = false;
             int deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
             float distance = (e2.getX() - e1.getX()) / (deviceWidth / 100);
-            mProgress.setProgress((int) (currentProgress + distance));
             currentProgress = (int) (currentProgress + distance);
-            Api.sharedApi().hIG_PlayMediaSetPosition((int) (currentProgress * mOffsetRate), (aBoolean, s) -> {
-
-            });
+            JSONObject object = new JSONObject();
+            try {
+                object.put("playPosition", (int) (currentProgress + distance));
+                mProgress.setProgress((int) (currentProgress + distance));
+                Api.sharedApi().hIG_PlayMediaSetPosition(object.toString(), s -> {
+                    Log.v("playPosition", "" + s);
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return false;
         }
 

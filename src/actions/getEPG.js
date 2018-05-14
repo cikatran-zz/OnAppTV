@@ -21,17 +21,19 @@ export function getEpgsFailure(error) {
     }
 }
 
-export function getEpgWithGenres(genresIds) {
+export function getEpgWithGenres(genresIds, page, perPage) {
     return {
         type: actionTypes.FETCHING_EPG_GENRES,
-        genresIds: genresIds
+        genresIds: genresIds,
+        page: page,
+        perPage: perPage
     }
 }
 
 export function getEpgWithGenresSuccess(data) {
     return {
         type: actionTypes.FETCH_EPG_GENRES_SUCCESS,
-        data: data.viewer.videoMany
+        data: data.viewer.videoPagination.items
     }
 }
 
@@ -42,17 +44,19 @@ export function getEpgWithGenresFailure(error) {
     }
 }
 
-export function getEpgWithSeriesId (seriesId) {
+export function getEpgWithSeriesId (seriesId, page, perPage) {
   return {
     type: actionTypes.FETCHING_EPG_SERIES,
-    seriesId: seriesId
+    seriesId: seriesId,
+    page: page,
+    perPage: perPage
   }
 }
 
 export function getEpgWithSeriesIdSuccess (data) {
   return {
     type: actionTypes.FETCH_EPG_SERIES_SUCCESS,
-    data: data.viewer.videoMany
+    data: data.viewer.videoPagination.items
   }
 }
 

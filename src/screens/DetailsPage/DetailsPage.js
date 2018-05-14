@@ -44,22 +44,20 @@ export default class DetailsPage extends React.Component {
                  Fetching information about EPG next in channel and EPG which are
                  at the same time on other channels
                  */
-                this.props.getEpgs([item.channelData.serviceId])
-                this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
+                // this.props.getEpgs([item.channelData.serviceId])
+                // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
+                this.props.getEpgWithGenre(item.genreIds, 1, 10);
             }
             else if (item.type) {
                 /*
                  Fetch epg with related content or epg in series
                  */
                 if (item.type === 'Episode')
-                    this.props.getEpgWithSeriesId([item.seriesId])
+                    this.props.getEpgWithSeriesId([item.seriesId], 1, 10)
                 else
-                    this.props.getEpgWithGenre(item.genreIds)
+                    this.props.getEpgWithGenre(item.genreIds, 1, 10)
             }
         }
-        // InteractionManager.runAfterInteractions(() => {
-        //
-        // })
 
         DeviceEventEmitter.addListener('dismissControlPage', (e) => {
                 this.props.navigation.replace("Home");
@@ -68,6 +66,7 @@ export default class DetailsPage extends React.Component {
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
             InteractionManager.runAfterInteractions(() => {
                 const {item, isLive} = e;
+                console.log('reloadDetailsPage', item, isLive)
                 this.setNewState(item, isLive);
                 if (item && isLive !== undefined) {
                     if (isLive === true && item.channelData
@@ -102,7 +101,7 @@ export default class DetailsPage extends React.Component {
     }
 
     setNewState = (item, isLive) => {
-        this.setState({item, isLive})
+        this.setState({item: JSON.parse(item), isLive})
     }
 
     componentWillUnmount() {

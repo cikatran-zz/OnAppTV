@@ -12,9 +12,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getEpgs: (serviceId) => dispatch(getEpgs(serviceId)),
-    getEpgWithGenre: (genresIds) => dispatch(getEpgWithGenres(genresIds)),
-    getEpgWithSeriesId: (seriesId) => dispatch(getEpgWithSeriesId(seriesId)),
+    getEpgs: (serviceId, page, perPage) => dispatch(getEpgs(serviceId), page, perPage),
+    getEpgWithGenre: (genresIds, page, perPage) => dispatch(getEpgWithGenres(genresIds, page, perPage)),
+    getEpgWithSeriesId: (seriesId, page, perPage) => dispatch(getEpgWithSeriesId(seriesId, page, perPage)),
     getEpgSameTime: (currentTime, channelId) => dispatch(getEpgSameTime(currentTime, channelId))
   }
 }
