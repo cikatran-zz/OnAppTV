@@ -419,7 +419,7 @@ export default class Home extends Component {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
-                onEndReachedThreshold={5}
+                onEndReachedThreshold={0.5}
                 ListFooterComponent={this._renderVODFooter}
                 onEndReached={this._fetchMoreVOD}
                 keyExtractor={this._keyExtractor}

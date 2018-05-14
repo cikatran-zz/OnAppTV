@@ -19,7 +19,7 @@ export const epgWithGenre = (action$) =>
     action$.ofType(actionTypes.FETCHING_EPG_GENRES)
         .mergeMap(action =>
             Observable.from(getEpgWithGenres(action.genresIds, action.page, action.perPage))
-              .map(res => getEpgWithGenresSuccess(res.data))
+              .map(res => getEpgWithGenresSuccess(res.data, action.page))
               .catch(error => Observable.of(getEpgWithGenresFailure(error)))
         );
 
@@ -27,6 +27,6 @@ export const epgWithSeriesId = (action$) =>
     action$.ofType(actionTypes.FETCHING_EPG_SERIES)
         .mergeMap(action =>
             Observable.from(getEpgWithSeriesId(action.seriesId, action.page, action.perPage))
-              .map(res => getEpgWithSeriesIdSuccess(res.data))
+              .map(res => getEpgWithSeriesIdSuccess(res.data, action.page))
               .catch(error => Observable.of(getEpgWithSeriesIdFailure(error)))
         );

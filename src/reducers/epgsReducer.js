@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes'
+import _ from 'lodash'
 
 const initialState = {
   data: null,
@@ -19,9 +20,15 @@ export default function epgsReducer(state = initialState, action) {
     case actionTypes.FETCH_EPGS_SUCCESS:
     case actionTypes.FETCH_EPG_GENRES_SUCCESS:
     case actionTypes.FETCH_EPG_SERIES_SUCCESS:
+        let tempData = null;
+        if (action.page === 1) {
+            tempData = action.data
+        } else {
+            tempData = _.concat(...state.data, action.data);
+        }
       return {
         ...state,
-        data: action.data,
+        data: tempData,
         isFetching: false,
         fetched: true
       };

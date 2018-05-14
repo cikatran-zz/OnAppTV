@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     View,
     InteractionManager,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    ActivityIndicator
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
@@ -25,6 +26,7 @@ import { DotsLoader } from 'react-native-indicator'
 import moment from "moment/moment";
 
 export default class DetailsPage extends React.Component {
+    _page = 1;
 
     constructor(props) {
         super(props);
@@ -76,8 +78,9 @@ export default class DetailsPage extends React.Component {
                          Fetching information about EPG next in channel and EPG which are
                          at the same time on other channels
                          */
-                        this.props.getEpgs([item.channelData.serviceId]);
-                        this.props.getEpgSameTime(new Date(), item.channelId);
+                        // this.props.getEpgs([item.channelData.serviceId]);
+                        // this.props.getEpgSameTime(new Date(), item.channelId);
+                        this.props.getEpgWithGenre(item.genreIds, 1, 10);
                     }
                     else if (item.type) {
                         /*
@@ -142,7 +145,6 @@ export default class DetailsPage extends React.Component {
                         {data: [item], showHeader: false, renderItem: this._renderBanner},
                         {data: [item], renderItem: this._renderBannerInfo},
                         {data: [epg.data], showHeader: false, renderItem: this._renderList},
-                        {data: [epgSameTime.data], showHeader: false, renderItem: this._renderListEpgInSameTime}
                     ]}
                 />
             </View>
@@ -305,6 +307,45 @@ export default class DetailsPage extends React.Component {
         )
     }
 
+    __renderListFooter = () => {
+        const {epg} = this.props;
+        if (epg.isFetching) {
+            return (
+                <View
+                    style={{height: 30, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
+    _fetchMore = () => {
+        this._page++;
+        const {item, isLive} = this.props.navigation.state.params;
+        if (item && isLive !== undefined) {
+            if (isLive === true ) {
+                /*
+                 Fetching information about EPG next in channel and EPG which are
+                 at the same time on other channels
+                 */
+                // this.props.getEpgs([item.channelData.serviceId])
+                // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
+                this.props.getEpgWithGenre(item.genreIds, this._page, 10);
+            }
+            else if (item.type) {
+                /*
+                 Fetch epg with related content or epg in series
+                 */
+                if (item.type === 'Episode')
+                    this.props.getEpgWithSeriesId([item.seriesId], this._page, 10)
+                else
+                    this.props.getEpgWithGenre(item.genreIds, this._page, 10)
+            }
+        }
+    }
+
 
     _renderList = ({item}) => {
         if (this._isFromChannel()) {
@@ -324,6 +365,9 @@ export default class DetailsPage extends React.Component {
                         style={styles.list}
                         horizontal={false}
                         data={item}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={this.__renderListFooter}
+                        onEndReached={this._fetchMore}
                         keyExtractor={this._keyExtractor}
                         renderItem={this._renderListVideoItem}/>
                 </View>
