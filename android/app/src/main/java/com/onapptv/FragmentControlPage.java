@@ -83,8 +83,6 @@ public class FragmentControlPage extends Fragment {
     int deviceWidth;
     Boolean isRecorded = false;
     Boolean isFavorite = false;
-    Boolean disConnected = false;
-    Boolean isFromBanner = false;
 
     interface OnPlayFinished {
         void nextPage();
@@ -142,11 +140,6 @@ public class FragmentControlPage extends Fragment {
     public void onCreate(Bundle onSavedInstanceState) {
         super.onCreate(onSavedInstanceState);
 
-            if (!Api.sharedApi().hIG_IsConnect()) {
-                showDialogWithMessage("Disconnected from STB");
-                disConnected = true;
-            }
-
         if (ControlPageAdapter.isLive()) {
             mDataLive = (HashMap) getArguments().getSerializable("item");
             liveTimeHandler = new Handler();
@@ -185,7 +178,6 @@ public class FragmentControlPage extends Fragment {
                     videoUrl = video.findHighQualitySource(DeliveryType.MP4).getUrl();
                 }
             });
-            isFromBanner = getArguments().getBoolean("isFromBanner");
 
             int currentOrientation = getResources().getConfiguration().orientation;
             if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -418,7 +410,7 @@ public class FragmentControlPage extends Fragment {
 
         mDetail.setOnClickListener(v -> {
             Intent data = new Intent();
-            data.putExtra("isFromBanner", isFromBanner);
+            data.putExtra("isFromBanner", ControlPageAdapter.isFromBanner());
             data.putExtra("isLive",ControlPageAdapter.isLive());
             if (ControlPageAdapter.isLive()) {
                 data.putExtra("item", mDataLive);
@@ -432,7 +424,7 @@ public class FragmentControlPage extends Fragment {
         mDismiss.setOnClickListener(v -> {
             Intent data = new Intent();
             data.putExtra("dismiss", true);
-            data.putExtra("isFromBanner", isFromBanner);
+            data.putExtra("isFromBanner", ControlPageAdapter.isFromBanner());
             getActivity().setResult(getActivity().RESULT_OK, data);
             getActivity().finish();
         });
@@ -529,6 +521,17 @@ public class FragmentControlPage extends Fragment {
             return true;
         }
     });
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (!Api.sharedApi().hIG_IsConnect() && !ControlActivity.getIsDisconneted()) {
+                    showDialogWithMessage("Disconnected from STB");
+                    ControlActivity.setIsDisconnected(true);
+            }
+        }
+    }
 
     String getImageFromArray(ArrayList<HashMap> images, String firstName, String secondName) {
         if (images == null || images.size() == 0) {

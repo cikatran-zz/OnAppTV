@@ -20,6 +20,7 @@ import {
     StatusBar,
     Linking,
     InteractionManager,
+    DeviceEventEmitter,
     ActivityIndicator
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
@@ -89,6 +90,10 @@ export default class Home extends Component {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
             Orientation.lockToPortrait();
+        });
+        DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
+            const {item, isLive} = e;
+            this._onVideoPress(JSON.parse(item), isLive);
         });
     };
 
@@ -164,7 +169,6 @@ export default class Home extends Component {
         if (item == null) {
             return null
         }
-        console.log(item);
         return (
             <TouchableOpacity onPress={() => this._onBannerPress(item, false)}>
                 <View style={styles.slotMachineContainer}>

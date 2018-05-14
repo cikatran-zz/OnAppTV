@@ -37,7 +37,6 @@ export default class DetailsPage extends React.Component {
     _keyExtractor = (item, index) => index;
 
     componentDidMount() {
-        console.log('componentDidMount')
         const {item, isLive} = this.props.navigation.state.params;
         if (item && isLive !== undefined) {
             if (isLive === true ) {
@@ -118,9 +117,6 @@ export default class DetailsPage extends React.Component {
             item = this.props.navigation.state.params.item;
             isLive = this.props.navigation.state.params.isLive;
         }
-
-        console.log(item)
-        console.log(epg)
 
         if ((!epg || !epg.data || !item)) {
             return (
@@ -390,7 +386,6 @@ export default class DetailsPage extends React.Component {
         if (Platform.OS !== 'ios') {
             let data = epg.data.length !== 0 ? epg.data : [item]
             let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
-            console.log('Special', data);
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
                     itemIndex,
