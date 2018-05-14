@@ -21,7 +21,7 @@ class BottomTabbar extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.animation.play();
+        // this.animation.play();
     }
     _renderTab = (tab, i) => {
         const {navigation} = this.props;

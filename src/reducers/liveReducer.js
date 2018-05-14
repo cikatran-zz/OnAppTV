@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-
+import _ from 'lodash';
 const initialState = {
     data: null,
     fetched: false,
@@ -19,7 +19,7 @@ export default function liveReducer(state = initialState, action) {
             if (action.page === 1) {
                 tempData = action.data
             } else {
-                tempData = [...state.data, action.data];
+                tempData = _.concat(...state.data, action.data);
             }
 
             return {

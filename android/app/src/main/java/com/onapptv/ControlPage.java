@@ -96,13 +96,13 @@ public class ControlPage extends LimitedViewPager {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void loadViewPager() {
         Log.v("setIsLive", "Activity " + mActivity);
-        if (mEpg != null && mIndex != -1 && mIsLive != null && mActivity != null) {
-
-            ControlPageAdapter adapter =
-                    new ControlPageAdapter(mActivity.getFragmentManager(), mEpg.toArrayList(), mIsLive);
-            this.setAdapter(adapter);
-
-            this.setCurrentItem(mIndex);
-        }
+//        if (mEpg != null && mIndex != -1 && mIsLive != null && mActivity != null) {
+//
+////            ControlPageAdapter adapter =
+////                    new ControlPageAdapter(mActivity.getFragmentManager(), mEpg.toArrayList(), mIsLive);
+//            this.setAdapter(adapter);
+//
+//            this.setCurrentItem(mIndex);
+//        }
     }
 }
