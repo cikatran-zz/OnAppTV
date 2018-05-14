@@ -20,8 +20,7 @@ export default function vodReducer(state = initialState, action) {
             if (action.page === 1) {
                 tempData = action.data
             } else {
-                if (action.data.length > 0)
-                    tempData = _.concat(...state.data, action.data);
+                tempData = _.concat(...state.data, action.data);
             }
             return {
                 ...state,
