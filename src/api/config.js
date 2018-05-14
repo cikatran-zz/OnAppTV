@@ -176,6 +176,7 @@ const lastGQL = `}
         shortDescription
         epgsData(current: $currentTime) {
           videoId
+          genreIds
           videoData {
             contentId
             durationInSeconds
@@ -295,85 +296,91 @@ query getEPGByChannel($channelId: Float){
 `;
 
 const relatedEpgQuery = gql`
-query getRelated($genreIds: [MongoID]){
+query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
   viewer{
-    videoMany(filter: {
+    videoPagination(page: $page, perPage: $perPage,filter: {
       _operators: {
         genreIds: {
           in: $genreIds
         }
       }
     })  {
-      _id
-      contentId
-      durationInSeconds
-      publishDate
-      genreIds
-      genresData {
-        name
+      items {
+          _id
+          contentId
+          durationInSeconds
+          publishDate
+          genreIds
+          genresData {
+            name
+          }
+          title
+          originalImages {
+            height
+            width
+            url
+            name
+            fileName
+          }
+          genreIds
+          longDescription
+          shortDescription
+          feature
+          seriesId
+          seasonIndex
+          episodeIndex
+          type
+          impression
+          updatedAt
+          createdAt
+          custom
       }
-      title
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      }
-      genreIds
-      longDescription
-      shortDescription
-      feature
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      updatedAt
-      createdAt
-      custom
+      count
     }
   }
 }
 `
 const seriesEpgQuery = gql`
-query getSeriesEpg($id: [MongoID]){
+query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int){
     viewer{
   
-    videoMany(filter: {
+    videoPagination(filter: {
       _operators: {
         seriesId: {
           in: $id
         }
       }
-    }) {
-      _id
-      contentId
-      durationInSeconds
-      publishDate
-      genreIds
-      genresData {
-        name
-      }
-      title
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      }
-      longDescription
-      shortDescription
-      feature
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      updatedAt
-      createdAt
-      custom
+    }, page: $page, perPage: $perPage) {
+        items {
+            _id
+          contentId
+          durationInSeconds
+          publishDate
+          genreIds
+          genresData {
+            name
+          }
+          title
+          originalImages {
+            height
+            width
+            url
+            name
+            fileName
+          }
+          longDescription
+          shortDescription
+          feature
+          seriesId
+          seasonIndex
+          episodeIndex
+          type
+          impression
+          updatedAt
+          createdAt
+          custom
+        }
+        count
     }
   }
 }

@@ -352,18 +352,17 @@ export const getGenresContent = (genresIds) => {
     });
 };
 
-export const getEpgWithGenres = (genresIds) => {
-    console.log(genresIds)
+export const getEpgWithGenres = (genresIds, page, perPage) => {
     return client.query({
         query: config.queries.EPG_WITH_GENRES,
-        variables: {genreIds: genresIds}
+        variables: {genreIds: genresIds, page: page, perPage: perPage}
     })
 }
 
-export const getEpgWithSeriesId = (seriesId) => {
+export const getEpgWithSeriesId = (seriesId, page, perPage) => {
     return client.query({
         query: config.queries.EPG_WITH_SERIES,
-        variables: {id: seriesId}
+        variables: {id: seriesId, page: page, perPage: perPage}
     })
 };
 
