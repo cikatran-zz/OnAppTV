@@ -19,7 +19,8 @@ import {
     TouchableOpacity,
     StatusBar,
     Linking,
-    InteractionManager
+    InteractionManager,
+    DeviceEventEmitter
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -94,6 +95,11 @@ export default class Home extends Component {
             getWatchingHistory().then((response) => {
                 this.setState({resumeVOD: response});
             });
+        });
+        DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
+            const {item, isLive} = e;
+            console.log('bannerDetailsPage', e);
+            this._onVideoPress(JSON.parse(item), isLive);
         });
     };
 

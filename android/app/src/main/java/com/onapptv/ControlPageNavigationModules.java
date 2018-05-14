@@ -54,10 +54,6 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle extras = data.getExtras();
                     boolean isFromBanner = extras.getBoolean("isFromBanner");
-                    if (isFromBanner) {
-                        // NOTHING TO DO, JUST RETURN
-                        return;
-                    }
                     boolean isDismiss = extras.getBoolean("dismiss");
                     if (isDismiss)
                         sendEvent(getReactApplicationContext(), "dismissControlPage", null);
@@ -69,7 +65,8 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
                         Gson gson = new Gson();
                         String itemJson = gson.toJson(item);
                         params.putString("item", itemJson);
-                        sendEvent(getReactApplicationContext(), "reloadDetailsPage", params);
+                        if (isFromBanner) sendEvent(getReactApplicationContext(), "bannerDetailsPage", params);
+                        else sendEvent(getReactApplicationContext(), "reloadDetailsPage", params);
                     }
                 }
             }

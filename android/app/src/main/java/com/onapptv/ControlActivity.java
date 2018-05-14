@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class ControlActivity extends AppCompatActivity implements FragmentControlPage.OnPlayFinished {
 
     LimitedViewPager mViewPager;
+    private static Boolean isDisconnected = false;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -26,7 +27,10 @@ public class ControlActivity extends AppCompatActivity implements FragmentContro
         mViewPager = findViewById(R.id.view_pager);
 
         ControlPageAdapter adapter =
-                new ControlPageAdapter(getFragmentManager(),(ArrayList) bundle.getSerializable("epg") , bundle.getBoolean("isLive"));
+                new ControlPageAdapter(getFragmentManager(),
+                        (ArrayList) bundle.getSerializable("epg") ,
+                        bundle.getBoolean("isLive"),
+                        bundle.getBoolean("isFromBanner"));
         mViewPager.setAdapter(adapter);
         int index = bundle.getInt("index");
         mViewPager.setCurrentItem(index);
@@ -41,5 +45,13 @@ public class ControlActivity extends AppCompatActivity implements FragmentContro
         else {
             mViewPager.setCurrentItem(0);
         }
+    }
+
+    public static void setIsDisconnected(Boolean b) {
+        isDisconnected = b;
+    }
+
+    public static Boolean getIsDisconneted() {
+        return isDisconnected;
     }
 }
