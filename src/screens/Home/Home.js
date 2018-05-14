@@ -19,7 +19,8 @@ import {
     TouchableOpacity,
     StatusBar,
     Linking,
-    InteractionManager
+    InteractionManager,
+    ActivityIndicator
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -318,6 +319,7 @@ export default class Home extends Component {
             showsHorizontalScrollIndicator={false}
             data={item}
             onEndReachedThreshold={5}
+            ListFooterComponent={this._renderLiveFooter}
             onEndReached={this._fetchMoreLive}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderOnLiveItem}/>)
@@ -376,6 +378,34 @@ export default class Home extends Component {
                       style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
             </TouchableOpacity>)
     };
+    _renderVODFooter = () => {
+        const {vod} = this.props;
+        if (vod.isFetching) {
+            return (
+                <View
+                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
+    _renderLiveFooter = () => {
+        const {live} = this.props;
+        if (live.isFetching) {
+            return (
+                <View
+                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
 
     _renderVODList = ({item}) => {
         if (item == null || item[0] == null) {
@@ -392,6 +422,7 @@ export default class Home extends Component {
                 showsHorizontalScrollIndicator={false}
                 data={item}
                 onEndReachedThreshold={5}
+                ListFooterComponent={this._renderVODFooter}
                 onEndReached={this._fetchMoreVOD}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderVODItem}/>
