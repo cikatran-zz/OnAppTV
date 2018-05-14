@@ -89,12 +89,6 @@ export default class Home extends Component {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
             Orientation.lockToPortrait();
-            getChannel().then((response) => {
-                this._setupFavoriteChannel(response);
-            });
-            getWatchingHistory().then((response) => {
-                this.setState({resumeVOD: response});
-            });
         });
     };
 
