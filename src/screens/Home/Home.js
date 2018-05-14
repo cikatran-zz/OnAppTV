@@ -20,7 +20,8 @@ import {
     StatusBar,
     Linking,
     InteractionManager,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    ActivityIndicator
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -47,7 +48,7 @@ export default class Home extends Component {
             favoriteCategories: null,
             category: null,
             favoriteChannels: [null],
-            resumeVOD: [null]
+            resumeVOD: [null],
         };
         this.alertVC = null;
     };
@@ -89,12 +90,6 @@ export default class Home extends Component {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
             Orientation.lockToPortrait();
-            getChannel().then((response) => {
-                this._setupFavoriteChannel(response);
-            });
-            getWatchingHistory().then((response) => {
-                this.setState({resumeVOD: response});
-            });
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
             const {item, isLive} = e;
@@ -220,6 +215,9 @@ export default class Home extends Component {
         let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
+                <View style={[styles.placeHolder,{bottom: 0}]}>
+                    <Text style={styles.textPlaceHolder}>On App TV</Text>
+                </View>
                 <ImageBackground
                     style={styles.adsContainer}
                     source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}>
@@ -252,6 +250,9 @@ export default class Home extends Component {
         return (
             <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}>
                 <View style={styles.notificationContainer}>
+                    <View style={styles.placeHolder}>
+                        <Text style={styles.textPlaceHolder}>On App TV</Text>
+                    </View>
                     <Image style={styles.notificationImage} source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}/>
                     <Text style={styles.notificationTitle}>{item.data.title}</Text>
                     <Text style={styles.notificationSubTitle}>{item.data.shortDescription}</Text>
@@ -265,7 +266,7 @@ export default class Home extends Component {
         if (item.epgsData == null) {
             return null;
         }
-        let genres = "N/A";
+        let genres = "";
         if (item.epgsData.videoData.genres != null && item.epgsData.videoData.genres.length > 0) {
             item.epgsData.videoData.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -273,6 +274,8 @@ export default class Home extends Component {
                 }
                 genres = genres.concat(genre.name.toString());
             })
+        } else {
+            genres = "N/A";
         }
         let timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
 
@@ -299,7 +302,7 @@ export default class Home extends Component {
 
     _fetchMoreVOD = () => {
         this._vodPage++;
-        this.props.getVOD(true, this._vodPage, 10);
+        this.props.getVOD(this._vodPage, 10);
     }
 
     _renderOnLiveList = ({item}) => {
@@ -316,6 +319,7 @@ export default class Home extends Component {
             showsHorizontalScrollIndicator={false}
             data={item}
             onEndReachedThreshold={5}
+            ListFooterComponent={this._renderLiveFooter}
             onEndReached={this._fetchMoreLive}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderOnLiveItem}/>)
@@ -353,7 +357,7 @@ export default class Home extends Component {
     // ON VOD
     _renderVODItem = ({item}) => {
 
-        let genres = "N/A";
+        let genres = "";
         if (item.genresData != null && item.genresData.length > 0) {
             item.genresData.forEach((genre, index) => {
                 if (genres.length != 0) {
@@ -361,6 +365,8 @@ export default class Home extends Component {
                 }
                 genres = genres.concat(genre.name.toString());
             })
+        } else {
+            genres = "N/A";
         }
 
         return (
@@ -372,6 +378,34 @@ export default class Home extends Component {
                       style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
             </TouchableOpacity>)
     };
+    _renderVODFooter = () => {
+        const {vod} = this.props;
+        if (vod.isFetching) {
+            return (
+                <View
+                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
+    _renderLiveFooter = () => {
+        const {live} = this.props;
+        if (live.isFetching) {
+            return (
+                <View
+                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
 
     _renderVODList = ({item}) => {
         if (item == null || item[0] == null) {
@@ -388,6 +422,7 @@ export default class Home extends Component {
                 showsHorizontalScrollIndicator={false}
                 data={item}
                 onEndReachedThreshold={5}
+                ListFooterComponent={this._renderVODFooter}
                 onEndReached={this._fetchMoreVOD}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderVODItem}/>
@@ -534,7 +569,6 @@ export default class Home extends Component {
 
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
-        let refreshing = banner.isFetching || live.isFetching || vod.isFetching || ads.isFetching || category.isFetching || news.isFetching;
         if (this.state.favoriteCategories === null) {
             let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
             this.state.category = category.data === null ? [] : category.data;
@@ -583,8 +617,6 @@ export default class Home extends Component {
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
-                    refreshing={refreshing}
-                    onRefresh={() => this.fetchData()}
                     sections={sections}
                 />
             </View>
@@ -786,4 +818,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         textAlign: 'center'
     },
+    placeHolder: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 50,
+        zIndex: -1,
+        borderWidth: 0.5,
+        borderColor: colors.textGrey,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textPlaceHolder: {
+        color: colors.textGrey
+    }
 });
