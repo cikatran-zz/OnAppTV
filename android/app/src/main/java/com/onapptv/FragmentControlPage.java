@@ -568,16 +568,10 @@ public class FragmentControlPage extends Fragment {
             int deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
             float distance = (e2.getX() - e1.getX()) / (deviceWidth / 100);
             currentProgress = (int) (currentProgress + distance);
-            JSONObject object = new JSONObject();
-            try {
-                object.put("playPosition", (int) (currentProgress + distance));
-                mProgress.setProgress((int) (currentProgress + distance));
-                Api.sharedApi().hIG_PlayMediaSetPosition(object.toString(), s -> {
-                    Log.v("playPosition", "" + s);
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            mProgress.setProgress(currentProgress);
+            Api.sharedApi().hIG_PlayMediaSetPosition(currentProgress, (b, i) -> {
+
+            });
             return false;
         }
 

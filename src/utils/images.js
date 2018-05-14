@@ -6,13 +6,17 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
     images.forEach((item)=> {
         if (item.name === firstImageName) {
             let scaledImages = item.scaledImage
-            if (scaledImages != null)
+            if (scaledImages != null) {
+                console.log(scaledImages[scaledImages.length - 1].url)
                 image = scaledImages[scaledImages.length - 1].url;
+            }
         }
         if (image == null && item.name === secondImageName) {
             let scaledImages = item.scaledImage
-            if (scaledImages != null)
+            if (scaledImages != null) {
+                console.log(scaledImages[scaledImages.length - 1].url)
                 image = scaledImages[scaledImages.length - 1].url;
+            }
         }
     });
     image = (image == null) ? images[0].url : image;
