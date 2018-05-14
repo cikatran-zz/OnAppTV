@@ -155,6 +155,11 @@ query{
       updatedAt
       createdAt
       originalImages {
+        scaledImage {
+          height
+          width
+          url
+        }
         height
         width
         url

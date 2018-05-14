@@ -245,13 +245,16 @@ export default class Home extends Component {
                 </View>
             );
         }
+
+        let imageUrl = getImageFromArray(item.data.originalImages, 'feature', 'landscape');
+        console.log("Image URL: ", imageUrl);
         return (
             <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}>
                 <View style={styles.notificationContainer}>
                     <View style={styles.placeHolder}>
                         <Text style={styles.textPlaceHolder}>On App TV</Text>
                     </View>
-                    <Image style={styles.notificationImage} source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}/>
+                    <Image style={styles.notificationImage} source={{uri: imageUrl}}/>
                     <Text style={styles.notificationTitle}>{item.data.title}</Text>
                     <Text style={styles.notificationSubTitle}>{item.data.shortDescription}</Text>
                 </View>
