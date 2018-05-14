@@ -7,7 +7,7 @@
 import React, {Component} from 'react';
 import {
     StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList,
-    TouchableOpacity, NativeModules, Platform
+    TouchableOpacity, NativeModules, Platform, InteractionManager, ActivityIndicator
 } from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
@@ -39,7 +39,9 @@ export default class ZapperChannel extends Component {
     };
 
     componentDidMount() {
-        this.props.getChannel(-1);
+        InteractionManager.runAfterInteractions(() => {
+            this.props.getChannel(-1);
+        })
     };
 
     componentWillUnmount() {
@@ -165,7 +167,17 @@ export default class ZapperChannel extends Component {
 
     render() {
         const {channel} = this.props;
-        if (!channel.data || channel.isFetching) {
+        if (channel.isFetching) {
+            return (<View style={styles.root}>
+                <ImageBackground style={{flex:1, justifyContent:'center', alignItems:'center'}}
+                                 source={imgBackground}
+                                 blurRadius={30}>
+                    <ActivityIndicator size="large" color={colors.whitePrimary}/>
+                </ImageBackground>
+            </View>)
+        }
+
+        if (!channel.data) {
             return (<View style={styles.root}>
                 <ImageBackground style={styles.image}
                                  source={imgBackground}
@@ -174,6 +186,7 @@ export default class ZapperChannel extends Component {
                 </ImageBackground>
             </View>)
         }
+
         if (this.state.allChannels.length == 0) {
             this.state.allChannels = _.cloneDeep(channel.data);
             this._filterFavoriteChannel();
@@ -202,7 +215,8 @@ export default class ZapperChannel extends Component {
                             <Image source={require('../../../assets/ic_sort.png')} style={{resizeMode: 'stretch'}}/>
                         </TouchableOpacity>
                     </View>
-                    <FlatList style={styles.grid}
+                    <View style={styles.gridContainer}>
+                    <FlatList
                               data={this.state.channelData}
                               numColumns={3}
                               showsVerticalScrollIndicator={false}
@@ -211,6 +225,7 @@ export default class ZapperChannel extends Component {
                               refreshing={channel.isFetching}
                               onRefresh={() => this.props.getChannel(-1)}
                               ListFooterComponent={this._renderListFooter}/>
+                    </View>
                 </ImageBackground>
             </View>
         );
@@ -258,12 +273,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    grid: {
-        paddingLeft: 30,
-        paddingRight: 30,
-        width: '100%'
+    gridContainer: {
+        flexDirection:'column',
+        alignItems:'center',
+        justifyContent:'center',
+        width:'100%'
     },
-
     contentGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',

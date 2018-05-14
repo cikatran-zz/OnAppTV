@@ -2,7 +2,7 @@ import React from 'react'
 import {
     StyleSheet, Image, View, Text, Platform, TouchableOpacity
 } from 'react-native'
-import colors from '../utils/themeConfig'
+import {colors} from '../utils/themeConfig'
 class ZapperCell extends React.Component{
     constructor(props){
         super(props);
@@ -32,10 +32,11 @@ const styles = StyleSheet.create({
     },
     placeHolder: {
         position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        overflow: "hidden",
+        top: 0.5,
+        left: 0.5,
+        right: 0.5,
+        bottom: 0.5,
         zIndex: -1,
         borderWidth: 0.5,
         borderColor: colors.textGrey,
