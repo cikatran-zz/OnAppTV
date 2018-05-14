@@ -66,6 +66,7 @@ export default class DetailsPage extends React.Component {
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
             InteractionManager.runAfterInteractions(() => {
                 const {item, isLive} = e;
+                console.log('reloadDetailsPage', item, isLive)
                 this.setNewState(item, isLive);
                 if (item && isLive !== undefined) {
                     if (isLive === true && item.channelData
@@ -100,7 +101,7 @@ export default class DetailsPage extends React.Component {
     }
 
     setNewState = (item, isLive) => {
-        this.setState({item, isLive})
+        this.setState({item: JSON.parse(item), isLive})
     }
 
     componentWillUnmount() {
