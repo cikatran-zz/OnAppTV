@@ -116,6 +116,11 @@ query queryVOD($perPage: Int, $page: Int){
           url
           name
           fileName
+          scaledImage {
+              height
+              width
+              url
+          }
         }
         genreIds
         genresData {

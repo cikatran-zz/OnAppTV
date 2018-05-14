@@ -62,37 +62,35 @@ export default class DetailsPage extends React.Component {
         }
 
         DeviceEventEmitter.addListener('dismissControlPage', (e) => {
-                this.props.navigation.replace("Home");
+            this.props.navigation.replace("Home");
         })
 
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
-            InteractionManager.runAfterInteractions(() => {
-                const {item, isLive} = e;
-                console.log('reloadDetailsPage', item, isLive)
-                this.setNewState(item, isLive);
-                if (item && isLive !== undefined) {
-                    if (isLive === true && item.channelData
-                        && item.channelData.serviceId
-                        && item.channelId) {
-                        /*
-                         Fetching information about EPG next in channel and EPG which are
-                         at the same time on other channels
-                         */
-                        // this.props.getEpgs([item.channelData.serviceId]);
-                        // this.props.getEpgSameTime(new Date(), item.channelId);
-                        this.props.getEpgWithGenre(item.genreIds, 1, 10);
-                    }
-                    else if (item.type) {
-                        /*
-                         Fetch epg with related content or epg in series
-                         */
-                        if (item.type === 'Episode')
-                            this.props.getEpgWithSeriesId([item.seriesId]);
-                        else
-                            this.props.getEpgWithGenre(item.genreIds);
-                    }
-                };
-            })
+            const {item, isLive} = e;
+            console.log('reloadDetailsPage', item, isLive)
+            this.setNewState(item, isLive);
+            if (item && isLive !== undefined) {
+                if (isLive === true && item.channelData
+                    && item.channelData.serviceId
+                    && item.channelId) {
+                    /*
+                     Fetching information about EPG next in channel and EPG which are
+                     at the same time on other channels
+                     */
+                    // this.props.getEpgs([item.channelData.serviceId]);
+                    // this.props.getEpgSameTime(new Date(), item.channelId);
+                    this.props.getEpgWithGenre(item.genreIds, 1, 10);
+                }
+                else if (item.type) {
+                    /*
+                     Fetch epg with related content or epg in series
+                     */
+                    if (item.type === 'Episode')
+                        this.props.getEpgWithSeriesId([item.seriesId]);
+                    else
+                        this.props.getEpgWithGenre(item.genreIds);
+                }
+            };
         });
 
         Orientation.lockToPortrait();
@@ -160,7 +158,7 @@ export default class DetailsPage extends React.Component {
         return (
             <View style={styles.topContainer}>
                 <TouchableOpacity style={{padding: 15,
-                                            alignSelf: 'flex-start'}}
+                    alignSelf: 'flex-start'}}
                                   onPress={() => this.props.navigation.goBack()}>
                     <Image source={require('../../assets/ic_back_details.png')}/>
                 </TouchableOpacity>
@@ -170,8 +168,8 @@ export default class DetailsPage extends React.Component {
                            style={styles.banner}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{position: 'absolute',
-                                            bottom: 6,
-                                            left: 21}}>
+                    bottom: 6,
+                    left: 21}}>
                     <Image source={require('../../assets/ic_change_orientation.png')}/>
                 </TouchableOpacity>
             </View>
@@ -189,7 +187,7 @@ export default class DetailsPage extends React.Component {
                               numberOfLines={1}
                               ellipsizeMode={'tail'}>
                             {data.title}
-                         </Text>
+                        </Text>
                         <Text style={styles.videoTypeText}>{data.type}</Text>
                     </View>
                     <View style={styles.bannerButtonsContainer}>
@@ -247,13 +245,13 @@ export default class DetailsPage extends React.Component {
         let url = getImageFromArray(data.originalImages, 'landscape', 'feature');
         return (
             <View style={{flexDirection: 'column',
-                            marginLeft: 8,
-                            alignSelf: 'flex-start',
-                            alignItems: 'center'}}>
+                marginLeft: 8,
+                alignSelf: 'flex-start',
+                alignItems: 'center'}}>
                 <View style={styles.nextInChannelContainer}>
                     <Image source={{uri: url}}
                            style={{width: '100%',
-                                  height: '100%'}}/>
+                               height: '100%'}}/>
                 </View>
                 <Text numberOfLines={1}
                       ellipsizeMode={'tail'}
