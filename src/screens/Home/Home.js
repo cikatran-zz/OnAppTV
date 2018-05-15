@@ -571,10 +571,12 @@ export default class Home extends Component {
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
         if (this.state.favoriteCategories === null) {
-            let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true || item.favorite === 1.0)).map(cate => ({"name": cate.name}));
-            this.state.category = category.data === null ? [] : category.data;
+            let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true )).map(cate => ({"name": cate.name}));
             categoryData.push({"name": "_ADD"});
-            this.state.favoriteCategories = categoryData;
+            this.setState({
+                category: category.data === null ? [] : category.data,
+                favoriteCategories: categoryData
+            });
         }
 
 

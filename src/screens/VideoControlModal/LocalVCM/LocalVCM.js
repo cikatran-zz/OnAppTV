@@ -14,20 +14,14 @@ import {
     PanResponder,
     Platform
 } from 'react-native'
-import {colors} from '../../utils/themeConfig'
+import {colors} from '../../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
-import BrightcovePlayer from "../../components/BrightcovePlayer";
-import VolumeSeeker from "../../components/VolumeSeeker"
-import LowerPagerComponent from "../DetailsPage/DetailsPage"
-import BlurView from '../../components/BlurView'
-import ControlModal from '../../components/ControlModal'
-import {getBlurRadius} from '../../utils/blurRadius'
-import {secondFormatter} from '../../utils/timeUtils'
-import Swiper from 'react-native-swiper'
-import PinkRoundedButton from '../../components/PinkRoundedLabel'
-import {rootViewTopPadding} from '../../utils/rootViewPadding'
+import BlurView from '../../../components/BlurView'
+import ControlModal from '../../../components/ControlModal'
+import {getBlurRadius} from '../../../utils/blurRadius'
+import {rootViewTopPadding} from '../../../utils/rootViewPadding'
 import moment from 'moment';
-import AlertModal from '../../components/AlertModal'
+import AlertModal from '../../../components/AlertModal'
 
 const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
@@ -484,7 +478,7 @@ export default class VideoControlModal extends React.Component {
         const {modalContent, modalRecordTarget, modalFavoriteTarget} = this.state
         const {isLive} = this.props.navigation.state.params
 
-        let img = modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
+        let img = modalContent === 'record' ? require('../../../assets/ic_record_black_border.png') : require('../../../assets/ic_heart_black_border.png')
         let firstButtonImg
         let secondButtonImg
 
@@ -512,7 +506,7 @@ export default class VideoControlModal extends React.Component {
                     <View style={styles.modal}>
                         <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
                         <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
-                            <Image source={require('../../assets/ic_modal_close.png')}/>
+                            <Image source={require('../../../assets/ic_modal_close.png')}/>
                         </TouchableOpacity>
                         <View style={styles.modalInsideContainer}>
                             <Image source={{uri: iconUrl}} style={styles.modalImage}/>
