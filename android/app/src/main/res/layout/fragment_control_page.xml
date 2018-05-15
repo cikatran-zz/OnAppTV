@@ -104,7 +104,7 @@
         <ImageView
             android:id="@+id/record"
             android:layout_margin="@dimen/buttonMargin"
-            android:background="@android:color/transparent"
+            android:background="@drawable/circle_button_bg"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_record"
             android:layout_width="@dimen/buttonSize"
@@ -112,7 +112,7 @@
         <ImageView
             android:id="@+id/favorite"
             android:layout_margin="@dimen/buttonMargin"
-            android:background="@drawable/information_btn_bg"
+            android:background="@drawable/circle_button_bg"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_favorite"
             android:layout_width="@dimen/buttonSize"
@@ -121,7 +121,7 @@
             android:id="@+id/share"
 
             android:layout_margin="@dimen/buttonMargin"
-            android:background="@android:color/transparent"
+            android:background="@drawable/circle_button_bg"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_share"
             android:layout_width="@dimen/buttonSize"
@@ -130,7 +130,7 @@
             android:id="@+id/start_over"
 
             android:layout_margin="@dimen/buttonMargin"
-            android:background="@android:color/transparent"
+            android:background="@drawable/circle_button_bg"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_start_over"
             android:layout_width="@dimen/buttonSize"
@@ -139,7 +139,7 @@
             android:id="@+id/caption"
 
             android:layout_margin="@dimen/buttonMargin"
-            android:background="@android:color/transparent"
+            android:background="@drawable/circle_button_bg"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_caption"
             android:layout_width="@dimen/buttonSize"

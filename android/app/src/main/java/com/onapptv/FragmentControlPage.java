@@ -373,10 +373,12 @@ public class FragmentControlPage extends Fragment {
 
             mRecord.setOnClickListener(v -> {
                 if (isRecorded) {
-                    Api.sharedApi().hIG_RecordPvrStop((aBoolean, s) -> {
-                        if (aBoolean) isRecorded = true;
-                    });
-                    mRecord.setBackgroundColor(getResources().getColor(R.color.mainPinkColor));
+                    if (mDataLive != null) {
+                        Api.sharedApi().hIG_RecordPvrStop((aBoolean, s) -> {
+                            if (aBoolean) isRecorded = true;
+                        });
+                    }
+                    else download();
                 }
                 else {
                     if (mDataLive != null) {
@@ -392,11 +394,11 @@ public class FragmentControlPage extends Fragment {
 
             mFavorite.setOnClickListener(v -> {
                 if (isFavorite) {
-                    mFavorite.setBackgroundColor(Color.TRANSPARENT);
+                    mFavorite.setBackground(getResources().getDrawable(R.drawable.circle_button_bg));
                     isFavorite = false;
                 }
                 else {
-                    mFavorite.setBackgroundColor(getResources().getColor(R.color.mainPinkColor));
+                    mFavorite.setBackground(getResources().getDrawable(R.drawable.circle_button_bg_pink));
                     isFavorite = true;
                 }
             });
@@ -498,7 +500,14 @@ public class FragmentControlPage extends Fragment {
     }
 
     void download() {
-        showDialogWithMessage("Coming soon");
+        if (isRecorded) {
+            mRecord.setBackground(getResources().getDrawable(R.drawable.circle_button_bg));
+            isRecorded = false;
+        }
+        else {
+            mRecord.setBackground(getResources().getDrawable(R.drawable.circle_button_bg_pink));
+            isRecorded = true;
+        }
     }
 
     void record() throws JSONException {
