@@ -19,7 +19,8 @@ export default function categoryReducer(state = initialState, action) {
                 ...state,
                 isFetching: false,
                 fetched: true,
-                data: action.data
+                data: action.data,
+                favorite: action.data.filter(item => item.favorite === true)
             };
         case actionTypes.FETCH_CATEGORY_FAILURE:
             return {

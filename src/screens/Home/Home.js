@@ -570,8 +570,8 @@ export default class Home extends Component {
 
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
-        if (this.state.favoriteCategories === null) {
-            let categoryData = ((category.data === null || !category.data) ? [] : category.data).filter(item => (item.favorite === true )).map(cate => ({"name": cate.name}));
+        if (this.state.favoriteCategories === null && category.data !== undefined && category.favorite !== undefined) {
+            let categoryData = (category.favorite === null || category.favorite === {}) ? [] : category.favorite.map(cate => ({"name": cate.name})) ;
             categoryData.push({"name": "_ADD"});
             this.setState({
                 category: category.data === null ? [] : category.data,
