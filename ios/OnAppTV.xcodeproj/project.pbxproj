@@ -124,6 +124,10 @@
 		69A16FD22068DB6600E215B8 /* STBAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69A16FD12068DB6600E215B8 /* STBAPI.framework */; };
 		69BD179D20319DB500E33978 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD179A20319D8900E33978 /* libART.a */; };
 		69BD17D82032988000E33978 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD17BE2032986D00E33978 /* libRCTOrientation.a */; };
+		69C4DABA20AA8CA8000E4B4F /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DA8A20AA8CA7000E4B4F /* database _IBC_2017-2.xml */; };
+		69C4DABB20AA8CA8000E4B4F /* database _IBC_2018.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DAB820AA8CA7000E4B4F /* database _IBC_2018.xml */; };
+		69C4DABC20AA8CA8000E4B4F /* channel_database-1.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DAB920AA8CA7000E4B4F /* channel_database-1.xml */; };
+		69C4DABE20AA8CBE000E4B4F /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DABD20AA8CBE000E4B4F /* SF-Pro-Display-Regular.otf */; };
 		69CD24F0208607E70075883F /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CD24EF208607E70075883F /* Notification.swift */; };
 		69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D21E5A20525C8200DFA90A /* STBConnectionView.swift */; };
 		69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */; };
@@ -654,6 +658,10 @@
 		69A16FD12068DB6600E215B8 /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
 		69BD179420319D8900E33978 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		69BD17AB2032986D00E33978 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
+		69C4DA8A20AA8CA7000E4B4F /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "STBHTML/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
+		69C4DAB820AA8CA7000E4B4F /* database _IBC_2018.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2018.xml"; path = "STBHTML/database _IBC_2018.xml"; sourceTree = "<group>"; };
+		69C4DAB920AA8CA7000E4B4F /* channel_database-1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "channel_database-1.xml"; path = "STBHTML/channel_database-1.xml"; sourceTree = "<group>"; };
+		69C4DABD20AA8CBE000E4B4F /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Regular.otf"; path = "STBHTML/SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
 		69CD24EF208607E70075883F /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		69D21E5A20525C8200DFA90A /* STBConnectionView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = STBConnectionView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		69D21E5C20525D0C00DFA90A /* STBConnectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STBConnectionView.xib; sourceTree = "<group>"; };
@@ -969,6 +977,7 @@
 		6927DD29209B555B00FFA275 /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				69C4DABD20AA8CBE000E4B4F /* SF-Pro-Display-Regular.otf */,
 				6927DCE9209B554D00FFA275 /* SF-UI-Text-Regular.otf */,
 				6927DCE2209B554C00FFA275 /* Plantagenet Cherokee.ttf */,
 			);
@@ -1146,6 +1155,9 @@
 		69D21E9420525DC300DFA90A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				69C4DAB920AA8CA7000E4B4F /* channel_database-1.xml */,
+				69C4DA8A20AA8CA7000E4B4F /* database _IBC_2017-2.xml */,
+				69C4DAB820AA8CA7000E4B4F /* database _IBC_2018.xml */,
 				6927DD29209B555B00FFA275 /* Font */,
 				6927DCFC209B555000FFA275 /* agents.html */,
 				6927DCFA209B554F00FFA275 /* Antional.html */,
@@ -1833,6 +1845,7 @@
 				6927DD23209B555100FFA275 /* Antional.html in Resources */,
 				6927DD27209B555100FFA275 /* database _IBC_2017.xml in Resources */,
 				6927DD1C209B555100FFA275 /* TROPICALISLAND_4.png in Resources */,
+				69C4DABC20AA8CA8000E4B4F /* channel_database-1.xml in Resources */,
 				69D21E5D20525D0C00DFA90A /* STBConnectionView.xib in Resources */,
 				6927DD24209B555100FFA275 /* spinner.html in Resources */,
 				2BCD5ED0B67446FE841498F5 /* Feather.ttf in Resources */,
@@ -1854,10 +1867,12 @@
 				C55E8A493DD94C18A8F434D4 /* MaterialCommunityIcons.ttf in Resources */,
 				6927DD1F209B555100FFA275 /* SelectDecoder.html in Resources */,
 				6927DD04209B555100FFA275 /* Revolution.html in Resources */,
+				69C4DABB20AA8CA8000E4B4F /* database _IBC_2018.xml in Resources */,
 				6927DD05209B555100FFA275 /* 无声.mp3 in Resources */,
 				6927DD28209B555100FFA275 /* SignIn.html in Resources */,
 				6927DD01209B555100FFA275 /* Load.html in Resources */,
 				6927DD02209B555100FFA275 /* js in Resources */,
+				69C4DABA20AA8CA8000E4B4F /* database _IBC_2017-2.xml in Resources */,
 				6927DD0D209B555100FFA275 /* Register.html in Resources */,
 				6927DF7020A0399D00FFA275 /* ControlModalCell.xib in Resources */,
 				B40B0805BE5A4CCCA084F1F4 /* MaterialIcons.ttf in Resources */,
@@ -1867,6 +1882,7 @@
 				CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */,
 				6927DD26209B555100FFA275 /* ConnectLoad.html in Resources */,
 				6927DD09209B555100FFA275 /* STB-PIN.html in Resources */,
+				69C4DABE20AA8CBE000E4B4F /* SF-Pro-Display-Regular.otf in Resources */,
 				5850E4C8287F4AF8B1675481 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
