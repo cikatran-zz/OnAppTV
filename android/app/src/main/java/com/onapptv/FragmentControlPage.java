@@ -42,9 +42,10 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.onapptv.R;
-import com.onapptv.OTVDialog;
+import com.google.gson.Gson;
 
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,8 +58,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import tv.hi_global.stbapi.Api;
+import userkit.sdk.UserKit;
 
 import static com.liulishuo.filedownloader.model.FileDownloadStatus.progress;
 
@@ -87,6 +91,7 @@ public class FragmentControlPage extends Fragment {
     int deviceWidth;
     Boolean isRecorded = false;
     Boolean isFavorite = false;
+    Gson gson = new Gson();
 
     interface OnPlayFinished {
         void nextPage();
@@ -378,7 +383,36 @@ public class FragmentControlPage extends Fragment {
                             if (aBoolean) isRecorded = true;
                         });
                     }
-                    else download();
+                    else {
+                        //Stop download execute
+//                        try {
+//                            JSONObject obj = new JSONObject();
+//                            obj.put("remove_flag", 1);
+//                            obj.put("contentId", mData.get("contentId").toString());
+//                            obj.put("url", videoUrl);
+//                            obj.put("destination_path", "/C/Downloads");
+//                            Api.sharedApi().hIG_MediaDownloadStop(1, "/C/Downloads", videoUrl, (aBoolean, s) -> {
+//                                if (aBoolean) {
+//                                    UserKit.getInstance().getProfileManager().getProperty("download_list", HashMap.class)
+//                                            .subscribeOn(Schedulers.io())
+//                                            .observeOn(AndroidSchedulers.mainThread())
+//                                            .subscribe(value -> {
+//                                                if (value.isPresent()) {
+//                                                    JSONObject object = gson.fromJson(value.get().toString(), JSONObject.class);
+//
+//                                                } else {
+//
+//                                                }
+//
+//                                            }, null, null);
+//                                }
+//                            });
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        isRecorded = false;
+                        showDialogWithMessage("Download on Android will be available soon");
+                    }
                 }
                 else {
                     if (mDataLive != null) {
@@ -388,7 +422,29 @@ public class FragmentControlPage extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    else download();
+                    else {
+                        //Download Execute
+//                        JSONObject obj = new JSONObject();
+//                        try {
+//                            obj.put("remove_flag", 1);
+//                            obj.put("contentId", mData.get("contentId").toString());
+//                            obj.put("url", videoUrl);
+//                            obj.put("destination_path", "/C/Downloads");
+//                            JSONArray array = new JSONArray();
+//
+//                            HashMap map = new HashMap();
+//                            map.put("dataArr", "[]");
+//                            UserKit.getInstance().getProfileManager().set("download_list", map)
+//                                    .subscribeOn(Schedulers.io())
+//                                    .observeOn(AndroidSchedulers.mainThread())
+//                                    .subscribe();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        isRecorded = true;
+                        showDialogWithMessage("Download on Android will be available soon");
+
+                    }
                 }
             });
 
@@ -499,17 +555,6 @@ public class FragmentControlPage extends Fragment {
                 .emit(eventName, params);
     }
 
-    void download() {
-        if (isRecorded) {
-            mRecord.setBackground(getResources().getDrawable(R.drawable.circle_button_bg));
-            isRecorded = false;
-        }
-        else {
-            mRecord.setBackground(getResources().getDrawable(R.drawable.circle_button_bg_pink));
-            isRecorded = true;
-        }
-    }
-
     void record() throws JSONException {
         String title = ((HashMap) mDataLive.get("videoData")).get("title").toString();
         int lcn = Integer.parseInt(((HashMap) mDataLive.get("channelData")).get("lcn").toString());
@@ -595,6 +640,9 @@ public class FragmentControlPage extends Fragment {
                     showDialogWithMessage("Disconnected from STB");
                     ControlActivity.setIsDisconnected(true);
             }
+        }
+        else {
+            mTimer.cancel(true);
         }
     }
 
