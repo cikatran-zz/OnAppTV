@@ -21,12 +21,13 @@ export function getEpgsFailure(error) {
     }
 }
 
-export function getEpgWithGenres(genresIds, page, perPage) {
+export function getEpgWithGenres(contentId, genresIds, page, perPage) {
     return {
         type: actionTypes.FETCHING_EPG_GENRES,
         genresIds: genresIds,
         page: page,
-        perPage: perPage
+        perPage: perPage,
+        contentId: contentId
     }
 }
 
@@ -45,12 +46,13 @@ export function getEpgWithGenresFailure(error) {
     }
 }
 
-export function getEpgWithSeriesId (seriesId, page, perPage) {
+export function getEpgWithSeriesId (contentId, seriesId, page, perPage) {
     return {
         type: actionTypes.FETCHING_EPG_SERIES,
         seriesId: seriesId,
         page: page,
-        perPage: perPage
+        perPage: perPage,
+        contentId: contentId
     }
 }
 

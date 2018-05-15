@@ -14,23 +14,23 @@ import {
     PanResponder,
     Platform
 } from 'react-native'
-import {colors} from '../../../utils/themeConfig'
+import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
-import VolumeSeeker from "../../../components/VolumeSeeker"
-import BlurView from '../../../components/BlurView'
-import {getBlurRadius} from '../../../utils/blurRadius'
-import {secondFormatter} from '../../../utils/timeUtils'
+import BrightcovePlayer from "../../components/BrightcovePlayer";
+import VolumeSeeker from "../../components/VolumeSeeker"
+import LowerPagerComponent from "../DetailsPage/DetailsPage"
+import BlurView from '../../components/BlurView'
+import ControlModal from '../../components/ControlModal'
+import {getBlurRadius} from '../../utils/blurRadius'
+import {secondFormatter} from '../../utils/timeUtils'
 import Swiper from 'react-native-swiper'
-import PinkRoundedButton from '../../../components/PinkRoundedLabel'
-import {rootViewTopPadding} from '../../../utils/rootViewPadding'
+import PinkRoundedButton from '../../components/PinkRoundedLabel'
+import {rootViewTopPadding} from '../../utils/rootViewPadding'
 import moment from 'moment';
-import AlertModal from '../../../components/AlertModal'
+import AlertModal from '../../components/AlertModal'
 
 const {width, height} = Dimensions.get("window")
-export default class LocalVCM extends React.Component {
-
-    _currentPosition = 0
-    _offsetRate = 0
+export default class VideoControlModal extends React.Component {
 
     onLayout(e) {
         const {width, height} = Dimensions.get("window")
@@ -59,14 +59,18 @@ export default class LocalVCM extends React.Component {
         }
     }
 
+    _showDownloadModal = () => {
+        if (!this.alertModal.state.isShow) {
+            this.alertModal.setState({isShow: true, message: "Sign in to download videos"})
+        }
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             showBrightcove: false,
             recordEnabled: false,
             favoriteEnabled: false,
-            firstTimePlay: false,
-            isPlaying: true,
             modalVisibility: false,
             modalRecordTarget: "none",
             modalFavoriteTarget: "none",
@@ -80,121 +84,28 @@ export default class LocalVCM extends React.Component {
         this.alertModal = null
     }
 
-    getCurrentPosition() {
-        return this._currentPosition
-    }
-
-    setPosition(pos) {
-        if (pos > width) {
-            return;
-        }
-        let periodRate = Math.round(pos / this._offsetRate)
-        // Display played area
-        console.log('Dragging to position %s', periodRate)
-        this.setState({
-            currentPos: periodRate < 0 ? 0 : periodRate
-        })
-    }
-
-    setCurrentPosition(newPos) {
-        let pos = this._currentPosition + newPos
-        if (pos < 0)
-            pos = 0
-        if (pos > width)
-            return;
-        this._currentPosition += newPos
-        if (this.state.isConnected) {
-            let json = {
-                playPosition: Math.round(this._currentPosition / this._offsetRate)
-            }
-            NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (e, r) => {
-            })
-        }
-    }
-
-    _onStartShouldSetPanResponder = (event) => {
-        return true;
-    };
-
-    _onPanResponderMove = (event, gestureState) => {
-        this.setState({dragging: true})
-        this._onChangeScrollEnabled(false);
-        this.setPosition(this.getCurrentPosition() + gestureState.dx);
-    };
-
-    _onPanResponderRelease = (event, gestureState) => {
-        this.setState({dragging: false});
-        this._onChangeScrollEnabled(true);
-        this.setCurrentPosition(gestureState.dx);
-        return true;
-    }
-
-    _onPanResponderGrant = (event, gestureState) => {
-        this._onChangeScrollEnabled(false);
-    }
-
     componentWillMount() {
-        this._panResponder = PanResponder.create({
-            onPanResponderGrant: this._onPanResponderGrant,
-            onMoveShouldSetPanResponder: this._onStartShouldSetPanResponder,
-            onMoveShouldSetPanResponderCapture: this._onStartShouldSetPanResponder,
-            onPanResponderMove: this._onPanResponderMove,
-            onPanResponderRelease: this._onPanResponderRelease,
-        })
     }
-
-    _getVodTime = setInterval(() => {
-        const {isLive} = this.props.navigation.state.params;
-        if (!isLive) {
-            NativeModules.STBManager.playMediaGetPositionInJson((e, r) => {
-                let pos = JSON.parse(r[0]).playPosition
-                this.setState({
-                    currentPos: pos
-                })
-            })
-        }
-    }, 1000);
-
-    _getTimeInterval = setInterval(() => {
-        const {isLive} = this.props.navigation.state.params;
-        const {isConnected} = this.state
-        if (isLive || !isConnected) {
-            if (this.state.isPlaying) {
-                this.setState({
-                    currentTime: new Date().getTime()
-                })
-            }
-        }
-    }, 1000)
 
     componentWillUnmount() {
-        clearInterval(this._getTimeInterval)
-        clearInterval(this._getVodTime)
         Orientation.removeOrientationListener(this._orientationDidChange)
     }
 
     componentWillReceiveProps(nextProps) {
-        const {item} = this.props.navigation.state.params
 
         let bcVideos = nextProps.bcVideos;
-        if (!bcVideos.isFetching && !this.state.firstTimePlay) {
-            let json = {
-                url: '/C/Downloads/' + item.fileName,
-                playPosition: 0
-            }
-            NativeModules.STBManager.playMediaStartWithJson(JSON.stringify(json), (error, events) => {
-            })
 
-            let progressJson = {
-                url: bcVideos.data.sources.filter(x => { return !!x.container})[0].src,
-                destination_path: '/C/Downloads'
-            }
+        if (bcVideos && bcVideos.data) {
 
-            console.log('Progress json %s', JSON.stringify(progressJson))
-            NativeModules.STBManager.mediaDownloadGetProgressWithJson(JSON.stringify(progressJson), (e, r) => {
-                if (e) console.log(e)
-                else console.log(r[0])
-            })
+            if (!bcVideos.isFetching) {
+
+                let progressJson = {
+                    url: bcVideos.data.sources.filter(x => {
+                        return !!x.container
+                    })[0].src,
+                    destination_path: '/C/Downloads'
+                }
+            }
         }
     }
 
@@ -206,36 +117,12 @@ export default class LocalVCM extends React.Component {
             this.setState({isConnected: json})
         })
 
-
-        NativeModules.STBManager.getVolumeInJson((error, events) => {
-            if (!error) {
-                this.setState({volume: parseInt(JSON.parse(events[0]).volume)})
-            }
-        })
-
         this.setState({
             currentTime: new Date().getTime(),
             startPoint: new Date().getTime()
         })
-
-        if (isLive) {
-            // Change channel with lcn
-            NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN: item.channelData.lcn}), (error, events) => {
-                console.log(JSON.parse(events[0]))
-            })
-            // Calculate offsetRate for dragging
-            let durations = (new Date(item.endTime).getTime() - new Date(item.startTime).getTime()) / 1000
-            this._offsetRate = width / durations
-        }
-        else {
-            this.props.getBcVideos(item.contentId)
-            // Calculate offsetRate for dragging
-            this._offsetRate = width / item.durationInSeconds
-
-        }
         Orientation.unlockAllOrientations();
         Orientation.addOrientationListener(this._orientationDidChange);
-        // PUT YOUR CHANNEL ID HERE
     }
 
     _orientationDidChange = (orientation) => {
@@ -249,55 +136,9 @@ export default class LocalVCM extends React.Component {
         }
     };
 
-    _formatGenresText = (genresData) => {
-        let returnText = ''
-        genresData.forEach(genres => {
-            returnText += genres.name + " "
-        })
-        return returnText
-    }
-
     _onRecordPress = () => this._toggleModal('record')
 
     _onFavouritePress = () => this._toggleModal('favorite')
-
-    _onVolumeChange = (newValue) => {
-        let jsonString = {
-            volume: newValue
-        }
-        // Check connection before set volume
-        NativeModules.STBManager.isConnect((events) => {
-            if (this.state.isConnected) NativeModules.STBManager.setVolumeWithJsonString(JSON.stringify(jsonString), (error, events) => {
-            })
-        })
-    }
-
-    _getLivePassedTime = (isLive, timeInSeconds) => {
-        if (isLive) {
-            let time = this.state.currentTime
-            let startTime = new Date(timeInSeconds)
-            let passed = (time - startTime.getTime()) / 1000
-            if (passed > 0) return secondFormatter(passed.toString())
-        }
-        else {
-            return secondFormatter(this.state.currentPos ? this.state.currentPos : 0)
-        }
-    }
-
-    _getEtrTime = (isLive, timeInSeconds, durationInSeconds) => {
-        if (isLive) {
-            let time = this.state.currentTime
-            let endTime = new Date(timeInSeconds)
-            let passed = (endTime.getTime() - time) / 1000
-            if (passed > 0) return "-" + secondFormatter(passed.toString())
-        }
-        else {
-            const {currentPos} = this.state
-
-            let etrTime = durationInSeconds - currentPos
-            if (etrTime > 0) return "-" + secondFormatter(etrTime.toString())
-        }
-    }
 
     _getRecordStartMargin = (startTime, endTime) => {
         const {startPoint} = this.state;
@@ -314,152 +155,9 @@ export default class LocalVCM extends React.Component {
         else return recordedTime + "%"
     }
 
-    _getLiveProgress = (startTime, endTime) => {
-        const {currentTime} = this.state;
-        let durationInMsSecons = (new Date(endTime)).getTime() - (new Date(startTime)).getTime()
-        let passedTime = currentTime - (new Date(startTime)).getTime();
-        return (passedTime / durationInMsSecons) * 100 + "%"
-    }
-
-    _getVodProgress = (durationInSeconds) => {
-        const {currentPos} = this.state
-        return (currentPos / durationInSeconds) * 100 + "%"
-    }
-
-    _resetPlayPosition = () => {
-        let json = {
-            playPosition: 0
-        }
-        NativeModules.STBManager.playMediaSetPositionWithJson(JSON.stringify(json), (error, events) => {
-
-        })
-    }
-
-    _backWard = () => {
-        NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-            if (!error) {
-                let playPos = (JSON.parse(events[0]).playPosition - 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition - 10)
-                let playPosInJson = "{\n" +
-                    "\tplayPosition: \n" + playPos + "}"
-                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
-
-                })
-            }
-        })
-    }
-
-    _fastForward = () => {
-        NativeModules.STBManager.playMediaGetPositionInJson((error, events) => {
-            if (!error) {
-                let playPos = (JSON.parse(events[0]).playPosition + 10) < 0 ? 0 : (JSON.parse(events[0]).playPosition + 10)
-                let playPosInJson = "{\n" +
-                    "\tplayPosition: \n" + playPos + "}"
-                NativeModules.STBManager.playMediaSetPositionWithJson(playPosInJson, (error, events) => {
-
-                })
-            }
-        })
-    }
-
     _playMediaControl = (bcVideos) => {
         if (bcVideos.data) {
-
-            this.setState({isPlaying: !this.state.isPlaying})
-            if (this.state.isPlaying) {
-                NativeModules.STBManager.playMediaPause((error, events) => {
-
-                })
-            }
-            else {
-                NativeModules.STBManager.playMediaResume((error, events) => {
-                })
-            }
         }
-    }
-
-    _renderPlaybackController = (item) => {
-        const {recordEnabled, favoriteEnabled} = this.state
-        const {bcVideos} = this.props
-        const {isLive} = this.props.navigation.state.params;
-
-        let playIconSrc;
-        if (isLive) {
-            playIconSrc = require('../../../assets/ic_on_tv.png')
-        }
-        else {
-            playIconSrc = this.state.isPlaying !== true ? require('../../../assets/ic_play_with_border.png') : require('../../../assets/ic_pause.png')
-        }
-
-        return (
-            <View style={styles.playbackContainer}>
-                <View style={{
-                    height: '11%',
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                }}>
-                    <Text
-                        style={styles.passedText}>{this._getLivePassedTime(isLive, item.startTime ? item.startTime : 0, item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
-                    <Text
-                        style={styles.etrText}>{this._getEtrTime(isLive, item.endTime ? item.endTime : 0, item.durationInSeconds ? item.durationInSeconds : 1)}</Text>
-                </View>
-                <View style={styles.topButtonsContainer}>
-                    <TouchableOpacity disabled={!this.state.isConnected}
-                                      style={[styles.buttonStyle, {backgroundColor: recordEnabled === true ? colors.mainPink : 'transparent'}]}
-                                      onPress={this._onRecordPress}>
-                        <Image source={require('../../../assets/ic_record.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected}
-                                      style={[styles.buttonStyle, {backgroundColor: favoriteEnabled === true ? colors.mainPink : 'transparent'}]}
-                                      onPress={this._onFavouritePress}>
-                        <Image source={require('../../../assets/ic_heart_with_border.png')}
-                               style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}
-                                      onPress={() => this._shareExecution(item.title, "")}>
-                        <Image source={require('../../../assets/ic_share.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}
-                                      onPress={() => this._resetPlayPosition()}>
-                        <Image source={require('../../../assets/ic_start_over.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected} style={styles.buttonStyle}>
-                        <Image source={require('../../../assets/ic_caption.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.mediaInfoContainer}>
-                    <Text style={styles.titleText}>{isLive !== true ? item.title : item.videoData.title}</Text>
-                    <Text
-                        style={styles.typeText}>{this._formatGenresText(isLive !== true ? item.genresData : item.videoData.genresData)}</Text>
-                </View>
-                <View style={[styles.playbackButtons]}>
-                    <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._backWard()}
-                                      style={[styles.rewindButton, {opacity: isLive === true ? 0.17 : 1}]}>
-                        <Image source={require('../../../assets/ic_rewind.png')}
-                               style={{resizeMode: 'contain', width: '100%', height: '100%'}}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected} style={{width: '21%', height: '100%'}}
-                                      onPress={() => this._playMediaControl(bcVideos)}>
-                        <Image source={playIconSrc} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={!this.state.isConnected} onPress={() => this._fastForward()}
-                                      style={[styles.fastForwardButton, {opacity: isLive === true ? 0.17 : 1}]}>
-                        <Image source={require('../../../assets/ic_fastforward.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.volumeSeekBarContainer}>
-                    <TouchableOpacity style={styles.volumeLessIcon}>
-                        <Image source={require('../../../assets/ic_quieter.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                    <VolumeSeeker width={260} thumbSize={16} maxValue={100} onVolumeChange={this._onVolumeChange}
-                                  onChangedScrollEnabled={this._onChangeScrollEnabled}
-                                  disabled={!this.state.isConnected}/>
-                    <TouchableOpacity style={styles.volumeMoreIcon}>
-                        <Image source={require('../../../assets/ic_louder.png')} style={styles.buttonIconStyle}/>
-                    </TouchableOpacity>
-                </View>
-            </View>)
     }
 
     _renderRecordBar = (isLive, startTime, endTime) => {
@@ -474,49 +172,6 @@ export default class LocalVCM extends React.Component {
         else return null
     }
 
-    _renderTopContainer = (item, isLive) => {
-        let data = item
-        if (item.serviceID) {
-            if (!epg.data) {
-                return null
-            }
-            data = epg.data[0].videoData
-        }
-
-        let iconUrl = ''
-        if (isLive === false) {
-            if (data.originalImages && data.originalImages.length > 0) {
-                iconUrl = data.originalImages[0].url
-            }
-        }
-        else {
-            if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
-                iconUrl = data.videoData.originalImages[0].url
-            }
-        }
-
-        return (
-            <View style={styles.topContainer} {...this._panResponder.panHandlers}>
-                <ImageBackground style={styles.topVideoControl}
-                                 resizeMode="cover"
-                                 source={{uri: iconUrl}}/>
-                {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-                <Animated.View style={{
-                    width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds),
-                    height: '100%',
-                    backgroundColor: 'rgba(17,17,19,0.45)',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                }}>
-                </Animated.View>
-                <TouchableOpacity style={{position: 'absolute', bottom: 20, right: 20}} onPress={this._showAlertModal}>
-                    <Image source={require('../../../assets/ic_change_orientation.png')}/>
-                </TouchableOpacity>
-            </View>
-        )
-    }
-
     _informationPress = (item, epg, isLive) => {
         this.props.navigation.replace('DetailsPage', {
             item: item,
@@ -525,165 +180,54 @@ export default class LocalVCM extends React.Component {
         })
     }
 
-    _renderLive = (epg, item) => {
-        let data = item
-        const {isLive} = this.props.navigation.state.params
 
-        if (item.serviceID) {
-            if (!epg.data) {
-                return null
-            }
-            data = epg.data[0].videoData
-        }
-
-        let iconUrl = ''
-        if (isLive === false) {
-            if (data.originalImages && data.originalImages.length > 0) {
-                iconUrl = data.originalImages[0].url
-            }
-        }
-        else {
-            if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
-                iconUrl = data.videoData.originalImages[0].url
-            }
-        }
-
-        return (
-            <View style={{width: '100%', height: height}} key={item}>
-
-                <View style={styles.bottomContainer}>
-                    <ImageBackground style={styles.bottomVideoControl}
-                                     resizeMode="cover"
-                                     blurRadius={10}
-                                     source={{uri: iconUrl}}/>
-                    {this._renderPlaybackController(data)}
-                </View>
-
-                <View style={styles.topContainer}>
-                    <ImageBackground style={styles.topVideoControl}
-                                     resizeMode="cover"
-                                     source={{uri: iconUrl}}/>
-                    {this._renderRecordBar(isLive, item.startTime, item.endTime)}
-                    <View style={{
-                        width: isLive === true ? this._getLiveProgress(item.startTime, item.endTime) : this._getVodProgress(item.durationInSeconds),
-                        height: '100%',
-                        backgroundColor: 'rgba(17,17,19,0.45)',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0
-                    }}>
-                    </View>
-                    <TouchableOpacity
-                        style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}}
-                        onPress={() => this.props.navigation.goBack()}>
-                        <Image source={require('../../../assets/ic_dismiss_modal.png')}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}}
-                                      onPress={this._showAlertModal}>
-                        <Image source={require('../../../assets/ic_change_orientation.png')}/>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        )
-    }
-
-    _renderUpperPage = (epg, item) => {
-        let data = item
-        const {isLive} = this.props.navigation.state.params
-
-        if (item.serviceID) {
-            if (!epg.data) {
-                return null
-            }
-            data = epg.data[0].videoData
-        }
-
-        let iconUrl = ''
-        if (isLive === false) {
-            if (data.originalImages && data.originalImages.length > 0) {
-                iconUrl = data.originalImages[0].url
-            }
-        }
-        else {
-            if (data.videoData.originalImages && data.videoData.originalImages.length > 0) {
-                iconUrl = data.videoData.originalImages[0].url
-            }
-        }
-
-        return (
-            <View style={{width: '100%', height: height}} key={item}>
-
-                <View style={styles.bottomContainer}>
-                    <ImageBackground style={styles.bottomVideoControl}
-                                     resizeMode="cover"
-                                     blurRadius={10}
-                                     source={{uri: iconUrl}}/>
-                    {this._renderPlaybackController(data)}
-                    <TouchableOpacity style={{position: 'absolute', bottom: 25, right: 25}}
-                                      onPress={() => this._informationPress(item, epg, isLive)}>
-                        <Image source={require('../../../assets/ic_information.png')} style={styles.infoImage}/>
-                    </TouchableOpacity>
-                </View>
-                {this._renderTopContainer(item, isLive)}
-            </View>)
-    }
 
     _keyExtractor = (item, index) => index;
 
     _onSwiperIndexChanged = (index) => {
         const {item, isLive, epg} = this.props.navigation.state.params
         if (!isLive) {
-            this.props.getBcVideos(epg[index].contentId)
+            let itemContentId = epg[index].contentId
+            if (Number.parseInt(itemContentId) === +itemContentId) {
+                this.props.getBcVideos(epg[index].contentId)
+            }
             this.setState({
-                index: index,
-                isPlaying: true,
-                currentPos: 0
+                index: index
             })
         }
     }
 
+    _onAlertModal = (event) => {
+        this.alertModal.setState({isShow: true, message: event.nativeEvent.message})
+    };
+
+
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
+        console.log(item, epg, isLive);
+        const {bcVideos} = this.props;
+        let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+        let url = '';
 
-        if (this.state.showBrightcove) {
-            return (
-                <View style={{flex: 1, backgroundColor: 'black'}}
-                      onLayout={this.onLayout.bind(this)}/>
-            )
+        if (bcVideos.data !== null) {
+            let url = bcVideos.data.sources.filter(x => {
+                return !!x.container
+            })[0].src
         }
-
-        // Right now, Live is just one video, check for one video
-        if (isLive) {
-            return (
-                <View
-                    onLayout={this.onLayout.bind(this)}
-                    style={{flex: 1}}>
-                    {this._renderLive({}, item)}
-                </View>
-            )
-        }
-
-        let index = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
 
         return (
-            <View
-                onLayout={this.onLayout.bind(this)}
-                style={{flex: 1}}>
-                <Swiper scrollEnabled={this.state.isScrollEnabled} loop={false} loadMinimal={true} loadMinimalSize={1}
-                        onIndexChanged={this._onSwiperIndexChanged} showsPagination={false} horizontal={true}
-                        style={styles.pageViewStyle} removeClippedSubviews={false} index={index}>
-                    {
-                        epg.map(value => this._renderUpperPage(epg, value))
-                    }
-                </Swiper>
-                <TouchableOpacity
-                    style={{position: 'absolute', top: 10 + rootViewTopPadding(), left: 30, width: 50, height: 50}}
-                    onPress={() => this.props.navigation.goBack()}>
-                    <Image source={require('../../../assets/ic_dismiss_modal.png')}/>
-                </TouchableOpacity>
-            </View>
-
-        );
+            <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}}
+                          items={epg}
+                          index={itemIndex}
+                          isLive={isLive}
+                          onClose={() => this.props.navigation.goBack()}
+                          onDetail={()=>this._informationPress(item, epg, isLive)}
+                          onAlert={(event)=>this._onAlertModal(event)}
+                          onShare={(event)=>this._shareExecution(event.nativeEvent)}
+                          onIndexChanged={(event)=>this._onSwiperIndexChanged(event.nativeEvent.index)}
+                          onBookmark={this._onRecordPress}
+                          onFavorite={this._onFavouritePress}/>
+        )
 
     }
 
@@ -701,14 +245,26 @@ export default class LocalVCM extends React.Component {
 
             if (actionType === 'record') {
                 if (item.type === 'Standalone') {
-                    if (recordEnabled) {
-                        // Stop downloading current item
-                        this.stopDownload()
-                    }
-                    else {
-                        // Start or resume downloading current item
-                        this._downloadExecution()
-                    }
+                    NativeModules.RNUserKitIdentity.checkSignIn((error, result) => {
+                        let isSignIn = JSON.parse(result[0]).is_sign_in
+                        if (isSignIn) {
+                            if (recordEnabled) {
+                                // Stop downloading current item
+                                this.stopDownload()
+                            }
+                            else {
+                                // Start or resume downloading current item
+                                this._downloadExecution()
+                            }
+                            this.setState({
+                                recordEnabled: !recordEnabled
+                            })
+                        }
+                        else {
+                            this._showDownloadModal()
+                        }
+                    })
+
                 }
                 else {
                     if (recordEnabled) {
@@ -719,11 +275,13 @@ export default class LocalVCM extends React.Component {
                         // Start recording
                         this._bookExecution(item)
                     }
+
+                    this.setState({
+                        recordEnabled: !recordEnabled
+                    })
                 }
 
-                this.setState({
-                    recordEnabled: !recordEnabled
-                })
+
             }
             else {
                 // Use Userkit
@@ -744,29 +302,32 @@ export default class LocalVCM extends React.Component {
     stopDownload = () => {
         const {bcVideos} = this.props
 
-        let json = {
-            remove_flag: 1,
-            contentId: bcVideos.data.contentId,
-            url: bcVideos.data.sources.filter(x => {
-                return !!x.container
-            })[0].src,
-            destination_path: "/C/Downloads"
-        }
-        NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
-            if (JSON.parse(events[0]).return === 1) {
-                let downloadList = []
-                NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
-                    downloadList = downloadList.concat(JSON.parse(obj).dataArr)
-                    downloadList.splice(downloadList.indexOf(downloadList.filter(x => x.contentId === json.contentId)[0]), 1)
-                    NativeModules.RNUserKit.storeProperty("download_list", {dataArr: downloadList}, (e, r) => {
+        if (bcVideos && bcVideos.data) {
+
+            let json = {
+                remove_flag: 1,
+                contentId: bcVideos.data.contentId,
+                url: bcVideos.data.sources.filter(x => {
+                    return !!x.container
+                })[0].src,
+                destination_path: "/C/Downloads"
+            }
+            NativeModules.STBManager.mediaDownloadStopWithJson(JSON.stringify(json), (error, events) => {
+                if (JSON.parse(events[0]).return === 1) {
+                    let downloadList = []
+                    NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
+                        downloadList = downloadList.concat(JSON.parse(obj).dataArr)
+                        downloadList.splice(downloadList.indexOf(downloadList.filter(x => x.contentId === json.contentId)[0]), 1)
+                        NativeModules.RNUserKit.storeProperty("download_list", {dataArr: downloadList}, (e, r) => {
+                        })
                     })
-                })
-            }
-            else {
-                console.log('Stop download failure!')
-                console.log(json)
-            }
-        })
+                }
+                else {
+                    console.log('Stop download failure!')
+                    console.log(json)
+                }
+            })
+        }
     }
 
     _downloadExecution = () => {
@@ -776,43 +337,45 @@ export default class LocalVCM extends React.Component {
 
         let videoData = index === -1 ? item : epg[index]
 
-        let json = {
-            contentId: bcVideos.data.contentId,
-            url: bcVideos.data.sources.filter(x => {
-                return !!x.container
-            })[0].src,
-            destination_path: "/C/Downloads"
-        }
-
-        console.log('Download Json')
-        console.log(json)
-
-        NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(json), (error, events) => {
-            let result = JSON.parse(events[0]).return
-            console.log('Download result of id %s is %s', bcVideos.data.contentId, result)
-            if (result === "1") {
-                // Start download successfully
-                // Add to userkit
-                let pattern = /[a-zA-Z0-9]*\.mp4/
-
-                let downloadList = []
-                NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
-                    downloadList = downloadList.concat(JSON.parse(obj).dataArr ? JSON.parse(obj).dataArr : [])
-
-                    let newData = {
-                        ...videoData,
-                        ...json,
-                        fileName: pattern.exec(json.url)[0]
-                    }
-
-                    let params = downloadList.concat([newData])
-
-                    NativeModules.RNUserKit.storeProperty("download_list", {dataArr: params}, (e, r) => {
-                    })
-                })
+        if (bcVideos && bcVideos.data) {
+            let json = {
+                contentId: bcVideos.data.contentId,
+                url: bcVideos.data.sources.filter(x => {
+                    return !!x.container
+                })[0].src,
+                destination_path: "/C/Downloads"
             }
-            else console.log(result)
-        })
+
+            console.log('Download Json')
+            console.log(json)
+
+            NativeModules.STBManager.mediaDownloadStartWithJson(JSON.stringify(json), (error, events) => {
+                let result = JSON.parse(events[0]).return
+                console.log('Download result of id %s is %s', bcVideos.data.contentId, result)
+                if (result === "1") {
+                    // Start download successfully
+                    // Add to userkit
+                    let pattern = /[a-zA-Z0-9]*\.mp4/
+
+                    let downloadList = []
+                    NativeModules.RNUserKit.getProperty("download_list", (err, obj) => {
+                        downloadList = downloadList.concat(JSON.parse(obj).dataArr ? JSON.parse(obj).dataArr : [])
+
+                        let newData = {
+                            ...videoData,
+                            ...json,
+                            fileName: pattern.exec(json.url)[0]
+                        }
+
+                        let params = downloadList.concat([newData])
+
+                        NativeModules.RNUserKit.storeProperty("download_list", {dataArr: params}, (e, r) => {
+                        })
+                    })
+                }
+                else console.log(result)
+            })
+        }
     }
 
     _simpleDataFormat = (time) => {
@@ -854,14 +417,14 @@ export default class LocalVCM extends React.Component {
         this.setState({isScrollEnabled: isEnabled})
     };
 
-    _shareExecution = (title, url) => {
-        content = {
-            message: "",
-            title: title,
-            url: url
-        }
+    _shareExecution = (event) => {
+        let content = {
+            message: event.message,
+            title: event.title,
+            url: event.url
+        };
         Share.share(content, {})
-    }
+    };
 
     _onModalButtonPress = (actionType, secondActionType) => {
         const {recordEnabled, favoriteEnabled, modalRecordTarget, modalFavoriteTarget} = this.state
@@ -921,7 +484,7 @@ export default class LocalVCM extends React.Component {
         const {modalContent, modalRecordTarget, modalFavoriteTarget} = this.state
         const {isLive} = this.props.navigation.state.params
 
-        let img = modalContent === 'record' ? require('../../../assets/ic_record_black_border.png') : require('../../../assets/ic_heart_black_border.png')
+        let img = modalContent === 'record' ? require('../../assets/ic_record_black_border.png') : require('../../assets/ic_heart_black_border.png')
         let firstButtonImg
         let secondButtonImg
 
@@ -949,7 +512,7 @@ export default class LocalVCM extends React.Component {
                     <View style={styles.modal}>
                         <BlurView blurRadius={getBlurRadius(30)} style={styles.modalBlurView} overlayColor={1}/>
                         <TouchableOpacity style={styles.close} onPress={() => this._toggleModal()}>
-                            <Image source={require('../../../assets/ic_modal_close.png')}/>
+                            <Image source={require('../../assets/ic_modal_close.png')}/>
                         </TouchableOpacity>
                         <View style={styles.modalInsideContainer}>
                             <Image source={{uri: iconUrl}} style={styles.modalImage}/>
@@ -1148,7 +711,11 @@ const styles = StyleSheet.create({
     },
     titleText: {
         color: colors.whitePrimary,
-        fontSize: 16
+        fontSize: 16,
+        alignSelf: 'center',
+        textAlign: 'center',
+        marginStart: 30,
+        marginEnd: 30
     },
     typeText: {
         color: colors.whitePrimary,
@@ -1226,6 +793,13 @@ const styles = StyleSheet.create({
         width: 27,
         height: 27,
         resizeMode: 'cover'
+    },
+    vodProgressStyle: {
+        height: '100%',
+        backgroundColor: 'rgba(17,17,19,0.45)',
+        position: 'absolute',
+        top: 0,
+        left: 0
     }
 })
 
