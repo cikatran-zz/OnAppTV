@@ -326,12 +326,12 @@ public class AndroidSTBConnectScreen extends FrameLayout {
                         if(bool) {
 //                            webName = "main-new";
                             webName = "page";
+                            bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
+                            bWebView.setWebViewClient(new LocalWebViewClient(bWebView,launch_View));
                         } else {
-//                            webName = "agents";
-                            webName = "page";
+                            onFinished();
                         }
-                        bWebView.loadUrl("file:///android_asset/STBHTML/"+webName+".html");
-                        bWebView.setWebViewClient(new LocalWebViewClient(bWebView,launch_View));
+
                     }
                 });
             }

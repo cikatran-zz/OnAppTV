@@ -32,7 +32,7 @@ export default class DetailsPage extends React.Component {
         super(props);
         this.state = {
             item: null,
-            isLive: false,
+            isLive: false
         }
     }
 
@@ -48,16 +48,16 @@ export default class DetailsPage extends React.Component {
                  */
                 // this.props.getEpgs([item.channelData.serviceId])
                 // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                this.props.getEpgWithGenre(item.genreIds, 1, 10);
+                this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, 1, 10);
             }
             else if (item.type) {
                 /*
                  Fetch epg with related content or epg in series
                  */
                 if (item.type === 'Episode')
-                    this.props.getEpgWithSeriesId([item.seriesId], 1, 10)
+                    this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], 1, 10)
                 else
-                    this.props.getEpgWithGenre(item.genreIds, 1, 10)
+                    this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10)
             }
         }
 
@@ -116,14 +116,6 @@ export default class DetailsPage extends React.Component {
         if (!item) {
             item = this.props.navigation.state.params.item;
             isLive = this.props.navigation.state.params.isLive;
-        }
-
-        if ((!epg || !epg.data || !item)) {
-            return (
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            )
         }
 
         return (
@@ -346,31 +338,43 @@ export default class DetailsPage extends React.Component {
 
 
     _renderList = ({item}) => {
-        if (this._isFromChannel()) {
-            return (
-                <View>{this._renderListNextInChannel(item)}</View>
-            )
-        }
-        else {
-            return (
-                <View style={{marginBottom: 36}}>
-                    <View style={styles.listHeader}>
-                        <View style={styles.nextButtonContainer}>
-                            {this._renderPinkIndicatorButton()}
-                        </View>
+        const {_id} = this.props.epg;
+        console.log('Test', _id, this.props.navigation.state.params.item);
+        if (item == null || _id != null  ) {
+            if (this._isFromChannel() && _id !== this.props.navigation.state.params.item.videoData.contentId) {
+                return (
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                     </View>
-                    <FlatList
-                        style={styles.list}
-                        horizontal={false}
-                        data={item}
-                        onEndReachedThreshold={0.5}
-                        ListFooterComponent={this.__renderListFooter}
-                        onEndReached={this._fetchMore}
-                        keyExtractor={this._keyExtractor}
-                        renderItem={this._renderListVideoItem}/>
-                </View>
-            )
+                )
+            }
+            if (_id !== this.props.navigation.state.params.item.contentId) {
+                return (
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                    </View>
+                )
+            }
         }
+
+        return (
+            <View style={{marginBottom: 36}}>
+                <View style={styles.listHeader}>
+                    <View style={styles.nextButtonContainer}>
+                        {this._renderPinkIndicatorButton()}
+                    </View>
+                </View>
+                <FlatList
+                    style={styles.list}
+                    horizontal={false}
+                    data={item}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={this.__renderListFooter}
+                    onEndReached={this._fetchMore}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderListVideoItem}/>
+            </View>
+        )
     }
 
     _renderListVideoItem = ({item}) => {

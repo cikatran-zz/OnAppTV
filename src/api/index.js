@@ -260,14 +260,13 @@ export const getCategory = () => {
                 } else {
                     let categories = response.data.viewer.genreMany;
                     let favoriteCategories = JSON.parse(results[0]);
-                    console.log(favoriteCategories);
                     let categoriesResults = [];
                     for (let i = 0; i < categories.length; i++) {
                         let name = categories[i].name;
                         categoriesResults.push({
                             id: categories[i]._id,
                             name: name,
-                            favorite: (favoriteCategories[name] === null || favoriteCategories[name] === false || favoriteCategories[name] == 0.0) ? false : true
+                            favorite: (Array.isArray(favoriteCategories)) && !!(favoriteCategories.some((item) => item.id === categories[i]._id))
                         });
                     }
                     resolve(categoriesResults);
