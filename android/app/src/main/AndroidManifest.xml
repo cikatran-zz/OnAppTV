@@ -8,11 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!--允许程序改变 Wi-Fi 连接状态-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <!--允许修改网络状态的权限-->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-sdk
             android:minSdkVersion="16"
