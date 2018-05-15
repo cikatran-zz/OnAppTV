@@ -116,7 +116,7 @@ class STBConnectionView: UIView {
             })
         }
         self.bridge.registerHandler("HIG_ParseXMLLast") { (data, responseCallback) in
-            Api.shared().hIG_ParseXMLLastInJson(withPath: Bundle.main.path(forResource: "channel_database", ofType: "xml"), callback: { (jsonString) in
+            Api.shared().hIG_ParseXMLLastInJson(withPath: Bundle.main.path(forResource: "channel_database-1", ofType: "xml"), callback: { (jsonString) in
                 Api.shared().hIG_GetSTBConfigureAndCallback({ (model) in
                     Api.shared().hIG_SetSTBConfigure(with: model, callback: nil)
                 })
@@ -170,7 +170,7 @@ class STBConnectionView: UIView {
             if connectState {
                 self.onFinished([:])
             }else {
-                Api.shared().hIG_ParseXMLInJson(withPath: Bundle.main.path(forResource: "channel_database", ofType: "xml"), callback: { (jsonString) in
+                Api.shared().hIG_ParseXMLInJson(withPath: Bundle.main.path(forResource: "channel_database-1", ofType: "xml"), callback: { (jsonString) in
                     DispatchQueue.main.async {
                         self.onFinished([:])
                     }

@@ -37,6 +37,10 @@ class ControlModalCell: UICollectionViewCell {
     @IBOutlet weak var bookmarkButton: UIButton!
     @IBOutlet weak var captionButton: UIButton!
     
+    // Contraints need to set
+    @IBOutlet weak var dismissButtonTop: NSLayoutConstraint!
+    @IBOutlet weak var infoButtonBottom: NSLayoutConstraint!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -101,8 +105,8 @@ class ControlModalCell: UICollectionViewCell {
     func commonInit() {
         Bundle.main.loadNibNamed("ControlModalCell", owner: self, options: nil)
         self.contentView.addSubview(cellContentView)
-        contentView.frame = self.bounds
-        contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        cellContentView.frame = self.bounds
+        cellContentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
         setUpVolumeSlider()
         
@@ -112,6 +116,10 @@ class ControlModalCell: UICollectionViewCell {
         blurImage.clipsToBounds = true
         progressImage.clipsToBounds = true
         redBar.isHidden = true
+        if (UIScreen.main.bounds.height == 812 && UIScreen.main.bounds.width == 375) {
+            dismissButtonTop.constant += 20
+            infoButtonBottom.constant -= 34
+        }
     }
     
     func setUpVolumeSlider() {
