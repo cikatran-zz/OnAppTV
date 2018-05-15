@@ -266,7 +266,7 @@ export const getCategory = () => {
                         categoriesResults.push({
                             id: categories[i]._id,
                             name: name,
-                            favorite: (Array.isArray(favoriteCategories)) && !!(favoriteCategories.some((item) => item.id === categories[i]._id))
+                            favorite: favoriteCategories === null || (favoriteCategories[name] === true)
                         });
                     }
                     resolve(categoriesResults);
