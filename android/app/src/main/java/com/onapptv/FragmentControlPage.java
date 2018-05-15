@@ -71,12 +71,11 @@ public class FragmentControlPage extends Fragment {
     ImageView mTopBanner, mMainBanner;
     ProgressBar mProgress;
     HashMap mData, mDataLive;
-    ImageButton mDetail, mDismiss, mRecord, mFavorite, mShare, mStartOver, mCaption, mPlay, mBackward, mFastward;
-    ImageButton mOrientationButton;
+    ImageView mDetail, mDismiss, mRecord, mFavorite, mShare, mStartOver, mCaption, mPlay, mBackward, mFastward;
+    ImageView mOrientationButton;
     TextView mTitle, mGenres, mPassedTv, mEtrTime;
     GetTimer mTimer;
     Activity activity;
-    WebView mLoading;
 
     String videoUrl = NO_VIDEO_URL;
     Boolean isDragging = false;
@@ -100,7 +99,7 @@ public class FragmentControlPage extends Fragment {
     }
 
     public void setProgress(int progress) {
-        if (mData != null) {
+        if (mData != null && !isDragging) {
             currentProgress = progress;
             float percent = progress / mOffsetRate;
             mProgress.setProgress((int) (percent / (deviceWidth / 100)));
@@ -109,7 +108,7 @@ public class FragmentControlPage extends Fragment {
             int seconds = progress - hours * 3600 - minutes * 60;
             String str = String.format("%02d:%02d:%02d",hours, minutes, seconds);
             mPassedTv.setText(str);
-            int etr_time = (int) durations;
+            int etr_time;
             if (durations > progress) {
                 etr_time = (int) (durations - progress);
                 int etr_hours = etr_time / 3600;
@@ -118,6 +117,11 @@ public class FragmentControlPage extends Fragment {
                 String etr = "-" + String.format("%02d:%02d:%02d", etr_hours, etr_minutes, etr_seconds).toString();
                 mEtrTime.setText(etr);
             }
+        }
+        else {
+            if (!isDragging) new Handler().postDelayed((Runnable) () -> {
+
+            }, 3000);
         }
     }
 
@@ -213,80 +217,11 @@ public class FragmentControlPage extends Fragment {
         return date;
     }
 
-    View.OnClickListener backward = v -> {
-        if (Api.sharedApi().hIG_IsConnect()) {
-            Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("playPosition", i - 10);
-                    Api.sharedApi().hIG_PlayMediaSetPosition(obj.toString(), s -> {
-
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-    };
-
-    View.OnClickListener forward = v -> {
-        if (Api.sharedApi().hIG_IsConnect()) {
-            Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("playPosition", i + 10);
-                    Api.sharedApi().hIG_PlayMediaSetPosition(obj.toString(), s -> {
-
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-    };
-
     View.OnClickListener startOver = v -> {
         if (Api.sharedApi().hIG_IsConnect()) {
             Api.sharedApi().hIG_PlayMediaSetPosition(0, (aBoolean, s) -> {
 
             });
-        }
-    };
-
-    View.OnClickListener playBtnListener = v -> {
-        if (Api.sharedApi().hIG_IsConnect()) {
-            if (mData != null) {
-                // VOD
-                if (isPlaying == null) {
-                    Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, (aBoolean, s) -> {
-                                Log.v("playMediaOnSuccess", aBoolean.toString());
-                                if (mData.get("durationInSeconds") != null)
-                                    mTimer.execute();
-                            }
-                    );
-                    mPlay.setImageResource(R.mipmap.ic_pause);
-                    isPlaying = true;
-                } else if (isPlaying) {
-                    Api.sharedApi().hIG_PlayMediaPause(s -> {
-                    });
-                    mPlay.setImageResource(R.mipmap.ic_play);
-                    isPlaying = false;
-                } else {
-                    Api.sharedApi().hIG_PlayMediaResume(s -> {
-                    });
-                    mPlay.setImageResource(R.mipmap.ic_pause);
-                    isPlaying = true;
-                }
-            }
-            else {
-                // LIVE
-                if (isPlaying == null) {
-                    int lcn = Integer.parseInt(((HashMap) mDataLive.get("channelData")).get("lcn").toString());
-                    Api.sharedApi().hIG_SetZap(lcn, (aBoolean, s) -> {
-
-                    });
-                }
-            }
         }
     };
 
@@ -300,7 +235,7 @@ public class FragmentControlPage extends Fragment {
         if (mData != null && (mData.get("durationInSeconds") != null)) {
             // offset-rate = width / durations
             durations = Float.parseFloat(mData.get("durationInSeconds").toString());
-            mOffsetRate = (Float.parseFloat(mData.get("durationInSeconds").toString())) / deviceWidth;
+            mOffsetRate = durations / deviceWidth;
         }
 
         mRealSeek = rootView.findViewById(R.id.real_volume);
@@ -324,7 +259,6 @@ public class FragmentControlPage extends Fragment {
         mPassedTv = rootView.findViewById(R.id.passed_time);
         mEtrTime = rootView.findViewById(R.id.etr_time);
         mOrientationButton = rootView.findViewById(R.id.change_orientation_btn);
-        mLoading = rootView.findViewById(R.id.webView_top_banner);
 
         if (!Api.sharedApi().hIG_IsConnect()) {
             mRecord.setAlpha(0.5f);
@@ -346,7 +280,6 @@ public class FragmentControlPage extends Fragment {
         }
         else {
             mTopContainer.setOnTouchListener((v, event) -> {
-                Log.v("onTouch", "Top Container");
                 return mGestureDetector.onTouchEvent(event);
             });
 
@@ -368,9 +301,74 @@ public class FragmentControlPage extends Fragment {
                 }
             });
 
-            mPlay.setOnClickListener(playBtnListener);
-            mBackward.setOnClickListener(backward);
-            mFastward.setOnClickListener(forward);
+
+            mPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Api.sharedApi().hIG_IsConnect()) {
+                        if (mData != null) {
+                            // VOD
+                            if (isPlaying == null) {
+                                Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, (aBoolean, s) -> {
+                                            if (mData.get("durationInSeconds") != null)
+                                                mTimer.execute();
+                                        }
+                                );
+                                mPlay.setImageResource(R.mipmap.ic_pause);
+                                isPlaying = true;
+                            } else if (isPlaying) {
+                                Api.sharedApi().hIG_PlayMediaPause(s -> {
+                                });
+                                mPlay.setImageResource(R.mipmap.ic_play);
+                                isPlaying = false;
+                            } else {
+                                Api.sharedApi().hIG_PlayMediaResume(s -> {
+                                });
+                                mPlay.setImageResource(R.mipmap.ic_pause);
+                                isPlaying = true;
+                            }
+                        }
+                        else {
+                            // LIVE
+                            if (isPlaying == null) {
+                                int lcn = Integer.parseInt(((HashMap) mDataLive.get("channelData")).get("lcn").toString());
+                                Api.sharedApi().hIG_SetZap(lcn, (aBoolean, s) -> {
+
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+
+            mBackward.setOnClickListener(v -> {
+                if (Api.sharedApi().hIG_IsConnect()) {
+                    Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("playPosition", i - 10);
+                            Api.sharedApi().hIG_PlayMediaSetPosition(obj.toString(), s -> {
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            });
+            mFastward.setOnClickListener(v -> {
+                if (Api.sharedApi().hIG_IsConnect()) {
+                    Api.sharedApi().hIG_PlayMediaGetPosition((b, i) -> {
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("playPosition", i + 10);
+                            Api.sharedApi().hIG_PlayMediaSetPosition(obj.toString(), s -> {
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            });
             mStartOver.setOnClickListener(startOver);
 
             mRecord.setOnClickListener(v -> {
@@ -553,11 +551,12 @@ public class FragmentControlPage extends Fragment {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2,
                                 float distanceX, float distanceY) {
-            Log.v("onScroll", "MotionEvent");
             int deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-            float distance = (e2.getX() - e1.getX()) / (deviceWidth / 100);
+            float distance = e2.getX() - e1.getX();
             isDragging = true;
-            mProgress.setProgress((int) (currentProgress + distance));
+            mProgress.setProgress((int) ((currentProgress + distance * mOffsetRate) / mOffsetRate)  * 100/ deviceWidth );
+            Api.sharedApi().hIG_PlayMediaSetPosition((int) ((currentProgress + distance * mOffsetRate) * durations / 100), (b, i) -> {
+            });
             return false;
         }
 
@@ -566,11 +565,10 @@ public class FragmentControlPage extends Fragment {
                                float velocityY) {
             isDragging = false;
             int deviceWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-            float distance = (e2.getX() - e1.getX()) / (deviceWidth / 100);
-            currentProgress = (int) (currentProgress + distance);
-            mProgress.setProgress(currentProgress);
+            float distance = e2.getX() - e1.getX();
+            currentProgress = (int) (currentProgress + distance * mOffsetRate);
+            mProgress.setProgress((int) ((currentProgress / mOffsetRate) * 100 / deviceWidth));
             Api.sharedApi().hIG_PlayMediaSetPosition(currentProgress, (b, i) -> {
-
             });
             return false;
         }
