@@ -174,7 +174,7 @@ export default class Home extends Component {
                 <View style={styles.slotMachineContainer}>
                     <ImageBackground
                         style={styles.slotMachineImage}
-                        source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
+                        source={{uri: getImageFromArray(item.originalImages, 'portrait', 'landscape')}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
                             <PinkRoundedLabel text="NEW MOVIE" style={{alignSelf: 'flex-end', marginBottom: 14}}/>
