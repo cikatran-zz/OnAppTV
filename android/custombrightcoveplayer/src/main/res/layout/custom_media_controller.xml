@@ -9,7 +9,7 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:progressTint="#8C000000"
+        android:progressTint="#80ffffff"
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                 style="@style/BorderlessButton"
                 android:layout_height="15dp"
                 android:layout_width="15dp"
-                android:background="@drawable/repeat"/>
+                android:background="@drawable/ic_start_over"/>
 
             <Button
                 android:id="@+id/subtitle"
