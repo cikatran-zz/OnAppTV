@@ -2,24 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/black">
     <ImageView
+        android:background="@android:color/black"
         android:id="@+id/main.banner"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <RelativeLayout
+        android:background="@android:color/black"
         android:id="@+id/top.banner"
         android:layout_width="match_parent"
         android:layout_height="300dp">
         <FrameLayout
-            android:background="@android:color/white"
+            android:background="@android:color/black"
             android:id="@+id/webView.top.banner"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
                 android:text="OnAppTV"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:layout_gravity="center"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:layout_width="wrap_content"
