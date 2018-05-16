@@ -198,7 +198,8 @@ export default class RecordList extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: colors.whiteBackground
     },
     list: {
         marginTop: 20,
