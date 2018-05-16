@@ -322,16 +322,16 @@ export default class DetailsPage extends React.Component {
                  */
                 // this.props.getEpgs([item.channelData.serviceId])
                 // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                this.props.getEpgWithGenre(item.genreIds, this._page, 10);
+                this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, this._page, 10);
             }
             else if (item.type) {
                 /*
                  Fetch epg with related content or epg in series
                  */
                 if (item.type === 'Episode')
-                    this.props.getEpgWithSeriesId([item.seriesId], this._page, 10)
+                    this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], this._page, 10)
                 else
-                    this.props.getEpgWithGenre(item.genreIds, this._page, 10)
+                    this.props.getEpgWithGenre(item.contentId, item.genreIds, this._page, 10)
             }
         }
     }

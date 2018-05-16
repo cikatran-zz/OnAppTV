@@ -72,9 +72,9 @@
     </RelativeLayout>
     <TextView
         android:id="@+id/passed_time"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
-        android:layout_below="@id/top.banner"
+        android:layout_below="@+id/top.banner"
         android:textSize="12sp"
         android:textColor="@android:color/white"
         android:layout_alignParentLeft="true"
@@ -83,22 +83,22 @@
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/etr_time"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:text="-00:00"
-        android:layout_below="@id/top.banner"
+        android:layout_below="@+id/top.banner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <LinearLayout
         android:id="@+id/controller_container"
-        android:layout_below="@id/top.banner"
+        android:layout_below="@+id/top.banner"
         android:layout_marginTop="30dp"
         android:orientation="horizontal"
         android:layout_marginLeft="57dp"
-        android:layout_marginRight="57dp"
+        android:layout_marginRight="52dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -150,7 +150,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/title_tv"
         android:textSize="16sp"
-        android:layout_below="@id/controller_container"
+        android:layout_below="@+id/controller_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
@@ -162,13 +162,13 @@
         android:id="@+id/genres_tv"
         android:text="Genres"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/title_tv"
+        android:layout_below="@+id/title_tv"
         android:layout_width="wrap_content"
         android:textColor="@android:color/white"
         android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/genres_tv"
+        android:layout_below="@+id/genres_tv"
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="90dp">
@@ -207,7 +207,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
-        android:layout_above="@id/information_btn"
+        android:layout_above="@+id/information_btn"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <ImageButton
@@ -254,7 +254,7 @@
             android:src="@mipmap/ic_volume_more"
             android:scaleType="centerCrop"
             android:layout_alignParentEnd="true"
-            android:layout_alignEnd="@id/real_volume"
+            android:layout_alignEnd="@+id/real_volume"
             android:layout_width="20dp"
             android:layout_height="20dp" />
     </RelativeLayout>

@@ -104,7 +104,7 @@ public class FragmentControlPage extends Fragment {
     }
 
     public void setProgress(int progress) {
-        if (mData != null && !isDragging) {
+        if (mData != null && !isDragging && mProgress != null) {
             currentProgress = progress;
             float percent = progress / mOffsetRate;
             mProgress.setProgress((int) (percent / (deviceWidth / 100)));
@@ -209,6 +209,7 @@ public class FragmentControlPage extends Fragment {
                 intent.putExtra(BrightcoveActivity.VIDEO_ID, mData.get("contentId").toString());
                 intent.putExtra(BrightcoveActivity.ACCOUNT_ID, "5706818955001");
                 intent.putExtra(BrightcoveActivity.POLICY_KEY, "BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I");
+                intent.putExtra(BrightcoveActivity.METADATA, new HashMap<>());
                 getContext().startActivity(intent);
             }
         }
@@ -282,6 +283,7 @@ public class FragmentControlPage extends Fragment {
             mBackward.setClickable(false);
             mFastward.setAlpha(0.5f);
             mFastward.setClickable(false);
+            mFakeSeek.setClickable(false);
         }
         else {
             mTopContainer.setOnTouchListener((v, event) -> {
@@ -642,7 +644,16 @@ public class FragmentControlPage extends Fragment {
             }
         }
         else {
-            mTimer.cancel(true);
+            if (mTimer != null) mTimer.cancel(true);
+            if (mDataLive != null) {
+                if (mPlay != null )mPlay.setImageResource(R.mipmap.ic_ontv);
+                if (isPlaying != null) isPlaying = false;
+            }
+            else {
+                if (mPlay != null )mPlay.setImageResource(R.mipmap.ic_play);
+                if (isPlaying != null) isPlaying = false;
+                setProgress(0);
+            }
         }
     }
 

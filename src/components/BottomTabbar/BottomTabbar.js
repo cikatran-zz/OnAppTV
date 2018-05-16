@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, NativeModules} from 'react-native'
 import PropTypes from 'prop-types'
 import {colors} from '../../utils/themeConfig'
 import BlurView from '../BlurView'
@@ -18,10 +18,54 @@ const tabs = [
 class BottomTabbar extends React.PureComponent {
     constructor(props){
         super(props);
+        this.state = {
+            isPlaying: true
+        }
     }
 
     componentDidMount() {
-        // this.animation.play();
+        setInterval(() => {
+            NativeModules.STBManager.isConnect((connectStr) => {
+                let json = JSON.parse(connectStr).is_connected
+                if (json === true) {
+                    NativeModules.STBManager.getSTBStatus((error, events) => {
+                        try {
+                            let result = JSON.parse(events[0]);
+                            if (result['return'] === "1") {
+                                if (result['statuses'].length === 0 || (result['status'])['ACTIVE_STANDBY'] === undefined || (result['status'])['ACTIVE_STANDBY'] === null) {
+                                    this.setState({
+                                        isPlaying: false
+                                    })
+                                    this.animation.reset();
+                                }
+                                else {
+                                    this.setState({
+                                        isPlaying: true
+                                    })
+                                    this.animation.play();
+                                }
+                            }
+                            else {
+                                this.setState({
+                                    isPlaying: false
+                                })
+                                this.animation.reset();
+                            }
+                        }
+                        catch (e) {
+                            console.log('Error when reading STB status');
+                        }
+
+                    })
+                }
+                else {
+                    this.setState({
+                        isPlaying: false
+                    })
+                    this.animation.reset();
+                }
+            })
+        }, 2000);
     }
     _renderTab = (tab, i) => {
         const {navigation} = this.props;
