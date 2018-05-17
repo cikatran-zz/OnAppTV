@@ -16,6 +16,7 @@ const tabs = [
 
 
 class BottomTabbar extends React.PureComponent {
+    animation = null;
     constructor(props){
         super(props);
         this.state = {
@@ -36,20 +37,20 @@ class BottomTabbar extends React.PureComponent {
                                     this.setState({
                                         isPlaying: false
                                     })
-                                    this.animation.reset();
+                                    this._resetAnimation();
                                 }
                                 else {
                                     this.setState({
                                         isPlaying: true
                                     })
-                                    this.animation.play();
+                                    this._playAnimation();
                                 }
                             }
                             else {
                                 this.setState({
                                     isPlaying: false
                                 })
-                                this.animation.reset();
+                                this._resetAnimation();
                             }
                         }
                         catch (e) {
@@ -62,10 +63,18 @@ class BottomTabbar extends React.PureComponent {
                     this.setState({
                         isPlaying: false
                     })
-                    this.animation.reset();
+                    this._resetAnimation();
                 }
             })
         }, 2000);
+    }
+
+    _resetAnimation = () => {
+        this.animation.reset();
+    }
+
+    _playAnimation = () => {
+        this.animation.play();
     }
     _renderTab = (tab, i) => {
         const {navigation} = this.props;

@@ -1,18 +1,19 @@
 import * as actionTypes from './actionTypes';
 
-export function getVODByGenres(limit, skip, genresId) {
+export function getVODByGenres(page, perPage, genresId) {
     return {
         type: actionTypes.FETCHING_VOD_BY_GENRES,
-        limit: limit,
-        skip: skip,
+        page: page,
+        perPage: perPage,
         genresId: genresId
     }
 }
 
-export function getVODByGenresSuccess(data) {
+export function getVODByGenresSuccess(data, page) {
     return {
         type: actionTypes.FETCH_VOD_BY_GENRES_SUCCESS,
-        data: data.viewer.videoMany
+        data: data.viewer.videoPagination.items,
+        page: page
     }
 }
 

@@ -290,10 +290,10 @@ export const getEpgs = (serviceId) => {
     })
 };
 
-export const getVODByGenres = (genresId, limit, skip) => {
+export const getVODByGenres = (genresId, page, perPage) => {
     return client.query({
         query: config.queries.VOD_BY_GENRES,
-        variables: {genresId: genresId, limit: limit, skip: skip}
+        variables: {genresId: genresId, page: page, perPage: perPage}
     })
 };
 

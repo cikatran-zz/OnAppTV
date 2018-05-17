@@ -434,38 +434,48 @@ query genresVOD($genresId: [MongoID]){
 `;
 
 const vodByGenres = gql`
-query genresVOD($genresId: MongoID, $limit: Int, $skip: Int){
+query genresVOD($genresId: MongoID, $page: Int, $perPage: Int){
   viewer{
-    videoMany(filter: {
+    videoPagination(page: $page, perPage: $perPage, filter: {
       _operators: {
         genreIds: {
           in: [$genresId]
         }
       }
-    }, limit: $limit, skip: $skip) {
-      contentId
-      durationInSeconds
-      title
-      feature
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      state
-      genresData {
-        name
-      }
-      genreIds
-      durationInSeconds
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      }
-      custom
+    }, sort: FEATURE_DESC) {
+    	items {
+    	  contentId
+    	  durationInSeconds
+    	  publishDate
+    	  title
+    	  longDescription
+    	  shortDescription
+    	  feature
+    	  seriesId
+    	  seasonIndex
+    	  episodeIndex
+    	  type
+    	  impression
+    	  updatedAt
+    	  createdAt
+        originalImages {
+          height
+          width
+          url
+          name
+          fileName
+          scaledImage {
+              height
+              width
+              url
+          }
+        }
+        genreIds
+        genresData {
+          name
+        }
+        custom
+    	}
     }
   }
 }

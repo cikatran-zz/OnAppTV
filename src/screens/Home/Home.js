@@ -434,7 +434,7 @@ export default class Home extends Component {
 
     _navigateToMyCategories = () => {
         const {navigate} = this.props.navigation;
-        navigate('MyCategories', {data: this.state.category, updateFavorite: this._updateFavoriteCategories});
+        navigate('MyCategories', {data: this.props.category.data});
     };
 
     _navigateToCategory = (cate) => {
@@ -499,20 +499,6 @@ export default class Home extends Component {
         }}/>
     );
 
-    _updateFavoriteCategories = (favorites) => {
-        favorites.push({"name": "_ADD"});
-        var data = this.state.category;
-        for (var i = 0; i < data.length; i++) {
-            data[i].favorite = 0;
-            for (var j = 0; j < favorites.length; j++) {
-                if (data[i].name == favorites[j].name) {
-                    data[i].favorite = 1;
-                }
-            }
-        }
-        this.setState({favoriteCategories: favorites, category: data});
-    };
-
     // ResumeVOD
 
     _onResumePress = (item) => {
@@ -570,14 +556,7 @@ export default class Home extends Component {
 
     render() {
         const {banner, live, vod, ads, category, news} = this.props;
-        if (this.state.favoriteCategories === null && category.data !== undefined && category.favorite !== undefined) {
-            let categoryData = (category.favorite === null || category.favorite === {}) ? [] : category.favorite.map(cate => ({"name": cate.name})) ;
-            categoryData.push({"name": "_ADD"});
-            this.setState({
-                category: category.data === null ? [] : category.data,
-                favoriteCategories: categoryData
-            });
-        }
+
 
 
         let bannerData = (banner.data == null || banner.data.length == 0) ? null : banner.data[0]
@@ -598,7 +577,7 @@ export default class Home extends Component {
             sections.push({data: [vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList});
         }
 
-        sections.push({ data: [this.state.favoriteCategories], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList});
+        sections.push({ data: [category.favorite], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList});
 
         sections.push({data: [news], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter});
 
