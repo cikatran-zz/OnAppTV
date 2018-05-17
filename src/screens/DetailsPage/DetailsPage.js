@@ -143,16 +143,14 @@ export default class DetailsPage extends React.Component {
 
     _renderBanner = ({item}) => {
         let data = this._isFromChannel() ? item.videoData : item
-        let url = '';
-        if (data.originalImages != null && data.originalImages.length > 0) {
-            url = data.originalImages[0].url ? data.originalImages[0].url : '';
-        }
+        let url;
+        url = getImageFromArray(data.originalImages, 'feature', 'landscape');
         return (
             <View style={styles.topContainer}>
                 <TouchableOpacity style={{padding: 15,
                     alignSelf: 'flex-start'}}
                                   onPress={() => this.props.navigation.goBack()}>
-                    <Image source={require('../../assets/ic_back_details.png')}/>
+                    <Image source={require('../../assets/ic_dismiss_black.png')}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bannerThumbnailContainer}
                                   onPress={() => this._onPress(item)}>

@@ -163,7 +163,6 @@ export default class Bookmark extends React.Component {
                 <View style={{
                     flexDirection: 'column',
                     height: 156,
-                    marginLeft: 8,
                     alignSelf: 'flex-start',
                     alignItems: 'center'
                 }}>
