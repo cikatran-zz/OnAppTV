@@ -12,7 +12,7 @@ import {
     Share,
     View,
     PanResponder,
-    Platform
+    Platform, StatusBar
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import Orientation from 'react-native-orientation';
@@ -89,6 +89,7 @@ export default class VideoControlModal extends React.Component {
 
     componentWillUnmount() {
         Orientation.removeOrientationListener(this._orientationDidChange)
+        this._navListener.remove();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -110,7 +111,10 @@ export default class VideoControlModal extends React.Component {
     }
 
     componentDidMount() {
-        const {item, isLive, epg} = this.props.navigation.state.params
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('light-content');
+            (Platform.OS !== 'ios') && StatusBar.setBackgroundColor('transparent');
+        });
 
         NativeModules.STBManager.isConnect((connectStr) => {
             let json = JSON.parse(connectStr).is_connected
@@ -558,6 +562,10 @@ export default class VideoControlModal extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    translucent={true}
+                    backgroundColor='#00000000'
+                    barStyle='light-content'/>
                 <AlertModal ref={(modal) => {
                     this.alertModal = modal
                 }}/>
