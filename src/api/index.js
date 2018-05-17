@@ -351,17 +351,17 @@ export const getGenresContent = (genresIds) => {
     });
 };
 
-export const getEpgWithGenres = (genresIds, page, perPage) => {
+export const getEpgWithGenres = (genresIds, page, perPage, contentId) => {
     return client.query({
         query: config.queries.EPG_WITH_GENRES,
-        variables: {genreIds: genresIds, page: page, perPage: perPage}
+        variables: {genreIds: genresIds, page: page, perPage: perPage, contentId: contentId}
     })
 }
 
-export const getEpgWithSeriesId = (seriesId, page, perPage) => {
+export const getEpgWithSeriesId = (seriesId, page, perPage, contentId) => {
     return client.query({
         query: config.queries.EPG_WITH_SERIES,
-        variables: {id: seriesId, page: page, perPage: perPage}
+        variables: {id: seriesId, page: page, perPage: perPage, contentId: contentId}
     })
 };
 

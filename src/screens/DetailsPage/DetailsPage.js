@@ -67,28 +67,26 @@ export default class DetailsPage extends React.Component {
 
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
             const {item, isLive} = e;
-            console.log('reloadDetailsPage', item, isLive)
             this.setNewState(item, isLive);
-            if (item && isLive !== undefined) {
-                if (isLive === true && item.channelData
-                    && item.channelData.serviceId
-                    && item.channelId) {
+            let parsedItem = JSON.parse(item);
+            if (parsedItem && isLive !== undefined) {
+                if (isLive === true) {
                     /*
                      Fetching information about EPG next in channel and EPG which are
                      at the same time on other channels
                      */
                     // this.props.getEpgs([item.channelData.serviceId]);
                     // this.props.getEpgSameTime(new Date(), item.channelId);
-                    this.props.getEpgWithGenre(item.genreIds, 1, 10);
+                    this.props.getEpgWithGenre(parsedItem.videoData.contentId, item.genreIds, 1, 10);
                 }
-                else if (item.type) {
+                else if (parsedItem.type) {
                     /*
                      Fetch epg with related content or epg in series
                      */
-                    if (item.type === 'Episode')
-                        this.props.getEpgWithSeriesId([item.seriesId]);
+                    if (parsedItem.type === 'Episode')
+                        this.props.getEpgWithSeriesId(parsedItem.contentId, [item.seriesId], 1, 10);
                     else
-                        this.props.getEpgWithGenre(item.genreIds);
+                        this.props.getEpgWithGenre(parsedItem.contentId, item.genreIds, 1, 10);
                 }
             };
         });
@@ -111,11 +109,10 @@ export default class DetailsPage extends React.Component {
 
     render() {
         // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-        const {epg, epgSameTime} = this.props;
-        let {item, isLive} = this.state;
+        const {epg} = this.props;
+        let {item} = this.state;
         if (!item) {
             item = this.props.navigation.state.params.item;
-            isLive = this.props.navigation.state.params.isLive;
         }
 
         return (
@@ -337,16 +334,16 @@ export default class DetailsPage extends React.Component {
 
     _renderList = ({item}) => {
         const {_id} = this.props.epg;
-        console.log('Test', _id, this.props.navigation.state.params.item);
+        let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (item == null || _id != null  ) {
-            if (this._isFromChannel() && _id !== this.props.navigation.state.params.item.videoData.contentId) {
+            if (this._isFromChannel() && _id !== currentItem.videoData.contentId) {
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                     </View>
                 )
             }
-            if (_id !== this.props.navigation.state.params.item.contentId) {
+            if (_id !== currentItem.contentId) {
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>

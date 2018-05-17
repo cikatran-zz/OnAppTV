@@ -514,7 +514,9 @@ public class FragmentControlPage extends Fragment {
             else {
                 WritableMap params = Arguments.createMap();
                 Gson gson = new Gson();
-                String itemJson = gson.toJson(mDataLive);
+                String itemJson = "";
+                if (ControlPageAdapter.isLive()) itemJson = gson.toJson(mDataLive);
+                else itemJson = gson.toJson(mData);
                 params.putString("item", itemJson);
                 params.putBoolean("isLive", ControlPageAdapter.isLive());
                 sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
