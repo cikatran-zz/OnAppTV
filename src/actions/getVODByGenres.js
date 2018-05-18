@@ -9,11 +9,12 @@ export function getVODByGenres(page, perPage, genresId) {
     }
 }
 
-export function getVODByGenresSuccess(data, page) {
+export function getVODByGenresSuccess(data, page, genresId) {
     return {
         type: actionTypes.FETCH_VOD_BY_GENRES_SUCCESS,
         data: data.viewer.videoPagination.items,
-        page: page
+        page: page,
+        genresId: genresId
     }
 }
 

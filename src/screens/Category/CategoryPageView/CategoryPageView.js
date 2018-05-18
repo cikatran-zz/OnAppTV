@@ -15,8 +15,7 @@ import {getEPGByGenres, getVODByGenres} from "../../../api";
 import _ from 'lodash'
 import {DotsLoader} from "react-native-indicator";
 
-class CategoryPageView extends React.Component{
-    _vodPage = 1;
+class CategoryPageView extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -33,8 +32,9 @@ class CategoryPageView extends React.Component{
     componentDidMount() {
         const {genresId} = this.props;
         this._getEPG(genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
-        this.props.getVOD(1, 10, genresId);
+        this.props.getVODByGenres(1, 10, genresId);
     };
+
 
     _getEPG = (genresId, currentTime) => {
         this.setState({epgLoading: true});
@@ -64,7 +64,7 @@ class CategoryPageView extends React.Component{
         });
     };
 
-    _keyExtractor = (item, index) => index + "";
+    _keyExtractor = (item, index) => index.toString();
 
     _renderSlotMachines = ({item}) => {
         if (item == null) {
@@ -76,7 +76,7 @@ class CategoryPageView extends React.Component{
                 { item.map((it, index)=> {
                     let image = getImageFromArray(it.originalImages, 'feature', 'landscape');
                     return (
-                        <TouchableOpacity onPress={()=>this.props.onVideoPress(it,false)}>
+                        <TouchableOpacity key={index} onPress={()=>this.props.onVideoPress(it,false)}>
                             <Image
                                 key={image + index}
                                 style={styles.slotMachineImage}
@@ -188,11 +188,14 @@ class CategoryPageView extends React.Component{
     }
 
     _renderVODFooter = () => {
-        const {vod} = this.props;
-        if (vod.isFetching) {
+        const {vod, genresId} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        if (!vodMap)
+            return null;
+        if (vodMap.isFetching) {
             return (
                 <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    style={{height: 50, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
                     <ActivityIndicator size={"small"} color={colors.textGrey}/>
                 </View>
             )
@@ -202,8 +205,11 @@ class CategoryPageView extends React.Component{
     }
 
     _fetchMoreVOD = () => {
-        this._vodPage++;
-        this.props.getVOD(this._vodPage, 10);
+        const {genresId, vod} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        let vodPage = vodMap.page;
+        vodPage++;
+        this.props.getVODByGenres(vodPage, 10, genresId);
     }
 
     _renderListFooter = () => (
@@ -232,7 +238,14 @@ class CategoryPageView extends React.Component{
     };
 
     render(){
-        const {vod} = this.props;
+        const {vod, genresId} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        let latestVOD = [];
+        let vodData = [];
+        if (vodMap) {
+            latestVOD = vodMap.latestVOD;
+            vodData = vodMap.vod;
+        }
         if (this.state.epgLoading && this.state.vodLoading && this.state.latestVODLoading) {
             return (
                 <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
@@ -242,7 +255,7 @@ class CategoryPageView extends React.Component{
         }
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
-                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()} showBackButton={true}/>
+                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()} showBackButton={false}/>
                 <SectionList
                     style={[styles.container, {marginTop: 0, backgroundColor: colors.whiteBackground}]}
                     keyExtractor={this._keyExtractor}
@@ -253,9 +266,9 @@ class CategoryPageView extends React.Component{
                     onEndReached={this._fetchMore}
                     ListFooterComponent={this._renderListFooter}
                     sections={[
-                        {data: [vod.latestVOD], showHeader: false, renderItem: this._renderSlotMachines},
+                        {data: [latestVOD], showHeader: false, renderItem: this._renderSlotMachines},
                         {data: [this.state.epg], showHeader: this.state.epg != null && this.state.epg.length > 0, title: "ON LIVE", renderItem: this._renderOnLiveList},
-                        {data: [vod.vod], showHeader: vod.vod != null && vod.vod.length > 0, title: "VOD", renderItem: this._renderVODList}
+                        {data: [vodData], showHeader: vodData != null && vodData.length > 0, title: "VOD", renderItem: this._renderVODList}
                     ]}
                 />
             </View>

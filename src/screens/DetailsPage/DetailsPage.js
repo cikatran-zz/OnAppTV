@@ -18,7 +18,6 @@ import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
 import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 import {rootViewTopPadding} from "../../utils/rootViewPadding";
-import {getChannel, getWatchingHistory} from "../../api";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";

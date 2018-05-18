@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     return {
         getLatestVOD: (genresId)=> dispatch(getLatestVODByGenres(genresId)),
         getEPG: (limit, skip, genresId, currentTime) => dispatch(getEPGByGenres(limit, skip, genresId, currentTime)),
-        getVOD: (page, perPage, genresId) => dispatch(getVODByGenres(page, perPage, genresId))
+        getVODByGenres: (page, perPage, genresId) => dispatch(getVODByGenres(page, perPage, genresId))
     }
 }
 
