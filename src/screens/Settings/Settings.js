@@ -357,7 +357,7 @@ export default class Settings extends React.PureComponent {
         if (section.showHeader) {
             return (
                 <View style={styles.headerSectionContainer}>
-                    <PinkRoundedLabel text={section.title} style={styles.headerSection}/>
+                    <PinkRoundedLabel text={section.title} containerStyle={styles.headerSection}/>
                 </View>
             )
         } else {

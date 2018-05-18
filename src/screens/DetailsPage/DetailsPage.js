@@ -203,18 +203,18 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromChannel()) {
             // isLive
-            return (<PinkRoundedLabel style={{marginBottom: 21}} text={"NEXT CHANNEL"}/>)
+            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT CHANNEL"}/>)
         }
 
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
             }
             case 'Standalone':
-                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"RELATED"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
             default:
-                return (<PinkRoundedLabel style={{marginBottom: 21}} text={"NEXT"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT"}/>)
         }
     }
 
@@ -452,7 +452,7 @@ export default class DetailsPage extends React.Component {
     _renderAppSection = (image, title, description, url) => {
         return (
             <View style={{flexDirection: 'column', marginHorizontal: 15, marginBottom: 36, alignItems: 'flex-start'}}>
-                <PinkRoundedLabel style={{marginBottom: 21}} text={"APP'S"}/>
+                <PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"APP'S"}/>
                 <View style={styles.appSectionView}>
                     <Image source={{uri: (image == null) ? 'https://i.imgur.com/7eKo6Q7.png' : image}} style={styles.appImage}/>
                     <View style={styles.appTextView}>

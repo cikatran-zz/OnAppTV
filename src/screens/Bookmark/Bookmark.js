@@ -79,7 +79,7 @@ export default class Bookmark extends React.Component {
         return (
             <View style={styles.bookmarkSection}>
                 <View style={styles.bookmarkLabelContainer}>
-                    <PinkRoundedLabel text="BOOKING" style={styles.bookingHeaderLabel}/>
+                    <PinkRoundedLabel text="BOOKING" containerStyle={styles.bookingHeaderLabel}/>
                     <View style={styles.textInputContainer}>
                         <TextInput placeholder={'Emissions'} onChangeText={text => this.setState({inputText: text})}
                                    value={this.state.inputText ? this.state.inputText : ''} style={styles.textInput}

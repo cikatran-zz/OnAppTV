@@ -332,7 +332,7 @@ export default class ZapperContent extends Component {
                     {...this._panResponder.panHandlers}
                     style={this.getMovableStyle()}
                     ref={(ref) => this._movable = ref} >
-                    <PinkRoundedLabel style={{zIndex: 1, marginLeft: 5}} text={this.state.time}/>
+                    <PinkRoundedLabel containerStyle={{zIndex: 1, marginLeft: 5}} text={this.state.time}/>
                 </Animated.View>
                 <ImageBackground style={styles.image}
                                  source={require('../../../assets/conn_bg.png')}
