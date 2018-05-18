@@ -431,6 +431,7 @@ export default class DetailsPage extends React.Component {
                     itemIndex,
                     isLive,
                     false,
+                    false,
                     () => { console.log("onDismiss") },
                     () => { console.log("onDetail") });
         }

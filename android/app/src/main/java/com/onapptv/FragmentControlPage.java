@@ -493,35 +493,40 @@ public class FragmentControlPage extends Fragment {
         }
 
         mDetail.setOnClickListener(v -> {
-            Intent data = new Intent();
-            data.putExtra("isFromBanner", ControlPageAdapter.isFromBanner());
-            data.putExtra("isLive",ControlPageAdapter.isLive());
-            if (ControlPageAdapter.isLive()) {
-                data.putExtra("item", mDataLive);
-            } else {
-                data.putExtra("item", mData);
-            }
-            if (ControlPageAdapter.isFromBanner()) {
-                WritableMap params = Arguments.createMap();
-                Gson gson = new Gson();
-                String itemJson = gson.toJson(mData);
-                params.putString("item", itemJson);
-                params.putBoolean("isLive", ControlPageAdapter.isLive());
-                sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
-                        "bannerDetailsPage",
-                        params);
-            }
-            else {
-                WritableMap params = Arguments.createMap();
-                Gson gson = new Gson();
-                String itemJson = "";
-                if (ControlPageAdapter.isLive()) itemJson = gson.toJson(mDataLive);
-                else itemJson = gson.toJson(mData);
-                params.putString("item", itemJson);
-                params.putBoolean("isLive", ControlPageAdapter.isLive());
-                sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
-                        "reloadDetailsPage",
-                        params);
+            switch (ControlPageAdapter.getStatus()) {
+                case ControlPageAdapter.IS_FROM_BANNER: {
+                    WritableMap params = Arguments.createMap();
+                    Gson gson = new Gson();
+                    String itemJson = gson.toJson(mData);
+                    params.putString("item", itemJson);
+                    params.putBoolean("isLive", ControlPageAdapter.isLive());
+                    sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
+                            "bannerDetailsPage",
+                            params);
+                    break;
+                }
+                case ControlPageAdapter.IS_FROM_LIVE_DETAILS: {
+                    WritableMap params = Arguments.createMap();
+                    Gson gson = new Gson();
+                    params.putString("item", gson.toJson(mDataLive));
+                    params.putBoolean("isLive", true);
+                    sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
+                            "reloadDetailsPage",
+                            params);
+                    break;
+                }
+                case ControlPageAdapter.IS_FROM_VOD_DETAILS: {
+                    WritableMap params = Arguments.createMap();
+                    Gson gson = new Gson();
+                    params.putString("item", gson.toJson(mData));
+                    params.putBoolean("isLive", false);
+                    sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
+                            "reloadDetailsPage",
+                            params);
+                    break;
+                }
+                default:
+                    break;
             }
             getActivity().finish();
         });

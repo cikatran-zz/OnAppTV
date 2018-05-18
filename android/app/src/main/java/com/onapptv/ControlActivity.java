@@ -30,7 +30,8 @@ public class ControlActivity extends AppCompatActivity implements FragmentContro
                 new ControlPageAdapter(getFragmentManager(),
                         (ArrayList) bundle.getSerializable("epg") ,
                         bundle.getBoolean("isLive"),
-                        bundle.getBoolean("isFromBanner"));
+                        bundle.getBoolean("isFromBanner"),
+                        bundle.getBoolean("isFromChannel"));
         mViewPager.setAdapter(adapter);
         int index = bundle.getInt("index");
         mViewPager.setCurrentItem(index);

@@ -31,47 +31,20 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
 
     public ControlPageNavigationModules(ReactApplicationContext context) {
         super(context);
-        context.addActivityEventListener(mActivityEventListener);
     }
 
     @ReactMethod
-    public void navigateControl(ReadableArray epg, int index, boolean isLive, boolean isFromBanner, Callback onDismiss, Callback onDetails) {
+    public void navigateControl(ReadableArray epg, int index, boolean isLive, boolean isFromBanner, boolean isFromChannel, Callback onDismiss, Callback onDetails) {
         Intent intent = new Intent(getReactApplicationContext(), ControlActivity.class);
         Bundle arguments = new Bundle();
         arguments.putInt("index", index);
         arguments.putBoolean("isLive", isLive);
         arguments.putBoolean("isFromBanner", isFromBanner);
+        arguments.putBoolean("isFromChannel", isFromChannel);
         arguments.putSerializable("epg", epg.toArrayList());
         intent.putExtra("control_page", arguments);
         getCurrentActivity().startActivityForResult(intent, DETAILS_PAGE_REQUEST);
     }
-
-    private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
-        @Override
-        public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(activity, requestCode, resultCode, data);
-            if (requestCode == DETAILS_PAGE_REQUEST) {
-                if (resultCode == Activity.RESULT_OK) {
-                    Bundle extras = data.getExtras();
-                    boolean isFromBanner = extras.getBoolean("isFromBanner");
-                    boolean isDismiss = extras.getBoolean("dismiss");
-                    if (isDismiss)
-                        sendEvent(getReactApplicationContext(), "dismissControlPage", null);
-                    else {
-                        boolean isLive = extras.getBoolean("isLive");
-                        HashMap item = (HashMap) extras.getSerializable("item");
-                        WritableMap params = Arguments.createMap();
-                        params.putBoolean("isLive", isLive);
-                        Gson gson = new Gson();
-                        String itemJson = gson.toJson(item);
-                        params.putString("item", itemJson);
-                        if (isFromBanner) sendEvent(getReactApplicationContext(), "bannerDetailsPage", params);
-                        else sendEvent(getReactApplicationContext(), "reloadDetailsPage", params);
-                    }
-                }
-            }
-        }
-    };
 
     private void sendEvent(ReactContext reactContext,
                            String eventName,

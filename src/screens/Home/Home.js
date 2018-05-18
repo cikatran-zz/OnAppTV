@@ -342,6 +342,7 @@ export default class Home extends Component {
                     0,
                     false,
                     true,
+                    false,
                     () => { console.log("onDismiss") },
                     () => { console.log("onDetail") });
         }
