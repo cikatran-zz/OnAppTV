@@ -233,7 +233,7 @@ export const getLive = (currentTime, page, itemPerPage) => {
                 }));
             } else {
                 resolve(client.query({
-                    query: config.queries.LIVESTB,
+                    query: config.queries.LIVENOSTB,
                     variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
                 }));
             }
@@ -744,6 +744,13 @@ export const getWatchingHistory = () => {
 
     })
 };
+
+export const getLiveEpgInChannel = (currentTime, serviceId) => {
+    return client.query({
+        query: config.queries.LIVE_CHANNEL_IN_ZAPPER,
+        variables: {currentTime: currentTime, serviceId: serviceId}
+    })
+}
 
 
 

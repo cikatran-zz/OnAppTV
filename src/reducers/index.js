@@ -33,6 +33,7 @@ import watchingHistoryReducer from "./watchingHistoryReducer";
 import epgByGenresReducer from "./epgByGenresReducer";
 import vodByGenresReducer from "./vodByGenresReducer";
 import latestVODByGenresReducer from "./latestVODByGenresReducer";
+import liveEpgInZapperReducer from "./liveEpgZapperReducer";
 
 export default combineReducers({
     nav,
@@ -68,5 +69,6 @@ export default combineReducers({
     watchingHistoryReducer,
     epgByGenresReducer,
     vodByGenresReducer,
-    latestVODByGenresReducer
+    latestVODByGenresReducer,
+    liveEpgInZapperReducer
 });

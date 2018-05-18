@@ -26,6 +26,7 @@ import * as getWatchingHistory from './getWatchingHistory'
 import * as getEPGByGenres from './getEPGByGenres'
 import * as getVODByGenres from './getVODByGenres'
 import * as getLatestVODByGenres from './getLatestVODByGenres'
+import * as getLiveEpgInZapper from './getLiveEpgInZapper'
 
 export default actions = {
     getBanner,
@@ -55,5 +56,6 @@ export default actions = {
     getWatchingHistory,
     getEPGByGenres,
     getVODByGenres,
-    getLatestVODByGenres
+    getLatestVODByGenres,
+    getLiveEpgInZapper
 };

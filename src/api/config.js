@@ -657,6 +657,67 @@ query getVODs($id: [String]!){
 }
 `;
 
+const liveChannelInZapper = gql`
+query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
+  viewer {
+    channelPagination(filter: {
+      _operators: {
+        serviceId: {
+          in: [$serviceId]
+        }
+      }
+    }, page: 1, perPage: 1) {
+      count
+      items {
+        serviceId
+        lcn
+        ipLink
+        title
+        longDescription
+        shortDescription
+        epgsData(current: $currentTime) {
+          videoId
+          genreIds
+          videoData {
+            contentId
+            durationInSeconds
+            publishDate
+            title
+            longDescription
+            shortDescription
+            feature
+            genres {
+              name
+            }
+            seriesId
+            seasonIndex
+            episodeIndex
+            type
+            impression
+            state
+            custom
+            createdAt
+            updatedAt
+            projectId
+          }
+          channelId
+          startTime
+          endTime
+          state
+          createdAt
+          updatedAt
+          projectId
+        }
+        state
+        createdAt
+        updatedAt
+        projectId
+      }
+    }
+  }
+}
+`;
+
 export default {
     serverURL: 'https://contentkit-api.mstage.io/graphql',
     queries: {
@@ -679,6 +740,6 @@ export default {
         EPG_SAME_TIME: queryEpgSameTime,
         VOD_BY_IDS: VODByIds,
         VOD_BY_GENRES: vodByGenres,
-
+        LIVE_CHANNEL_IN_ZAPPER: liveChannelInZapper
     }
 };
