@@ -181,6 +181,8 @@ export const getChannel = (limit) => {
     let zapList = null;
     return getSTBChannel()
         .then((value) => {
+            if (value == undefined || value == null)
+                value = [];
             zapList = _.cloneDeep(value);
             var serviceIDs = [];
             for (let i = 0; i < value.length; i++) {
@@ -714,6 +716,9 @@ export const getWatchingHistory = () => {
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 NativeModules.RNWatchingHistory.getWatchingHistory((error, result) => {
+                    // result = JSON.parse(result);
+                    // if (_.isEmpty(result));
+                    //     result = [];
                     try {
                         let contentIds = result.map((item)=>item.id);
                         client.query({

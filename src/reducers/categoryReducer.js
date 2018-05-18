@@ -16,7 +16,7 @@ export default function categoryReducer(state = initialState, action) {
                 isFetching: true
             };
         case actionTypes.FETCH_CATEGORY_SUCCESS:
-            let favorite = action.data.filter(item => item.favorite === true);
+            let favorite = action.data.filter(item => item.favorite === 1);
             let categoryData = [];
             if (state.data !== undefined && state.favorite !== undefined) {
                 categoryData = (favorite === null || favorite === {}) ? [] : favorite.map(cate => ({"name": cate.name}));

@@ -44,12 +44,6 @@ export default class Home extends Component {
     _vodPage = 1;
     constructor(props) {
         super(props);
-        this.state = {
-            favoriteCategories: null,
-            category: null,
-            favoriteChannels: [null],
-            resumeVOD: [null],
-        };
         this.alertVC = null;
     };
 
@@ -57,14 +51,6 @@ export default class Home extends Component {
         Orientation.lockToPortrait();
     }
 
-    _setupFavoriteChannel = (channel) => {
-        let channelData = channel ? channel.filter(item => item.favorite == 1 || item.favorite == true || item.favorite == 1.0) : [];
-        if (channelData.length == 0) {
-            channelData = [null];
-        } else {
-            this.setState({favoriteChannels: channelData});
-        }
-    };
 
     fetchData() {
         InteractionManager.runAfterInteractions(() => {
@@ -74,13 +60,8 @@ export default class Home extends Component {
             this.props.getVOD(1, 10);
             this.props.getCategory();
             this.props.getNews();
-            getChannel().then((response) => {
-                this._setupFavoriteChannel(response);
-            });
-
-            getWatchingHistory().then((response) => {
-                this.setState({resumeVOD: [response]});
-            });
+            this.props.getWatchingHistory();
+            this.props.getChannel();
         })
     }
 
@@ -107,7 +88,7 @@ export default class Home extends Component {
     };
 
     _renderChannelListItem = ({item}) => {
-        if (item == null) {
+        if (_.isEmpty(item)) {
             return (
                 <TouchableOpacity onPress={() => this._navigateToZappers()}>
                     <View style={[styles.itemContainer, {borderWidth: 1, borderColor: 'rgba(149,152,154,32)'}]}>
@@ -162,7 +143,7 @@ export default class Home extends Component {
         )
     };
 
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => index.toString();
 
     // BANNER
     _renderBanner = ({item}) => {
@@ -177,7 +158,7 @@ export default class Home extends Component {
                         source={{uri: getImageFromArray(item.originalImages, 'feature', 'landscape')}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
-                            <PinkRoundedLabel text="NEW MOVIE" style={{alignSelf: 'flex-end', marginBottom: 14}}/>
+                            <PinkRoundedLabel text="NEW MOVIE" containerStyle={{alignSelf: 'flex-end', marginBottom: 14}}/>
                             <Text style={styles.bannerTitle}>
                                 {item.title}
                             </Text>
@@ -438,8 +419,8 @@ export default class Home extends Component {
     };
 
     _navigateToCategory = (cate) => {
-        const {navigation} = this.props;
-        let data = this.state.category.filter(item => (item.favorite === true || item.favorite === 1.0));
+        const {navigation, category} = this.props;
+        let data = category.data.filter(item => (item.favorite === true || item.favorite === 1.0));
         navigation.navigate('Category', {data: data, fromItem: cate});
     };
 
@@ -555,15 +536,15 @@ export default class Home extends Component {
 
 
     render() {
-        const {banner, live, vod, ads, category, news} = this.props;
+        const {banner, live, vod, ads, category, news, watchingHistory, channel} = this.props;
 
 
 
         let bannerData = (banner.data == null || banner.data.length == 0) ? null : banner.data[0]
         let sections = [
             {data: [bannerData], showHeader: false, renderItem: this._renderBanner},
-            {data: [this.state.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
-            {data: this.state.resumeVOD, showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
+            {data: [channel.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
+            {data: [watchingHistory.data], showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
             {data: [ads], showHeader: false, renderItem: this._renderAds}
             ];
 
