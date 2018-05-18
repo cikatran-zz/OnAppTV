@@ -15,10 +15,12 @@ import {rootViewTopPadding} from '../../../utils/rootViewPadding'
 import ZapperCell from '../../../components/ZapperCell'
 import ChannelModal from "../ChannelModal/ChannelModal";
 import {colors} from "../../../utils/themeConfig";
+import IndicatorModal from "../../../components/IndicatorModal";
+import AlertModal from "../../../components/AlertModal";
 
 const favoriteImg = require('../../../assets/ic_favorite.png');
 const allImg = require('../../../assets/ic_all.png');
-const imgBackground = require('../../../assets/conn_bg.png')
+const imgBackground = require('../../../assets/zapper_channel_bg.png');
 
 export default class ZapperChannel extends Component {
 
@@ -30,6 +32,8 @@ export default class ZapperChannel extends Component {
             favoriteChannels: [],
             allChannels: []
         };
+        this.indicatorModal = null;
+        this.alertModal = null;
         this.channelModal = null;
         this.stbManager = NativeModules.STBManager;
     };
@@ -73,6 +77,7 @@ export default class ZapperChannel extends Component {
 
     _zapChannel = (item) => {
         console.log("ZAP:",item);
+        this.props.getLiveEpgInZapper(true, item.serviceID);
         NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
             if (error) {
                 console.log(error);
@@ -153,6 +158,34 @@ export default class ZapperChannel extends Component {
         this.setState({channelData: newData})
     };
 
+    _navigateToControlPage = (item) => {
+        const {navigation} = this.props;
+        if (Platform.OS !== 'ios') {
+            NativeModules.RNControlPageNavigation
+                .navigateControl([item],
+                    0,
+                    false,
+                    false,
+                    true,
+                    () => { console.log("onDismiss") },
+                    () => { console.log("onDetail") });
+        }
+        else {
+            navigation.navigate('VideoControlModal', {
+                item: item,
+                epg: [item],
+                isLive: false
+            })
+        }
+    };
+
+    componentWillReceiveProps(nextProps) {
+        const {epg} = nextProps;
+        if (epg.isFetching === false && epg.epgsData != null && epg.epgsData.length !== 0) {
+            this._navigateToControlPage(epg.epgsData[0]);
+        }
+    }
+
     _onSwitchPress = () => {
         let newData = this.state.allChannels;
         if (this.state.showAllChannels) {
@@ -166,7 +199,7 @@ export default class ZapperChannel extends Component {
     };
 
     render() {
-        const {channel} = this.props;
+        const {channel, epg} = this.props;
         if (channel.isFetching) {
             return (<View style={styles.root}>
                 <ImageBackground style={{flex:1, justifyContent:'center', alignItems:'center'}}
@@ -187,7 +220,7 @@ export default class ZapperChannel extends Component {
             </View>)
         }
 
-        if (this.state.allChannels.length == 0) {
+        if (this.state.allChannels.length === 0) {
             this.state.allChannels = _.cloneDeep(channel.data);
             this._filterFavoriteChannel();
             if (this.state.showAllChannels) {
@@ -196,12 +229,25 @@ export default class ZapperChannel extends Component {
                 this.state.channelData = this.state.favoriteChannels;
             }
         }
+        if (epg.isFetching === true && this.indicatorModal != null) {
+            this.indicatorModal.state.isShow = true;
+        }
+        if (epg.isFetching === false && this.indicatorModal != null) {
+            if (epg.epgsData == null) {
+                this.alertModal.state.message = "Channel is offline";
+                this.alertModal.state.isShow = true;
+                this.indicatorModal.state.isShow = false;
+            }
+        }
+
         return (
             <View style={styles.root}>
                 <StatusBar
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content'/>
+                <IndicatorModal ref={(ref) => this.indicatorModal = ref}/>
+                <AlertModal ref={(ref) => this.alertModal = ref}/>
                 <ChannelModal ref={(modal) => this.channelModal = modal} channels={this.state.channelData}
                               onFavoriteItem={this._favoriteItem}/>
                 <ImageBackground style={styles.image}
