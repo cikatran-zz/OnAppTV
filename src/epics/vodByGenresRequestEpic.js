@@ -7,8 +7,10 @@ import { getVODByGenresFailure, getVODByGenresSuccess } from '../actions/getVODB
 const getVODByGenresEpic = (action$) =>
     action$.ofType(actionTypes.FETCHING_VOD_BY_GENRES)
         .mergeMap(action =>
-            Observable.from(getVODByGenres(action.genresId, action.limit, action.skip))
-                .map(response => getVODByGenresSuccess(response.data))
+            Observable.from(getVODByGenres(action.genresId, action.page, action.perPage))
+                .map(response =>
+                    getVODByGenresSuccess(response.data, action.page, action.genresId)
+                )
                 .catch(error => Observable.of(getVODByGenresFailure(error)))
         );
 

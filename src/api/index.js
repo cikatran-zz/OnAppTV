@@ -181,6 +181,8 @@ export const getChannel = (limit) => {
     let zapList = null;
     return getSTBChannel()
         .then((value) => {
+            if (value == undefined || value == null)
+                value = [];
             zapList = _.cloneDeep(value);
             var serviceIDs = [];
             for (let i = 0; i < value.length; i++) {
@@ -266,7 +268,7 @@ export const getCategory = () => {
                         categoriesResults.push({
                             id: categories[i]._id,
                             name: name,
-                            favorite:  (favoriteCategories[name] == null) ? false : favoriteCategories[name]
+                            favorite:  (favoriteCategories[name] == null) ? 0 : favoriteCategories[name]
                         });
                     }
                     resolve(categoriesResults);
@@ -290,10 +292,10 @@ export const getEpgs = (serviceId) => {
     })
 };
 
-export const getVODByGenres = (genresId, limit, skip) => {
+export const getVODByGenres = (genresId, page, perPage) => {
     return client.query({
         query: config.queries.VOD_BY_GENRES,
-        variables: {genresId: genresId, limit: limit, skip: skip}
+        variables: {genresId: genresId, page: page, perPage: perPage}
     })
 };
 
@@ -714,6 +716,9 @@ export const getWatchingHistory = () => {
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 NativeModules.RNWatchingHistory.getWatchingHistory((error, result) => {
+                    // result = JSON.parse(result);
+                    // if (_.isEmpty(result));
+                    //     result = [];
                     try {
                         let contentIds = result.map((item)=>item.id);
                         client.query({

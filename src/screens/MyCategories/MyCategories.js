@@ -31,7 +31,7 @@ export default class MyCategories extends Component {
 
     _changeFavorite(category, isFavorite) {
         var toggles = this.state.toggleState;
-        toggles[category] = isFavorite;
+        toggles[category] = isFavorite ? 1 : 0;
         this.setState({toggleState: toggles});
     }
 
@@ -57,15 +57,14 @@ export default class MyCategories extends Component {
     _keyExtractor = (item, index) => index;
 
     _onUpdateFavoriteCategories = () => {
-        const {updateFavorite} = this.props.navigation.state.params;
         let keys = Object.keys(this.state.toggleState);
         var favorites = []
         for (var i = 0; i < keys.length; i++) {
             if (this.state.toggleState[keys[i]]) {
-                favorites.push({name: keys[i], favorite: true});
+                favorites.push({name: keys[i], favorite: 1});
             }
         }
-        updateFavorite(favorites);
+        this.props.updateFavorite(favorites);
         NativeModules.RNUserKit.storeProperty("favorite_categories", this.state.toggleState, (error, results) => {
             if (error) {
                 console.log(error);

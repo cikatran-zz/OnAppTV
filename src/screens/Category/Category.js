@@ -12,6 +12,9 @@ export default class Category extends Component {
         super(props);
         this.names = null;
         this.startCategory = "";
+        this.state = {
+            position: 'begin'
+        }
     };
 
     componentDidMount() {
@@ -56,17 +59,41 @@ export default class Category extends Component {
         navigation.goBack();
     };
 
+    _onIndexChanged = (index) => {
+        const {data} = this.props.navigation.state.params;
+        let pagePosition = this._getPagePosition(index, data.length);
+        this.setState({
+            position: pagePosition
+        })
+    }
+
+    _getBackBtnImage = () =>{
+        const {position} = this.state;
+        let backBtnImage = null;
+        if (position == 'begin') {
+            backBtnImage = require('../../assets/ic_left_arrow.png');
+        } else {
+            backBtnImage = require('../../assets/ic_white_left_arrow.png');
+        }
+
+        return (
+            <Image source={backBtnImage} style={styles.backImage}/>
+        )
+    }
+
     render() {
         const {data, fromItem} = this.props.navigation.state.params;
         let startIndex = _.findIndex(data, {'name': fromItem})
-
         return (
             <View style={{width: '100%', height: '100%'}}>
                 <StatusBar
                     translucent={true}
                     backgroundColor='white'
                     barStyle='dark-content'/>
-                <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false} index={startIndex}>
+                <TouchableOpacity onPress={() => this.props.navigation.goBack()} style={styles.backButton}>
+                    {this._getBackBtnImage()}
+                </TouchableOpacity>
+                <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false} index={startIndex} onIndexChanged={this._onIndexChanged}>
                     {data.map((genres, index) => {
                         return (<CategoryPageView pagePosition={this._getPagePosition(index, data.length)}
                                                   header={genres.name}
@@ -87,6 +114,18 @@ const styles = StyleSheet.create({
 
     pageViewStyle: {
         backgroundColor: colors.whiteBackground
+    },
+    backButton: {
+        paddingHorizontal: 15,
+        paddingVertical: 6,
+        left: 2,
+        top: 42,
+        position: 'absolute',
+        zIndex: 10
+    },
+    backImage: {
+        height: 13,
+        resizeMode: 'cover'
     },
 
 });

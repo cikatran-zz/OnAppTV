@@ -16,7 +16,9 @@ function mapStateToProps(state) {
         vod: state.vodReducer,
         ads: state.adsReducer,
         category: state.categoryReducer,
-        news: state.newsReducer
+        news: state.newsReducer,
+        watchingHistory: state.watchingHistoryReducer,
+        channel: state.channelReducer
     }
 }
 
@@ -27,7 +29,9 @@ function mapDispatchToProps(dispatch) {
         getVOD: (page, itemPerPage) => dispatch(getVOD(page, itemPerPage)),
         getAds: () => dispatch(getAds()),
         getCategory: () => dispatch(getCategory()),
-        getNews: () => dispatch(getNews())
+        getNews: () => dispatch(getNews()),
+        getWatchingHistory: () => dispatch(getWatchingHistory()),
+        getChannel: () => dispatch(getChannel())
     }
 }
 

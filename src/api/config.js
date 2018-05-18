@@ -102,12 +102,12 @@ query queryVOD($perPage: Int, $page: Int){
     	  title
     	  longDescription
     	  shortDescription
-    	  feature
+    	  
     	  seriesId
     	  seasonIndex
     	  episodeIndex
     	  type
-    	  impression
+    	  
     	  updatedAt
     	  createdAt
         originalImages {
@@ -194,7 +194,7 @@ const lastGQL = `}
             title
             longDescription
             shortDescription
-            feature
+            
             genres {
               name
             }
@@ -202,7 +202,7 @@ const lastGQL = `}
             seasonIndex
             episodeIndex
             type
-            impression
+            
             state
             custom
             createdAt
@@ -288,12 +288,12 @@ query getEPGByChannel($channelId: Float){
             title
             longDescription
             shortDescription
-            feature
+            
             seriesId
             seasonIndex
             episodeIndex
             type
-            impression
+            
             state
             createdAt
             updatedAt
@@ -338,12 +338,12 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int, $contentId: [S
           genreIds
           longDescription
           shortDescription
-          feature
+          
           seriesId
           seasonIndex
           episodeIndex
           type
-          impression
+          
           updatedAt
           createdAt
           custom
@@ -386,12 +386,12 @@ query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int, $contentId: [Strin
           }
           longDescription
           shortDescription
-          feature
+          
           seriesId
           seasonIndex
           episodeIndex
           type
-          impression
+          
           updatedAt
           createdAt
           custom
@@ -411,16 +411,16 @@ query genresVOD($genresId: [MongoID]){
           in: $genresId
         }
       }
-    }, sort: FEATURE_DESC) {
+    }, sort: _DESC) {
       contentId
       durationInSeconds
       title
-      feature
+      
       seriesId
       seasonIndex
       episodeIndex
       type
-      impression
+      
       state
       genresData {
         name
@@ -440,38 +440,48 @@ query genresVOD($genresId: [MongoID]){
 `;
 
 const vodByGenres = gql`
-query genresVOD($genresId: MongoID, $limit: Int, $skip: Int){
+query genresVOD($genresId: MongoID, $page: Int, $perPage: Int){
   viewer{
-    videoMany(filter: {
+    videoPagination(page: $page, perPage: $perPage, filter: {
       _operators: {
         genreIds: {
           in: [$genresId]
         }
       }
-    }, limit: $limit, skip: $skip) {
-      contentId
-      durationInSeconds
-      title
-      feature
-      seriesId
-      seasonIndex
-      episodeIndex
-      type
-      impression
-      state
-      genresData {
-        name
-      }
-      genreIds
-      durationInSeconds
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-      }
-      custom
+    }) {
+    	items {
+    	  contentId
+    	  durationInSeconds
+    	  publishDate
+    	  title
+    	  longDescription
+    	  shortDescription
+    	  
+    	  seriesId
+    	  seasonIndex
+    	  episodeIndex
+    	  type
+    	  
+    	  updatedAt
+    	  createdAt
+        originalImages {
+          height
+          width
+          url
+          name
+          fileName
+          scaledImage {
+              height
+              width
+              url
+          }
+        }
+        genreIds
+        genresData {
+          name
+        }
+        custom
+    	}
     }
   }
 }
@@ -561,12 +571,12 @@ query searchBc($id: String) {
       title
       longDescription
       shortDescription
-      feature
+      
       seriesId
       seasonIndex
       episodeIndex
       type
-      impression
+      
       state
       createdAt
       updatedAt
@@ -608,12 +618,12 @@ query getEpgSameTime($currentTime: Date, $id: [MongoID]){
         title
         longDescription
         shortDescription
-        feature
+        
         seriesId
         seasonIndex
         episodeIndex
         type
-        impression
+        
         custom
       }
       startTime
@@ -639,7 +649,7 @@ query getVODs($id: [String]!){
       seasonIndex
       episodeIndex
       type
-      impression
+      
       metadata
       originalImages {
         height

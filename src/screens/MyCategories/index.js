@@ -1,6 +1,6 @@
 import MyCategories from './MyCategories'
 import {connect} from 'react-redux';
-import {getCategory} from "../../actions/getCategory";
+import {updateFavorite} from "../../actions/updateFavorite";
 
 function mapStateToProps(state) {
     return {
@@ -10,6 +10,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        updateFavorite: (favorites) => dispatch(updateFavorite(favorites))
     }
 }
 

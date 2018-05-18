@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions, TouchableOpacity
+    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions, TouchableOpacity, ActivityIndicator
 } from 'react-native'
 import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeConfig'
 import {connect} from "react-redux";
@@ -15,7 +15,7 @@ import {getEPGByGenres, getVODByGenres} from "../../../api";
 import _ from 'lodash'
 import {DotsLoader} from "react-native-indicator";
 
-class CategoryPageView extends React.Component{
+class CategoryPageView extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -32,36 +32,9 @@ class CategoryPageView extends React.Component{
     componentDidMount() {
         const {genresId} = this.props;
         this._getEPG(genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
-        this._getVOD(genresId);
-        // this.props.getLatestVOD(genresId);
-        // this.props.getEPG(10, 0, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
-        // this.props.getVOD(10,3,genresId);
+        this.props.getVODByGenres(1, 10, genresId);
     };
 
-    _getVOD = (genresId) => {
-        this.setState({latestVODLoading: true, vodLoading: true});
-        getVODByGenres(genresId, 10, this.vodQuerySkip).then((value)=> {
-            let newVOD = value.data.viewer.videoMany;
-            let newLatestVOD = this.state.latestVOD;
-            let newBelowVOD = this.state.vod;
-            if (newVOD == null) {
-                this.setState({latestVODLoading: false, vodLoading: false});
-                return
-            }
-            if (this.vodQuerySkip === 0) {
-                // Update latestVOD
-                newLatestVOD = newVOD.slice(0,3);
-                newBelowVOD = newVOD.slice(3);
-            } else {
-                newBelowVOD = newBelowVOD.concat(newVOD);
-            }
-            this.vodQuerySkip = (newVOD != null) ? newVOD.length : 0;
-            this.setState({latestVOD: newLatestVOD, vod: newBelowVOD, latestVODLoading: false, vodLoading: false})
-        }).catch((err) => {
-            console.log(err);
-            this.setState({latestVODLoading: false, vodLoading: false});
-        });
-    };
 
     _getEPG = (genresId, currentTime) => {
         this.setState({epgLoading: true});
@@ -91,25 +64,7 @@ class CategoryPageView extends React.Component{
         });
     };
 
-    _getVODFromScratch = (genresId) => {
-        this.setState({latestVODLoading: true, vodLoading: true});
-        getVODByGenres(genresId, 10, 0).then((value)=> {
-            let newVOD = value.data.viewer.videoMany;
-            if (newVOD == null) {
-                this.setState({latestVODLoading: false, vodLoading: false});
-                return
-            }
-            let newLatestVOD = newVOD.slice(0,3);
-            let newBelowVOD = newVOD.slice(3);
-            this.vodQuerySkip = (newVOD != null) ? newVOD.length : 0;
-            this.setState({latestVOD: newLatestVOD, vod: newBelowVOD, latestVODLoading: false, vodLoading: false})
-        }).catch((err) => {
-            console.log(err);
-            this.setState({latestVODLoading: false, vodLoading: false});
-        });
-    };
-
-    _keyExtractor = (item, index) => index + "";
+    _keyExtractor = (item, index) => index.toString();
 
     _renderSlotMachines = ({item}) => {
         if (item == null) {
@@ -121,7 +76,7 @@ class CategoryPageView extends React.Component{
                 { item.map((it, index)=> {
                     let image = getImageFromArray(it.originalImages, 'feature', 'landscape');
                     return (
-                        <TouchableOpacity onPress={()=>this.props.onVideoPress(it,false)}>
+                        <TouchableOpacity key={index} onPress={()=>this.props.onVideoPress(it,false)}>
                             <Image
                                 key={image + index}
                                 style={styles.slotMachineImage}
@@ -226,8 +181,35 @@ class CategoryPageView extends React.Component{
             horizontal={false}
             showsVerticalScrollIndicator={false}
             data={item}
+            ListFooterComponent={this._renderVODFooter}
+            onEndReached={this._fetchMoreVOD}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderVODItem} />)
+    }
+
+    _renderVODFooter = () => {
+        const {vod, genresId} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        if (!vodMap)
+            return null;
+        if (vodMap.isFetching) {
+            return (
+                <View
+                    style={{height: 50, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
+    _fetchMoreVOD = () => {
+        const {genresId, vod} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        let vodPage = vodMap.page;
+        vodPage++;
+        this.props.getVODByGenres(vodPage, 10, genresId);
     }
 
     _renderListFooter = () => (
@@ -238,14 +220,9 @@ class CategoryPageView extends React.Component{
         }}/>
     );
 
-    _onRefresh = ()=> {
-        const {genresId} = this.props;
-        this._getEPGFromScratch(genresId,moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
-        this._getVODFromScratch(genresId)
-    };
 
     _fetchMore = ()=> {
-        const {genresId} = this.props;
+        const {genresId, vod} = this.props;
         let noEPGs = (this.state.epg == null) ? 0 : this.state.epg.length;
         if (noEPGs % 10 === 0 && noEPGs !== 0) {
             console.log("fetch more");
@@ -261,6 +238,14 @@ class CategoryPageView extends React.Component{
     };
 
     render(){
+        const {vod, genresId} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        let latestVOD = [];
+        let vodData = [];
+        if (vodMap) {
+            latestVOD = vodMap.latestVOD;
+            vodData = vodMap.vod;
+        }
         if (this.state.epgLoading && this.state.vodLoading && this.state.latestVODLoading) {
             return (
                 <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
@@ -270,10 +255,8 @@ class CategoryPageView extends React.Component{
         }
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
-                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()} showBackButton={true}/>
+                <HeaderLabel position={this.props.pagePosition} text={this.props.header} keyExtractor={this._keyExtractor} goBack={()=>this.props.goBack()} showBackButton={false}/>
                 <SectionList
-                    refreshing={this.state.latestVODLoading && this.state.epgLoading}
-                    onRefresh={()=>this._onRefresh()}
                     style={[styles.container, {marginTop: 0, backgroundColor: colors.whiteBackground}]}
                     keyExtractor={this._keyExtractor}
                     stickySectionHeadersEnabled={false}
@@ -283,9 +266,9 @@ class CategoryPageView extends React.Component{
                     onEndReached={this._fetchMore}
                     ListFooterComponent={this._renderListFooter}
                     sections={[
-                        {data: [this.state.latestVOD], showHeader: false, renderItem: this._renderSlotMachines},
+                        {data: [latestVOD], showHeader: false, renderItem: this._renderSlotMachines},
                         {data: [this.state.epg], showHeader: this.state.epg != null && this.state.epg.length > 0, title: "ON LIVE", renderItem: this._renderOnLiveList},
-                        {data: [this.state.vod], showHeader: this.state.vod != null && this.state.vod.length > 0, title: "VOD", renderItem: this._renderVODList}
+                        {data: [vodData], showHeader: vodData != null && vodData.length > 0, title: "VOD", renderItem: this._renderVODList}
                     ]}
                 />
             </View>
