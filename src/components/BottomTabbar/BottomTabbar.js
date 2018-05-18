@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View, NativeModules} from 'react-native'
 import PropTypes from 'prop-types'
 import {colors} from '../../utils/themeConfig'
@@ -13,10 +13,11 @@ const tabs = [
     'Setting',
 ];
 
+let checkSTBInterval;
 
-
-class BottomTabbar extends React.PureComponent {
+class BottomTabbar extends Component {
     animation = null;
+
     constructor(props){
         super(props);
         this.state = {
@@ -25,7 +26,7 @@ class BottomTabbar extends React.PureComponent {
     }
 
     componentDidMount() {
-        setInterval(() => {
+        checkSTBInterval = setInterval(() => {
             NativeModules.STBManager.isConnect((connectStr) => {
                 let json = JSON.parse(connectStr).is_connected
                 if (json === true) {
@@ -69,12 +70,18 @@ class BottomTabbar extends React.PureComponent {
         }, 2000);
     }
 
-    _resetAnimation = () => {
-        this.animation.reset();
+    componentWillUnmount() {
+            clearInterval(checkSTBInterval)
     }
 
-    _playAnimation = () => {
-        this.animation.play();
+    _resetAnimation() {
+        if (this.animation != null)
+            this.animation.reset();
+    }
+
+    _playAnimation() {
+        if (this.animation != null)
+            this.animation.play();
     }
     _renderTab = (tab, i) => {
         const {navigation} = this.props;

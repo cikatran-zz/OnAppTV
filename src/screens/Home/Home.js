@@ -420,7 +420,7 @@ export default class Home extends Component {
 
     _navigateToCategory = (cate) => {
         const {navigation, category} = this.props;
-        let data = category.data.filter(item => (item.favorite === true || item.favorite === 1.0));
+        let data = category.data.filter(item => (item.favorite === 1));
         navigation.navigate('Category', {data: data, fromItem: cate});
     };
 

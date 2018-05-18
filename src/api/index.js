@@ -268,7 +268,7 @@ export const getCategory = () => {
                         categoriesResults.push({
                             id: categories[i]._id,
                             name: name,
-                            favorite:  (favoriteCategories[name] == null) ? false : favoriteCategories[name]
+                            favorite:  (favoriteCategories[name] == null) ? 0 : favoriteCategories[name]
                         });
                     }
                     resolve(categoriesResults);
