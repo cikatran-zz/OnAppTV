@@ -30,7 +30,7 @@ class CategoryPageView extends Component{
         InteractionManager.runAfterInteractions(() => {
             this.props.getEPG(10, 0, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
             this.props.getVODByGenres(1, 10, genresId);
-        })
+        });
     };
 
 

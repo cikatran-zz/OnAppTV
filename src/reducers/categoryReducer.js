@@ -19,7 +19,7 @@ export default function categoryReducer(state = initialState, action) {
             let favorite = action.data.filter(item => item.favorite === 1);
             let categoryData = [];
             if (state.data !== undefined && state.favorite !== undefined) {
-                categoryData = (favorite === null || favorite === {}) ? [] : favorite.map(cate => ({"name": cate.name}));
+                categoryData = (favorite === null || favorite === {}) ? [] : favorite;
             }
             categoryData.push({"name": "_ADD"});
             return {

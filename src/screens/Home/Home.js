@@ -421,8 +421,8 @@ export default class Home extends Component {
 
     _navigateToCategory = (cate) => {
         const {navigation, category} = this.props;
-        let data = category.data.filter(item => (item.favorite === 1));
-        navigation.navigate('Category', {data: data, fromItem: cate});
+        let favoriteData = _.slice(category.favorite, 0, category.favorite.length - 1)
+        navigation.navigate('Category', {data: favoriteData, fromItem: cate});
     };
 
     _renderCategoryItem = ({item}) => {
