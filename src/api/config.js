@@ -185,6 +185,20 @@ const lastGQL = `}
         longDescription
         shortDescription
         epgsData(current: $currentTime) {
+            channelData {
+              serviceId
+              lcn
+              ipLink
+              updatedAt
+              createdAt
+              title
+              longDescription
+              shortDescription
+              state
+              custom
+              projectId
+              kind
+            }
           videoId
           genreIds
           videoData {
@@ -194,7 +208,18 @@ const lastGQL = `}
             title
             longDescription
             shortDescription
-            
+            originalImages {
+              height
+              width
+              url
+              name
+              fileName
+              scaledImage {
+                  height
+                  width
+                  url
+              }
+            }
             genres {
               name
             }
@@ -232,7 +257,8 @@ const ipLinkParam = `ipLink: {
         }`;
 const liveQuerySTB = gql`${firstGQL}${lastGQL}`;
 
-const liveQueryNoSTB = gql`${firstGQL}${ipLinkParam}${lastGQL}`;
+//const liveQueryNoSTB = gql`${firstGQL}${ipLinkParam}${lastGQL}`;
+const liveQueryNoSTB = liveQuerySTB;
 
 
 const epgQuery = gql`
@@ -331,6 +357,11 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
             url
             name
             fileName
+            scaledImage {
+              height
+              width
+              url
+            }
           }
           genreIds
           longDescription
@@ -377,6 +408,11 @@ query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int){
             url
             name
             fileName
+            scaledImage {
+              height
+              width
+              url
+            }
           }
           longDescription
           shortDescription
