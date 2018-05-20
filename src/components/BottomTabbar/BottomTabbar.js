@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, NativeModules} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, NativeModules, DeviceEventEmitter} from 'react-native'
 import PropTypes from 'prop-types'
 import {colors} from '../../utils/themeConfig'
 import BlurView from '../BlurView'
@@ -26,48 +26,34 @@ class BottomTabbar extends Component {
     }
 
     componentDidMount() {
-        checkSTBInterval = setInterval(() => {
-            NativeModules.STBManager.isConnect((connectStr) => {
-                let json = JSON.parse(connectStr).is_connected
-                if (json === true) {
-                    NativeModules.STBManager.getSTBStatus((error, events) => {
-                        try {
-                            let result = JSON.parse(events[0]);
-                            if (result['return'] === "1") {
-                                if (result['statuses'].length === 0 || (result['status'])['ACTIVE_STANDBY'] === undefined || (result['status'])['ACTIVE_STANDBY'] === null) {
-                                    this.setState({
-                                        isPlaying: false
-                                    })
-                                    this._resetAnimation();
-                                }
-                                else {
-                                    this.setState({
-                                        isPlaying: true
-                                    })
-                                    this._playAnimation();
-                                }
-                            }
-                            else {
-                                this.setState({
-                                    isPlaying: false
-                                })
-                                this._resetAnimation();
-                            }
-                        }
-                        catch (e) {
-                            console.log('Error when reading STB status');
-                        }
+        NativeModules.STBManager.getSTBStatus((error, events) => {
+            let statuses = JSON.parse(events[0])['statuses'];
+            if (statuses.length !== 0)
+                this._playAnimation();
+        });
 
-                    })
+        DeviceEventEmitter.addListener('receiveEvent', (e) => {
+            const {data} = e;
+            if (data !== undefined) {
+                let event = JSON.parse(data);
+                switch(event['notify_event']) {
+                    case 'HIG_NOTIFY_EVENT_PLAY_STOP':
+                        this._resetAnimation();
+                        break;
+                    case 'HIG_NOTIFY_EVENT_PLAY_START':
+                        this._playAnimation();
+                        break;
+                    case 'HIG_NOTIFY_EVENT_SIGNAL_LOST':
+                        this._resetAnimation();
+                        break;
+                    case 'HIG_NOTIFY_EVENT_SIGNAL_LOCK':
+                        this._playAnimation();
+                        break;
+                    default:
+                        this._playAnimation();
                 }
-                else {
-                    this.setState({
-                        isPlaying: false
-                    })
-                    this._resetAnimation();
-                }
-            })
-        }, 2000);
+            }
+        });
     }
 
     componentWillUnmount() {
