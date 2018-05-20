@@ -372,7 +372,15 @@ export default class DetailsPage extends React.Component {
     }
 
     _renderListVideoItem = ({item}) => {
-        let videoData = this._isFromChannel() ? item.videoData : item
+        let videoData = this._isFromChannel() ? item.videoData : item;
+        let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
+        console.log('Data', videoData, currentItem);
+        if (this._isFromChannel() && videoData.contentId === currentItem.videoData.contentId) {
+            return null;
+        }
+        if (!this._isFromChannel() && videoData.contentId === currentItem.contentId) {
+            return null;
+        }
 
         if (videoData) {
             return (
@@ -425,6 +433,7 @@ export default class DetailsPage extends React.Component {
         if (Platform.OS !== 'ios') {
             let data = epg.data.length !== 0 ? epg.data : [item]
             let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+            console.log('Index', itemIndex);
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
                     itemIndex,

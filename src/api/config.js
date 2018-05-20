@@ -306,15 +306,12 @@ query getEPGByChannel($channelId: Float){
 `;
 
 const relatedEpgQuery = gql`
-query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int, $contentId: [String]){
+query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
   viewer{
     videoPagination(page: $page, perPage: $perPage,filter: {
       _operators: {
         genreIds: {
             in: $genreIds
-        },
-        contentId: {
-            nin: $contentId
         }
       }
     })  {
@@ -354,16 +351,13 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int, $contentId: [S
 }
 `
 const seriesEpgQuery = gql`
-query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int, $contentId: [String]){
+query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int){
     viewer{
   
     videoPagination(filter: {
       _operators: {
         seriesId: {
             in: $id
-        },
-        contentId: {
-            nin: $contentId
         }
       }
     }, page: $page, perPage: $perPage) {
