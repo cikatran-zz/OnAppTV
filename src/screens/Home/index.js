@@ -8,6 +8,7 @@ import {getAds} from "../../actions/getAds";
 import {getCategory} from "../../actions/getCategory";
 import {getNews} from "../../actions/getNews";
 import {getWatchingHistory} from "../../actions/getWatchingHistory";
+import {getPlaylist} from '../../actions/getPlaylist'
 
 function mapStateToProps(state) {
     return {
@@ -18,7 +19,8 @@ function mapStateToProps(state) {
         category: state.categoryReducer,
         news: state.newsReducer,
         watchingHistory: state.watchingHistoryReducer,
-        channel: state.channelReducer
+        channel: state.channelReducer,
+        playlist: state.playlistReducer
     }
 }
 
@@ -31,7 +33,8 @@ function mapDispatchToProps(dispatch) {
         getCategory: () => dispatch(getCategory()),
         getNews: () => dispatch(getNews()),
         getWatchingHistory: () => dispatch(getWatchingHistory()),
-        getChannel: () => dispatch(getChannel())
+        getChannel: () => dispatch(getChannel()),
+        getPlaylist: (playlist) => dispatch(getPlaylist(playlist))
     }
 }
 

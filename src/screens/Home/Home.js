@@ -62,6 +62,12 @@ export default class Home extends Component {
             this.props.getNews();
             this.props.getWatchingHistory();
             this.props.getChannel();
+            this.props.getPlaylist("VIDEOS FOR YOU");
+            this.props.getPlaylist("POPULAR LIVE");
+            this.props.getPlaylist("LIVE FOR YOU");
+            this.props.getPlaylist("POPULAR SERIES");
+            this.props.getPlaylist("SERIES FOR YOU");
+            this.props.getPlaylist("POPULAR VIDEOS");
         })
     }
 
@@ -161,9 +167,6 @@ export default class Home extends Component {
                             <PinkRoundedLabel text="NEW MOVIE" containerStyle={{alignSelf: 'flex-end', marginBottom: 14}}/>
                             <Text style={styles.bannerTitle}>
                                 {item.title}
-                            </Text>
-                            <Text style={styles.bannerSubtitle}>
-                                {item.shortDescription}
                             </Text>
                         </View>
                     </ImageBackground>
@@ -412,6 +415,36 @@ export default class Home extends Component {
         )
     }
 
+    _renderPlaylist = ({item}) => {
+        if (item == null || item[0] == null) {
+            return (
+                <View style={{flex: 1}}>
+                    <Text style={styles.noInternetConnection}>No data found. Please check the internet connection</Text>
+                </View>
+            )
+        }
+        return (
+            <FlatList
+                style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                data={item}
+                onEndReachedThreshold={0.5}
+                keyExtractor={this._keyExtractor}
+                renderItem={this._renderPlaylistItem}/>
+        )
+    }
+
+    _renderPlaylistItem = ({item}) => {
+
+        return (
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.type ? item.type : "N/A"}</Text>
+            </TouchableOpacity>)
+    };
+
     // CATEGORY
 
     _navigateToMyCategories = () => {
@@ -535,6 +568,20 @@ export default class Home extends Component {
         )
     };
 
+    _addPlaylistSection(playlistTitle, sections) {
+        const {playlist} = this.props;
+        let playlistMap = playlist.playlistMap.get(playlistTitle);
+        let playlistData = [];
+        if (playlistMap) {
+            if (!_.isEmpty(playlistMap))
+                playlistData = playlistMap.playlist;
+        }
+        if (playlistData !== null && playlistData.length > 0) {
+            sections.push({data: [playlistData], title: playlistTitle, showHeader: true, renderItem: this._renderPlaylist});
+        }
+
+    }
+
 
     render() {
         const {banner, live, vod, ads, category, news, watchingHistory, channel} = this.props;
@@ -548,6 +595,13 @@ export default class Home extends Component {
             {data: [watchingHistory.data], showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
             {data: [ads], showHeader: false, renderItem: this._renderAds}
             ];
+
+        this._addPlaylistSection("VIDEOS FOR YOU", sections);
+        this._addPlaylistSection("POPULAR LIVE", sections);
+        this._addPlaylistSection("LIVE FOR YOU", sections);
+        this._addPlaylistSection("POPULAR SERIES", sections);
+        this._addPlaylistSection("SERIES FOR YOU", sections);
+        this._addPlaylistSection("POPULAR VIDEOS", sections);
 
         if (live.data !== null && live.data.length > 0) {
             let epgsDataArray = _.filter(live.data, (item) =>  {item.epgsData != null});

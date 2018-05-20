@@ -61,6 +61,18 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
 }
 `
 
+const playlistQuery = gql`
+query queryPlaylist($playList: String) {
+  viewer{
+    playlistOne(filter: {
+      title:$playList
+    }) {
+      mediaData
+    }
+  }
+}
+`;
+
 const bannerQuery = gql`
 query {
   viewer{
@@ -732,6 +744,7 @@ export default {
     serverURL: 'https://contentkit-api.mstage.io/graphql',
     queries: {
         BANNER: bannerQuery,
+        PLAYLIST: playlistQuery,
         CHANNEL: channelQuery,
         ADS: adsQuery,
         CATEGORY: categoryQuery,
