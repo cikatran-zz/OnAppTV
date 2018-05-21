@@ -29,7 +29,7 @@ export default class ZapperContent extends Component {
     _offsetRate = 0;
     _currentTime = null;
     _timeAtMove = moment();
-    alertVC = null
+    alertVC = null;
     constructor(props) {
         super(props);
         this.state = {
@@ -116,7 +116,7 @@ export default class ZapperContent extends Component {
         let currentTime = moment();
         let showTime = moment(item.startTime);
         if (showTime.isAfter(currentTime)){
-            this._showRecordModal(item)
+            this._checkConnectionAndShowRecord(item)
         } else {
             NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lCN}),(error, events) => {
                 if (error) {
@@ -210,6 +210,24 @@ export default class ZapperContent extends Component {
         })
     }
 
+    _checkConnectionAndShowRecord = (item) => {
+        NativeModules.STBManager.isConnect((connectStr) => {
+            let isConnected = JSON.parse(connectStr).is_connected
+            if (isConnected) {
+                this._showRecordModal(item);
+            }
+            else {
+               this._showAlertDialog("You must connect to the STB");
+            }
+        })
+    }
+
+    _showAlertDialog = (message) => {
+        if (!this.alertVC.state.isShow) {
+            this.alertVC.setState({isShow: true, message: message})
+        }
+    }
+
     _dismissRecordModal = () => {
         this.setState({
           recordModalVisibility: false
@@ -246,29 +264,32 @@ export default class ZapperContent extends Component {
           if (isConnected) {
               NativeModules.STBManager.addPvrBooKListWithJson(JSON.stringify(json), (error, events) => {
                 if (JSON.parse(events[0]) === '1') {
-                  if (!this.alertModal.state.isShow) {
-                    this.alertModal.setState({isShow: true, message: "Book successfully"})
-                  }
+                  this._showAlertDialog("Book successfully");
                 }
                 else {
-                  if (!this.alertModal.state.isShow) {
-                    this.alertModal.setState({isShow: true, message: "Book failure"})
-                  }
+                  this._showAlertDialog("Book failure");
                 }
               })
-
+          }
+          else {
+              this._showAlertDialog("You must connect to the STB");
           }
       })
     }
 
-    _renderRecordModal = () => {
-        const {currentEpg} = this.state
-        let epgItem = currentEpg
+    _simpleDataFormat = (time) => {
+        return moment(time).format("YYYY-MM-DD hh:mm:ss")
+    }
 
-        let iconUrl = ''
-        let title = 'No data available'
+    _renderRecordModal = () => {
+        const {currentEpg} = this.state;
+        console.log('Current Epg', currentEpg);
+        let epgItem = currentEpg;
+
+        let iconUrl = '';
+        let title = 'No data available';
         if (epgItem !== undefined) {
-            iconUrl = getImageFromArray(epgItem.originalImages, "landscape", "feature");
+            iconUrl = getImageFromArray(epgItem.videoData.originalImages, "landscape", "feature");
             if (epgItem.videoData && epgItem.videoData.title) {
                 title = epgItem.videoData.title
             }
@@ -441,7 +462,7 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   yesNoButtonContainer: {
-    padding: 5
+    padding: 20
   }
 
 });
