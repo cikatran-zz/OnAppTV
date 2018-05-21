@@ -194,15 +194,26 @@ class CategoryPageView extends Component{
     _fetchMoreLive = () => {
         const {genresId, epg} = this.props;
         let epgMap = epg.epgMap.get(genresId);
-        this.props.getEPG(10, epgMap.skip, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
+        if (epg.data != null) {
+            if (this.props.epg.data.length === epgMap.skip * 10) {
+                this.props.getEPG(10, epgMap.skip, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
+            }
+        }
     }
 
     _fetchMoreVOD = () => {
+
         const {genresId, vod} = this.props;
         let vodMap = vod.vodMap.get(genresId);
         let vodPage = vodMap.page;
-        vodPage++;
-        this.props.getVODByGenres(vodPage, 10, genresId);
+        if (vod.data != null) {
+            if (vod.data.length === this.currentPage * 10) {
+                vodPage++;
+                this.props.getVODByGenres(vodPage, 10, genresId);
+            }
+        }
+
+
     }
 
     _renderListFooter = () => (

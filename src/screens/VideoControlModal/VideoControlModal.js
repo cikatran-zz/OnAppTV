@@ -30,6 +30,7 @@ import {rootViewTopPadding} from '../../utils/rootViewPadding'
 import moment from 'moment';
 import AlertModal from '../../components/AlertModal'
 const { RNBrightcoveVC } = NativeModules;
+import _ from 'lodash'
 
 const brightcoveVCEmitter = new NativeEventEmitter(RNBrightcoveVC);
 
@@ -103,6 +104,8 @@ export default class VideoControlModal extends React.Component {
     componentWillReceiveProps(nextProps) {
 
         let bcVideos = nextProps.bcVideos;
+
+        console.log("BRIGHTCOVE",bcVideos.data);
 
         if (bcVideos && bcVideos.data) {
 
@@ -222,16 +225,17 @@ export default class VideoControlModal extends React.Component {
 
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
-        console.log(item, epg, isLive);
         const {bcVideos} = this.props;
         let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
         let url = '';
 
-        if (bcVideos.data !== null) {
+        if (bcVideos.data != null) {
             let url = bcVideos.data.sources.filter(x => {
                 return !!x.container
             })[0].src
         }
+
+        console.log("Render modal");
 
         return (
             <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}}
@@ -562,7 +566,7 @@ export default class VideoControlModal extends React.Component {
                                     }}>
                                         <Image source={img} style={styles.buttonIconStyle}/>
                                     </View>
-                                    <Text>{seriesInfo.data ? seriesInfo.data.title : ""}</Text>
+                                    <Text>{_.get(seriesInfo, 'data', null) ? seriesInfo.data.title : ""}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

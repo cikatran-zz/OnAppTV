@@ -439,6 +439,7 @@ export default class DetailsPage extends React.Component {
                     () => { console.log("onDetail") });
         }
         else {
+            console.log(epg);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: epg.data.length !== 0 ? epg.data : [item],
@@ -464,6 +465,7 @@ export default class DetailsPage extends React.Component {
                     () => { console.log("onDetail") });
         }
         else {
+            console.log(epg);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: epg.data.length !== 0 ? epg.data : [item],

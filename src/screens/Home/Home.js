@@ -76,6 +76,7 @@ export default class Home extends Component {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
+            this.props.getChannel();
             Orientation.lockToPortrait();
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
@@ -94,7 +95,7 @@ export default class Home extends Component {
     };
 
     _renderChannelListItem = ({item}) => {
-        if (_.isEmpty(item)) {
+        if (item == null) {
             return (
                 <TouchableOpacity onPress={() => this._navigateToZappers()}>
                     <View style={[styles.itemContainer, {borderWidth: 1, borderColor: 'rgba(149,152,154,32)'}]}>
@@ -137,13 +138,17 @@ export default class Home extends Component {
     );
 
     _renderChannelList = ({item}) => {
+        let data = item;
+        if (_.isEmpty(data)) {
+            data = [null];
+        }
         return (
             <FlatList
                 style={styles.listHorizontal}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={this._renderChannelListItemSeparator}
-                data={item}
+                data={data}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderChannelListItem}/>
         )
@@ -281,13 +286,23 @@ export default class Home extends Component {
     };
 
     _fetchMoreLive = () => {
-        this._livePage++;
-        this.props.getLive(true, this._livePage, 20);
+        if (this.props.live.data != null) {
+            if (this.props.live.data.length === this.currentPage * 20) {
+                this._livePage++;
+                this.props.getLive(true, this._livePage, 20);
+            }
+        }
     }
 
     _fetchMoreVOD = () => {
-        this._vodPage++;
-        this.props.getVOD(this._vodPage, 10);
+
+        if (this.props.vod.data != null) {
+            if (this.props.vod.data.length === this.currentPage * 10) {
+                this._vodPage++;
+                this.props.getVOD(this._vodPage, 10);
+            }
+        }
+
     }
 
     _renderOnLiveList = ({item}) => {
@@ -454,7 +469,9 @@ export default class Home extends Component {
 
     _navigateToCategory = (cate) => {
         const {navigation, category} = this.props;
-        let favoriteData = _.slice(category.favorite, 0, category.favorite.length - 1)
+        console.log("Home_cat",category);
+        let favoriteData = _.slice(category.favorite, 0, category.favorite.length - 1);
+        console.log("Home_dat",favoriteData);
         navigation.navigate('Category', {data: favoriteData, fromItem: cate});
     };
 

@@ -15,7 +15,7 @@ enum DraggingState {
     case progress
     case volume
 }
-
+var isShowedPopUp = false
 class ControlModal: UIView {
     
     @IBOutlet var contentView: UIView!
@@ -73,8 +73,9 @@ class ControlModal: UIView {
     var isSTBConnected: Bool {
         get {
             let result = Api.shared().hIG_IsConnect()
-            if !result {
+            if !result && isShowedPopUp == false {
                 onAlert(["message": "Disconnect from STB"])
+                isShowedPopUp = true
             }
             return result
         }

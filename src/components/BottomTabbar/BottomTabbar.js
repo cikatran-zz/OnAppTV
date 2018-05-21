@@ -33,6 +33,7 @@ class BottomTabbar extends Component {
         });
 
         DeviceEventEmitter.addListener('receiveEvent', (e) => {
+            console.log(e);
             const {data} = e;
             if (data !== undefined) {
                 let event = JSON.parse(data);

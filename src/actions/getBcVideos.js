@@ -8,6 +8,7 @@ export function getBcVideos (contentId) {
 }
 
 export function getBcVideosSuccess (data) {
+  console.log("BC",data);
   return {
     type: actionTypes.FETCH_BC_VIDEOS_SUCCESS,
     data: data.viewer.brightcoveSearchVideo

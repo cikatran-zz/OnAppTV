@@ -198,6 +198,10 @@ export default class ZapperChannel extends Component {
         this.state.favoriteChannels = this.state.allChannels.filter(channel => channel.favorite === 1);
     };
 
+    onDismissIndicatorModal() {
+        this.alertModal.setState({isShow: true});
+    }
+
     render() {
         const {channel, epg} = this.props;
         if (channel.isFetching) {
@@ -246,7 +250,7 @@ export default class ZapperChannel extends Component {
                     translucent={true}
                     backgroundColor='#00000000'
                     barStyle='light-content'/>
-                <IndicatorModal ref={(ref) => this.indicatorModal = ref}/>
+                <IndicatorModal ref={(ref) => this.indicatorModal = ref} onDismiss={this.onDismissIndicatorModal.bind(this)}/>
                 <AlertModal ref={(ref) => this.alertModal = ref}/>
                 <ChannelModal ref={(modal) => this.channelModal = modal} channels={this.state.channelData}
                               onFavoriteItem={this._favoriteItem}/>

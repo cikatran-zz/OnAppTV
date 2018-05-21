@@ -96,6 +96,7 @@ export default class Category extends Component {
     render() {
         const {data, fromItem} = this.props.navigation.state.params;
         let startIndex = _.findIndex(data, {'name': fromItem})
+        console.log("category",data);
         return (
             <View style={{width: '100%', height: '100%'}}>
                 <StatusBar

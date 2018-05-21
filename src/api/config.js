@@ -195,7 +195,7 @@ const lastGQL = `}
         title
         longDescription
         shortDescription
-        epgsData(current: $currentTime) {
+        epgsData(current: true) {
             channelData {
               serviceId
               lcn
@@ -290,7 +290,7 @@ query getEPGByChannel($channelId: Float){
               name
               fileName
         }
-        epgsData {
+        epgsData(current: true) {
           videoId
           channelId
           channelData {
@@ -728,7 +728,7 @@ query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
         title
         longDescription
         shortDescription
-        epgsData(current: $currentTime) {
+        epgsData(current: true) {
           videoId
           genreIds
           videoData {
