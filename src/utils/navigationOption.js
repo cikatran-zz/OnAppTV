@@ -1,6 +1,7 @@
 import {colors} from "./themeConfig";
-import {Image, TouchableOpacity} from "react-native";
+import {Image, TouchableOpacity, Platform} from "react-native";
 import React from 'react';
+import {rootViewTopPadding} from "./rootViewPadding";
 
 export default defaultNavigationOptions = (title, navigation, canBack = false) => {
     var backButton = {
@@ -24,15 +25,17 @@ export default defaultNavigationOptions = (title, navigation, canBack = false) =
             shadowColor: '#ffffff',
             shadowRadius: 0,
             elevation: 0,
-            borderBottomWidth: 0
+            borderBottomWidth: 0,
+            marginTop: Platform.OS !== 'ios' ? 24 : 0
         },
         headerTitleStyle: {
+            width: '80%',
             color: colors.greySettingLabel,
             //textAlign: 'center',
             //justifyContent: 'space-between',
             fontSize: 17,
             //alignSelf: 'center',
-            fontWeight: "normal"
+            fontWeight: "normal",
         },
         ...backButton
     }
