@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,6 +45,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
+import com.onapptv.custombrightcoveplayer.GlideApp;
 
 
 import org.json.JSONArray;
@@ -474,21 +477,25 @@ public class FragmentControlPage extends Fragment {
         }
 
         if (ControlPageAdapter.isLive()) {
-            Glide.with(getContext())
+            GlideApp.with(getContext())
                     .load(getImageFromArray((ArrayList<HashMap>) ((HashMap) mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mTopBanner);
-            Glide.with(getContext())
+            GlideApp.with(getContext())
                     .load(getImageFromArray((ArrayList<HashMap>) ((HashMap )mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mMainBanner);
         }
         else {
-            Glide.with(getContext())
+            GlideApp.with(getContext())
                     .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mTopBanner);
-            Glide.with(getContext())
+            GlideApp.with(getContext())
                     .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mMainBanner);
         }
 
