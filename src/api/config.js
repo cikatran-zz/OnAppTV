@@ -64,7 +64,7 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
 const playlistQuery = gql`
 query queryPlaylist($playList: String) {
   viewer{
-    playlistOne(filter: {
+    listOne(filter: {
       title:$playList
     }) {
       mediaData
@@ -76,7 +76,7 @@ query queryPlaylist($playList: String) {
 const bannerQuery = gql`
 query {
   viewer{
-    playlistOne(filter: {
+    listOne(filter: {
       title: "HIGHLIGHT"
     }) {
       mediaData
