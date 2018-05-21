@@ -199,7 +199,7 @@ export default class ZapperChannel extends Component {
     };
 
     onDismissIndicatorModal() {
-        this.alertModal.setState({isShow: true});
+        //this.alertModal.setState({isShow: true});
     }
 
     render() {

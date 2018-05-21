@@ -348,6 +348,9 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
       _operators: {
         genreIds: {
             in: $genreIds
+        },
+        type: {
+          nin: "Episode"
         }
       }
     })  {
@@ -489,6 +492,9 @@ query genresVOD($genresId: MongoID, $page: Int, $perPage: Int){
       _operators: {
         genreIds: {
           in: [$genresId]
+        },
+        type: {
+          nin: "Episode"
         }
       }
     }) {

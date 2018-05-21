@@ -7,8 +7,8 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
         if (item.name === firstImageName) {
             let scaledImages = item.scaledImage
             if (scaledImages != null) {
-                if (scaledImages.length > 2) {
-                    image = scaledImages[scaledImages.length - 2].url;
+                if (firstImageName === 'feature' && scaledImages.length > 2) {
+                    image = scaledImages[1].url;
                 } else {
                     image = scaledImages[scaledImages.length - 1].url;
                 }
@@ -17,8 +17,8 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
         if (image == null && item.name === secondImageName) {
             let scaledImages = item.scaledImage
             if (scaledImages != null) {
-                if (scaledImages.length > 2) {
-                    image = scaledImages[scaledImages.length - 2].url;
+                if (secondImageName === 'feature' && scaledImages.length > 2) {
+                    image = scaledImages[1].url;
                 } else {
                     image = scaledImages[scaledImages.length - 1].url;
                 }
