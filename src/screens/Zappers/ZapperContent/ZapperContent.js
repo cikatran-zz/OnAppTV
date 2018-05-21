@@ -58,7 +58,6 @@ export default class ZapperContent extends Component {
             this.props.onChangedScrollEnabled(true);
             return;
         }
-        console.log("Event", evt.nativeEvent);
         this.setState({dragging: true})
         this.props.onChangedScrollEnabled(false);
         this.setPosition(evt.nativeEvent.pageY);
