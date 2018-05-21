@@ -61,7 +61,7 @@ export default class DetailsPage extends React.Component {
         }
 
         DeviceEventEmitter.addListener('dismissControlPage', (e) => {
-            this.props.navigation.replace("Home");
+            this.props.navigation.goBack(null);
         })
 
         DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
@@ -424,10 +424,10 @@ export default class DetailsPage extends React.Component {
     _onBannerPress = (item) => {
         const {isLive} = this.props.navigation.state.params;
         const {epg, navigation} = this.props;
-        let data = epg;
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
+            if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = data.concat([item]);
             let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
