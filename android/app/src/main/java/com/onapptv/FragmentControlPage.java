@@ -170,14 +170,14 @@ public class FragmentControlPage extends Fragment {
                         Date date = new Date();
                         Date start = fromISO8601UTC(mDataLive.get("startTime").toString());
                         Date end = fromISO8601UTC(mDataLive.get("endTime").toString());
-                        long current = date.getTime() - start.getTime();
+                        long current = (date.getTime() - start.getTime()) / 1000;
                         int hours = (int) (current / 3600);
-                        int minutes = (int) (current % 60) / 60;
+                        int minutes = (int) (current % 3600) / 60;
                         int seconds = (int) (current - hours * 3600 - minutes * 60);
                         String str = String.format("%02d:%02d:%02d", hours,minutes, seconds);
                         mPassedTv.setText(str);
 
-                        long etr = end.getTime() - date.getTime();
+                        long etr = (end.getTime() - date.getTime()) / 1000;
                         int etr_hours = (int) (etr / 3600);
                         int etr_minutes = (int) ((etr % 3600) / 60);
                         int etr_seconds = (int) (etr - etr_hours * 3600 - etr_minutes * 60);
