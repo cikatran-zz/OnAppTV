@@ -195,7 +195,7 @@ const lastGQL = `}
         title
         longDescription
         shortDescription
-        epgsData(current: true) {
+        epgsData(current: $currentTime) {
             channelData {
               serviceId
               lcn
@@ -734,7 +734,7 @@ query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
         title
         longDescription
         shortDescription
-        epgsData(current: true) {
+        epgsData(current: $currentTime) {
           videoId
           genreIds
           videoData {

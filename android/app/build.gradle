@@ -93,6 +93,12 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 27
 
@@ -118,10 +124,10 @@ android {
             keyPassword "android"
         }
         release {
-            storeFile file("../appkit-hasbrain.keystore")
-            storePassword "mStagehasBrain"
-            keyAlias "hasBrain"
-            keyPassword "mStagehasBrain"
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
 
