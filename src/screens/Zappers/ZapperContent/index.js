@@ -10,7 +10,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getZapperContent: (gtTime, ltTime) => dispatch(getZapperContentWithTime(gtTime, ltTime)),
+        getZapperContent: (currentTime) => dispatch(getZapperContentWithTime(currentTime)),
     }
 }
 

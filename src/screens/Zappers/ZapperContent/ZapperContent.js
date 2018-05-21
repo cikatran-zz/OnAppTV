@@ -69,9 +69,7 @@ export default class ZapperContent extends Component {
 
     setCurrentPosition(position) {
 
-        let temp = moment(this._timeAtMove.toDate());
-        let fiveMinuteMore = temp.add(5, 'minutes');
-        this.props.getZapperContent(this._timeAtMove.toISOString(true), fiveMinuteMore.toISOString(true));
+        this.props.getZapperContent(this._timeAtMove.toISOString(true));
     }
 
     _onStartShouldSetPanResponder = (event) => {
@@ -95,20 +93,13 @@ export default class ZapperContent extends Component {
     }
 
     componentDidMount() {
-        // let currentTime = moment().startOf('day');
-        //Temporary hard set time to 1/5/2018 8:00 AM
-        this._currentTime = moment("May 1 08:00:00", "MMM DD hh:mm:ss");
+        this._currentTime = moment();
         let time = "Now";
         this.setState({time: time})
-        let endOfDay = moment("May 1 08:00:00", "MMM DD hh:mm:ss").endOf('day');
-        console.log("Current Time: ", this._currentTime);
-        console.log("End of day: ", endOfDay);
+        let endOfDay = moment().endOf('day');
         this._rangeTime = moment.duration(endOfDay.diff(this._currentTime)).asMinutes();
-        console.log("Range time: ", this._rangeTime);
-        console.log("Range Height: ", rangeHeight);
         this._offsetRate  =  this._rangeTime / rangeHeight;
-        let fiveMinuteMore = moment("May 1 08:00:00", "MMM DD hh:mm:ss").add(5, 'minutes');
-        this.props.getZapperContent(this._currentTime.toISOString(true), fiveMinuteMore.toISOString(true));
+        this.props.getZapperContent(this._currentTime.toISOString(true));
     };
 
 
@@ -148,11 +139,8 @@ export default class ZapperContent extends Component {
             return;
         if (position > maxHeight )
             return;
-        console.log("Current Offset", position);
         let periodRate = Math.round((position - 70) * this._offsetRate);
-        console.log("Offset Rate", this._offsetRate);
-        console.log("Period Rate", periodRate);
-        this._timeAtMove = moment("May 1 08:00:00", "MMM DD hh:mm:ss").add(periodRate, 'minutes');
+        this._timeAtMove = moment().add(periodRate, 'minutes');
         let time = '';
         if (moment.duration(this._timeAtMove.diff(this._currentTime)).asMinutes() === 0) {
             time = "Now";

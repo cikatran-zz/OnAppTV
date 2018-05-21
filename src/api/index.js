@@ -374,10 +374,10 @@ export const getEpgWithSeriesId = (seriesId, page, perPage, contentId) => {
     })
 };
 
-export const getZapperContentTimeRange = (gtTime, ltTime) => {
+export const getZapperContentTimeRange = (currentTime) => {
     return client.query({
         query: config.queries.ZAPPER_CONTENT,
-        variables: {gtTime: gtTime, ltTime: ltTime}
+        variables: {currentTime: currentTime}
     })
 }
 

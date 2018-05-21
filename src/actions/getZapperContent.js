@@ -1,10 +1,9 @@
 import * as actionTypes from './actionTypes';
 
-export function getZapperContentWithTime(gtTime, ltTime) {
+export function getZapperContentWithTime(currentTime) {
     return {
         type: actionTypes.FETCHING_ZAPPER_CONTENT,
-        gtTime: gtTime,
-        ltTime: ltTime
+        currentTime: currentTime,
     }
 }
 

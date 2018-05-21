@@ -7,7 +7,7 @@ import {Observable} from 'rxjs/Observable';
 const getZapperContentEpic = (action$) =>
     action$.ofType(actionTypes.FETCHING_ZAPPER_CONTENT)
         .mergeMap(action =>
-            Observable.from(getZapperContentTimeRange(action.gtTime, action.ltTime))
+            Observable.from(getZapperContentTimeRange(action.currentTime))
                 .map(response => getZapperContentSuccess(response.data.viewer.epgRange))
                 .catch(error => Observable.of(getZapperContentFailure(error)))
         );
