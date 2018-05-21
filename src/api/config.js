@@ -450,6 +450,9 @@ query genresVOD($genresId: [MongoID]){
       _operators: {
         genreIds: {
           in: $genresId
+        },
+        type: {
+          nin: "Episode"
         }
       }
     }, sort: _DESC) {
