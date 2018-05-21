@@ -13,6 +13,10 @@
 
 RCT_EXPORT_MODULE();
 
+- (NSArray<NSString *> *)supportedEvents {
+    return @[@"DismissBrightcove"];
+}
+
 RCT_EXPORT_METHOD(navigateWithVideoId: (NSString *)videoId
                   accountId: (NSString *)accountId
                   policyKey: (NSString *)policyKey
@@ -27,8 +31,8 @@ RCT_EXPORT_METHOD(navigateWithVideoId: (NSString *)videoId
                            policyKey:policyKey
                             metaData:metaData
                               onDone:^{
-                                  [currentWindow.rootViewController dismissViewControllerAnimated:YES
-                                                                                       completion:nil];
+                                  [currentWindow.rootViewController dismissViewControllerAnimated:YES completion:NULL];
+                                  [self sendEventWithName:@"DismissBrightcove" body:@{@"name": @"DismissBrightcove"}];
                               }];
         
         [currentWindow.rootViewController presentViewController:vc animated:YES completion:nil];

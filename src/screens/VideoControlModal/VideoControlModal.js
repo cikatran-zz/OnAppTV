@@ -9,6 +9,7 @@ import {
     Text,
     TouchableOpacity,
     NativeModules,
+    NativeEventEmitter,
     Share,
     View,
     PanResponder,
@@ -28,6 +29,9 @@ import PinkRoundedButton from '../../components/PinkRoundedLabel'
 import {rootViewTopPadding} from '../../utils/rootViewPadding'
 import moment from 'moment';
 import AlertModal from '../../components/AlertModal'
+const { RNBrightcoveVC } = NativeModules;
+
+const brightcoveVCEmitter = new NativeEventEmitter(RNBrightcoveVC);
 
 const {width, height} = Dimensions.get("window")
 export default class VideoControlModal extends React.Component {
@@ -79,17 +83,21 @@ export default class VideoControlModal extends React.Component {
             volume: 0,
             index: -1,
             isScrollEnabled: true
-        }
 
-        this.alertModal = null
+        };
+
+        this.alertModal = null;
+        this.showingBrightcove = false
+        this.subscription = null;
     }
 
     componentWillMount() {
     }
 
     componentWillUnmount() {
-        Orientation.removeOrientationListener(this._orientationDidChange)
+        Orientation.removeSpecificOrientationListener(this._orientationDidChange)
         this._navListener.remove();
+        this.subscription.remove();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -119,23 +127,29 @@ export default class VideoControlModal extends React.Component {
         NativeModules.STBManager.isConnect((connectStr) => {
             let json = JSON.parse(connectStr).is_connected
             this.setState({isConnected: json})
-        })
+        });
 
         this.setState({
             currentTime: new Date().getTime(),
             startPoint: new Date().getTime()
-        })
+        });
         Orientation.unlockAllOrientations();
-        Orientation.addOrientationListener(this._orientationDidChange);
+        Orientation.addSpecificOrientationListener(this._orientationDidChange);
+
+        this.subscription = brightcoveVCEmitter.addListener('DismissBrightcove', (event)=> {
+            this.showingBrightcove = false;
+        });
     }
 
     _orientationDidChange = (orientation) => {
-        if (orientation === 'LANDSCAPE') {
-            !(Platform.OS === "ios") && this.setState({showBrightcove: true})
-            const {item} = this.props.navigation.state.params
-            if (item) {
+
+        if (orientation === 'LANDSCAPE-LEFT' || orientation === 'LANDSCAPE-RIGHT') {
+            !(Platform.OS === "ios") && this.setState({showBrightcove: true});
+            const {item} = this.props.navigation.state.params;
+            if (item && this.showingBrightcove === false) {
                 let videoId = item.contentId ? item.contentId : '5714823997001';
-                NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I', {});
+                this.showingBrightcove = true;
+                RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I', {});
             }
         }
     };
