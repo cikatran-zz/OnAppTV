@@ -30,7 +30,7 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gDo-Dc-tRw">
                     <rect key="frame" x="0.0" y="0.0" width="0.0" height="375"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.26000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="1" alpha="0.35999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" id="WEu-2O-ueq"/>
                     </constraints>
@@ -157,6 +157,6 @@
     <resources>
         <image name="caption" width="19" height="13"/>
         <image name="play" width="20" height="21"/>
-        <image name="repeat" width="22" height="15"/>
+        <image name="repeat" width="19" height="18"/>
     </resources>
 </document>

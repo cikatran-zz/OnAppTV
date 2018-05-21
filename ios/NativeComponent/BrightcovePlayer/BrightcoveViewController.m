@@ -72,7 +72,7 @@
     if (orientation == UIDeviceOrientationPortrait) {
         //[[BrightcovePlayerManager sharedInstance] removePlayer];
         [_brightcovePlayer stop];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        //[self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

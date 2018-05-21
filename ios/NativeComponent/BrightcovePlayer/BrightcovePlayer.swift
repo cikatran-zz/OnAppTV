@@ -83,8 +83,8 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     }
     
     public override func removeFromSuperview() {
-        self.stop()
-        BrightcovePlayerManagager.sharedInstance.removePlayer()
+//        self.stop()
+//        BrightcovePlayerManagager.sharedInstance.removePlayer()
         super.removeFromSuperview()
     }
     
@@ -281,6 +281,7 @@ extension BrightcovePlayer {
         playbackController?.pause()
         playbackController?.setVideos(NSArray())
         controlsView.stop()
+        self.onDone()
         self.isStopped = true
         storeVideoToUserKit()
     }
