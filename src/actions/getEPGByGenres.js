@@ -10,10 +10,13 @@ export function getEPGByGenres(limit, skip, genresId, currentTime) {
     }
 }
 
-export function getEPGByGenresSuccess(data) {
+export function getEPGByGenresSuccess(data, limit, skip, genresId) {
     return {
         type: actionTypes.FETCH_EPG_BY_GENRES_SUCCESS,
-        data: data.viewer.epgMany
+        data: data.viewer.epgMany,
+        limit: limit,
+        skip: skip,
+        genresId: genresId,
     }
 }
 

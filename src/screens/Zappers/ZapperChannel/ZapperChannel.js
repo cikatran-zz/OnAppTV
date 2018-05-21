@@ -20,7 +20,7 @@ import AlertModal from "../../../components/AlertModal";
 
 const favoriteImg = require('../../../assets/ic_favorite.png');
 const allImg = require('../../../assets/ic_all.png');
-const imgBackground = require('../../../assets/zapper_channel_bg.png');
+const imgBackground = require('../../../assets/conn_bg.png');
 
 export default class ZapperChannel extends Component {
 

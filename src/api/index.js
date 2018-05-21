@@ -218,6 +218,13 @@ export const getBanner = () => {
     });
 };
 
+export const getPlaylist = (playlist) => {
+    return client.query({
+        query: config.queries.PLAYLIST,
+        variables: {playList: playlist}
+    });
+};
+
 export const getAds = () => {
     return client.query({
         query: config.queries.ADS

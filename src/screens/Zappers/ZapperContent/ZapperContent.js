@@ -335,7 +335,7 @@ export default class ZapperContent extends Component {
                     <PinkRoundedLabel containerStyle={{zIndex: 1, marginLeft: 5}} text={this.state.time}/>
                 </Animated.View>
                 <ImageBackground style={styles.image}
-                                 source={require('../../../assets/conn_bg.png')}
+                                 source={require('../../../assets/zapper_channel_bg.png')}
                                  blurRadius={30}>
                     {this._renderEPGList()}
                 </ImageBackground>

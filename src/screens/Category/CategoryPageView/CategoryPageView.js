@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions, TouchableOpacity, ActivityIndicator
+    StyleSheet, Text, SectionList, View, Image, FlatList, Platform, Dimensions, TouchableOpacity, ActivityIndicator, InteractionManager
 } from 'react-native'
 import {colors, textDarkDefault, textLightDefault} from '../../../utils/themeConfig'
 import {connect} from "react-redux";
@@ -11,8 +11,6 @@ import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
 import {getImageFromArray} from "../../../utils/images";
 import moment from "moment";
-import {getEPGByGenres, getVODByGenres} from "../../../api";
-import _ from 'lodash'
 import {DotsLoader} from "react-native-indicator";
 
 class CategoryPageView extends Component{
@@ -26,43 +24,15 @@ class CategoryPageView extends Component{
             epgLoading: false,
             vodLoading: false
         };
-        this.epgQuerySkip = 0;
-        this.vodQuerySkip = 0;
     }
     componentDidMount() {
         const {genresId} = this.props;
-        this._getEPG(genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
-        this.props.getVODByGenres(1, 10, genresId);
-    };
-
-
-    _getEPG = (genresId, currentTime) => {
-        this.setState({epgLoading: true});
-        getEPGByGenres(genresId, currentTime, 10, this.epgQuerySkip).then((value)=> {
-            let newEPG = value.data.viewer.epgMany;
-            if (this.state.epg != null) {
-                newEPG = this.state.epg.concat(newEPG)
-            }
-            this.epgQuerySkip = (newEPG != null) ? newEPG.length : 0;
-            this.setState({epg: newEPG, epgLoading: false});
-        }).catch((err) => {
-            console.log(err);
-            this.setState({epgLoading: false});
+        InteractionManager.runAfterInteractions(() => {
+            this.props.getEPG(10, 0, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
+            this.props.getVODByGenres(1, 10, genresId);
         });
     };
 
-    _getEPGFromScratch = (genresId, currentTime) => {
-        console.log("Get EPG from Scratch");
-        this.setState({epgLoading: true});
-        getEPGByGenres(genresId, currentTime, 10, 0).then((value)=> {
-            let newEPG = value.data.viewer.epgMany;
-            this.epgQuerySkip = (newEPG != null) ? newEPG.length : 0;
-            this.setState({epg: newEPG, epgLoading: false});
-        }).catch((err) => {
-            console.log(err);
-            this.setState({epgLoading: false});
-        });
-    };
 
     _keyExtractor = (item, index) => index.toString();
 
@@ -148,12 +118,12 @@ class CategoryPageView extends Component{
         const {genresId} = this.props;
         return (
             <FlatList
-                refreshing={this.state.epgLoading}
-                onRefresh={() => this._getEPGFromScratch(genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"))}
                 style={{flex: 1}}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
+                ListFooterComponent={this._renderLiveFooter}
+                onEndReached={this._fetchMoreLive}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderOnLiveItem}/>
         )
@@ -204,6 +174,29 @@ class CategoryPageView extends Component{
         }
     }
 
+    _renderLiveFooter = () => {
+        const {epg, genresId} = this.props;
+        let epgMap = epg.epgMap.get(genresId);
+        if (!epgMap)
+            return null;
+        if (epgMap.isFetching) {
+            return (
+                <View
+                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                </View>
+            )
+        } else {
+            return null;
+        }
+    }
+
+    _fetchMoreLive = () => {
+        const {genresId, epg} = this.props;
+        let epgMap = epg.epgMap.get(genresId);
+        this.props.getEPG(10, epgMap.skip, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
+    }
+
     _fetchMoreVOD = () => {
         const {genresId, vod} = this.props;
         let vodMap = vod.vodMap.get(genresId);
@@ -221,37 +214,19 @@ class CategoryPageView extends Component{
     );
 
 
-    _fetchMore = ()=> {
-        const {genresId, vod} = this.props;
-        let noEPGs = (this.state.epg == null) ? 0 : this.state.epg.length;
-        if (noEPGs % 10 === 0 && noEPGs !== 0) {
-            console.log("fetch more");
-            this._getEPG(genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
-        }
-        let noTopVOD = (this.state.latestVOD == null) ? 0 : this.state.latestVOD.length;
-        let noBelowVOD = (this.state.vod == null) ? 0 : this.state.vod.length;
-
-        if ((noTopVOD + noBelowVOD) % 10 === 0 && (noTopVOD + noBelowVOD) > 0) {
-            console.log("fetch more");
-            this._getVOD(genresId);
-        }
-    };
-
     render(){
-        const {vod, genresId} = this.props;
+        const {vod, epg, genresId} = this.props;
         let vodMap = vod.vodMap.get(genresId);
+        let epgMap = epg.epgMap.get(genresId);
         let latestVOD = [];
         let vodData = [];
+        let epgData= [];
         if (vodMap) {
             latestVOD = vodMap.latestVOD;
             vodData = vodMap.vod;
         }
-        if (this.state.epgLoading && this.state.vodLoading && this.state.latestVODLoading) {
-            return (
-                <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            );
+        if (epgMap) {
+            epgData = epgMap.epg;
         }
         return (
             <View keyExtractor={this._keyExtractor} style={styles.rootView}>
@@ -263,11 +238,10 @@ class CategoryPageView extends Component{
                     renderSectionHeader={this._renderSectionHeader}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
-                    onEndReached={this._fetchMore}
                     ListFooterComponent={this._renderListFooter}
                     sections={[
                         {data: [latestVOD], showHeader: false, renderItem: this._renderSlotMachines},
-                        {data: [this.state.epg], showHeader: this.state.epg != null && this.state.epg.length > 0, title: "ON LIVE", renderItem: this._renderOnLiveList},
+                        {data: [epgData], showHeader: epgData != null && epgData.length > 0, title: "ON LIVE", renderItem: this._renderOnLiveList},
                         {data: [vodData], showHeader: vodData != null && vodData.length > 0, title: "VOD", renderItem: this._renderVODList}
                     ]}
                 />

@@ -66,7 +66,8 @@ export default function vodByGenresReducer(state = initialState, action) {
             })
             return {
                 ...state,
-                vodMap: vodMap
+                vodMap: vodMap,
+                error: action.errorMessage
             };
         default:
             return state

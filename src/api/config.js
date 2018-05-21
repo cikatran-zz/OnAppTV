@@ -61,6 +61,18 @@ query queryZapperByTime($gtTime: Date, $ltTime: Date){
 }
 `
 
+const playlistQuery = gql`
+query queryPlaylist($playList: String) {
+  viewer{
+    playlistOne(filter: {
+      title:$playList
+    }) {
+      mediaData
+    }
+  }
+}
+`;
+
 const bannerQuery = gql`
 query {
   viewer{
@@ -257,8 +269,7 @@ const ipLinkParam = `ipLink: {
         }`;
 const liveQuerySTB = gql`${firstGQL}${lastGQL}`;
 
-//const liveQueryNoSTB = gql`${firstGQL}${ipLinkParam}${lastGQL}`;
-const liveQueryNoSTB = liveQuerySTB;
+const liveQueryNoSTB = gql`${firstGQL}${ipLinkParam}${lastGQL}`;
 
 
 const epgQuery = gql`
@@ -762,6 +773,7 @@ export default {
     serverURL: 'https://contentkit-api.mstage.io/graphql',
     queries: {
         BANNER: bannerQuery,
+        PLAYLIST: playlistQuery,
         CHANNEL: channelQuery,
         ADS: adsQuery,
         CATEGORY: categoryQuery,
