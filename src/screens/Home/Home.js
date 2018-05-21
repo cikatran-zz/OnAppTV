@@ -245,12 +245,13 @@ export default class Home extends Component {
 
     // ON LIVE
     _renderOnLiveItem = ({item}) => {
-        if (item.epgsData == null) {
+        // TODO: Logic checked. Revert it if already checked in your branch
+        if (item.epgsData[0] == null) {
             return null;
         }
         let genres = "";
-        if (item.epgsData.videoData.genres != null && item.epgsData.videoData.genres.length > 0) {
-            item.epgsData.videoData.genres.forEach((genre, index) => {
+        if (item.epgsData[0].videoData.genres != null && item.epgsData[0].videoData.genres.length > 0) {
+            item.epgsData[0].videoData.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
                     genres = genres.concat(", ");
                 }
@@ -259,16 +260,16 @@ export default class Home extends Component {
         } else {
             genres = "N/A";
         }
-        let timeInfo = timeFormatter(item.startTime) + '-' + timeFormatter(item.endTime);
+        let timeInfo = timeFormatter(item.epgsData[0].startTime) + '-' + timeFormatter(item.epgsData[0].endTime);
 
         let currentDate = (new Date()).getTime();
-        let startDate = (new Date(item.startTime)).getTime();
-        let endDate = (new Date(item.endTime)).getTime();
+        let startDate = (new Date(item.epgsData[0].startTime)).getTime();
+        let endDate = (new Date(item.epgsData[0].endTime)).getTime();
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData.videoData.originalImages, 'landscape', 'feature')}/>
-                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData.videoData.title}</Text>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
+                <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData[0].videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
                       style={styles.textLiveVideoInfo}>{item ? item.title : "No Title"}</Text>
@@ -302,7 +303,7 @@ export default class Home extends Component {
             data={item}
             onEndReachedThreshold={5}
             ListFooterComponent={this._renderLiveFooter}
-            onEndReached={this._fetchMoreLive}
+            onEndReached={this._fetchMoreLive} // TODO : Check this carefully
             keyExtractor={this._keyExtractor}
             renderItem={this._renderOnLiveItem}/>)
     };
@@ -549,10 +550,11 @@ export default class Home extends Component {
             {data: [ads], showHeader: false, renderItem: this._renderAds}
             ];
 
-        if (live.data !== null && live.data.length > 0) {
-            let epgsDataArray = _.filter(live.data, (item) =>  {item.epgsData != null});
+        // TODO: Condition checked. Revert it when merge if already checked on your branch
+        if (live.data != null && live.data.length > 0) {
+            let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0});
             if (epgsDataArray.length > 0)
-                sections.push({data: [live.data], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
+                sections.push({data: [epgsDataArray], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
         }
 
         if (vod.data !== null && vod.data.length > 0) {
