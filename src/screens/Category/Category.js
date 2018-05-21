@@ -13,7 +13,7 @@ export default class Category extends Component {
         this.names = null;
         this.startCategory = "";
         this.state = {
-            position: 'begin'
+            position: undefined
         }
     };
 
@@ -69,12 +69,24 @@ export default class Category extends Component {
 
     _getBackBtnImage = () =>{
         const {position} = this.state;
+        const {data, fromItem} = this.props.navigation.state.params;
+        let startIndex = _.findIndex(data, {'name': fromItem});
+        let pagePosition = this._getPagePosition(startIndex, data.length);
         let backBtnImage = null;
-        if (position == 'begin') {
-            backBtnImage = require('../../assets/ic_left_arrow.png');
+        if (position) {
+            if (position == 'begin') {
+                backBtnImage = require('../../assets/ic_left_arrow.png');
+            } else {
+                backBtnImage = require('../../assets/ic_white_left_arrow.png');
+            }
         } else {
-            backBtnImage = require('../../assets/ic_white_left_arrow.png');
+            if (pagePosition == 'begin') {
+                backBtnImage = require('../../assets/ic_left_arrow.png');
+            } else {
+                backBtnImage = require('../../assets/ic_white_left_arrow.png');
+            }
         }
+
 
         return (
             <Image source={backBtnImage} style={styles.backImage}/>
