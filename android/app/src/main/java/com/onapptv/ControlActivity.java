@@ -1,12 +1,14 @@
 package com.onapptv;
 
 import android.content.Intent;
+import android.opengl.GLES10;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 
 import com.onapptv.R;
+import com.onapptv.custombrightcoveplayer.GlideApp;
 
 import java.util.ArrayList;
 
@@ -46,6 +48,12 @@ public class ControlActivity extends AppCompatActivity implements FragmentContro
         else {
             mViewPager.setCurrentItem(0);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlideApp.get(this).clearMemory();
     }
 
     public static void setIsDisconnected(Boolean b) {
