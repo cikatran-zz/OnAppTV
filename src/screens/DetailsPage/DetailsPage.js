@@ -76,16 +76,16 @@ export default class DetailsPage extends React.Component {
                      */
                     // this.props.getEpgs([item.channelData.serviceId]);
                     // this.props.getEpgSameTime(new Date(), item.channelId);
-                    this.props.getEpgWithGenre(parsedItem.videoData.contentId, item.genreIds, 1, 10);
+                    this.props.getEpgWithGenre(parsedItem.videoData.contentId, parsedItem.genreIds, 1, 10);
                 }
                 else if (parsedItem.type) {
                     /*
                      Fetch epg with related content or epg in series
                      */
                     if (parsedItem.type === 'Episode')
-                        this.props.getEpgWithSeriesId(parsedItem.contentId, [item.seriesId], 1, 10);
+                        this.props.getEpgWithSeriesId(parsedItem.contentId, [parsedItem.seriesId], 1, 10);
                     else
-                        this.props.getEpgWithGenre(parsedItem.contentId, item.genreIds, 1, 10);
+                        this.props.getEpgWithGenre(parsedItem.contentId, parsedItem.genreIds, 1, 10);
                 }
             };
         });
@@ -149,7 +149,7 @@ export default class DetailsPage extends React.Component {
                     <Image source={require('../../assets/ic_dismiss_black.png')}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bannerThumbnailContainer}
-                                  onPress={() => this._onPress(item)}>
+                                  onPress={() => this._onBannerPress(item)}>
                     <Image source={{uri: url}}
                            style={styles.banner}/>
                 </TouchableOpacity>
@@ -203,13 +203,13 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromChannel()) {
             // isLive
-            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT CHANNEL"}/>)
+            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
         }
 
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASONS"}/>)
             }
             case 'Standalone':
                 return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
@@ -308,7 +308,8 @@ export default class DetailsPage extends React.Component {
     _fetchMore = () => {
         this._page++;
         const {item, isLive} = this.props.navigation.state.params;
-        if (item && isLive !== undefined) {
+        let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
+        if (currentItem && isLive !== undefined) {
             if (isLive === true ) {
                 /*
                  Fetching information about EPG next in channel and EPG which are
@@ -316,16 +317,16 @@ export default class DetailsPage extends React.Component {
                  */
                 // this.props.getEpgs([item.channelData.serviceId])
                 // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, this._page, 10);
+                this.props.getEpgWithGenre(currentItem.videoData.contentId, currentItem.genreIds, this._page, 10);
             }
-            else if (item.type) {
+            else if (currentItem.type) {
                 /*
                  Fetch epg with related content or epg in series
                  */
-                if (item.type === 'Episode')
-                    this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], this._page, 10)
+                if (currentItem.type === 'Episode')
+                    this.props.getEpgWithSeriesId(currentItem.contentId, [currentItem.seriesId], this._page, 10)
                 else
-                    this.props.getEpgWithGenre(item.contentId, item.genreIds, this._page, 10)
+                    this.props.getEpgWithGenre(currentItem.contentId, currentItem.genreIds, this._page, 10)
             }
         }
     }
@@ -335,14 +336,15 @@ export default class DetailsPage extends React.Component {
         const {_id} = this.props.epg;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (item == null || _id != null  ) {
-            if (this._isFromChannel() && _id !== currentItem.videoData.contentId) {
+            console.log(this._isFromChannel(), currentItem, _id);
+            if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                     </View>
                 )
             }
-            if (_id !== currentItem.contentId) {
+            if (!this._isFromChannel() && _id !== currentItem.contentId) {
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
@@ -372,10 +374,9 @@ export default class DetailsPage extends React.Component {
     }
 
     _renderListVideoItem = ({item}) => {
-        let videoData = this._isFromChannel() ? item.videoData : item;
+        let videoData = item;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
-        console.log('Data', videoData, currentItem);
-        if (this._isFromChannel() && videoData.contentId === currentItem.videoData.contentId) {
+        if (this._isFromChannel() && currentItem.videoData !== undefined && videoData.contentId === currentItem.videoData.contentId) {
             return null;
         }
         if (!this._isFromChannel() && videoData.contentId === currentItem.contentId) {
@@ -400,7 +401,7 @@ export default class DetailsPage extends React.Component {
                         </Text>
                         <Text style={styles.itemType}>{videoData.type}</Text>
                         <Text
-                            style={styles.itemTime}>{this._isFromChannel() ? timeFormatter(item.startTime) + ' - ' + timeFormatter(item.endTime) : secondFormatter(item.durationInSeconds)}</Text>
+                            style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
                     </View>
                     <View style={styles.itemActionsContainer}>
                         <TouchableOpacity onPress={() => {
@@ -420,20 +421,14 @@ export default class DetailsPage extends React.Component {
         else return null
     }
 
-    _onPress = (item) => {
+    _onBannerPress = (item) => {
         const {isLive} = this.props.navigation.state.params;
-        const {epg, navigation, epgSameTime} = this.props;
+        const {epg, navigation} = this.props;
         let data = epg;
-        if (isLive) {
-            data = epgSameTime;
-            data.data = data.data.concat([item])
-        }
-
 
         if (Platform.OS !== 'ios') {
-            let data = epg.data.length !== 0 ? epg.data : [item]
+            let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
             let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
-            console.log('Index', itemIndex);
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
                     itemIndex,
@@ -448,6 +443,31 @@ export default class DetailsPage extends React.Component {
                 item: item,
                 epg: epg.data.length !== 0 ? epg.data : [item],
                 isLive: isLive
+            })
+        }
+    }
+
+    _onPress = (item) => {
+        const {epg, navigation} = this.props;
+        let data = epg;
+
+        if (Platform.OS !== 'ios') {
+            let data = epg.data.length !== 0 ? epg.data : [item];
+            let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+            NativeModules.RNControlPageNavigation
+                .navigateControl(data,
+                    itemIndex,
+                    false,
+                    false,
+                    false,
+                    () => { console.log("onDismiss") },
+                    () => { console.log("onDetail") });
+        }
+        else {
+            navigation.replace('VideoControlModal', {
+                item: item,
+                epg: epg.data.length !== 0 ? epg.data : [item],
+                isLive: false
             })
         }
     }
