@@ -251,7 +251,7 @@ export default class ZapperContent extends Component {
           "endtime": liveItem.endTime,
           "starttime": liveItem.startTime,
           "title": liveItem.videoData.title,
-          "image": getImageFromArray(liveItem.videoData.originalImages, "landscape", "feature"),
+          "image": getImageFromArray(liveItem.videoData.originalImages, "logo", "feature"),
           "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
         }
       }

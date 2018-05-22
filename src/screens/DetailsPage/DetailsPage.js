@@ -31,7 +31,7 @@ export default class DetailsPage extends React.Component {
         super(props);
         this.state = {
             item: null,
-            isLive: false
+            isLive: null
         }
     }
 
@@ -307,10 +307,9 @@ export default class DetailsPage extends React.Component {
 
     _fetchMore = () => {
         this._page++;
-        const {item, isLive} = this.props.navigation.state.params;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
-        if (currentItem && isLive !== undefined) {
-            if (isLive === true ) {
+        if (currentItem && this._isFromChannel() !== undefined) {
+            if (this._isFromChannel() === true ) {
                 /*
                  Fetching information about EPG next in channel and EPG which are
                  at the same time on other channels
@@ -336,7 +335,6 @@ export default class DetailsPage extends React.Component {
         const {_id} = this.props.epg;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (item == null || _id != null  ) {
-            console.log(this._isFromChannel(), currentItem, _id);
             if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -422,11 +420,9 @@ export default class DetailsPage extends React.Component {
     }
 
     _onBannerPress = (item) => {
-        const {isLive} = this.props.navigation.state.params;
         const {epg, navigation} = this.props;
         let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
         if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = data.concat([item]);
-        console.log('onBannerPress', data);
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
@@ -435,7 +431,7 @@ export default class DetailsPage extends React.Component {
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
                     itemIndex,
-                    isLive,
+                    this._isFromChannel(),
                     false,
                     false,
                     () => { console.log("onDismiss") },
@@ -447,20 +443,17 @@ export default class DetailsPage extends React.Component {
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,
-                isLive: isLive
+                isLive: this._isFromChannel()
             })
         }
     }
 
     _onPress = (item) => {
         const {epg, navigation} = this.props;
-        let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-        if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = data.concat([item]);
-        console.log('onPress', data);
 
         if (Platform.OS !== 'ios') {
-            let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = data.concat([item]);
+            let data = epg.data.length !== 0 ? epg.data : [item];
+            if (!data.some(x => x.title === item.title)) data = data.concat([item]);
             let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
@@ -472,8 +465,8 @@ export default class DetailsPage extends React.Component {
                     () => { console.log("onDetail") });
         }
         else {
-            let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = data.concat([item]);
+            let data = epg.data.length !== 0 ? epg.data : [item];
+            if (!data.some(x => x.title === item.title)) data = data.concat([item]);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,
@@ -486,7 +479,7 @@ export default class DetailsPage extends React.Component {
         this.props.listScrollOffsetY(e.nativeEvent.contentOffset.y)
     }
 
-    _isFromChannel = () => this.props.navigation.state.params.isLive === true
+    _isFromChannel = () => this.state.isLive != null ? this.state.isLive === true : this.props.navigation.state.params.isLive === true
 
     _renderAppSection = (image, title, description, url) => {
         return (
