@@ -100,7 +100,13 @@ class ControlModalData {
             DispatchQueue.main.async {
                 self.delegate?.progressChanged(controlModalData: self)
             }
-            
+            if (!self.isLive) {
+                var movieJSON = [String: Any]()
+                movieJSON[UserKitKeys.StopPosition.rawValue] = currentProgress * self.durationInSeconds
+                movieJSON[UserKitKeys.Id.rawValue] = self.contentId as Any
+                let properties: [String: Any] = [ UserKitKeys.ContinueWatching.rawValue: movieJSON as Any]
+                WatchingHistory.sharedInstance.updateWatchingHistory(id: self.contentId, properties: properties, completion: nil, errorBlock: nil)
+            }
         }
     }
     public var redBarStartPoint: Double = 0         // 0.0 - 1.0
@@ -161,10 +167,11 @@ class ControlModalData {
         
         for i in 0..<arr.count {
             let image = arr[i]
-            if let name = asJsonObj(image)[JSONKeys.name] as? String, name == name {
+            if let imageName = asJsonObj(image)[JSONKeys.name] as? String, imageName == name {
                 return (asJsonObj(image)[JSONKeys.url] as? String) ?? ""
             }
         }
+        
         return (asJsonObj(arr.first)[JSONKeys.url] as? String) ?? ""
     }
     

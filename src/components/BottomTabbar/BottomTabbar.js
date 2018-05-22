@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, NativeModules, DeviceEventEmitter} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, NativeModules, DeviceEventEmitter, Modal, Platform} from 'react-native'
 import PropTypes from 'prop-types'
 import {colors} from '../../utils/themeConfig'
 import BlurView from '../BlurView'
 import LottieView from 'lottie-react-native';
+const {RNConnectionViewModule} = NativeModules;
 
 const tabs = [
     'Home',
@@ -18,11 +19,11 @@ let checkSTBInterval;
 class BottomTabbar extends Component {
     animation = null;
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             isPlaying: true
-        }
+        };
     }
 
     componentDidMount() {
@@ -37,7 +38,7 @@ class BottomTabbar extends Component {
             const {data} = e;
             if (data !== undefined) {
                 let event = JSON.parse(data);
-                switch(event['notify_event']) {
+                switch (event['notify_event']) {
                     case 'HIG_NOTIFY_EVENT_PLAY_STOP':
                         this._resetAnimation();
                         break;
@@ -58,7 +59,7 @@ class BottomTabbar extends Component {
     }
 
     componentWillUnmount() {
-            clearInterval(checkSTBInterval)
+        clearInterval(checkSTBInterval)
     }
 
     _resetAnimation() {
@@ -70,6 +71,7 @@ class BottomTabbar extends Component {
         if (this.animation != null)
             this.animation.play();
     }
+
     _renderTab = (tab, i) => {
         const {navigation} = this.props;
         let {index} = navigation.state;
@@ -77,15 +79,16 @@ class BottomTabbar extends Component {
             return (
                 <TouchableOpacity
                     onPress={() => console.log('click')}
+                    onLongPress={()=> (Platform.OS === "ios") && RNConnectionViewModule.show()}
                     style={styles.tab}
                     key={tab}
                 >
-                  <LottieView
-                      ref={animation => {
-                          this.animation = animation;
-                      }}
-                      source={require('../../assets/power_btn.json')}
-                  />
+                    <LottieView
+                        ref={animation => {
+                            this.animation = animation;
+                        }}
+                        source={require('../../assets/power_btn.json')}
+                    />
                 </TouchableOpacity>
             )
         } else {
@@ -100,7 +103,7 @@ class BottomTabbar extends Component {
                             tabIndex -= 1;
                         }
 
-                        if (navigation.state.index != tabIndex) {
+                        if (navigation.state.index !== tabIndex) {
                             navigation.navigate(tab);
                         } else {
                             navigation.popToTop();
@@ -109,7 +112,7 @@ class BottomTabbar extends Component {
                     style={styles.tab}
                     key={tab}
                 >
-                  <Text style={isActive ? styles.tabTextActive : styles.tabTextInActive}>{tab}</Text>
+                    <Text style={isActive ? styles.tabTextActive : styles.tabTextInActive}>{tab}</Text>
                 </TouchableOpacity>
             )
         }
@@ -118,7 +121,7 @@ class BottomTabbar extends Component {
     render() {
         return (
             <View style={styles.container}>
-              <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
+                <BlurView blurRadius={100} overlayColor={1} style={styles.blurview}/>
                 {tabs.map((tab, i) =>
                     this._renderTab(tab, i)
                 )}
@@ -129,10 +132,10 @@ class BottomTabbar extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        position:'absolute',
+        position: 'absolute',
         right: 0,
         left: 0,
-        bottom:0,
+        bottom: 0,
         backgroundColor: colors.greyOpacity,
         flexDirection: 'row',
         width: '100%',
@@ -143,24 +146,24 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         left: 0,
-        right:0,
+        right: 0,
         height: '100%'
     },
     tab: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor:'transparent'
+        backgroundColor: 'transparent'
     },
     tabTextActive: {
         color: colors.mainPink,
         fontSize: 11,
-        backgroundColor:'transparent'
+        backgroundColor: 'transparent'
     },
     tabTextInActive: {
         color: colors.textWhitePrimary,
         fontSize: 11,
-        backgroundColor:'transparent'
+        backgroundColor: 'transparent'
     }
 })
 BottomTabbar.propTypes = {

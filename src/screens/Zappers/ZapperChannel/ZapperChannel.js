@@ -30,7 +30,8 @@ export default class ZapperChannel extends Component {
             channelData: [],
             showAllChannels: true,
             favoriteChannels: [],
-            allChannels: []
+            allChannels: [],
+            alreadyNavigated: true
         };
         this.indicatorModal = null;
         this.alertModal = null;
@@ -77,12 +78,13 @@ export default class ZapperChannel extends Component {
 
     _zapChannel = (item) => {
         console.log("ZAP:",item);
+        this.setState({alreadyNavigated: false});
         this.props.getLiveEpgInZapper(true, item.serviceID);
         NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
             if (error) {
                 console.log(error);
             } else {
-                console.log(JSON.parse(events[0]))
+                console.log(JSON.parse(events[0]));
             }
         } )
     };
@@ -160,6 +162,7 @@ export default class ZapperChannel extends Component {
 
     _navigateToControlPage = (item) => {
         const {navigation} = this.props;
+        this.setState({alreadyNavigated: true});
         if (Platform.OS !== 'ios') {
             NativeModules.RNControlPageNavigation
                 .navigateControl([item],
@@ -182,8 +185,9 @@ export default class ZapperChannel extends Component {
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
         console.log('NextProps', epg);
-        if (epg.isFetching === false && epg.data != null && epg.data.epgsData != null && epg.data.epgsData.length !== 0) {
+        if (this.state.alreadyNavigated === false && epg.isFetching === false && epg.data != null && epg.data.epgsData != null && epg.data.epgsData.length !== 0) {
             this._navigateToControlPage(epg.data.epgsData[0]);
+
         }
     }
 

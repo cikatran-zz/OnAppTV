@@ -1,5 +1,5 @@
 //
-//  NotificationCenter.swift
+//  CustomNotificationCenter.swift
 //  OnAppTV
 //
 //  Created by Chuong Huynh on 3/13/18.
@@ -10,9 +10,9 @@ import UIKit
 import UserNotifications
 
 
-class NotificationCenter: NSObject, UNUserNotificationCenterDelegate {
+class CustomNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     
-    static let shared = NotificationCenter()
+    static let shared = CustomNotificationCenter()
     
     private override init() {
         super.init()

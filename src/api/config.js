@@ -694,12 +694,17 @@ query getVODs($id: [String]!){
       contentId
       durationInSeconds
       title
+      genres {
+        name
+        createdAt
+        updatedAt
+        projectId
+      }
       seriesId
       seasonIndex
       episodeIndex
       type
-      
-      metadata
+      custom
       originalImages {
         height
         width
@@ -717,7 +722,7 @@ query getVODs($id: [String]!){
 `;
 
 const liveChannelInZapper = gql`
-query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
+query liveChannelInZapper($serviceId: Float){
   viewer {
     channelPagination(filter: {
       _operators: {

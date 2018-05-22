@@ -226,6 +226,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
         if !onceOnly {
             let indexToScrollTo = IndexPath(item: index.intValue, section: 0)
             self.collectionView.scrollToItem(at: indexToScrollTo, at: .centeredHorizontally, animated: false)
+            onIndexChanged(["index": index.intValue])
             // Zap or play media
             if (isSTBConnected) {
                 if (self.videosData[index.intValue].isLive) {
