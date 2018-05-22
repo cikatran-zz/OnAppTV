@@ -244,7 +244,6 @@ export default class ZapperChannel extends Component {
             if (epg.data == null || epg.data.epgsData.length === 0) {
                 this.alertModal.state.message = "Channel is offline";
                 this.alertModal.state.isShow = true;
-                this.indicatorModal.state.isShow = false;
             }
         }
 

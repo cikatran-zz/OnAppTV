@@ -10,7 +10,7 @@ class ZapperCell extends React.Component{
 
     render(){
         return (
-            <View style={this.props.style}>
+            <View style={this.props.style} renderToHardwareTextureAndroid={true}>
                 <View style={styles.placeHolder}>
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>
@@ -22,8 +22,8 @@ class ZapperCell extends React.Component{
 const styles = StyleSheet.create({
     icon: {
         overflow: "hidden",
-        borderRadius: 22,
-        resizeMode: 'stretch',
+        borderRadius: Platform.OS === 'ios' ? 11 : 22,
+        resizeMode: 'cover',
         width: '100%',
         height: '100%',
         top:0,
