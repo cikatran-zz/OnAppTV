@@ -717,7 +717,7 @@ query getVODs($id: [String]!){
 `;
 
 const liveChannelInZapper = gql`
-query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
+query liveChannelInZapper($serviceId: Float){
   viewer {
     channelPagination(filter: {
       _operators: {
@@ -735,6 +735,20 @@ query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
         longDescription
         shortDescription
         epgsData(current: true) {
+        channelData {
+              serviceId
+              lcn
+              ipLink
+              updatedAt
+              createdAt
+              title
+              longDescription
+              shortDescription
+              state
+              custom
+              projectId
+              kind
+            }
           videoId
           genreIds
           videoData {
@@ -744,7 +758,18 @@ query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
             title
             longDescription
             shortDescription
-            feature
+            originalImages {
+              height
+              width
+              url
+              name
+              fileName
+              scaledImage {
+                  height
+                  width
+                  url
+              }
+            }
             genres {
               name
             }
@@ -752,7 +777,7 @@ query liveChannelInZapper($currentTime: Boolean, $serviceId: Float){
             seasonIndex
             episodeIndex
             type
-            impression
+            
             state
             custom
             createdAt
