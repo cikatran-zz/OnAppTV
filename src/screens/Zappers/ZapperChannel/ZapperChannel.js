@@ -164,7 +164,7 @@ export default class ZapperChannel extends Component {
             NativeModules.RNControlPageNavigation
                 .navigateControl([item],
                     0,
-                    false,
+                    true,
                     false,
                     true,
                     () => { console.log("onDismiss") },
@@ -174,15 +174,16 @@ export default class ZapperChannel extends Component {
             navigation.navigate('VideoControlModal', {
                 item: item,
                 epg: [item],
-                isLive: false
+                isLive: true
             })
         }
     };
 
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
-        if (epg.isFetching === false && epg.epgsData != null && epg.epgsData.length !== 0) {
-            this._navigateToControlPage(epg.epgsData[0]);
+        console.log('NextProps', epg);
+        if (epg.isFetching === false && epg.data != null && epg.data.epgsData != null && epg.data.epgsData.length !== 0) {
+            this._navigateToControlPage(epg.data.epgsData[0]);
         }
     }
 
@@ -237,7 +238,10 @@ export default class ZapperChannel extends Component {
             this.indicatorModal.state.isShow = true;
         }
         if (epg.isFetching === false && this.indicatorModal != null) {
-            if (epg.epgsData == null) {
+            this.indicatorModal.state.isShow = false;
+        }
+        if (epg.isFetching === false && epg.isFetched === true && this.indicatorModal != null) {
+            if (epg.data == null || epg.data.epgsData.length === 0) {
                 this.alertModal.state.message = "Channel is offline";
                 this.alertModal.state.isShow = true;
                 this.indicatorModal.state.isShow = false;
