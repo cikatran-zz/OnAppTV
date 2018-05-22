@@ -238,12 +238,12 @@ export const getLive = (currentTime, page, itemPerPage) => {
             if (connected) {
                 resolve(client.query({
                     query: config.queries.LIVESTB,
-                    variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
+                    variables: {page: page, perPage: itemPerPage}
                 }));
             } else {
                 resolve(client.query({
                     query: config.queries.LIVENOSTB,
-                    variables: {page: page, perPage: itemPerPage, currentTime: currentTime}
+                    variables: {page: page, perPage: itemPerPage}
                 }));
             }
 
