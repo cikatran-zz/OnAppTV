@@ -173,6 +173,9 @@ export default class Home extends Component {
                             <Text style={styles.bannerTitle}>
                                 {item.title}
                             </Text>
+                            <Text style={styles.bannerSubtitle}>
+                                {item.shortDescription}
+                            </Text>
                         </View>
                     </ImageBackground>
                 </View>
@@ -235,10 +238,11 @@ export default class Home extends Component {
             );
         }
 
-        let imageUrl = getImageFromArray(item.data.originalImages, 'feature', 'landscape');
-        console.log("Image URL: ", imageUrl);
+        let imageUrl = getImageFromArray(item.data.originalImages, 'landscape', 'feature');
         return (
-            <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}>
+            <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}
+                                style={{width: '100%',
+                                        alignSelf: 'center'}}>
                 <View style={styles.notificationContainer}>
                     <View style={styles.placeHolder}>
                         <Text style={styles.textPlaceHolder}>On App TV</Text>
@@ -782,7 +786,8 @@ const styles = StyleSheet.create({
     notificationImage: {
         ...borderedImageDefault,
         width: '100%',
-        aspectRatio: 2.5
+        height: 130,
+        resizeMode: 'cover'
     },
     notificationTitle: {
         ...textDarkDefault,

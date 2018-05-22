@@ -44,7 +44,6 @@ export const textWhiteDefault = {
 }
 
 export const borderedImageDefault = {
-  aspectRatio: 2,
   borderRadius: 3,
   overflow: 'hidden',
 }
