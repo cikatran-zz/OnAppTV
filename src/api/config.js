@@ -12,6 +12,7 @@ query queryChannel($serviceIDs: [Float]!){
       }
     }) {
       items {
+        _id
         serviceId
         lcn
         title
