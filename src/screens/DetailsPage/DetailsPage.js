@@ -53,10 +53,11 @@ export default class DetailsPage extends React.Component {
                 /*
                  Fetch epg with related content or epg in series
                  */
-                if (item.type === 'Episode')
+              if (item.type === 'Episode')
                     this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], 1, 10)
-                else
+                else {
                     this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10)
+              }
             }
         }
 

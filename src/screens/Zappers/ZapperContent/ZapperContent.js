@@ -99,6 +99,7 @@ export default class ZapperContent extends Component {
         let endOfDay = moment().endOf('day');
         this._rangeTime = moment.duration(endOfDay.diff(this._currentTime)).asMinutes();
         this._offsetRate  =  this._rangeTime / rangeHeight;
+        this.props.getChannel(-1);
         this.props.getZapperContent(this._currentTime.toISOString(true));
     };
 
