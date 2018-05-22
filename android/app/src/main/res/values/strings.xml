@@ -1,4 +1,5 @@
 <resources>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">d13a7611-a801-4318-b606-b374ee9d22ad</string>
     <string name="app_name">OnAppTV</string>
     <string name="facebook_app_id">362491514234474</string>
 </resources>
