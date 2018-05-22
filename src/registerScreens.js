@@ -15,6 +15,9 @@ import SignUp from "./screens/Authentication/SignUp";
 import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
 import DetailsPage from './screens/DetailsPage'
 import BrightcovePlayerScreen from './screens/BrightcovePlayer'
+import {
+    Platform
+} from 'react-native'
 
 const TabNav = TabNavigator({
     Home: {

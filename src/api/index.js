@@ -726,8 +726,10 @@ export const getWatchingHistory = () => {
                     // result = JSON.parse(result);
                     // if (_.isEmpty(result));
                     //     result = [];
+                    console.log("RES", result);
                     try {
                         let contentIds = result.map((item)=>item.id);
+                        console.log("CONTENTIDS", contentIds);
                         client.query({
                             query: config.queries.VOD_BY_IDS,
                             variables: {id: contentIds}

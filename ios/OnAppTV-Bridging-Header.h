@@ -6,3 +6,6 @@
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTComponent.h>
 #import "WebViewJavascriptBridge.h"
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
+#import "AppDelegate.h"

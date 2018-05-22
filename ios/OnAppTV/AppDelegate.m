@@ -8,7 +8,6 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
-#import <React/RCTRootView.h>
 #import <AVFoundation/AVFoundation.h>
 #import "Orientation.h"
 #import "OnAppTV-Swift.h"
@@ -24,16 +23,26 @@
     jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:@"main" fallbackExtension:@"jsbundle"];
     //jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
     
-    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+    _reactNativeView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                         moduleName:@"OnAppTV"
                                                  initialProperties:nil
                                                      launchOptions:launchOptions];
-    rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+    _reactNativeView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    UIViewController *rootViewController = [UIViewController new];
-    rootViewController.view = rootView;
-    self.window.rootViewController = rootViewController;
+    
+    BOOL isStarted = [NSUserDefaults.standardUserDefaults boolForKey:@"isStarted"];
+    if (isStarted) {
+        UIViewController *rootViewController = [UIViewController new];
+        rootViewController.view = _reactNativeView;
+        self.window.rootViewController = rootViewController;
+    } else {
+        [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"isStarted"];
+        [OpenSoftwareUpdateVC.sharedInstance openWithWindow:self.window];
+    }
+    
+    
+    
     [self.window makeKeyAndVisible];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
     

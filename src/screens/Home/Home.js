@@ -21,7 +21,7 @@ import {
     Linking,
     InteractionManager,
     DeviceEventEmitter,
-    ActivityIndicator
+    ActivityIndicator, NativeEventEmitter
 } from 'react-native';
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -39,12 +39,21 @@ import {DotsLoader} from "react-native-indicator";
 import {getImageFromArray} from "../../utils/images";
 import moment from 'moment';
 
+const { RNConnectionViewModule } = NativeModules;
+const connectionViewEmitter = new NativeEventEmitter(RNConnectionViewModule);
+
+
 export default class Home extends Component {
     _livePage = 1;
     _vodPage = 1;
     constructor(props) {
         super(props);
         this.alertVC = null;
+
+        this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event)=> {
+            console.log("Refresh");
+            this.fetchData()
+        });
     };
 
     componentWillMount() {

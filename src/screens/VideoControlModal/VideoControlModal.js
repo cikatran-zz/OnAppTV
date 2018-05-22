@@ -148,9 +148,10 @@ export default class VideoControlModal extends React.Component {
 
         if (orientation === 'LANDSCAPE-LEFT' || orientation === 'LANDSCAPE-RIGHT') {
             !(Platform.OS === "ios") && this.setState({showBrightcove: true});
-            const {item} = this.props.navigation.state.params;
-            if (item && this.showingBrightcove === false) {
-                let videoId = item.contentId ? item.contentId : '5714823997001';
+            const {epg} = this.props.navigation.state.params;
+            let it = epg[this.state.index];
+            if (it && this.showingBrightcove === false) {
+                let videoId = it.contentId ? it.contentId : '5714823997001';
                 this.showingBrightcove = true;
                 RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I', {});
             }
@@ -194,8 +195,9 @@ export default class VideoControlModal extends React.Component {
     }
 
     _informationPress = (item, epg, isLive) => {
+        console.log("Information",this.state.index);
         this.props.navigation.replace('DetailsPage', {
-            item: item,
+            item: epg[this.state.index < 0 ? 0 : this.state.index],
             epg: epg.data,
             isLive: isLive
         })
@@ -226,7 +228,7 @@ export default class VideoControlModal extends React.Component {
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
         const {bcVideos} = this.props;
-        let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+        let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn);
         let url = '';
 
         if (bcVideos.data != null) {
@@ -234,8 +236,6 @@ export default class VideoControlModal extends React.Component {
                 return !!x.container
             })[0].src
         }
-
-        console.log("Render modal");
 
         return (
             <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}}

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SF-UI-Text-Regular.otf">
+            <string>SFUIText-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WlanWPSViewController" customModule="OnAppTV" customModuleProvider="target">
+            <connections>
+                <outlet property="installBtn" destination="YnX-Ac-TWw" id="lTu-0o-tGo"/>
+                <outlet property="searchBtn" destination="Yvy-wF-PB8" id="I9P-pd-66A"/>
+                <outlet property="swiperView" destination="ZGd-Up-qxS" id="fVf-hK-mfy"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="STB’s Wifi connection" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vhz-g7-hjA">
+                    <rect key="frame" x="95.5" y="34.5" width="184" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="vhz-g7-hjA" secondAttribute="height" multiplier="175:20" id="53b-Er-5XO"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                    <color key="textColor" red="0.46666666666666667" green="0.46666666666666667" blue="0.46666666666666667" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KGn-OW-6uM">
+                    <rect key="frame" x="312.5" y="30.5" width="44" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="KGn-OW-6uM" secondAttribute="height" multiplier="1:1" id="bIh-xN-WwY"/>
+                    </constraints>
+                    <state key="normal" image="start-wifi_connect_close"/>
+                    <connections>
+                        <action selector="comeBack:" destination="-1" eventType="touchUpInside" id="vI7-tE-ksM"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZGd-Up-qxS" customClass="SwiperView" customModule="OnAppTV" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="74.5" width="375" height="379"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sYG-f1-GWj">
+                    <rect key="frame" x="0.0" y="453.5" width="375" height="214"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yvy-wF-PB8">
+                            <rect key="frame" x="72" y="0.0" width="232" height="33.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Yvy-wF-PB8" secondAttribute="height" multiplier="232:33.35" id="DTC-zT-3KI"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                            <state key="normal" title="Search your STB">
+                                <color key="titleColor" red="0.51764705882352935" green="0.51764705882352935" blue="0.51764705882352935" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="searchSTB:" destination="-1" eventType="touchUpInside" id="yCu-dL-348"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YnX-Ac-TWw">
+                            <rect key="frame" x="72" y="47" width="232" height="33.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="YnX-Ac-TWw" secondAttribute="height" multiplier="232:33.35" id="zhI-RU-UkE"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                            <state key="normal" title="Install in manual mode">
+                                <color key="titleColor" red="0.51764705882352935" green="0.51764705882352935" blue="0.51764705882352935" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <state key="highlighted">
+                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="installInManual:" destination="-1" eventType="touchUpInside" id="utl-5O-XPJ"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6e5-2b-gHU">
+                            <rect key="frame" x="283.5" y="149.5" width="65.5" height="38.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="6e5-2b-gHU" secondAttribute="height" multiplier="65.62:39" id="T7m-sM-rFY"/>
+                            </constraints>
+                            <state key="normal" image="start-wifi_connect_wps"/>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press here for more details" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bMi-v6-QGy">
+                            <rect key="frame" x="29.5" y="98.5" width="316" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="bMi-v6-QGy" secondAttribute="height" multiplier="316:16" id="1JL-ne-pbu"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="13"/>
+                            <color key="textColor" red="0.9882352941176471" green="0.20784313725490194" blue="0.35686274509803922" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="bMi-v6-QGy" firstAttribute="centerX" secondItem="sYG-f1-GWj" secondAttribute="centerX" id="3ja-q2-cbi"/>
+                        <constraint firstAttribute="trailing" secondItem="6e5-2b-gHU" secondAttribute="trailing" constant="26" id="8tR-69-f74"/>
+                        <constraint firstItem="Yvy-wF-PB8" firstAttribute="centerX" secondItem="sYG-f1-GWj" secondAttribute="centerX" id="Buc-6C-iin"/>
+                        <constraint firstItem="YnX-Ac-TWw" firstAttribute="centerY" secondItem="sYG-f1-GWj" secondAttribute="centerY" multiplier="0.6" id="CBL-BG-xFx"/>
+                        <constraint firstItem="bMi-v6-QGy" firstAttribute="centerY" secondItem="sYG-f1-GWj" secondAttribute="centerY" id="QcV-iF-ivs"/>
+                        <constraint firstItem="Yvy-wF-PB8" firstAttribute="top" secondItem="sYG-f1-GWj" secondAttribute="top" id="aHW-Z5-xWE"/>
+                        <constraint firstItem="Yvy-wF-PB8" firstAttribute="width" secondItem="sYG-f1-GWj" secondAttribute="width" multiplier="232:375" id="den-kD-erc"/>
+                        <constraint firstItem="YnX-Ac-TWw" firstAttribute="width" secondItem="sYG-f1-GWj" secondAttribute="width" multiplier="232:375" id="fIz-DQ-8AQ"/>
+                        <constraint firstAttribute="bottom" secondItem="6e5-2b-gHU" secondAttribute="bottom" constant="26" id="h7w-Pz-ZcI"/>
+                        <constraint firstItem="6e5-2b-gHU" firstAttribute="width" secondItem="sYG-f1-GWj" secondAttribute="width" multiplier="65.62:375" id="lRt-Nc-JmW"/>
+                        <constraint firstItem="YnX-Ac-TWw" firstAttribute="centerX" secondItem="sYG-f1-GWj" secondAttribute="centerX" id="nUK-OF-I7N"/>
+                        <constraint firstItem="bMi-v6-QGy" firstAttribute="width" secondItem="sYG-f1-GWj" secondAttribute="width" multiplier="316:375" id="ynz-YQ-o7d"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="sYG-f1-GWj" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="5Yv-IZ-AFa"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="KGn-OW-6uM" secondAttribute="trailing" constant="18.5" id="8U8-BJ-rkK"/>
+                <constraint firstItem="KGn-OW-6uM" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="44:375" id="Dj1-78-b8x"/>
+                <constraint firstItem="KGn-OW-6uM" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="10.5" id="FWk-vL-XR6"/>
+                <constraint firstItem="ZGd-Up-qxS" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="GTY-Pu-Ujy"/>
+                <constraint firstItem="ZGd-Up-qxS" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="379:667" id="I4k-er-DJt"/>
+                <constraint firstItem="vhz-g7-hjA" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="14.5" id="Jd4-rJ-qdb"/>
+                <constraint firstItem="sYG-f1-GWj" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="JiG-if-NaD"/>
+                <constraint firstItem="vhz-g7-hjA" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Lcs-j6-kFx"/>
+                <constraint firstItem="sYG-f1-GWj" firstAttribute="top" secondItem="ZGd-Up-qxS" secondAttribute="bottom" id="X3g-VA-Ee8"/>
+                <constraint firstItem="sYG-f1-GWj" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="214:667" id="ab9-vn-gJb"/>
+                <constraint firstItem="ZGd-Up-qxS" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="fU8-zS-BQ6"/>
+                <constraint firstItem="ZGd-Up-qxS" firstAttribute="top" secondItem="KGn-OW-6uM" secondAttribute="bottom" id="faz-qT-Hpj"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="leading" secondItem="ZGd-Up-qxS" secondAttribute="leading" id="fwE-eH-D5r"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="leading" secondItem="sYG-f1-GWj" secondAttribute="leading" id="o4q-6a-XSb"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="33" y="53"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="start-wifi_connect_close" width="44" height="44"/>
+        <image name="start-wifi_connect_wps" width="66" height="44"/>
+    </resources>
+</document>

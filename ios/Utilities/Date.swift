@@ -11,5 +11,6 @@ import Foundation
 let timeDistance = Date().timeIntervalSince1970 - 1525136400
 
 func getCurrentTime() -> Date {
-    return Date(timeIntervalSince1970: Date().timeIntervalSince1970 - timeDistance)
+    return Date()
+    //return Date(timeIntervalSince1970: Date().timeIntervalSince1970 - timeDistance)
 }
