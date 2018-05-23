@@ -1,8 +1,8 @@
 
 import React, {Component} from 'react';
 import {
-  StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
-  Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules, Modal
+    StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
+    Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules, Modal, Platform
 } from 'react-native'
 import ZapperCell from '../../../components/ZapperCell';
 import PinkRoundedLabel from "../../../components/PinkRoundedLabel";
@@ -113,12 +113,36 @@ export default class ZapperContent extends Component {
         return image;
     }
 
+    _navigateToControlPage = (item) => {
+        const {navigation} = this.props;
+        const {content} = this.props;
+        if (Platform.OS !== 'ios') {
+            NativeModules.RNControlPageNavigation
+                .navigateControl(content.data,
+                    0,
+                    true,
+                    false,
+                    true,
+                    () => { console.log("onDismiss") },
+                    () => { console.log("onDetail") });
+        }
+        else {
+
+            navigation.navigate('VideoControlModal', {
+                item: item,
+                epg: content.data,
+                isLive: true
+            })
+        }
+    };
+
     _zapChannel = (item) => {
         let currentTime = moment();
         let showTime = moment(item.startTime);
         if (showTime.isAfter(currentTime)){
             this._checkConnectionAndShowRecord(item)
         } else {
+            this._navigateToControlPage(item);
             NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.channelData.lCN}),(error, events) => {
                 if (error) {
                     console.log(error);
