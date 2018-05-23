@@ -37,7 +37,7 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
         <activity android:name=".android_stb_connect.TabBarActivity"/>
         <activity android:name=".BrightcoveActivity"/>
-        <activity android:name=".ControlActivity"/>
+        <activity android:name=".ControlActivity" android:configChanges="orientation|screenSize"/>
 
         <service
                 android:name=".NotificationHandler"

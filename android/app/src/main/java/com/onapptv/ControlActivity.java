@@ -63,4 +63,8 @@ public class ControlActivity extends AppCompatActivity implements FragmentContro
     public static Boolean getIsDisconneted() {
         return isDisconnected;
     }
+
+    public int currentIndex() {
+        return mViewPager.getCurrentItem();
+    }
 }

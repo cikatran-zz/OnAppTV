@@ -181,12 +181,12 @@ android {
 }
 
 ext {
-    userkitVersion = "2.2.49.1"
+    userkitVersion = "2.2.50"
     userkitVersionStaging = "2.2.49.1-staging"
 }
 
 dependencies {
-    compile project(':react-native-code-push')
+    implementation project(':react-native-code-push')
     implementation project(':lottie-react-native')
     implementation project(':lottie-react-native')
     implementation project(':react-native-vector-icons')

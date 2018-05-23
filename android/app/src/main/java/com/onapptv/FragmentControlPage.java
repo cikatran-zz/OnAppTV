@@ -95,6 +95,8 @@ public class FragmentControlPage extends Fragment {
     Boolean isRecorded = false;
     Boolean isFavorite = false;
     Gson gson = new Gson();
+    Boolean visibleToUser = null;
+    int selfIndex = 0;
 
     interface OnPlayFinished {
         void nextPage();
@@ -104,6 +106,10 @@ public class FragmentControlPage extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
+    }
+
+    public HashMap getData() {
+        return mData;
     }
 
     public void setProgress(int progress) {
@@ -160,6 +166,7 @@ public class FragmentControlPage extends Fragment {
     @Override
     public void onCreate(Bundle onSavedInstanceState) {
         super.onCreate(onSavedInstanceState);
+        selfIndex = getArguments().getInt("index");
 
         if (ControlPageAdapter.isLive()) {
             mDataLive = (HashMap) getArguments().getSerializable("item");
@@ -205,16 +212,6 @@ public class FragmentControlPage extends Fragment {
                 }
             });
 
-            int currentOrientation = getResources().getConfiguration().orientation;
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                // Landscape
-                Intent intent = new Intent(getContext(), BrightcoveActivity.class);
-                intent.putExtra(BrightcoveActivity.VIDEO_ID, mData.get("contentId").toString());
-                intent.putExtra(BrightcoveActivity.ACCOUNT_ID, "5706818955001");
-                intent.putExtra(BrightcoveActivity.POLICY_KEY, "BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I");
-                intent.putExtra(BrightcoveActivity.METADATA, new HashMap<>());
-                getContext().startActivity(intent);
-            }
         }
 
     }
@@ -504,7 +501,7 @@ public class FragmentControlPage extends Fragment {
                 case ControlPageAdapter.IS_FROM_BANNER: {
                     WritableMap params = Arguments.createMap();
                     Gson gson = new Gson();
-                    String itemJson = gson.toJson(mData);
+                    String itemJson = mData != null ? gson.toJson(mData) : gson.toJson(mDataLive);
                     params.putString("item", itemJson);
                     params.putBoolean("isLive", ControlPageAdapter.isLive());
                     sendEvent(((MainApplication) getActivity().getApplication()).getReactContext(),
@@ -697,5 +694,22 @@ public class FragmentControlPage extends Fragment {
             genre = genre.concat(genres.get(i).get("name").toString());
         }
         return genre;
+    }
+
+    Boolean isMainFragment() {
+        return selfIndex == ((ControlActivity) getActivity()).currentIndex();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && isMainFragment()) {
+            Intent intent = new Intent(getContext(), BrightcoveActivity.class);
+            intent.putExtra(BrightcoveActivity.VIDEO_ID, mData.get("contentId").toString());
+            intent.putExtra(BrightcoveActivity.ACCOUNT_ID, "5706818955001");
+            intent.putExtra(BrightcoveActivity.POLICY_KEY, "BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I");
+            intent.putExtra(BrightcoveActivity.METADATA, new HashMap<>());
+            getContext().startActivity(intent);
+        }
     }
 }

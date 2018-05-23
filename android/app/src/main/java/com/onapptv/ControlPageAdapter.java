@@ -29,12 +29,12 @@ public class ControlPageAdapter extends FragmentStatePagerAdapter {
                               ArrayList epg,
                               Boolean isLive,
                               Boolean fromBanner,
-                              Boolean isFromChannel) {
+                              Boolean fromChannel) {
         super(fm);
         setEpg(epg);
         mIsLive = isLive;
         isFromBanner = fromBanner;
-        isFromChannel = isFromChannel;
+        isFromChannel = fromChannel;
         mFm = fm;
     }
 
@@ -54,13 +54,15 @@ public class ControlPageAdapter extends FragmentStatePagerAdapter {
         return mIsLive;
     }
 
-    public static Boolean isFromBanner() { return isFromBanner; }
+    public static Boolean isFromBanner() {
+        return isFromBanner;
+    }
 
     public static Boolean isFromChannel() { return isFromChannel; }
 
     public static String getStatus() {
-        if (isLive()) return IS_FROM_LIVE_DETAILS;
         if (isFromBanner()) return IS_FROM_BANNER;
+        if (isLive()) return IS_FROM_LIVE_DETAILS;
         if (isFromChannel()) return IS_FROM_CHANNEL;
         return IS_FROM_VOD_DETAILS;
     }
