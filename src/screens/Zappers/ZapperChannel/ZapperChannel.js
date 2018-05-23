@@ -93,7 +93,7 @@ export default class ZapperChannel extends Component {
         } )
     };
 
-    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._zapChannel(item.item)}
+    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
                                                style={styles.item}
                                                onPress={()=>this._zapChannel(item.item)}>
         <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>

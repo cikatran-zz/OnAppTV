@@ -9,6 +9,7 @@ import {getCategory} from "../../actions/getCategory";
 import {getNews} from "../../actions/getNews";
 import {getWatchingHistory} from "../../actions/getWatchingHistory";
 import {getPlaylist} from '../../actions/getPlaylist'
+import { getLiveEpgInZapper } from '../../actions/getLiveEpgInZapper'
 
 function mapStateToProps(state) {
     return {
@@ -20,7 +21,8 @@ function mapStateToProps(state) {
         news: state.newsReducer,
         watchingHistory: state.watchingHistoryReducer,
         channel: state.channelReducer,
-        playlist: state.playlistReducer
+        playlist: state.playlistReducer,
+        epgZap: state.liveEpgInZapperReducer
     }
 }
 
@@ -34,7 +36,8 @@ function mapDispatchToProps(dispatch) {
         getNews: () => dispatch(getNews()),
         getWatchingHistory: () => dispatch(getWatchingHistory()),
         getChannel: () => dispatch(getChannel()),
-        getPlaylist: (playlist) => dispatch(getPlaylist(playlist))
+        getPlaylist: (playlist) => dispatch(getPlaylist(playlist)),
+        getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId))
     }
 }
 

@@ -54,12 +54,45 @@ export default class Home extends Component {
             console.log("Refresh");
             this.fetchData()
         });
+        this.state = {
+            alreadyNavigated: false
+        };
     };
 
     componentWillMount() {
         Orientation.lockToPortrait();
     }
 
+    componentWillReceiveProps(nextProps) {
+        const {epgZap} = this.props;
+        if (this.state.alreadyNavigated === false && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
+            this._navigateToControlPage(epgZap.data);
+        }
+    }
+
+    _navigateToControlPage = (array) => {
+        const {navigation} = this.props;
+        const {zapIndex} = this.state;
+        this.setState({alreadyNavigated: true});
+        console.log('Array', array, zapIndex);
+        if (Platform.OS !== 'ios') {
+            NativeModules.RNControlPageNavigation
+                .navigateControl(array,
+                    zapIndex,
+                    true,
+                    true, // Use true at isFromBanner because similar behavior
+                    true,
+                    () => { console.log("onDismiss") },
+                    () => { console.log("onDetail") });
+        }
+        else {
+            navigation.navigate('VideoControlModal', {
+                item: array[zapIndex],
+                epg: array,
+                isLive: true
+            })
+        }
+    };
 
     fetchData() {
         InteractionManager.runAfterInteractions(() => {
@@ -130,6 +163,12 @@ export default class Home extends Component {
     };
 
     _onChannelPress = (item) => {
+        const {channel} = this.props;
+        this.setState({alreadyNavigated: false});
+        this.setState({
+            zapIndex: channel.favoriteChannels != null ? channel.favoriteChannels.findIndex(x => x.serviceID === item.serviceID) : 0
+        })
+        this.props.getLiveEpgInZapper(true, channel.favoriteChannels.map(x => x.serviceID));
         NativeModules.STBManager.isConnect((connectString) => {
             let connected = JSON.parse(connectString).is_connected;
             if (connected) {
