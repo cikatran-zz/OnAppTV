@@ -7,7 +7,7 @@
 import React, {Component} from 'react';
 import {
     StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList,
-    TouchableOpacity, NativeModules, Platform, InteractionManager, ActivityIndicator
+    TouchableOpacity, NativeModules, Platform, InteractionManager, ActivityIndicator, DeviceEventEmitter
 } from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
@@ -31,7 +31,8 @@ export default class ZapperChannel extends Component {
             showAllChannels: true,
             favoriteChannels: [],
             allChannels: [],
-            alreadyNavigated: true
+            alreadyNavigated: true,
+            zapIndex: 0,
         };
         this.indicatorModal = null;
         this.alertModal = null;
@@ -77,9 +78,12 @@ export default class ZapperChannel extends Component {
     };
 
     _zapChannel = (item) => {
-        console.log("ZAP:",item);
+        const {channel} = this.props;
+        this.setState({
+            zapIndex: channel.data != null ? channel.data.findIndex(x => x.serviceID === item.serviceID) : 0
+        })
         this.setState({alreadyNavigated: false});
-        this.props.getLiveEpgInZapper(true, item.serviceID);
+        this.props.getLiveEpgInZapper(true, channel.data != null ? channel.data.map(x => x.serviceID) : []);
         NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
             if (error) {
                 console.log(error);
@@ -89,7 +93,7 @@ export default class ZapperChannel extends Component {
         } )
     };
 
-    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
+    _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._zapChannel(item.item)}
                                                style={styles.item}
                                                onPress={()=>this._zapChannel(item.item)}>
         <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
@@ -130,7 +134,6 @@ export default class ZapperChannel extends Component {
 
         this._filterFavoriteChannel();
 
-
         let newData = this.state.allChannels;
         let currentIndex = this.channelModal.state.currentIndex;
         let currentFavorite = this.channelModal.state.currentFavorite === "Favorite" ? "Unfavorite" : "Favorite";
@@ -160,23 +163,25 @@ export default class ZapperChannel extends Component {
         this.setState({channelData: newData})
     };
 
-    _navigateToControlPage = (item) => {
+    _navigateToControlPage = (array) => {
         const {navigation} = this.props;
+        const {zapIndex} = this.state;
         this.setState({alreadyNavigated: true});
+        console.log('Array', array, zapIndex);
         if (Platform.OS !== 'ios') {
             NativeModules.RNControlPageNavigation
-                .navigateControl([item],
-                    0,
+                .navigateControl(array,
+                    zapIndex,
                     true,
-                    false,
+                    true, // Use true at isFromBanner because similar behavior
                     true,
                     () => { console.log("onDismiss") },
                     () => { console.log("onDetail") });
         }
         else {
             navigation.navigate('VideoControlModal', {
-                item: item,
-                epg: [item],
+                item: array[zapIndex],
+                epg: array,
                 isLive: true
             })
         }
@@ -184,9 +189,9 @@ export default class ZapperChannel extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
-        if (this.state.alreadyNavigated === false && epg.isFetching === false && epg.data != null && epg.data.epgsData != null && epg.data.epgsData.length !== 0) {
-            this._navigateToControlPage(epg.data.epgsData[0]);
-
+        console.log('ReceiveProps', epg);
+        if (this.state.alreadyNavigated === false && epg.isFetching === false && epg.data != null && epg.data.length != 0) {
+            this._navigateToControlPage(epg.data);
         }
     }
 
@@ -244,7 +249,7 @@ export default class ZapperChannel extends Component {
             this.indicatorModal.state.isShow = false;
         }
         if (epg.isFetching === false && epg.isFetched === true && this.indicatorModal != null) {
-            if (epg.data == null || epg.data.epgsData.length === 0) {
+            if (epg.data == null || epg.data.length === 0) {
                 this.alertModal.state.message = "Channel is offline";
                 this.alertModal.state.isShow = true;
             }

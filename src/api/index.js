@@ -769,7 +769,7 @@ export const getWatchingHistory = () => {
 export const getLiveEpgInChannel = (currentTime, serviceId) => {
     return client.query({
         query: config.queries.LIVE_CHANNEL_IN_ZAPPER,
-        variables: {serviceId: serviceId}
+        variables: {serviceId: serviceId, perPage: serviceId.length}
     })
 }
 

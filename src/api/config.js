@@ -33,7 +33,7 @@ query queryChannel($serviceIDs: [Float]!){
 }`;
 
 const zapperContentQuery = gql`
-query queryZapperByTime($currentTime: Date, $channelIds: [MongoID!]){
+query queryZapperByTime($currentTime: Date, $channelIds: [String]){
   viewer{
     epgRange (
       current:$currentTime,
@@ -724,15 +724,15 @@ query getVODs($id: [String]!){
 `;
 
 const liveChannelInZapper = gql`
-query liveChannelInZapper($serviceId: Float){
+query liveChannelInZapper($serviceId: [Float], $perPage: Int){
   viewer {
     channelPagination(filter: {
       _operators: {
         serviceId: {
-          in: [$serviceId]
+          in: $serviceId
         }
       }
-    }, page: 1, perPage: 1) {
+    }, page: 1, perPage: $perPage) {
       count
       items {
         serviceId

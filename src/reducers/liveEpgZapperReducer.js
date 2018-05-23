@@ -19,7 +19,7 @@ export default function liveEpgZapperReducer(state = initialState, action) {
             ...state,
             isFetching: false,
             fetched: true,
-            data: action.data[0]
+            data: action.data.filter(x => x.epgsData != null && x.epgsData.length != 0).map(x => x.epgsData[0])
         };
         case actionTypes.FETCH_LIVE_EPG_IN_ZAPPER_FAILURE:
             return {
