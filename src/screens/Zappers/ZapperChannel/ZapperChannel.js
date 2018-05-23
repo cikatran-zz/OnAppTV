@@ -184,7 +184,6 @@ export default class ZapperChannel extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
-        console.log('NextProps', epg);
         if (this.state.alreadyNavigated === false && epg.isFetching === false && epg.data != null && epg.data.epgsData != null && epg.data.epgsData.length !== 0) {
             this._navigateToControlPage(epg.data.epgsData[0]);
 

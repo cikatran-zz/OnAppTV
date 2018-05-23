@@ -33,10 +33,11 @@ query queryChannel($serviceIDs: [Float]!){
 }`;
 
 const zapperContentQuery = gql`
-query queryZapperByTime($currentTime: Date){
+query queryZapperByTime($currentTime: Date, $channelIds: [MongoID!]){
   viewer{
     epgRange (
       current:$currentTime,
+      channelIds: $channelIds
     ) {
       videoId
       channelId

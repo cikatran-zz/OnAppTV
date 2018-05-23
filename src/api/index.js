@@ -196,15 +196,17 @@ export const getChannel = (limit) => {
         .then((response) => {
             let images = {};
             let shortTitles = {}
+            let ids = {}
             let data = response.data.viewer.channelPagination.items;
             for (let i = 0; i < data.length; i++) {
                 images[data[i].serviceId] = getImageFromArray(data[i].originalImages, "logo", "feature");
                 shortTitles[data[i].serviceId] = data[i].shortDescription;
-
+                ids[data[i].serviceId] = data[i]._id;
             }
             for (let i = 0; i < zapList.length; i++) {
                 zapList[i].image = images[zapList[i].serviceID];
                 zapList[i].shortDescription = shortTitles[zapList[i].serviceID];
+                zapList[i].channelId = ids[zapList[i].serviceID];
             }
             return new Promise((resolve, reject) => {
                 resolve(zapList);
@@ -375,10 +377,15 @@ export const getEpgWithSeriesId = (seriesId, page, perPage, contentId) => {
 };
 
 export const getZapperContentTimeRange = (currentTime) => {
-    return client.query({
-        query: config.queries.ZAPPER_CONTENT,
-        variables: {currentTime: currentTime}
-    })
+    return getChannel(-1)
+      .then((value) => {
+        let ids = value.map(x => x.channelId);
+        return client.query({
+          query: config.queries.ZAPPER_CONTENT,
+          variables: {currentTime: currentTime, channelIds: ids}
+        })
+      })
+
 }
 
 // Settings screen
