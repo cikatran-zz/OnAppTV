@@ -30,7 +30,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>80</string>
+	<string>81</string>
+	<key>CodePushDeploymentKey</key>
+	<string>$(CODEPUSH_KEY)</string>
 	<key>FacebookAppID</key>
 	<string>362491514234474</string>
 	<key>FacebookDisplayName</key>
@@ -76,7 +78,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CodePushDeploymentKey</key>
-	<string>$(CODEPUSH_KEY)</string>
 </dict>
 </plist>

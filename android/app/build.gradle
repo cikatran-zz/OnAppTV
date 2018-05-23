@@ -181,13 +181,15 @@ android {
 }
 
 ext {
-    userkitVersion = "2.2.50"
+    userkitVersion = "2.2.49.1"
     userkitVersionStaging = "2.2.49.1-staging"
 }
 
 dependencies {
     implementation project(':react-native-code-push')
-    implementation project(':lottie-react-native')
+    implementation project(':appcenter-crashes')
+    implementation project(':appcenter-analytics')
+    implementation project(':appcenter')
     implementation project(':lottie-react-native')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-orientation')
@@ -234,7 +236,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'nl.littlerobots.rxlint:rxlint:1.2'
-
 
     implementation 'com.android.support:multidex:1.0.3'
     releaseImplementation("com.mstage.userkit:sdk:${userkitVersion}") {

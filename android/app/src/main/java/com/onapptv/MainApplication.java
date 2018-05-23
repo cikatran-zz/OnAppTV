@@ -6,8 +6,10 @@ import android.support.multidex.MultiDex;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
+import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
+import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
 import com.microsoft.codepush.react.CodePush;
-import com.airbnb.android.react.lottie.LottiePackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -47,8 +49,10 @@ public class MainApplication extends Application implements ReactApplication {
             return Arrays.asList(
                 new RNFetchBlobPackage(),
                 new MainReactPackage(),
-            new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
-            new LottiePackage(),
+                new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
+                new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
+                new AppCenterReactNativePackage(MainApplication.this),
+                new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
                 new LottiePackage(),
                 new FBSDKPackage(mCallbackManager),
 //                new RNGestureHandlerPackage(),
