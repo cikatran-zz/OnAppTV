@@ -1,4 +1,11 @@
 PODS:
+  - AppCenter/Analytics (1.6.1):
+    - AppCenter/Core
+  - AppCenter/Core (1.6.1)
+  - AppCenter/Crashes (1.6.1):
+    - AppCenter/Core
+  - AppCenterReactNativeShared (1.5.1):
+    - AppCenter/Core (= 1.6.1)
   - Bolts (1.9.0):
     - Bolts/AppLinks (= 1.9.0)
     - Bolts/Tasks (= 1.9.0)
@@ -43,6 +50,9 @@ PODS:
     - UserKit
 
 DEPENDENCIES:
+  - AppCenter/Analytics (~> 1.6.1)
+  - AppCenter/Crashes (~> 1.6.1)
+  - AppCenterReactNativeShared (~> 1.5.1)
   - Brightcove-Player-Core/dynamic
   - FacebookCore
   - FacebookLogin
@@ -60,6 +70,8 @@ EXTERNAL SOURCES:
     :path: ../../mStage-UserKit-iOS-SDK
 
 SPEC CHECKSUMS:
+  AppCenter: f9eb653a45cece34549232f295aec05260dfc24f
+  AppCenterReactNativeShared: 5b40dc5bbaf891697d1982e0ae0e9b1120dd4274
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   Brightcove-Player-Core: d1187888c945578b1cd6f07e8a585166093f5162
   FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
@@ -74,6 +86,6 @@ SPEC CHECKSUMS:
   UserKit: 1d185a4e80d841a1ed67cf052b165498d6c13911
   UserKitIdentity: b766d7fc2b9afa71440f7c03813e9b825ee0e49e
 
-PODFILE CHECKSUM: 1c9cd8c2b44cabd4ce8002ce91ad6aae5c9b4781
+PODFILE CHECKSUM: 8d45de176b05b45fdf112205f247bbf9063559d2
 
 COCOAPODS: 1.4.0

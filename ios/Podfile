@@ -11,6 +11,9 @@ target 'OnAppTV' do
   use_frameworks!
 
   # Pods for OnAppTV
+  pod 'AppCenter/Crashes', '~> 1.6.1'
+  pod 'AppCenter/Analytics', '~> 1.6.1'
+  pod 'AppCenterReactNativeShared', '~> 1.5.1'
   pod 'Brightcove-Player-Core/dynamic'
   pod 'UserKit', :path => '../../mStage-UserKit-iOS-SDK'
   pod 'UserKitIdentity', :path => '../../mStage-UserKit-iOS-SDK'
@@ -20,8 +23,6 @@ target 'OnAppTV' do
   pod 'FacebookLogin'
   pod 'FacebookShare'
   pod 'PromiseKit', '~> 4.0'
-
-  pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
 end
 

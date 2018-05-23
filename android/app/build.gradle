@@ -186,6 +186,13 @@ ext {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-orientation')
+    compile project(':react-native-fbsdk')
+    compile project(':lottie-react-native')
+    compile project(':appcenter-crashes')
+    compile project(':appcenter-analytics')
+    compile project(':appcenter')
     compile project(':react-native-code-push')
     implementation project(':lottie-react-native')
     implementation project(':lottie-react-native')
@@ -234,7 +241,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'nl.littlerobots.rxlint:rxlint:1.2'
-
 
     implementation 'com.android.support:multidex:1.0.3'
     releaseImplementation("com.mstage.userkit:sdk:${userkitVersion}") {
