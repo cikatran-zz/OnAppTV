@@ -26,6 +26,11 @@ query queryChannel($serviceIDs: [Float]!){
           url
           name
           fileName
+          scaledImage {
+              height
+              width
+              url
+            }
         }
       }
     }
@@ -51,6 +56,12 @@ query queryZapperByTime($currentTime: Date, $channelIds: [String]){
         title
         originalImages {
           url
+          name
+          scaledImage {
+              height
+              width
+              url
+            }
         }
         genresData {
           name
@@ -97,6 +108,11 @@ query{
         url
         name
         fileName
+        scaledImage {
+              height
+              width
+              url
+            }
       }
       url
     }
@@ -291,6 +307,11 @@ query getEPGByChannel($channelId: Float){
               url
               name
               fileName
+                          scaledImage {
+              height
+              width
+              url
+            }
         }
         epgsData(current: true) {
           videoId
@@ -305,6 +326,11 @@ query getEPGByChannel($channelId: Float){
               url
               name
               fileName
+                          scaledImage {
+              height
+              width
+              url
+            }
             }
           }
           startTime
@@ -316,6 +342,11 @@ query getEPGByChannel($channelId: Float){
               url
               name
               fileName
+                          scaledImage {
+              height
+              width
+              url
+            }
             }
             genresData {
               name
@@ -480,6 +511,11 @@ query genresVOD($genresId: [MongoID]){
         url
         name
         fileName
+        scaledImage {
+          height
+          width
+          url
+        }
       }
       custom
     }
@@ -582,6 +618,11 @@ query genresEPGs($currentTime: Date, $genresId: MongoID, $limit: Int, $skip: Int
           url
           name
           fileName
+          scaledImage {
+              height
+              width
+              url
+            }
         }
       } 
     }
@@ -661,7 +702,13 @@ query getEpgSameTime($currentTime: Date, $id: [MongoID]){
       videoData {
         title
         originalImages {
+          name
           url
+          scaledImage {
+              height
+              width
+              url
+            }
         }
         genresData {
           name
@@ -713,6 +760,11 @@ query getVODs($id: [String]!){
         url
         name
         fileName
+        scaledImage {
+              height
+              width
+              url
+            }
       },
       genresData {
         name

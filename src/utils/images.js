@@ -14,18 +14,22 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
                 }
             }
         }
-        if (image == null && item.name === secondImageName) {
-            let scaledImages = item.scaledImage
-            if (scaledImages != null) {
-                if (secondImageName === 'feature' && scaledImages.length > 2) {
-                    image = scaledImages[1].url;
-                } else {
-                    image = scaledImages[scaledImages.length - 1].url;
-                }
-
-            }
-        }
+        // if (image == null && item.name === secondImageName) {
+        //     let scaledImages = item.scaledImage
+        //     if (scaledImages != null) {
+        //         if (secondImageName === 'feature' && scaledImages.length > 2) {
+        //             image = scaledImages[1].url;
+        //         } else {
+        //             image = scaledImages[scaledImages.length - 1].url;
+        //         }
+        //
+        //     }
+        // }
     });
-    image = (image == null) ? images[0].url : image;
+    if (image == null) {
+        console.log("DEBUG",images[0].url);
+        return 'https://i.imgur.com/7eKo6Q7.png'
+    }
+    //image = (image == null) ? images[0].url : image;
     return image;
 }

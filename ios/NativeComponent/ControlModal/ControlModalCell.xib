@@ -130,7 +130,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="BVK-Uv-ECz" userLabel="startTime">
-                                <rect key="frame" x="15.999999999999998" y="362.33333333333331" width="22.333333333333329" height="15.666666666666686"/>
+                                <rect key="frame" x="16" y="362.33333333333331" width="14" height="15.666666666666686"/>
                                 <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -315,7 +315,7 @@
                             <constraint firstItem="kAS-Gv-343" firstAttribute="centerX" secondItem="2Gm-4Q-F9N" secondAttribute="centerX" id="lvV-Qn-acj"/>
                             <constraint firstItem="HOl-3T-bFl" firstAttribute="trailing" secondItem="lLN-x4-qWw" secondAttribute="trailing" constant="10" id="obT-Uq-neq"/>
                             <constraint firstAttribute="trailing" secondItem="ElB-81-y3E" secondAttribute="trailing" constant="16" id="pd9-z7-IN7"/>
-                            <constraint firstItem="l9Z-f3-Fg5" firstAttribute="leading" secondItem="qmr-ef-Sq0" secondAttribute="leading" constant="30" id="vha-K3-wOW"/>
+                            <constraint firstItem="l9Z-f3-Fg5" firstAttribute="leading" secondItem="BVK-Uv-ECz" secondAttribute="trailing" id="vha-K3-wOW"/>
                         </constraints>
                     </view>
                     <constraints>

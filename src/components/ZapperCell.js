@@ -10,7 +10,7 @@ class ZapperCell extends React.Component{
 
     render(){
         return (
-            <View style={this.props.style} renderToHardwareTextureAndroid={true}>
+            <View style={this.props.style} renderToHardwareTextureAndroid={true} shouldRasterizeIOS={true}>
                 <View style={styles.placeHolder}>
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>

@@ -258,7 +258,7 @@ export default class Home extends Component {
                 </View>
                 <ImageBackground
                     style={styles.adsContainer}
-                    source={{uri: getImageFromArray(item.data.originalImages, 'feature', 'landscape')}}>
+                    source={{uri: getImageFromArray(item.data.originalImages, 'logo', 'landscape')}}>
                     <View style={styles.adsLabelContainer}>
                         <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
                     </View>
