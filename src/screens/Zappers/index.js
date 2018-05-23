@@ -54,7 +54,7 @@ export default class Zappers extends Component {
                     barStyle='light-content'/>
                 <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle} removeClippedSubviews={false} scrollEnabled={this.state.scrollEnabled}>
                     <ZapperChannel navigation={this.props.navigation} />
-                    <ZapperContent onChangedScrollEnabled={(isEnabled)=>this._onChangeScrollEnabled(isEnabled)}/>
+                    <ZapperContent onChangedScrollEnabled={(isEnabled)=>this._onChangeScrollEnabled(isEnabled)} navigation={this.props.navigation}/>
                 </Swiper>
             </View>
         );

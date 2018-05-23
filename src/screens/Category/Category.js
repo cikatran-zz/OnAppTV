@@ -5,6 +5,7 @@ import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 import Orientation from "react-native-orientation";
 import _ from 'lodash'
+import {rootViewTopPadding} from "../../utils/rootViewPadding";
 
 export default class Category extends Component {
 
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 6,
         left: 2,
-        top: 42,
+        top: rootViewTopPadding() + 17.5,
         position: 'absolute',
         zIndex: 10
     },

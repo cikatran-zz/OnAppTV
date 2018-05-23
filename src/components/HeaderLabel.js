@@ -7,7 +7,7 @@ export default class HeaderLabel extends React.PureComponent{
         super(props);
     }
     render(){
-        if (this.props.position == 'end') {
+        if (this.props.position === 'end') {
             return (
                 <View style={styles.headerView}>
                     <View style={[styles.backgroundHeaderView, styles.endHeaderView]}/>
@@ -20,7 +20,7 @@ export default class HeaderLabel extends React.PureComponent{
                 </View>
 
             )
-        } else if (this.props.position == 'inside') {
+        } else if (this.props.position === 'inside') {
             return (
                 <View style={styles.headerView}>
                     <View style={[styles.backgroundHeaderView, styles.insideHeaderView]}/>
@@ -33,7 +33,7 @@ export default class HeaderLabel extends React.PureComponent{
 
                 </View>
             )
-        } else if (this.props.position == 'begin') {
+        } else if (this.props.position === 'begin') {
             return (
                 <View style={styles.headerView}>
                     <View style={[styles.backgroundHeaderView, styles.beginHeaderView]}/>
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     backButton: {
         paddingHorizontal: 15,
         paddingVertical: 6,
+        top: 17.5,
         left: 0,
-        top: 0,
         position: 'absolute'
     },
     backImage: {
