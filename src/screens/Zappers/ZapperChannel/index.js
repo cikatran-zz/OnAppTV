@@ -2,6 +2,7 @@ import {connect} from "react-redux";
 import {getChannel} from '../../../actions/getChannel'
 import ZapperChannel from './ZapperChannel'
 import {getLiveEpgInZapper} from "../../../actions/getLiveEpgInZapper";
+import { disableTouch } from '../../../actions/disableTouch'
 
 function mapStateToProps (state) {
     return {
@@ -13,7 +14,8 @@ function mapStateToProps (state) {
 function mapDispatchToProps(dispatch) {
     return {
         getChannel: (numberOfItems) => dispatch(getChannel(numberOfItems)),
-        getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId))
+        getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),
+        disableTouch: (isDisable) => dispatch(disableTouch(isDisable))
     }
 }
 

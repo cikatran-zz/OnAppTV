@@ -10,6 +10,7 @@ import {getNews} from "../../actions/getNews";
 import {getWatchingHistory} from "../../actions/getWatchingHistory";
 import {getPlaylist} from '../../actions/getPlaylist'
 import { getLiveEpgInZapper } from '../../actions/getLiveEpgInZapper'
+import { disableTouch} from '../../actions/disableTouch'
 
 function mapStateToProps(state) {
     return {
@@ -37,7 +38,8 @@ function mapDispatchToProps(dispatch) {
         getWatchingHistory: () => dispatch(getWatchingHistory()),
         getChannel: () => dispatch(getChannel()),
         getPlaylist: (playlist) => dispatch(getPlaylist(playlist)),
-        getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId))
+        getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),
+        disableTouch: (isDisable) => dispatch(disableTouch(isDisable))
     }
 }
 

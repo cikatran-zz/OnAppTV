@@ -51,7 +51,7 @@ export default class ZapperChannel extends Component {
     };
 
     componentWillUnmount() {
-        this._navListener.remove();
+        if (this._navListener !== undefined) this._navListener.remove();
     }
 
     _imageUri(item) {
@@ -78,11 +78,17 @@ export default class ZapperChannel extends Component {
     };
 
     _zapChannel = (item) => {
+        this.indicatorModal.state.isShow = true;
+        this.props.disableTouch(true);
+        this._zapChannelWrapper(item);
+    }
+
+    _zapChannelWrapper = (item) => {
         const {channel} = this.props;
         this.setState({
-            zapIndex: channel.data != null ? channel.data.findIndex(x => x.serviceID === item.serviceID) : 0
+            zapIndex: channel.data != null ? channel.data.findIndex(x => x.serviceID === item.serviceID) : 0,
+            alreadyNavigated: false
         })
-        this.setState({alreadyNavigated: false});
         this.props.getLiveEpgInZapper(true, channel.data != null ? channel.data.map(x => x.serviceID) : []);
         NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
             if (error) {
@@ -95,7 +101,7 @@ export default class ZapperChannel extends Component {
 
     _renderItem = (item) => (<TouchableOpacity onLongPress={() => this._showChannelModal(item.item)}
                                                style={styles.item}
-                                               onPress={()=>this._zapChannel(item.item)}>
+                                               onPress={()=>this._zapChannel(item.item)} disabled={this.props.epg.disableTouch == null ? false : this.props.epg.disableTouch}>
         <ZapperCell image={this._imageUri(item.item)} style={{width: '100%', height: '100%'}}/>
     </TouchableOpacity>);
     _renderListFooter = () => (
@@ -166,30 +172,32 @@ export default class ZapperChannel extends Component {
     _navigateToControlPage = (array) => {
         const {navigation} = this.props;
         const {zapIndex} = this.state;
-        this.setState({alreadyNavigated: true});
-        console.log('Array', array, zapIndex);
-        if (Platform.OS !== 'ios') {
-            NativeModules.RNControlPageNavigation
-                .navigateControl(array,
-                    zapIndex,
-                    true,
-                    true, // Use true at isFromBanner because similar behavior
-                    true,
-                    () => { console.log("onDismiss") },
-                    () => { console.log("onDetail") });
-        }
-        else {
-            navigation.navigate('VideoControlModal', {
-                item: array[zapIndex],
-                epg: array,
-                isLive: true
-            })
+        if (zapIndex !== undefined) {
+            this.props.disableTouch(false);
+            this.setState({alreadyNavigated: true});
+            console.log('Already Navigated is true', array, zapIndex);
+            if (Platform.OS !== 'ios') {
+                NativeModules.RNControlPageNavigation
+                    .navigateControl(array,
+                        zapIndex,
+                        true,
+                        true, // Use true at isFromBanner because similar behavior
+                        true,
+                        () => { console.log("onDismiss") },
+                        () => { console.log("onDetail") });
+            }
+            else {
+                navigation.navigate('VideoControlModal', {
+                    item: array[zapIndex],
+                    epg: array,
+                    isLive: true
+                })
+            }
         }
     };
 
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
-        console.log('ReceiveProps', epg);
         if (this.state.alreadyNavigated === false && epg.isFetching === false && epg.data != null && epg.data.length != 0) {
             this._navigateToControlPage(epg.data);
         }
@@ -241,9 +249,6 @@ export default class ZapperChannel extends Component {
             } else {
                 this.state.channelData = this.state.favoriteChannels;
             }
-        }
-        if (epg.isFetching === true && this.indicatorModal != null) {
-            this.indicatorModal.state.isShow = true;
         }
         if (epg.isFetching === false && this.indicatorModal != null) {
             this.indicatorModal.state.isShow = false;

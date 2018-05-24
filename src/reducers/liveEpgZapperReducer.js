@@ -28,6 +28,11 @@ export default function liveEpgZapperReducer(state = initialState, action) {
                 fetched: true,
                 errorMessage: action.errorMessage
             };
+        case actionTypes.DISABLE_TOUCH:
+            return {
+                ...state,
+                disableTouch: action.data
+            }
         default:
             return state
     }

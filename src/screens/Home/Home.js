@@ -64,7 +64,7 @@ export default class Home extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {epgZap} = this.props;
+        const {epgZap} = nextProps;
         if (this.state.alreadyNavigated === false && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
             this._navigateToControlPage(epgZap.data);
         }
@@ -73,24 +73,27 @@ export default class Home extends Component {
     _navigateToControlPage = (array) => {
         const {navigation} = this.props;
         const {zapIndex} = this.state;
-        this.setState({alreadyNavigated: true});
-        console.log('Array', array, zapIndex);
-        if (Platform.OS !== 'ios') {
-            NativeModules.RNControlPageNavigation
-                .navigateControl(array,
-                    zapIndex,
-                    true,
-                    true, // Use true at isFromBanner because similar behavior
-                    true,
-                    () => { console.log("onDismiss") },
-                    () => { console.log("onDetail") });
-        }
-        else {
-            navigation.navigate('VideoControlModal', {
-                item: array[zapIndex],
-                epg: array,
-                isLive: true
-            })
+        if (zapIndex !== undefined) {
+            this.props.disableTouch(false);
+            this.setState({alreadyNavigated: true});
+            console.log('Array', array, zapIndex);
+            if (Platform.OS !== 'ios') {
+                NativeModules.RNControlPageNavigation
+                    .navigateControl(array,
+                        zapIndex,
+                        true,
+                        true, // Use true at isFromBanner because similar behavior
+                        true,
+                        () => { console.log("onDismiss") },
+                        () => { console.log("onDetail") });
+            }
+            else {
+                navigation.navigate('VideoControlModal', {
+                    item: array[zapIndex],
+                    epg: array,
+                    isLive: true
+                })
+            }
         }
     };
 
@@ -110,6 +113,7 @@ export default class Home extends Component {
             this.props.getPlaylist("POPULAR SERIES");
             this.props.getPlaylist("SERIES FOR YOU");
             this.props.getPlaylist("POPULAR VIDEOS");
+            this.props.getLiveEpgInZapper(true, []);
         })
     }
 
@@ -151,7 +155,7 @@ export default class Home extends Component {
             imageUrl = item.image;
         }
         return (
-            <TouchableOpacity style={{padding: 0}} onPress={() => this._onChannelPress(item)}>
+            <TouchableOpacity style={{padding: 0}} onPress={() => this._onChannelPress(item)} disabled={this.props.epgZap.disableTouch == null ? false : this.props.epgZap.disableTouch}>
                 <View style={styles.itemContainer}>
                     <Image
                         style={styles.itemImage}
@@ -164,6 +168,7 @@ export default class Home extends Component {
 
     _onChannelPress = (item) => {
         const {channel} = this.props;
+        this.props.disableTouch(true);
         this.setState({alreadyNavigated: false});
         this.setState({
             zapIndex: channel.favoriteChannels != null ? channel.favoriteChannels.findIndex(x => x.serviceID === item.serviceID) : 0
@@ -175,8 +180,6 @@ export default class Home extends Component {
                 NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN: item.lCN}), (error, events) => {
 
                 });
-            } else {
-                this.alertVC.setState({isShow: true, message: 'Connect STB to play this channel on TV'})
             }
         });
     };
