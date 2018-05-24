@@ -54,6 +54,7 @@ export default class Home extends Component {
             console.log("Refresh");
             this.fetchData()
         });
+        this.state = {};
     };
 
     componentWillMount() {
@@ -62,7 +63,7 @@ export default class Home extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epgZap} = nextProps;
-        if (epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
+        if (epgZap.disableTouch === true && epgZap.screen === 0 && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
             this._navigateToControlPage(epgZap.data);
         }
     }
@@ -71,8 +72,12 @@ export default class Home extends Component {
         const {navigation} = this.props;
         const {zapIndex} = this.state;
         if (zapIndex !== undefined) {
-            this.props.disableTouch(false);
-            console.log('Array', array, zapIndex);
+            setTimeout(() => {
+                this.props.disableTouch(false, 0);
+                this.setState({
+                    zapIndex: zapIndex
+                })
+                }, 100);
             if (Platform.OS !== 'ios') {
                 NativeModules.RNControlPageNavigation
                     .navigateControl(array,
@@ -137,6 +142,7 @@ export default class Home extends Component {
     };
 
     _renderChannelListItem = ({item}) => {
+        console.log('Rerender', this.props.epgZap.disableTouch);
         if (item == null) {
             return (
                 <TouchableOpacity onPress={() => this._navigateToZappers()}>
@@ -164,7 +170,7 @@ export default class Home extends Component {
 
     _onChannelPress = (item) => {
         const {channel} = this.props;
-        this.props.disableTouch(true);
+        this.props.disableTouch(true, 0);
         this.setState({
             zapIndex: channel.favoriteChannels != null ? channel.favoriteChannels.findIndex(x => x.serviceID === item.serviceID) : 0
         })
@@ -196,6 +202,7 @@ export default class Home extends Component {
                 ItemSeparatorComponent={this._renderChannelListItemSeparator}
                 data={data}
                 keyExtractor={this._keyExtractor}
+                extraData={this.state}
                 renderItem={this._renderChannelListItem}/>
         )
     };

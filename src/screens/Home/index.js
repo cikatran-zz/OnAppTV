@@ -39,7 +39,7 @@ function mapDispatchToProps(dispatch) {
         getChannel: () => dispatch(getChannel()),
         getPlaylist: (playlist) => dispatch(getPlaylist(playlist)),
         getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),
-        disableTouch: (isDisable) => dispatch(disableTouch(isDisable))
+        disableTouch: (isDisable, screen) => dispatch(disableTouch(isDisable, screen))
     }
 }
 

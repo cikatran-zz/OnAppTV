@@ -77,8 +77,8 @@ export default class ZapperChannel extends Component {
     };
 
     _zapChannel = (item) => {
+        this.props.disableTouch(true, 1);
         this.indicatorModal.state.isShow = true;
-        this.props.disableTouch(true);
         this._zapChannelWrapper(item);
     }
 
@@ -171,7 +171,8 @@ export default class ZapperChannel extends Component {
         const {navigation} = this.props;
         const {zapIndex} = this.state;
         if (zapIndex !== undefined) {
-            this.props.disableTouch(false);
+            console.log('Zapper disable touch');
+            setTimeout(() => this.props.disableTouch(false, 1), 100);
             if (Platform.OS !== 'ios') {
                 NativeModules.RNControlPageNavigation
                     .navigateControl(array,
@@ -194,7 +195,7 @@ export default class ZapperChannel extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
-        if (epg.isFetching === false && epg.data != null && epg.data.length != 0) {
+        if (epg.disableTouch === true && epg.screen === 1 && epg.isFetching === false && epg.data != null && epg.data.length != 0) {
             this._navigateToControlPage(epg.data);
         }
     }
