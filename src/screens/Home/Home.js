@@ -666,16 +666,7 @@ export default class Home extends Component {
         let sections = [
             {data: [bannerData], showHeader: false, renderItem: this._renderBanner},
             {data: [channel.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
-            {data: [watchingHistory.data], showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList},
-            {data: [ads], showHeader: false, renderItem: this._renderAds}
             ];
-
-        this._addPlaylistSection("VIDEOS FOR YOU", sections);
-        this._addPlaylistSection("POPULAR LIVE", sections);
-        this._addPlaylistSection("LIVE FOR YOU", sections);
-        this._addPlaylistSection("POPULAR SERIES", sections);
-        this._addPlaylistSection("SERIES FOR YOU", sections);
-        this._addPlaylistSection("POPULAR VIDEOS", sections);
 
         if (live.data != null && live.data.length > 0) {
             let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0});
@@ -683,13 +674,28 @@ export default class Home extends Component {
                 sections.push({data: [epgsDataArray], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
         }
 
+        sections.push({data: [watchingHistory.data], showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList});
+
+        sections.push({data: [ads], showHeader: false, renderItem: this._renderAds});
+
+        sections.push({ data: [category.favorite], showHeader: false, renderItem: this._renderCategoryList});
+
+        this._addPlaylistSection("VIDEOS FOR YOU", sections);
+        this._addPlaylistSection("SERIES FOR YOU", sections);
+        this._addPlaylistSection("POPULAR LIVE", sections);
+        this._addPlaylistSection("LIVE FOR YOU", sections);
+        this._addPlaylistSection("POPULAR SERIES", sections);
+        this._addPlaylistSection("POPULAR VIDEOS", sections);
+
+
+
         if (vod.data !== null && vod.data.length > 0) {
             sections.push({data: [vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList});
         }
 
-        sections.push({ data: [category.favorite], title: "BY CATEGORY", showHeader: true, renderItem: this._renderCategoryList});
 
-        sections.push({data: [news], title: "NOTIFICATION", showHeader: true, renderItem: this._renderFooter});
+
+        sections.push({data: [news], showHeader: false, renderItem: this._renderFooter});
 
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
