@@ -16,6 +16,7 @@ typedef void (^RCTDoneBlock)();
                        accountId: (NSString *)accountId
                        policyKey: (NSString *)policyKey
                         metaData: (NSDictionary *)metaData
+                        playhead: (NSNumber *)playhead
                           onDone: (RCTDoneBlock) doneCallback;
 
 

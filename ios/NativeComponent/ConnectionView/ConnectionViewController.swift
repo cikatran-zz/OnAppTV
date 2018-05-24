@@ -8,24 +8,11 @@
 
 import UIKit
 
-class ConnectionViewController: UIViewController, ConnectViewDelegate {
-    
-    func connectSuccess() {
-        NotificationCenter.default.post(name: NSNotification.Name("RefreshNotification") , object: nil)
-        self.dismiss(animated: true) {
-            let vc = SoftwareUpdateController()
-            UIApplication.shared.delegate?.window??.rootViewController?.present(vc, animated: true, completion: nil)
-        }
-        
-    }
-    
-    func connectFail(error: String) {
-        NotificationCenter.default.post(name: NSNotification.Name("RefreshNotification") , object: nil)
-        self.dismiss(animated: true, completion: nil)
-    }
+class ConnectionViewController: UIViewController {
     
     
     var connectionView: ConnectView!
+    var beginPoint: CGPoint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,4 +40,42 @@ class ConnectionViewController: UIViewController, ConnectViewDelegate {
     }
     */
 
+}
+
+extension ConnectionViewController {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if connectionView != nil {
+            let touch = touches.first
+            beginPoint = touch?.location(in: connectionView)
+        }
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if connectionView != nil {
+            let touch = touches.first
+            let currentLocation = touch?.location(in: connectionView)
+            var frame = connectionView.frame
+            frame.origin.y += (currentLocation?.y)! - self.beginPoint.y;
+            connectionView.frame = frame
+        }
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ConnectionViewController: ConnectViewDelegate {
+    
+    func connectSuccess() {
+        NotificationCenter.default.post(name: NSNotification.Name("RefreshNotification") , object: nil)
+        self.dismiss(animated: true) {
+            let vc = SoftwareUpdateController()
+            UIApplication.shared.delegate?.window??.rootViewController?.present(vc, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func connectFail(error: String) {
+        //NotificationCenter.default.post(name: NSNotification.Name("RefreshNotification") , object: nil)
+        self.dismiss(animated: true, completion: nil)
+    }
 }

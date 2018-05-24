@@ -81,6 +81,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="20" id="6Ee-iF-LgG"/>
                     </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                     <state key="normal" image="caption"/>
                     <connections>
                         <action selector="captionButtonTapped:" destination="-1" eventType="touchUpInside" id="NJj-A6-m28"/>
@@ -97,21 +98,23 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAr-JF-Vw8">
-                    <rect key="frame" x="587" y="337" width="20" height="22"/>
+                    <rect key="frame" x="587" y="338" width="20" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="20" id="nuE-c2-O54"/>
                     </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="0.0"/>
                     <state key="normal" image="repeat"/>
                     <connections>
                         <action selector="startOverButtonTapped:" destination="-1" eventType="touchUpInside" id="34l-HZ-Dat"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G9X-XK-nq8" userLabel="StartOverOverlap">
-                    <rect key="frame" x="582" y="333" width="30" height="30"/>
+                    <rect key="frame" x="582" y="334" width="30" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="Iag-ww-xfL"/>
                         <constraint firstAttribute="width" constant="30" id="pvz-fZ-6QW"/>
                     </constraints>
+                    <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="0.0"/>
                     <connections>
                         <action selector="startOverButtonTapped:" destination="-1" eventType="touchUpInside" id="der-A0-mSt"/>
                     </connections>
@@ -129,7 +132,7 @@
                 <constraint firstItem="Y0Y-Bn-cWt" firstAttribute="centerY" secondItem="ABP-ak-ZDl" secondAttribute="centerY" id="2gS-A7-MN0"/>
                 <constraint firstItem="Vr7-HU-OA3" firstAttribute="centerY" secondItem="rRw-4K-67N" secondAttribute="centerY" id="4E4-xf-DxP"/>
                 <constraint firstItem="HAr-JF-Vw8" firstAttribute="centerY" secondItem="G9X-XK-nq8" secondAttribute="centerY" id="6Da-ez-bXW"/>
-                <constraint firstItem="HAr-JF-Vw8" firstAttribute="centerY" secondItem="Y0Y-Bn-cWt" secondAttribute="centerY" id="9gB-DS-1qw"/>
+                <constraint firstItem="HAr-JF-Vw8" firstAttribute="centerY" secondItem="Y0Y-Bn-cWt" secondAttribute="centerY" constant="1" id="9gB-DS-1qw"/>
                 <constraint firstItem="NdJ-h2-OsP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" id="AEw-pM-ZWg"/>
                 <constraint firstItem="HAr-JF-Vw8" firstAttribute="leading" secondItem="Y0Y-Bn-cWt" secondAttribute="trailing" constant="20" id="EhP-9z-K1v"/>
                 <constraint firstItem="NdJ-h2-OsP" firstAttribute="centerX" secondItem="gDo-Dc-tRw" secondAttribute="trailing" priority="900" id="FUP-dI-ssh"/>

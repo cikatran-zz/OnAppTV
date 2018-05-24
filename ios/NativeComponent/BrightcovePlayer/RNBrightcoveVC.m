@@ -20,7 +20,8 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(navigateWithVideoId: (NSString *)videoId
                   accountId: (NSString *)accountId
                   policyKey: (NSString *)policyKey
-                  metaData: (NSDictionary *)metaData) {
+                  metaData: (NSDictionary *)metaData
+                  continuePlayhead: (NSNumber * __nonnull)playhead) {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIWindow *currentWindow = [[[UIApplication sharedApplication] delegate] window];
         
@@ -30,6 +31,7 @@ RCT_EXPORT_METHOD(navigateWithVideoId: (NSString *)videoId
                            accountId:accountId
                            policyKey:policyKey
                             metaData:metaData
+                            playhead:playhead
                               onDone:^{
                                   [currentWindow.rootViewController dismissViewControllerAnimated:YES completion:NULL];
                                   [self sendEventWithName:@"DismissBrightcove" body:@{@"name": @"DismissBrightcove"}];

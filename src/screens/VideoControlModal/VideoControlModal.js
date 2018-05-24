@@ -47,7 +47,7 @@ export default class VideoControlModal extends React.Component {
             if (item) {
                 let videoId = item.contentId ? item.contentId : '5714823997001';
                 console.log("BRIGHTCOVE", NativeModules.RNBrightcoveVC);
-                NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I',{});
+                NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I',{}, this.currentPlayHead);
             }
         }
         else {
@@ -90,6 +90,7 @@ export default class VideoControlModal extends React.Component {
         this.alertModal = null;
         this.showingBrightcove = false
         this.subscription = null;
+        this.currentPlayHead = 0
     }
 
     componentWillMount() {
@@ -153,7 +154,7 @@ export default class VideoControlModal extends React.Component {
             if (it && this.showingBrightcove === false) {
                 let videoId = it.contentId ? it.contentId : '5714823997001';
                 this.showingBrightcove = true;
-                RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I', {});
+                RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I', {}, this.currentPlayHead);
             }
         }
     };
@@ -248,7 +249,8 @@ export default class VideoControlModal extends React.Component {
                           onShare={(event)=>this._shareExecution(event.nativeEvent)}
                           onIndexChanged={(event)=>this._onSwiperIndexChanged(event.nativeEvent.index)}
                           onBookmark={this._onRecordPress}
-                          onFavorite={this._onFavouritePress}/>
+                          onFavorite={this._onFavouritePress}
+                          onProgress={(event)=> this.currentPlayHead = event.nativeEvent.current}/>
         )
 
     }
@@ -405,9 +407,12 @@ export default class VideoControlModal extends React.Component {
     }
 
     _bookExecution = (liveItem) => {
-        let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
+        let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000);
 
-
+        let genresData = liveItem.videoData.genresData;
+        if (genresData == null) {
+            genresData = liveItem.videoData.genres;
+        }
         let jsonString = {
             "record_parameter": {
                 "startTime": this._simpleDataFormat(liveItem.startTime),
@@ -422,7 +427,7 @@ export default class VideoControlModal extends React.Component {
                 "starttime": liveItem.startTime,
                 "title": liveItem.videoData.title,
                 "image": liveItem.videoData.originalImages[0].url,
-                "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
+                "subTitle": genresData.length > 0 ? genresData[0].name : ""
             }
         }
 

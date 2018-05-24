@@ -14,6 +14,7 @@ let controlModal = {
         onIndexChanged: PropTypes.func,
         onBookmark: PropTypes.func,
         onFavorite: PropTypes.func,
+        onProgress: PropTypes.func,
         ...ViewPropTypes, // include the default view properties
     },
 };

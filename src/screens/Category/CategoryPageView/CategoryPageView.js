@@ -28,7 +28,7 @@ class CategoryPageView extends Component{
     componentDidMount() {
         const {genresId} = this.props;
         InteractionManager.runAfterInteractions(() => {
-            this.props.getEPG(10, 0, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
+            this.props.getEPG(10, 0, genresId, new Date());
             this.props.getVODByGenres(1, 10, genresId);
         });
     };
@@ -196,7 +196,7 @@ class CategoryPageView extends Component{
         let epgMap = epg.epgMap.get(genresId);
         if (epg.data != null) {
             if (this.props.epg.data.length === epgMap.skip * 10) {
-                this.props.getEPG(10, epgMap.skip, genresId, moment("May 1 08:00:00", "MMM DD hh:mm:ss"));
+                this.props.getEPG(10, epgMap.skip, genresId, new Date());
             }
         }
     }
@@ -208,7 +208,7 @@ class CategoryPageView extends Component{
         let vodPage = vodMap.page;
         if (vod.data != null) {
             if (vod.data.length === this.currentPage * 10) {
-                vodPage++;
+                vodPage++;react
                 this.props.getVODByGenres(vodPage, 10, genresId);
             }
         }
