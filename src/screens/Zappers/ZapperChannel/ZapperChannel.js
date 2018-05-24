@@ -31,8 +31,7 @@ export default class ZapperChannel extends Component {
             showAllChannels: true,
             favoriteChannels: [],
             allChannels: [],
-            alreadyNavigated: true,
-            zapIndex: 0,
+            zapIndex: 0
         };
         this.indicatorModal = null;
         this.alertModal = null;
@@ -86,8 +85,7 @@ export default class ZapperChannel extends Component {
     _zapChannelWrapper = (item) => {
         const {channel} = this.props;
         this.setState({
-            zapIndex: channel.data != null ? channel.data.findIndex(x => x.serviceID === item.serviceID) : 0,
-            alreadyNavigated: false
+            zapIndex: channel.data != null ? channel.data.findIndex(x => x.serviceID === item.serviceID) : 0
         })
         this.props.getLiveEpgInZapper(true, channel.data != null ? channel.data.map(x => x.serviceID) : []);
         NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
@@ -174,8 +172,6 @@ export default class ZapperChannel extends Component {
         const {zapIndex} = this.state;
         if (zapIndex !== undefined) {
             this.props.disableTouch(false);
-            this.setState({alreadyNavigated: true});
-            console.log('Already Navigated is true', array, zapIndex);
             if (Platform.OS !== 'ios') {
                 NativeModules.RNControlPageNavigation
                     .navigateControl(array,
@@ -198,7 +194,7 @@ export default class ZapperChannel extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epg} = nextProps;
-        if (this.state.alreadyNavigated === false && epg.isFetching === false && epg.data != null && epg.data.length != 0) {
+        if (epg.isFetching === false && epg.data != null && epg.data.length != 0) {
             this._navigateToControlPage(epg.data);
         }
     }

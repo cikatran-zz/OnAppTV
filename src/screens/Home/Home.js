@@ -54,9 +54,6 @@ export default class Home extends Component {
             console.log("Refresh");
             this.fetchData()
         });
-        this.state = {
-            alreadyNavigated: false
-        };
     };
 
     componentWillMount() {
@@ -65,7 +62,7 @@ export default class Home extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epgZap} = nextProps;
-        if (this.state.alreadyNavigated === false && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
+        if (epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
             this._navigateToControlPage(epgZap.data);
         }
     }
@@ -75,7 +72,6 @@ export default class Home extends Component {
         const {zapIndex} = this.state;
         if (zapIndex !== undefined) {
             this.props.disableTouch(false);
-            this.setState({alreadyNavigated: true});
             console.log('Array', array, zapIndex);
             if (Platform.OS !== 'ios') {
                 NativeModules.RNControlPageNavigation
@@ -169,7 +165,6 @@ export default class Home extends Component {
     _onChannelPress = (item) => {
         const {channel} = this.props;
         this.props.disableTouch(true);
-        this.setState({alreadyNavigated: false});
         this.setState({
             zapIndex: channel.favoriteChannels != null ? channel.favoriteChannels.findIndex(x => x.serviceID === item.serviceID) : 0
         })
