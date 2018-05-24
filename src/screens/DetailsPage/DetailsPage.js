@@ -423,13 +423,11 @@ export default class DetailsPage extends React.Component {
 
     _onBannerPress = (item) => {
         const {epg, navigation} = this.props;
-        let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-        if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = [item].concat(data);
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = [item].concat(data);
-            let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+            if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
+            let itemIndex = data.findIndex(x => x.contentId ? x.contentId === item.contentId && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
                     itemIndex,
@@ -441,7 +439,7 @@ export default class DetailsPage extends React.Component {
         }
         else {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if (!this._isFromChannel() && !data.some(x => x.title === item.title)) data = [item].concat(data);
+            if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,
@@ -455,8 +453,8 @@ export default class DetailsPage extends React.Component {
 
         if (Platform.OS !== 'ios') {
             let data = epg.data.length !== 0 ? epg.data : [item];
-            if (!data.some(x => x.title === item.title)) [item].concat(data);
-            let itemIndex = data.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
+            if (!data.some(x => x.contentId === item.contentId)) [item].concat(data);
+            let itemIndex = data.findIndex(x => x.contentId ? x.contentId === item.contentId && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
                     itemIndex,
@@ -468,7 +466,7 @@ export default class DetailsPage extends React.Component {
         }
         else {
             let data = epg.data.length !== 0 ? epg.data : [item];
-            if (!data.some(x => x.title === item.title)) data = [item].concat(data);
+            if (!data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,
