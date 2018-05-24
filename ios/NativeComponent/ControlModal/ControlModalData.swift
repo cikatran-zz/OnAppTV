@@ -128,6 +128,7 @@ class ControlModalData {
             parseGenres(asJsonArr(videoData[JSONKeys.genresData]))
             
             let dateFormatter = DateFormatter()
+            dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
             dateFormatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSS'Z"
             
             if let date = dateFormatter.date(from: json[JSONKeys.startTime] as? String ?? "") {

@@ -26,5 +26,6 @@ RCT_EXPORT_VIEW_PROPERTY(onShare, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onIndexChanged, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onBookmark, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFavorite, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onProgress, RCTDirectEventBlock)
 
 @end

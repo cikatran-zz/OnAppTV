@@ -64,6 +64,7 @@ class ControlModalCell: UICollectionViewCell {
     public var onBookmark: (()->Void)? = nil
     public var onFavorite: (()->Void)? = nil
     public var playNext: (()->Void)? = nil
+    public var onProgress: ((Double)->Void)? = nil
     weak var data: ControlModalData?
     var onTVLabelColor: UIColor = .white
     var onTVDarkerLabelColor: UIColor = .darkGray
@@ -135,19 +136,19 @@ class ControlModalCell: UICollectionViewCell {
 extension ControlModalCell {
     
     func showHideComponents() {
-        if (data?.isLive ?? false) {
+        //if (data?.isLive ?? false) {
             // Show logo channel + red line
-            channelImage.isHidden = false
-            redBar.isHidden = true
+            //channelImage.isHidden = false
+            //redBar.isHidden = true
             // Hide orientation button
-            orientationButton.isHidden = true
-        } else {
+            //orientationButton.isHidden = true
+        //} else {
             // Show orientation button
             orientationButton.isHidden = false
             // Hide logo channel + red line
             channelImage.isHidden = true
             redBar.isHidden = true
-        }
+        //}
     }
     
     func updateLabelsWith(_ newCurrentTime: Double) {
@@ -273,6 +274,7 @@ extension ControlModalCell: ControlModalDataDelegate {
         } else {
             let totalTime = data?.durationInSeconds ?? 0
             updateLabelsWith((data?.currentProgress ?? 0) * totalTime)
+            onProgress?((data?.currentProgress ?? 0) * totalTime)
         }
     }
     
@@ -282,21 +284,24 @@ extension ControlModalCell: ControlModalDataDelegate {
     }
     
     func playStateChanged(controlModalData: ControlModalData) {
+        onTVButtonView.isHidden = true
         if (data?.isLive ?? false) {
-            onTVButtonView.isHidden = false
             playbackButton.setImage(nil, for: .normal)
             let playState = data?.playState ?? .notPlayed
             if (playState == .notPlayed) {
                 // normal color
-                onTVLabel.textColor = onTVLabelColor
+                //onTVLabel.textColor = onTVLabelColor
+                self.playbackButton.setImage(UIImage(named: "ic_play_with_border"), for: .normal)
             } else if (playState == .currentPlaying) {
                 // more dark color
-                onTVLabel.textColor = onTVDarkerLabelColor
+                //onTVLabel.textColor = onTVDarkerLabelColor
+                self.playbackButton.setImage(UIImage(named: "ic_pause"), for: .normal)
                 if (needUpdateAll) {
                     self.onPlayMedia?()
                 }
             } else {
-                onTVLabel.textColor = onTVDarkerLabelColor
+                
+                //onTVLabel.textColor = onTVDarkerLabelColor
                 playOverButton.isEnabled = false
                 rewindButton.isEnabled = false
                 fastforwardButton.isEnabled = false
@@ -305,7 +310,6 @@ extension ControlModalCell: ControlModalDataDelegate {
                 captionButton.isEnabled = false
             }
         } else {
-            onTVButtonView.isHidden = true
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
                 self.playbackButton.setImage(UIImage(named: "ic_play_with_border"), for: .normal)
@@ -441,13 +445,16 @@ extension ControlModalCell {
                 }
             } else if (playState == .notPlayed) {
                 data?.getVideoUrl(callback: { (url) in
-                    Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url) { (isSuccess, error) in
-                        if !isSuccess {
-                            print(error ?? "")
-                        } else {
-                            self.data?.playState = .currentPlaying
+                    WatchingHistory.sharedInstance.getConsumedLength(id: self.data?.contentId ?? "", completion: { (consumedLength) in
+                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url) { (isSuccess, error) in
+                            if !isSuccess {
+                                print(error ?? "")
+                            } else {
+                                self.data?.playState = .currentPlaying
+                            }
                         }
-                    }
+                    });
+                    
                 })
             } else {
                 Api.shared().hIG_PlayMediaPause({ (isSuccess, error) in

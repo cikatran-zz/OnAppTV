@@ -59,7 +59,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     fileprivate var rewindAnimationView: LOTAnimationView = LOTAnimationView(contentsOf: URL(string: "https://www.lottiefiles.com/storage/datafiles/rT1xFybxaeBO4Qf/data.json")! )
     
     fileprivate var filmstrip: [Double: ImageResource] = [Double: ImageResource]()
-    fileprivate var lastPosition: Double = 0
+    public var lastPosition: Double = 0
     fileprivate var isStopped: Bool = false
     
     // MARK: - Life cycle
@@ -299,7 +299,9 @@ extension BrightcovePlayer {
                     self.playbackController?.setVideos([v] as NSArray)
                     self.controlsView.videoDuration = (v.properties["duration"] as? Double ?? 0) / 1000
                     WatchingHistory.sharedInstance.getConsumedLength(id: videoId, completion: { (consumedLength) in
-                        self.lastPosition = consumedLength
+                        if (self.lastPosition == 0) {
+                            self.lastPosition = consumedLength
+                        }
                         self.continueWatching()
                     })
                 } else {

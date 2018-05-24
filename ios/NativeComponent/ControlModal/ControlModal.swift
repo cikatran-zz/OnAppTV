@@ -64,11 +64,12 @@ class ControlModal: UIView {
     public var onIndexChanged: RCTDirectEventBlock = { event in }
     public var onBookmark: RCTDirectEventBlock = { event in }
     public var onFavorite: RCTDirectEventBlock = { event in }
+    public var onProgress: RCTDirectEventBlock = { event in }
     // Datasource
     var videosData: [ControlModalData] = []
     
     // Default UI
-    var volumeValue: Float = Float(Api.shared().hIG_GetVolume() / 100)
+    var volumeValue: Float = Float(Api.shared().hIG_GetVolume()) / 100
     
     var isSTBConnected: Bool {
         get {
@@ -209,6 +210,9 @@ extension ControlModal: UICollectionViewDataSource {
         cell.onFavorite = {
             self.onFavorite([:])
         }
+        cell.onProgress = { currentTime in
+            self.onProgress(["current": currentTime])
+        }
         cell.volumeSlider.value = self.volumeValue
         cell.isSTBConnected = self.isSTBConnected
         return cell
@@ -239,13 +243,15 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                     }
                 } else {
                     self.videosData[index.intValue].getVideoUrl { (url) in
-                        Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url) { (isSuccess, error) in
-                            if !isSuccess {
-                                print(error ?? "")
-                            } else {
-                                self.videosData[self.index.intValue].playState = .currentPlaying
+                        WatchingHistory.sharedInstance.getConsumedLength(id: self.videosData[self.index.intValue].contentId, completion: { (consumedLength) in
+                            Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url) { (isSuccess, error) in
+                                if !isSuccess {
+                                    print(error ?? "")
+                                } else {
+                                    self.videosData[self.index.intValue].playState = .currentPlaying
+                                }
                             }
-                        }
+                        });
                     }
                     
                 }
