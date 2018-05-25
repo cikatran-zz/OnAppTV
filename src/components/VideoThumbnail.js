@@ -31,19 +31,20 @@ class VideoThumbnail extends React.PureComponent {
     }
 
     render() {
-
+        const {imageUrl, textCenter, isGenres, style} = this.props;
+        let blurRadius = isGenres ? 1 : 0;
         let source = require('../assets/bg_category.png');
-        if (this.props.imageUrl != null) {
-            source = {uri: this.props.imageUrl};
+        if (imageUrl != null) {
+            source = {uri: imageUrl};
         }
         return (
-            <View style={[this.props.style]}>
+            <View style={[style]}>
                 <View style={styles.placeHolder}>
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>
-                <ImageBackground imageStyle={{borderRadius: 3}} style={styles.imageContainer} source={source}>
+                <ImageBackground imageStyle={{borderRadius: 3}} style={styles.imageContainer} source={source} blurRadius={blurRadius}>
                     <View style={[styles.progressView, this._runProgressView()]}/>
-                    <Text style={styles.textCenter}>{this.props.textCenter}</Text>
+                    <Text style={styles.textCenter}>{textCenter}</Text>
                 </ImageBackground>
                 {this._renderRedlineProgress()}
             </View>
