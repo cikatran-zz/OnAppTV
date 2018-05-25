@@ -297,7 +297,7 @@ export default class Home extends Component {
                                 style={{width: '100%',
                                         alignSelf: 'center'}}>
                 <View style={styles.notificationContainer}>
-                    <View style={styles.placeHolder}>
+                    <View style={[styles.placeHolder, {borderRadius: 10}]}>
                         <Text style={styles.textPlaceHolder}>On App TV</Text>
                     </View>
                     <Image style={styles.notificationImage} source={{uri: imageUrl}}/>
@@ -324,7 +324,7 @@ export default class Home extends Component {
         } else {
             genres = "N/A";
         }
-        let timeInfo = timeFormatter(item.epgsData[0].startTime) + '-' + timeFormatter(item.epgsData[0].endTime);
+        // let timeInfo = timeFormatter(item.epgsData[0].startTime) + '-' + timeFormatter(item.epgsData[0].endTime);
 
         let currentDate = (new Date()).getTime();
         let startDate = (new Date(item.epgsData[0].startTime)).getTime();
@@ -337,7 +337,6 @@ export default class Home extends Component {
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
                       style={styles.textLiveVideoInfo}>{item ? item.title : "No Title"}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{timeInfo}</Text>
             </TouchableOpacity>
         )
     };
@@ -432,8 +431,6 @@ export default class Home extends Component {
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
-                <Text numberOfLines={1}
-                      style={styles.textLiveVideoInfo}>{secondFormatter(item.durationInSeconds)}</Text>
             </TouchableOpacity>)
     };
     _renderVODFooter = () => {
@@ -851,6 +848,7 @@ const styles = StyleSheet.create({
         ...borderedImageDefault,
         width: '100%',
         height: 130,
+        borderRadius: 10,
         resizeMode: 'cover'
     },
     notificationTitle: {
