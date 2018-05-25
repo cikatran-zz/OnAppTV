@@ -88,7 +88,7 @@ export default class ChannelModal extends React.Component {
                               overlayColor={1} />
                     <Animated.View style={[styles.animationView, {transform: [{translateY: this.animationY}]}, ]}>
                         <TouchableOpacity style={styles.upArrow} onPress={this.toggleModal}>
-                            <Image source={require('../../../assets/ic_up_arrow.png')} style={{width: '50%', height: '100%', resizeMode: 'center', alignSelf: 'center'}}/>
+                            <Image source={require('../../../assets/ic_up_arrow.png')} style={{resizeMode: 'contain', alignSelf: 'center'}}/>
                         </TouchableOpacity>
                         <Carousel
                             ref={(carousel) => this.carousel = carousel}
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         top: 0,
         width: 50,
-        height: 20,
+        height: 50,
     },
     channelItem: {
         width: 130,
