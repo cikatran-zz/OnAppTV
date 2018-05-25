@@ -168,6 +168,16 @@ query{
     genreMany {
       _id
       name
+      originalImages{
+        name
+        fileName
+        scaledImage {
+          height
+          width
+          url
+          _id
+        }
+      }
   	}
 	}
 }

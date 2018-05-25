@@ -549,7 +549,7 @@ export default class Home extends Component {
         return (
             <TouchableOpacity onPress={() => this._navigateToCategory(item.name)}>
                 <View style={styles.liveThumbnailContainer}>
-                    <VideoThumbnail style={styles.videoThumbnail} showProgress={false} textCenter={item.name} marginHorizontal={10}/>
+                    <VideoThumbnail style={styles.videoThumbnail} showProgress={false} textCenter={item.name} marginHorizontal={10} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 </View>
             </TouchableOpacity>
         )
