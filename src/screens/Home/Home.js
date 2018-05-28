@@ -51,7 +51,6 @@ export default class Home extends Component {
         this.alertVC = null;
 
         this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event)=> {
-            console.log("Refresh");
             this.fetchData();
             this.props.setStatusConnected();
         });
@@ -144,7 +143,6 @@ export default class Home extends Component {
     };
 
     _renderChannelListItem = ({item}) => {
-        console.log('Rerender', this.props.epgZap.disableTouch);
         if (item == null) {
             return (
                 <TouchableOpacity onPress={() => this._navigateToZappers()}>
@@ -172,7 +170,7 @@ export default class Home extends Component {
 
     _onChannelPress = (item) => {
         const {channel} = this.props;
-        //this.props.disableTouch(true, 0);
+        this.props.disableTouch(true, 0);
         this.setState({
             zapIndex: channel.favoriteChannels != null ? channel.favoriteChannels.findIndex(x => x.serviceID === item.serviceID) : 0
         })
