@@ -11,6 +11,7 @@ import {getWatchingHistory} from "../../actions/getWatchingHistory";
 import {getPlaylist} from '../../actions/getPlaylist'
 import { getLiveEpgInZapper } from '../../actions/getLiveEpgInZapper'
 import { disableTouch} from '../../actions/disableTouch'
+import actions from '../../actions'
 
 function mapStateToProps(state) {
     return {
@@ -23,7 +24,8 @@ function mapStateToProps(state) {
         watchingHistory: state.watchingHistoryReducer,
         channel: state.channelReducer,
         playlist: state.playlistReducer,
-        epgZap: state.liveEpgInZapperReducer
+        epgZap: state.liveEpgInZapperReducer,
+        connectStatus: state.connectStatusReducer
     }
 }
 
@@ -39,7 +41,9 @@ function mapDispatchToProps(dispatch) {
         getChannel: () => dispatch(getChannel()),
         getPlaylist: (playlist) => dispatch(getPlaylist(playlist)),
         getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),
-        disableTouch: (isDisable, screen) => dispatch(disableTouch(isDisable, screen))
+        disableTouch: (isDisable, screen) => dispatch(disableTouch(isDisable, screen)),
+        setStatusConnected: () => dispatch(actions.getConnectStatus.setStatusConnected()),
+        setStatusDisconnected: () => dispatch(actions.getConnectStatus.setStatusDisconnected())
     }
 }
 
