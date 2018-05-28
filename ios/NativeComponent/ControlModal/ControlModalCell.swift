@@ -287,7 +287,7 @@ extension ControlModalCell: ControlModalDataDelegate {
     func playStateChanged(controlModalData: ControlModalData) {
         onTVButtonView.isHidden = true
         if (data?.isLive ?? false) {
-            playbackButton.setImage(nil, for: .normal)
+            //playbackButton.setImage(nil, for: .normal)
             let playState = data?.playState ?? .notPlayed
             if (playState == .notPlayed) {
                 // normal color
