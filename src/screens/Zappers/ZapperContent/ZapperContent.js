@@ -159,14 +159,18 @@ export default class ZapperContent extends Component {
     }
 
     setPosition(position) {
-        if (position < minTop)
+        let time = '';
+        if (position < minTop) {
+            time = "Now";
+            this.setState({time: time});
             return;
+        }
         if (position > maxHeight )
             return;
         let periodRate = Math.round((position - 70) * this._offsetRate);
         this._timeAtMove = moment().add(periodRate, 'minutes');
-        let time = '';
-        if (moment.duration(this._timeAtMove.diff(this._currentTime)).asMinutes() === 0) {
+
+        if (moment.duration(this._timeAtMove.diff(this._currentTime)).asMinutes() < 3) {
             time = "Now";
         } else {
             time = "Today " + this._timeAtMove.format("HH:mm");
