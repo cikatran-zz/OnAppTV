@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.github.lzyzsd.jsbridge.BridgeHandler;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import tv.hi_global.stbapi.Api;
+import tv.hi_global.stbapi.Enum.HIG_NOTIFY_EVENT;
 import tv.hi_global.stbapi.Model.ConfigureModel;
 import tv.hi_global.stbapi.implementation.Api_Implementation;
 
@@ -65,6 +67,22 @@ public class AndroidSTBConnectScreen extends FrameLayout {
 //        允许 js 弹窗
         bWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         bWebView.getSettings().setDomStorageEnabled(true);
+
+        Api.sharedApi().hIG_ReceiverNotifyEvent((hig_notify_event, s) -> {
+            WritableMap map = Arguments.createMap();
+            map.putInt("data", hig_notify_event.getValue());
+            sendEvent((ReactContext) context,
+                    "statusEvent",
+                    map);
+        });
+
+        Api.sharedApi().hIG_DisconnectAndCallback(s -> {
+            WritableMap map = Arguments.createMap();
+            map.putString("data", s);
+            sendEvent((ReactContext) context,
+                    "disconnectEvent",
+                    map);
+        });
 
 //        定义一个 Setting 记录App是第几次启动
         SharedPreferences setting = context.getSharedPreferences("com.example.STB", 0);
@@ -349,6 +367,14 @@ public class AndroidSTBConnectScreen extends FrameLayout {
                 getId(),
                 "finished",
                 event);
+    }
+
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 
 
