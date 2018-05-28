@@ -218,10 +218,10 @@ export default class VideoControlModal extends React.Component {
             if (Number.parseInt(itemContentId) === +itemContentId) {
                 this.props.getBcVideos(epg[index].contentId)
             }
-            this.setState({
-                index: index
-            })
         }
+        this.setState({
+            index: index
+        });
     }
 
     _onAlertModal = (event) => {
