@@ -77,6 +77,7 @@ class ControlModalData {
                                 } else {
                                     DispatchQueue.main.async {
                                         if (oldValue != self.playState) {
+                                            WatchingHistory.sharedInstance.remove(id: self.contentId, completion: nil, errorBlock: nil)
                                             self.delegate?.playReachEnd(controlModalData: self)
                                         }
                                     }

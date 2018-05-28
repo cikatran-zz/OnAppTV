@@ -51,7 +51,6 @@ export default class Home extends Component {
         this.alertVC = null;
 
         this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event)=> {
-            console.log("Refresh");
             this.fetchData()
         });
         this.state = {};
@@ -124,6 +123,7 @@ export default class Home extends Component {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
             this.props.getChannel();
+            this.props.getWatchingHistory();
             Orientation.lockToPortrait();
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
@@ -142,7 +142,6 @@ export default class Home extends Component {
     };
 
     _renderChannelListItem = ({item}) => {
-        console.log('Rerender', this.props.epgZap.disableTouch);
         if (item == null) {
             return (
                 <TouchableOpacity onPress={() => this._navigateToZappers()}>

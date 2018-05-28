@@ -280,6 +280,7 @@ extension ControlModalCell: ControlModalDataDelegate {
     
     func playReachEnd(controlModalData: ControlModalData) {
         data?.playState = .pause
+        currentPlaying = nil
         playNext?()
     }
     

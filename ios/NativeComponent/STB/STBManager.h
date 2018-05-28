@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface STBManager : NSObject<RCTBridgeModule>
+@interface STBManager : RCTEventEmitter<RCTBridgeModule>
 
 @end
