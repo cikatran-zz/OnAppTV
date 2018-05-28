@@ -168,15 +168,15 @@ export default class ZapperChannel extends Component {
     };
 
     _navigateToControlPage = (array) => {
-        const {navigation} = this.props;
+        const {navigation, channel} = this.props;
         const {zapIndex} = this.state;
-        if (zapIndex !== undefined) {
-            console.log('Zapper disable touch');
+        let videoIndex = array.findIndex(x => x.channelData.serviceId === channel.data[zapIndex].serviceID);
+        if (videoIndex !== undefined) {
             setTimeout(() => this.props.disableTouch(false, 1), 100);
             if (Platform.OS !== 'ios') {
                 NativeModules.RNControlPageNavigation
                     .navigateControl(array,
-                        zapIndex,
+                        videoIndex,
                         true,
                         true, // Use true at isFromBanner because similar behavior
                         true,
@@ -185,7 +185,7 @@ export default class ZapperChannel extends Component {
             }
             else {
                 navigation.navigate('VideoControlModal', {
-                    item: array[zapIndex],
+                    item: array[videoIndex],
                     epg: array,
                     isLive: true
                 })
@@ -274,9 +274,9 @@ export default class ZapperChannel extends Component {
                         <TouchableOpacity style={styles.controlButton} onPress={this._onSwitchPress}>
                             {this._renderSwitchImage()}
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.controlButton}>
-                            <Image source={require('../../../assets/ic_sort.png')} style={{resizeMode: 'stretch'}}/>
-                        </TouchableOpacity>
+                        {/*<TouchableOpacity style={styles.controlButton}>*/}
+                            {/*<Image source={require('../../../assets/ic_sort.png')} style={{resizeMode: 'stretch'}}/>*/}
+                        {/*</TouchableOpacity>*/}
                     </View>
                     <View style={styles.gridContainer}>
                     <FlatList
