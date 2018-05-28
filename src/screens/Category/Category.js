@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Swiper from 'react-native-swiper'
-import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text, Platform, ActivityIndicator} from 'react-native';
+import {StyleSheet, StatusBar, View, TouchableOpacity, Image, Text, Platform, InteractionManager} from 'react-native';
 import {colors} from '../../utils/themeConfig'
 import CategoryPageView from "./CategoryPageView";
 import Orientation from "react-native-orientation";
@@ -16,6 +16,7 @@ export default class Category extends Component {
         this.state = {
             position: undefined
         }
+        this._debounceCategory = _.debounce(this._fetchCategories, 500);
     };
 
     componentDidMount() {
@@ -23,11 +24,16 @@ export default class Category extends Component {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('white');
         });
+        const {data, fromItem} = this.props.navigation.state.params;
+        let startIndex = _.findIndex(data, {'name': fromItem})
+        InteractionManager.runAfterInteractions(() => {
+            this._fetchCategories(startIndex);
+        })
     };
 
     componentWillMount() {
         Orientation.lockToPortrait();
-    }
+    };
 
     componentWillUnmount() {
         this._navListener.remove();
@@ -42,6 +48,18 @@ export default class Category extends Component {
             return 'inside';
         }
     };
+
+    _fetchCategories(index) {
+        const {data} = this.props.navigation.state.params;
+        const {vod, epg} = this.props;
+        let genresId = data[index].id;
+        let epgMap = epg.epgMap.get(genresId);
+        let vodMap = vod.vodMap.get(genresId);
+        if (!epgMap || !vodMap) {
+            this.props.getEPG(10, 0, genresId, new Date());
+            this.props.getVODByGenres(1, 10, genresId);
+        }
+    }
 
     _onVideoPress = (item, isLive) => {
         const {navigation} = this.props;
@@ -65,7 +83,8 @@ export default class Category extends Component {
         let pagePosition = this._getPagePosition(index, data.length);
         this.setState({
             position: pagePosition
-        })
+        });
+        this._debounceCategory(index);
     }
 
     _getBackBtnImage = () =>{
@@ -97,7 +116,6 @@ export default class Category extends Component {
     render() {
         const {data, fromItem} = this.props.navigation.state.params;
         let startIndex = _.findIndex(data, {'name': fromItem})
-        console.log("category",data);
         return (
             <View style={{width: '100%', height: '100%'}}>
                 <StatusBar
@@ -107,7 +125,11 @@ export default class Category extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.goBack()} style={styles.backButton}>
                     {this._getBackBtnImage()}
                 </TouchableOpacity>
-                <Swiper style={styles.pageViewStyle} loop={false} showsPagination={false} index={startIndex} onIndexChanged={this._onIndexChanged}>
+                <Swiper style={styles.pageViewStyle}
+                        loop={false}
+                        showsPagination={false}
+                        index={startIndex}
+                        onIndexChanged={this._onIndexChanged}>
                     {data.map((genres, index) => {
                         return (<CategoryPageView pagePosition={this._getPagePosition(index, data.length)}
                                                   header={genres.name}

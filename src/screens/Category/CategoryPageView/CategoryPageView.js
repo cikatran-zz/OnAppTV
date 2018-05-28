@@ -10,8 +10,6 @@ import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
 import {getImageFromArray} from "../../../utils/images";
-import moment from "moment";
-import {DotsLoader} from "react-native-indicator";
 
 class CategoryPageView extends Component{
     constructor(props){
@@ -25,14 +23,6 @@ class CategoryPageView extends Component{
             vodLoading: false
         };
     }
-    componentDidMount() {
-        const {genresId} = this.props;
-        InteractionManager.runAfterInteractions(() => {
-            this.props.getEPG(10, 0, genresId, new Date());
-            this.props.getVODByGenres(1, 10, genresId);
-        });
-    };
-
 
     _keyExtractor = (item, index) => index.toString();
 
@@ -58,7 +48,6 @@ class CategoryPageView extends Component{
         )
     };
     _renderOnLiveItem = ({item}) => {
-        console.log(item);
         let image = getImageFromArray(item.videoData.originalImages, 'landscape', null);
         let genres = '';
         if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
@@ -208,7 +197,7 @@ class CategoryPageView extends Component{
         let vodPage = vodMap.page;
         if (vod.data != null) {
             if (vod.data.length === this.currentPage * 10) {
-                vodPage++;react
+                vodPage++;
                 this.props.getVODByGenres(vodPage, 10, genresId);
             }
         }
