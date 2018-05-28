@@ -51,8 +51,8 @@ export default class Home extends Component {
         this.alertVC = null;
 
         this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event)=> {
-            console.log("Refresh");
-            this.fetchData()
+            this.fetchData();
+            this.props.setStatusConnected();
         });
         this.state = {};
     };
@@ -69,19 +69,17 @@ export default class Home extends Component {
     }
 
     _navigateToControlPage = (array) => {
-        const {navigation} = this.props;
+        const {navigation, channel} = this.props;
         const {zapIndex} = this.state;
+        let videoIndex = array.findIndex(x => x.channelData.serviceId === channel.favoriteChannels[zapIndex].serviceID);
         if (zapIndex !== undefined) {
             setTimeout(() => {
                 this.props.disableTouch(false, 0);
-                this.setState({
-                    zapIndex: zapIndex
-                })
-                }, 100);
+            }, 100);
             if (Platform.OS !== 'ios') {
                 NativeModules.RNControlPageNavigation
                     .navigateControl(array,
-                        zapIndex,
+                        videoIndex,
                         true,
                         true, // Use true at isFromBanner because similar behavior
                         true,
@@ -90,7 +88,7 @@ export default class Home extends Component {
             }
             else {
                 navigation.navigate('VideoControlModal', {
-                    item: array[zapIndex],
+                    item: array[videoIndex],
                     epg: array,
                     isLive: true
                 })
@@ -124,6 +122,9 @@ export default class Home extends Component {
             StatusBar.setBarStyle('light-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent');
             this.props.getChannel();
+            this._livePage = 1;
+            this.props.getLive(true, 1, 20);
+            this.props.getWatchingHistory();
             Orientation.lockToPortrait();
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
@@ -142,7 +143,6 @@ export default class Home extends Component {
     };
 
     _renderChannelListItem = ({item}) => {
-        console.log('Rerender', this.props.epgZap.disableTouch);
         if (item == null) {
             return (
                 <TouchableOpacity onPress={() => this._navigateToZappers()}>
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
     },
     addMoreCategoryContainer: {
         borderRadius: 4,
-        borderWidth: 2,
+        borderWidth: 1,
         overflow: 'hidden',
         borderColor: "#95989A",
         width: 156,

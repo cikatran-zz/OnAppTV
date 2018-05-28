@@ -13,6 +13,28 @@
 
 RCT_EXPORT_MODULE();
 
+- (NSArray<NSString *> *)supportedEvents {
+    [Api.sharedApi hIG_Disconnect:^(NSError *error) {
+        [self sendEventWithName:@"disconnectEvent" body:@{}];
+    }];
+    [Api.sharedApi hIG_ReceiverNotifyEventAndCallback:^(HIG_Notify_event event, NSString *eventContent) {
+        [self sendEventWithName:@"statusEvent" body:@{@"data": [[NSNumber alloc] initWithInt:event]}];
+    }];
+    return @[@"statusEvent", @"disconnectEvent"];
+}
+
+- (void)dealloc {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
+
+- (void)statusEvent: (NSNotification *) notification {
+    
+}
+
+- (void)disconnectEvent: (NSNotification *) notification {
+    
+}
+
 RCT_EXPORT_METHOD(udpOperation) {
     [Api.sharedApi hIG_UdpOperation];
 }

@@ -16,11 +16,13 @@ enum DraggingState {
     case volume
 }
 var isShowedPopUp = false
+var currentPlaying: String? = nil
 class ControlModal: UIView {
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     var draggingState: DraggingState = .none
+    var startContentOffset: CGFloat = 0
     var onceOnly = false
     var autoScroll = false
     
@@ -85,7 +87,6 @@ class ControlModal: UIView {
         }
     }
     
-    
     func commonInit() {
         Bundle.main.loadNibNamed("ControlModal", owner: self, options: nil)
         self.addSubview(contentView)
@@ -107,6 +108,7 @@ class ControlModal: UIView {
             let maxYPage = (collectionView.visibleCells.first as? ControlModalCell)?.gestureView.frame.size.height ?? 200
             if (tapLocation.y > minYPage && tapLocation.y < maxYPage) {
                 draggingState = .page
+                startContentOffset = self.collectionView?.contentOffset.x ?? 0
             } else if (tapLocation.y < 0) {
                 draggingState = .progress
             } else if (tapLocation.y >= maxYPage) {
@@ -140,7 +142,10 @@ class ControlModal: UIView {
         if sender.state == .ended {
             if (draggingState == .page) {
                 let contentOffsetX = self.collectionView.contentOffset.x
-                let page = round(contentOffsetX/self.frame.width)
+                var page = floor(contentOffsetX/self.frame.width)
+                if contentOffsetX > startContentOffset {
+                    page = ceil(contentOffsetX/self.frame.width)
+                }
                 self.collectionView.scrollToItem(at: IndexPath(item: Int(page), section: 0) , at: UICollectionViewScrollPosition.centeredHorizontally, animated: true)
             } else if (draggingState == .progress) {
                 (collectionView.visibleCells.first as? ControlModalCell)?.doneDraggingProgressView()
@@ -178,6 +183,7 @@ extension ControlModal: UICollectionViewDataSource {
             collectionView.reloadData()
         }
         cell.onPlayMedia = {
+            currentPlaying = self.videosData[indexPath.item].contentId
             for i in 0..<self.videosData.count {
                 if (i != indexPath.item) {
                     self.videosData[i].playState = .notPlayed
@@ -242,16 +248,20 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         }
                     }
                 } else {
-                    self.videosData[index.intValue].getVideoUrl { (url) in
-                        WatchingHistory.sharedInstance.getConsumedLength(id: self.videosData[self.index.intValue].contentId, completion: { (consumedLength) in
-                            Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url) { (isSuccess, error) in
-                                if !isSuccess {
-                                    print(error ?? "")
-                                } else {
-                                    self.videosData[self.index.intValue].playState = .currentPlaying
+                    if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
+                        self.videosData[self.index.intValue].playState = .currentPlaying
+                    } else {
+                        self.videosData[index.intValue].getVideoUrl { (url) in
+                            WatchingHistory.sharedInstance.getConsumedLength(id: self.videosData[self.index.intValue].contentId, completion: { (consumedLength) in
+                                Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url) { (isSuccess, error) in
+                                    if !isSuccess {
+                                        print(error ?? "")
+                                    } else {
+                                        self.videosData[self.index.intValue].playState = .currentPlaying
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                     
                 }

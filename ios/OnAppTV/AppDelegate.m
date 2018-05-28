@@ -81,6 +81,13 @@
     
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (YES) {
+            [NSThread sleepForTimeInterval:20.0];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.progressUpdate" object:NULL];
+        }
+    });
     return YES;
 }
 

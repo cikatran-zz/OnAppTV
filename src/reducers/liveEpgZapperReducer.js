@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import _ from 'lodash';
 
 const initialState = {
     data: null,
@@ -15,11 +16,13 @@ export default function liveEpgZapperReducer(state = initialState, action) {
                 isFetching: true
             };
         case actionTypes.FETCH_LIVE_EPG_IN_ZAPPER_SUCCESS:
+            let sortedArr = _.sortBy(action.data, 'serviceId', ['asc'])
+                .filter(x => x.epgsData != null && x.epgsData.length !== 0).map(x => x.epgsData[0]);
             return {
             ...state,
             isFetching: false,
             fetched: true,
-            data: action.data.filter(x => x.epgsData != null && x.epgsData.length != 0).map(x => x.epgsData[0])
+            data: sortedArr
         };
         case actionTypes.FETCH_LIVE_EPG_IN_ZAPPER_FAILURE:
             return {

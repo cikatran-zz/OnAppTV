@@ -123,6 +123,12 @@ export default class VideoControlModal extends React.Component {
     }
 
     componentDidMount() {
+        const {item, epg} = this.props.navigation.state.params;
+        let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn);
+        this.setState({
+            index: itemIndex
+        });
+
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('light-content');
             (Platform.OS !== 'ios') && StatusBar.setBackgroundColor('transparent');
@@ -196,15 +202,12 @@ export default class VideoControlModal extends React.Component {
     }
 
     _informationPress = (item, epg, isLive) => {
-        console.log("Information",this.state.index);
         this.props.navigation.replace('DetailsPage', {
             item: epg[this.state.index < 0 ? 0 : this.state.index],
             epg: epg.data,
             isLive: isLive
         })
     }
-
-
 
     _keyExtractor = (item, index) => index;
 
@@ -215,10 +218,10 @@ export default class VideoControlModal extends React.Component {
             if (Number.parseInt(itemContentId) === +itemContentId) {
                 this.props.getBcVideos(epg[index].contentId)
             }
-            this.setState({
-                index: index
-            })
         }
+        this.setState({
+            index: index
+        });
     }
 
     _onAlertModal = (event) => {

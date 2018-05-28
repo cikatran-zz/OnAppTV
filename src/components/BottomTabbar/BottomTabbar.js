@@ -1,10 +1,14 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, NativeModules, DeviceEventEmitter, Modal, Platform} from 'react-native'
+import {
+    StyleSheet, Text, TouchableOpacity, View, NativeModules, DeviceEventEmitter, Modal, Platform,
+    NativeEventEmitter, Image
+} from 'react-native'
 import PropTypes from 'prop-types'
 import {colors} from '../../utils/themeConfig'
 import BlurView from '../BlurView'
 import LottieView from 'lottie-react-native';
-const {RNConnectionViewModule} = NativeModules;
+
+const {RNConnectionViewModule, STBManager} = NativeModules;
 
 const tabs = [
     'Home',
@@ -27,35 +31,62 @@ class BottomTabbar extends Component {
     }
 
     componentDidMount() {
-        NativeModules.STBManager.getSTBStatus((error, events) => {
-            let statuses = JSON.parse(events[0])['statuses'];
-            if (statuses.length !== 0)
-                this._playAnimation();
-        });
+        // Won't have connection with STB at the first time
+        this.props.setStatusDisconnected();
+        DeviceEventEmitter.addListener('statusEvent',this._handleStatusEvent);
+        DeviceEventEmitter.addListener('disconnectEvent',this._handleDisconnectEvent);
+        if (Platform.OS === "ios") {
+            const stbEmitter = new NativeEventEmitter(STBManager);
+            stbEmitter.addListener("statusEvent", (event)=> this._handleStatusEvent(event));
+            stbEmitter.addListener("disconnectEvent", this._handleDisconnectEvent)
+        }
+    }
 
-        DeviceEventEmitter.addListener('receiveEvent', (e) => {
-            console.log(e);
-            const {data} = e;
-            if (data !== undefined) {
-                let event = JSON.parse(data);
-                switch (event['notify_event']) {
-                    case 'HIG_NOTIFY_EVENT_PLAY_STOP':
-                        this._resetAnimation();
-                        break;
-                    case 'HIG_NOTIFY_EVENT_PLAY_START':
-                        this._playAnimation();
-                        break;
-                    case 'HIG_NOTIFY_EVENT_SIGNAL_LOST':
-                        this._resetAnimation();
-                        break;
-                    case 'HIG_NOTIFY_EVENT_SIGNAL_LOCK':
-                        this._playAnimation();
-                        break;
-                    default:
-                        this._playAnimation();
-                }
+    _handleStatusEvent = (e) => {
+        const {data} = e;
+
+        if (data !== undefined) {
+
+            switch (data) {
+                case 9:
+                    this._resetAnimation();
+                    break;
+                case 8:
+                    this._playAnimation();
+                    break;
+                case 3:
+                    this._resetAnimation();
+                    break;
+                case 2:
+                    this._playAnimation();
+                    break;
+                default:
+                    this._playAnimation();
             }
-        });
+        }
+    };
+
+    _handleDisconnectEvent = (e) => {
+        this.props.setStatusDisconnected();
+    };
+
+    _renderMainButton = () => {
+        const {connectStatus} = this.props;
+        if (connectStatus.isConnect) {
+            return (
+                <LottieView
+                    ref={animation => {
+                        this.animation = animation;
+                    }}
+                    source={require('../../assets/power_btn.json')}
+                />
+            );
+        }
+        else {
+            return (
+                <Image source={require('../../assets/ic_standby.png')}/>
+            )
+        }
     }
 
     componentWillUnmount() {
@@ -79,16 +110,11 @@ class BottomTabbar extends Component {
             return (
                 <TouchableOpacity
                     onPress={() => console.log('click')}
-                    onLongPress={()=> (Platform.OS === "ios") && RNConnectionViewModule.show()}
+                    onLongPress={() => (Platform.OS === "ios") && RNConnectionViewModule.show()}
                     style={styles.tab}
                     key={tab}
                 >
-                    <LottieView
-                        ref={animation => {
-                            this.animation = animation;
-                        }}
-                        source={require('../../assets/power_btn.json')}
-                    />
+                    {this._renderMainButton()}
                 </TouchableOpacity>
             )
         } else {
