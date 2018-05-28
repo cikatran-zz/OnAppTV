@@ -87,7 +87,6 @@ class ControlModal: UIView {
         }
     }
     
-    
     func commonInit() {
         Bundle.main.loadNibNamed("ControlModal", owner: self, options: nil)
         self.addSubview(contentView)

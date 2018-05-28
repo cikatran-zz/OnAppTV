@@ -8,7 +8,6 @@
 
 import Foundation
 import STBAPI
-let controlModalQueue = DispatchQueue(label: "com.onapptv.controlModal", attributes: .concurrent)
 
 enum PlayState {
     case currentPlaying
@@ -67,7 +66,7 @@ class ControlModalData {
     public var playState: PlayState = PlayState.notPlayed {
         didSet {
             if (!self.isLive) {
-                controlModalQueue.async {
+                DispatchQueue.global().async {
                     while true {
                         Thread.sleep(forTimeInterval: 1.0)
                         if (self.playState == .currentPlaying) {
@@ -115,6 +114,7 @@ class ControlModalData {
     
     public var isLive = false
     public var contentId = ""
+    public var uniqueID = UUID().uuidString
     
     var delegate: ControlModalDataDelegate? = nil
     
@@ -146,12 +146,8 @@ class ControlModalData {
             self.lcn = channelData[JSONKeys.lcn] as? Int ?? 0
             self.logoImage = getImageFromArr(name: JSONKeys.logo, arr: asJsonArr(channelData[JSONKeys.originalImages]))
             
-            controlModalQueue.async {
-                while true {
-                    Thread.sleep(forTimeInterval: 60.0)
-                    self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
-                }
-            }
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(updateLiveProgress), name: NSNotification.Name("onapp.controlmodal.progressUpdate"), object: nil)
         } else {
             // VOD
             isLive = false
@@ -161,8 +157,14 @@ class ControlModalData {
             parseGenres(asJsonArr(json[JSONKeys.genresData]))
             self.contentId = json[JSONKeys.contentId] as? String ?? ""
         }
-        
-        
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func updateLiveProgress() {
+        self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
     }
     
     func getImageFromArr(name: String, arr: JSONArr) -> String {

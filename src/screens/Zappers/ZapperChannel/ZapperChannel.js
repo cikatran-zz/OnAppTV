@@ -184,6 +184,7 @@ export default class ZapperChannel extends Component {
                         () => { console.log("onDetail") });
             }
             else {
+                console.log("Video control modal");
                 navigation.navigate('VideoControlModal', {
                     item: array[videoIndex],
                     epg: array,
