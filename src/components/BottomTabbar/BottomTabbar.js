@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {
     StyleSheet, Text, TouchableOpacity, View, NativeModules, DeviceEventEmitter, Modal, Platform,
-    NativeEventEmitter
+    NativeEventEmitter, Image
 } from 'react-native'
 import PropTypes from 'prop-types'
 import {colors} from '../../utils/themeConfig'
@@ -31,13 +31,8 @@ class BottomTabbar extends Component {
     }
 
     componentDidMount() {
-        STBManager.getSTBStatus((error, events) => {
-            let statuses = JSON.parse(events[0])['statuses'];
-            if (statuses.length !== 0)
-                this._playAnimation();
-        });
-
-
+        // Won't have connection with STB at the first time
+        this.props.setStatusDisconnected();
         DeviceEventEmitter.addListener('statusEvent',this._handleStatusEvent);
         DeviceEventEmitter.addListener('disconnectEvent',this._handleDisconnectEvent);
         if (Platform.OS === "ios") {
@@ -72,8 +67,27 @@ class BottomTabbar extends Component {
     };
 
     _handleDisconnectEvent = (e) => {
-        console.log("Disconnect");
+        this.props.setStatusDisconnected();
     };
+
+    _renderMainButton = () => {
+        const {connectStatus} = this.props;
+        if (connectStatus.isConnect) {
+            return (
+                <LottieView
+                    ref={animation => {
+                        this.animation = animation;
+                    }}
+                    source={require('../../assets/power_btn.json')}
+                />
+            );
+        }
+        else {
+            return (
+                <Image source={require('../../assets/ic_standby.png')}/>
+            )
+        }
+    }
 
     componentWillUnmount() {
         clearInterval(checkSTBInterval)
@@ -100,12 +114,7 @@ class BottomTabbar extends Component {
                     style={styles.tab}
                     key={tab}
                 >
-                    <LottieView
-                        ref={animation => {
-                            this.animation = animation;
-                        }}
-                        source={require('../../assets/power_btn.json')}
-                    />
+                    {this._renderMainButton()}
                 </TouchableOpacity>
             )
         } else {
