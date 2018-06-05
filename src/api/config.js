@@ -88,7 +88,6 @@ query queryPlaylist($playList: String) {
         originalImages {
           scaledImage {
             url
-            _id
           }
           fileName
           name
@@ -118,7 +117,6 @@ query {
             height
             width
             url
-            _id
           }
           fileName
           name

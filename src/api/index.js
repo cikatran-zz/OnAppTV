@@ -224,7 +224,7 @@ export const getPlaylist = (playlist) => {
     return client.query({
         query: config.queries.PLAYLIST,
         variables: {playList: playlist}
-    });
+    })
 };
 
 export const getAds = () => {

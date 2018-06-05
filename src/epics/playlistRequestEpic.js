@@ -8,7 +8,10 @@ const getPlaylistEpic = (action$) =>
     action$.ofType(actionTypes.FETCHING_PLAYLIST)
         .mergeMap(action =>
             Observable.from(getPlaylist(action.playlist))
-                .map(response => getPlaylistSuccess(response.data, action.playlist))
+                .map(response => {
+                        console.log("PLAYLIST", response);
+                        return getPlaylistSuccess(response.data, action.playlist)
+                })
                 .catch(error => Observable.of(getPlaylistFailure(error)))
         );
 
