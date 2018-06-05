@@ -27,7 +27,6 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
         // }
     });
     if (image == null) {
-        console.log("DEBUG",images[0].url);
         return 'https://i.imgur.com/7eKo6Q7.png'
     }
     //image = (image == null) ? images[0].url : image;

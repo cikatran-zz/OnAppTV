@@ -79,7 +79,23 @@ query queryPlaylist($playList: String) {
     listOne(filter: {
       title:$playList
     }) {
-      mediaData
+      contentData {
+        contentId
+        content
+        title
+        longDescription
+        shortDescription
+        originalImages {
+          scaledImage {
+            url
+            _id
+          }
+          fileName
+          name
+        }
+        type
+        kind
+      }
     }
   }
 }
@@ -91,7 +107,25 @@ query {
     listOne(filter: {
       title: "HIGHLIGHT"
     }) {
-      mediaData
+      contentData {
+        contentId
+        content
+        title
+        longDescription
+        shortDescription
+        originalImages {
+          scaledImage {
+            height
+            width
+            url
+            _id
+          }
+          fileName
+          name
+        }
+        type
+        kind
+      }
     }
   }
 }

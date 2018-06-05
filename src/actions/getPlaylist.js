@@ -10,7 +10,7 @@ export function getPlaylist(playlist) {
 export function getPlaylistSuccess(data, playlist) {
     return {
         type: actionTypes.FETCH_PLAYLIST_SUCCESS,
-        data: data.viewer.listOne.mediaData,
+        data: data.viewer.listOne.contentData,
         playlist: playlist
     }
 }

@@ -10,7 +10,7 @@ export function getBannerSuccess(data) {
   console.log("BANNER",data);
   return {
     type: actionTypes.FETCH_BANNER_SUCCESS,
-    data: data.viewer.listOne.mediaData
+    data: data.viewer.listOne.contentData
   }
 }
 
