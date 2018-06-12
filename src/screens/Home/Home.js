@@ -332,7 +332,7 @@ export default class Home extends Component {
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData[0].videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
@@ -370,7 +370,7 @@ export default class Home extends Component {
             )
         }
         return (<FlatList
-            style={{flex: 1, marginBottom: 21, marginLeft: 7, marginRight: 8}}
+            style={{flex: 1, marginBottom: 24, marginLeft: 7, marginRight: 8}}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={item}
@@ -546,6 +546,7 @@ export default class Home extends Component {
         return (
             <TouchableOpacity onPress={() => this._navigateToCategory(item.name)}>
                 <View style={styles.liveThumbnailContainer}>
+                    <BlurView blurRadius={getBlurRadius(20)} overlayColor={0x42747474}/>
                     <VideoThumbnail
                         style={styles.videoThumbnail}
                         showProgress={false} textCenter={item.name}
@@ -620,7 +621,7 @@ export default class Home extends Component {
         let progress = lastPosition / videoLength * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onResumePress(item)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>

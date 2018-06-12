@@ -204,18 +204,18 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromChannel()) {
             // isLive
-            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
+            return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"RELATED"}/>)
         }
 
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASONS"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"SEASONS"}/>)
             }
             case 'Standalone':
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"RELATED"}/>)
             default:
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"NEXT"}/>)
         }
     }
 
@@ -484,7 +484,7 @@ export default class DetailsPage extends React.Component {
     _renderAppSection = (image, title, description, url) => {
         return (
             <View style={{flexDirection: 'column', marginHorizontal: 15, marginBottom: 36, alignItems: 'flex-start'}}>
-                <PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"APP'S"}/>
+                <PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"APP'S"}/>
                 <View style={styles.appSectionView}>
                     <Image source={{uri: (image == null) ? 'https://i.imgur.com/7eKo6Q7.png' : image}} style={styles.appImage}/>
                     <View style={styles.appTextView}>
@@ -642,7 +642,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 21
+        marginBottom: 36
     },
     bannerInfoContainer: {
         width: '90%',
