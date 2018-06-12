@@ -44,17 +44,35 @@ export default class Book extends React.Component {
 
     _keyExtractor = (item, index) => index
 
+    _renderStatusBar = () => {
+        if (Platform.OS === 'ios') {
+            return (
+                <View style={styles.statusBarWrapView}>
+                    <StatusBar
+                        translucent={true}
+                        backgroundColor='#00000000'
+                        barStyle='dark-content'/>
+                </View>
+            );
+        }
+        else {
+            return (
+                    <StatusBar
+                        translucent={true}
+                        backgroundColor='#ffffff'
+                        barStyle='dark-content'/>
+            );
+        }
+    }
+
     render() {
         const {books, pvrList, usbDirFiles} = this.props
         const {downloadedArr} = this.state
 
         return (
-            <View style={{width: '100%', height: '100%'}}>
-                <StatusBar
-                    translucent={true}
-                    backgroundColor='#00000000'
-                    barStyle='dark-content'/>
-                <Swiper loop={false} horizontal={true} showsPagination={true} style={styles.pageViewStyle}
+            <View style={styles.pageViewStyle}>
+                {this._renderStatusBar()}
+                <Swiper loop={false} horizontal={true} showsPagination={true}
                         removeClippedSubviews={false}>
                     <Bookmark books={books}/>
                     <RecordList header={"MY RECORDS"} position={'inside'} books={books} pvrList={pvrList.data}
@@ -70,6 +88,12 @@ export default class Book extends React.Component {
 const styles = StyleSheet.create({
     pageViewStyle: {
         paddingTop: rootViewTopPadding(),
-        backgroundColor: colors.screenBackground
+        backgroundColor: colors.whiteBackground,
+        height: '100%',
+        width: '100%'
+    },
+    statusBarWrapView: {
+        height: 0,
+        backgroundColor: colors.whiteBackground
     }
 })
