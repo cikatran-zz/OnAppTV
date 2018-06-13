@@ -22,20 +22,24 @@ import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
-import moment from "moment/moment";
-
+import {getGenresData} from '../../utils/StringUtils'
 export default class DetailsPage extends React.Component {
+    SERIES_TYPE = "seriestype";
     _page = 1;
 
     constructor(props) {
         super(props);
         this.state = {
             item: null,
-            isLive: null
+            isLive: null,
+            isVideoOneLoaded: false
         }
     }
 
     _renderVideoInBannerInfo = (data) => {
+        if (data == null || data === undefined) return (
+            <View style={styles.bannerInfo}/>
+        );
         let director = () => data.directors.length === 0 ? <View/>
             : (<Text style={styles.videoTypeText}
                     numberOfLines={1}
@@ -67,41 +71,70 @@ export default class DetailsPage extends React.Component {
         return info;
     }
 
-    _getGenresData = (data, numberOfItem) => {
-        console.log(data);
-        let genres = '';
-        data.genres.map((genre, index) => {
-            if (index < numberOfItem) {
-                if (index !== 0) genres = genres + ", " + genre.name;
-                else genres = genres + genre.name
-            }
-        })
-        return genres;
-    }
-
     _keyExtractor = (item, index) => index;
 
-    componentDidMount() {
+    componentWillReceiveProps(nextProps) {
+        const {videoOne} = nextProps;
+        const {isVideoOneLoaded} = this.state;
         const {item, isLive} = this.props.navigation.state.params;
-        if (item && isLive !== undefined) {
-            if (isLive === true ) {
+        // Check condition for saved state isVideoOneLoaded
+        if (videoOne.fetched === true && isVideoOneLoaded === false && item.contentId === videoOne.data.contentId) {
+            let item = videoOne.data;
+            if (isLive === true) {
                 /*
                  Fetching information about EPG next in channel and EPG which are
                  at the same time on other channels
                  */
                 // this.props.getEpgs([item.channelData.serviceId])
                 // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, 1, 10);
+                this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10);
             }
             else if (item.type) {
                 /*
                  Fetch epg with related content or epg in series
                  */
-              if (item.type === 'Episode')
+                if (item.type === 'Episode')
                     this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], 1, 10)
                 else {
                     this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10)
-              }
+                }
+            }
+            this.setState({
+                isVideoOneLoaded: true
+            })
+        }
+    }
+
+    componentDidMount() {
+        const {item, isLive, isFromPlaylist} = this.props.navigation.state.params;
+        if (item && isLive !== undefined) {
+            if (isFromPlaylist) {
+                this.props.getVideoOne(item.contentId ? item.contentId : "");
+                this.setState({
+                    isVideoOneLoaded: false
+                })
+                // TODO: check live playlist
+             }
+            else {
+                if (isLive === true) {
+                    /*
+                     Fetching information about EPG next in channel and EPG which are
+                     at the same time on other channels
+                     */
+                    // this.props.getEpgs([item.channelData.serviceId])
+                    // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
+                    this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, 1, 10);
+                }
+                else if (item.type) {
+                    /*
+                     Fetch epg with related content or epg in series
+                     */
+                    if (item.type === 'Episode')
+                        this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], 1, 10)
+                    else {
+                        this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10)
+                    }
+                }
             }
         }
 
@@ -209,6 +242,8 @@ export default class DetailsPage extends React.Component {
 
     _renderBannerInfo = ({item}) => {
         let data = this._isFromChannel() ? item.videoData : item
+        const {isFromPlaylist} = this.props.navigation.state.params;
+        const {videoOne} = this.props;
 
         return (
             <View style={styles.bannerContainer}>
@@ -235,12 +270,24 @@ export default class DetailsPage extends React.Component {
                         </View>
                     </View>
                 </View>
-                {this._renderVideoInBannerInfo(data)}
+                {this._renderVideoInBannerInfo(isFromPlaylist === true ? videoOne.data : data)}
                 <View style={styles.videoDescriptionContainer}>
-                    <Text style={styles.videoDescription}>{data.longDescription}</Text>
+                    <Text style={styles.videoDescription}>{this._getLongDescription(data, isFromPlaylist, videoOne)}</Text>
                 </View>
             </View>
         )
+    }
+
+    _getLongDescription = (data, isFromPlaylist, videoOne) => {
+        if (isFromPlaylist) {
+            if (data.type === 'Episode')
+                return videoOne.data ? (videoOne.data.series !== null ? videoOne.data.series.longDescription : '' ) : ''
+            else return data.longDescription
+        }
+        else if (data.type === 'Episode') {
+            return data.series.longDescription
+        }
+        else return data.longDescription
     }
 
     _renderPinkIndicatorButton = () => {
@@ -378,17 +425,31 @@ export default class DetailsPage extends React.Component {
 
     _renderList = ({item}) => {
         const {_id} = this.props.epg;
+        const {isFromPlaylist} = this.props.navigation.state.params;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (item == null || _id != null  ) {
-            if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
-                console.log();
-                return (
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                    </View>
-                )
+            if (isFromPlaylist === false) {
+                // Normal
+                if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
+                    return (
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                        </View>
+                    )
+                }
+            }
+            else {
+                // From Playlist, getting data from navigation item is different with live item
+                if (this._isFromChannel() && _id !== currentItem.contentId) {
+                    return (
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                        </View>
+                    )
+                }
             }
             if (!this._isFromChannel() && _id !== currentItem.contentId) {
+                console.log(_id + " ", currentItem);
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
@@ -446,7 +507,7 @@ export default class DetailsPage extends React.Component {
                         <Text style={styles.itemType}
                               numberOfLines={1}
                               ellipsizeMode={'tail'}>
-                            {this._getGenresData(videoData, 3)}
+                            {getGenresData(videoData, 3)}
                         </Text>
                         <Text
                             style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
@@ -470,7 +531,9 @@ export default class DetailsPage extends React.Component {
     }
 
     _onBannerPress = (item) => {
-        const {epg, navigation} = this.props;
+        const {epg, navigation, videoOne} = this.props;
+        const {isFromPlaylist} = this.props.navigation.state.params;
+        item = isFromPlaylist === true ? videoOne.data : item;
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];

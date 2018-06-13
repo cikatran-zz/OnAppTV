@@ -30,7 +30,7 @@ import {
     colors, textDarkDefault, textLightDefault, borderedImageDefault
 } from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
-import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
+import {getGenresData} from "../../utils/StringUtils";
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
 import {getChannel, getWatchingHistory} from "../../api";
@@ -129,7 +129,7 @@ export default class Home extends Component {
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
             const {item, isLive} = e;
-            this._onVideoPress(JSON.parse(item), isLive);
+            this._onVideoPress(JSON.parse(item), isLive, true);
         });
     };
 
@@ -331,7 +331,7 @@ export default class Home extends Component {
         let endDate = (new Date(item.epgsData[0].endTime)).getTime();
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true)}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true, false)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData[0].videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
@@ -381,11 +381,12 @@ export default class Home extends Component {
             renderItem={this._renderOnLiveItem}/>)
     };
 
-    _onVideoPress = (item, isLive) => {
+    _onVideoPress = (item, isLive, isFromPlaylist) => {
         const {navigation} = this.props;
         navigation.navigate('DetailsPage', {
             item: item,
-            isLive: isLive
+            isLive: isLive,
+            isFromPlaylist: isFromPlaylist
         })
     };
 
@@ -427,7 +428,7 @@ export default class Home extends Component {
         }
 
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false, false)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
@@ -505,12 +506,11 @@ export default class Home extends Component {
     }
 
     _renderPlaylistItem = ({item}) => {
-
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, item.isLiveList, true)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.type ? item.type : "N/A"}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres ? getGenresData(item, 3) : "N/A"}</Text>
             </TouchableOpacity>)
     };
 
