@@ -28,6 +28,7 @@ import * as getVODByGenres from './getVODByGenres'
 import * as getLatestVODByGenres from './getLatestVODByGenres'
 import * as getLiveEpgInZapper from './getLiveEpgInZapper'
 import * as getConnectStatus from './getConnectStatus'
+import * as getVideoOne from './getVideoOne'
 
 export default actions = {
     getBanner,
@@ -59,5 +60,6 @@ export default actions = {
     getVODByGenres,
     getLatestVODByGenres,
     getLiveEpgInZapper,
-    getConnectStatus
+    getConnectStatus,
+    getVideoOne
 };

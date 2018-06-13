@@ -33,6 +33,7 @@ import getVODByGenresEpic from "./vodByGenresRequestEpic";
 import getLatestVODByGenresEpic from "./latestVODByGenresRequestEpic";
 import getLiveEpgInChannelEpic from "./liveEpgInZapperEpic";
 import getPlaylistEpic from './playlistRequestEpic'
+import videoOneEpic from './videoOneEpic'
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -70,7 +71,8 @@ const rootEpic = combineEpics(
     getVODByGenresEpic,
     getLatestVODByGenresEpic,
     getLiveEpgInChannelEpic,
-    getPlaylistEpic
+    getPlaylistEpic,
+    videoOneEpic
 );
 
 export default rootEpic;
