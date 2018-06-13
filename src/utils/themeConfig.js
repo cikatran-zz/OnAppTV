@@ -26,7 +26,8 @@ export const colors = {
   blackDeleteButton: '#393939',
   blackNoBooking: 'rgba(92,92,92,0.73)',
   greyOutController: '#AAAFB4',
-  greyFilterCategory: '#747474'
+  greyFilterCategory: '#747474',
+  textDescriptionColor: '#ACACAC'
 };
 
 export const textDarkDefault = {

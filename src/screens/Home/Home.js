@@ -415,8 +415,8 @@ export default class Home extends Component {
     _renderVODItem = ({item}) => {
 
         let genres = "";
-        if (item.genresData != null && item.genresData.length > 0) {
-            item.genresData.forEach((genre, index) => {
+        if (item.genres != null && item.genres.length > 0) {
+            item.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
                     genres = genres.concat(", ");
                 }

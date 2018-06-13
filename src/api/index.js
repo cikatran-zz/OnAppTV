@@ -738,7 +738,6 @@ export const getWatchingHistory = () => {
                     console.log("RES", result);
                     try {
                         let contentIds = result.map((item)=>item.id);
-                        console.log("CONTENTIDS", contentIds);
                         client.query({
                             query: config.queries.VOD_BY_IDS,
                             variables: {id: contentIds}
@@ -772,6 +771,13 @@ export const getLiveEpgInChannel = (currentTime, serviceId) => {
     return client.query({
         query: config.queries.LIVE_CHANNEL_IN_ZAPPER,
         variables: {serviceId: serviceId, perPage: serviceId.length}
+    })
+}
+
+export const getVideoOne = (contentId) => {
+    return client.query({
+        query: config.queries.VIDEO_ONE,
+        variables: {contentId: contentId}
     })
 }
 

@@ -35,6 +35,50 @@ export default class DetailsPage extends React.Component {
         }
     }
 
+    _renderVideoInBannerInfo = (data) => {
+        let director = () => data.directors.length === 0 ? <View/>
+            : (<Text style={styles.videoTypeText}
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}>
+                {this._getVideoInfomation('Director', data.directors, 2)}
+            </Text>);
+        let actor = () => data.casts.length === 0 ? <View/>
+            : (<Text style={styles.videoTypeText}
+                     numberOfLines={1}
+                     ellipsizeMode={'tail'}>
+                {this._getVideoInfomation('Actors', data.casts, 3)}
+            </Text>)
+        return (
+            <View style={styles.bannerInfo}>
+                {director()}
+                {actor()}
+            </View>
+        );
+    }
+
+    _getVideoInfomation = (kindOfData, data, numberOfItem) => {
+        let info = kindOfData + ': ';
+        data.map((value,index) => {
+            if (index < numberOfItem) {
+                if (index !== 0) info = info + "," + value.name;
+                else info = info + value.name
+            }
+        })
+        return info;
+    }
+
+    _getGenresData = (data, numberOfItem) => {
+        console.log(data);
+        let genres = '';
+        data.genres.map((genre, index) => {
+            if (index < numberOfItem) {
+                if (index !== 0) genres = genres + ", " + genre.name;
+                else genres = genres + genre.name
+            }
+        })
+        return genres;
+    }
+
     _keyExtractor = (item, index) => index;
 
     componentDidMount() {
@@ -169,29 +213,29 @@ export default class DetailsPage extends React.Component {
         return (
             <View style={styles.bannerContainer}>
                 <View style={styles.bannerInfoContainer}>
-                    <View style={styles.bannerInfo}>
+                    <View style={{height: 16, width: '100%', flexDirection: 'row'}}>
                         <Text style={styles.videoTitleText}
                               numberOfLines={1}
                               ellipsizeMode={'tail'}>
                             {data.title}
                         </Text>
-                        <Text style={styles.videoTypeText}>{data.type}</Text>
-                    </View>
-                    <View style={styles.bannerButtonsContainer}>
-                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
-                            <Image source={require('../../assets/lowerpage_record.png')}
-                                   style={styles.videoPlayButton}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
-                            <Image source={require('../../assets/lowerpage_heart.png')}
-                                   style={styles.videoLoveButton}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> this._shareExecution(item.title, '')}>
-                            <Image source={require('../../assets/share.png')}
-                                   style={styles.videoShareButton}/>
-                        </TouchableOpacity>
+                        <View style={styles.bannerButtonsContainer}>
+                            <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
+                                <Image source={require('../../assets/lowerpage_record.png')}
+                                       style={styles.videoPlayButton}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
+                                <Image source={require('../../assets/lowerpage_heart.png')}
+                                       style={styles.videoLoveButton}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=> this._shareExecution(item.title, '')}>
+                                <Image source={require('../../assets/share.png')}
+                                       style={styles.videoShareButton}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
+                {this._renderVideoInBannerInfo(data)}
                 <View style={styles.videoDescriptionContainer}>
                     <Text style={styles.videoDescription}>{data.longDescription}</Text>
                 </View>
@@ -204,18 +248,18 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromChannel()) {
             // isLive
-            return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"RELATED"}/>)
+            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
         }
 
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"SEASONS"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASONS"}/>)
             }
             case 'Standalone':
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"RELATED"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
             default:
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"NEXT"}/>)
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT"}/>)
         }
     }
 
@@ -399,7 +443,11 @@ export default class DetailsPage extends React.Component {
                               ellipsizeMode={'tail'}>
                             {videoData.title}
                         </Text>
-                        <Text style={styles.itemType}>{videoData.type}</Text>
+                        <Text style={styles.itemType}
+                              numberOfLines={1}
+                              ellipsizeMode={'tail'}>
+                            {this._getGenresData(videoData, 3)}
+                        </Text>
                         <Text
                             style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
                     </View>
@@ -557,7 +605,7 @@ const styles = StyleSheet.create({
     itemContainer: {
         flexDirection: 'row',
         paddingTop: 9,
-        paddingBottom: 9,
+        paddingBottom: 17,
         paddingLeft: 14,
         paddingRight: 14,
         width: '100%',
@@ -587,8 +635,8 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginLeft: 12,
         color: colors.textMainBlack,
-        fontWeight: 'bold',
-        fontSize: 15
+        fontSize: 15,
+        fontFamily: 'Helvetica'
     },
     itemType: {
         marginTop: 2,
@@ -622,7 +670,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 17,
         height: 17,
-        marginRight: 18
+        marginRight: 18,
+        marginTop: 1
     },
     videoShareButton: {
         resizeMode: 'contain',
@@ -646,13 +695,15 @@ const styles = StyleSheet.create({
     },
     bannerInfoContainer: {
         width: '90%',
-        height: 35,
+        height: 16,
         flexDirection: 'row'
     },
     bannerInfo: {
         flexDirection: 'column',
-        flex: 1,
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        marginTop: 18,
+        alignSelf: 'flex-start',
+        marginLeft: '5%'
     },
     bannerButtonsContainer: {
         flexDirection: 'row',
@@ -662,15 +713,17 @@ const styles = StyleSheet.create({
     },
     videoTitleText: {
         fontSize: 16,
-        color: colors.textMainBlack
+        color: colors.textMainBlack,
+        lineHeight: 16,
+        flex: 2
     },
     videoTypeText: {
         fontSize: 12,
-        color: '#383838'
+        color: '#383838',
+        color: colors.textDescriptionColor
     },
     videoDescriptionContainer: {
         width: '90%',
-        marginTop: 20,
         maxHeight: 162,
         flexDirection: 'column',
     },
