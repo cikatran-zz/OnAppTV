@@ -63,8 +63,10 @@ export default class Home extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epgZap} = nextProps;
-        if (epgZap.disableTouch === true && epgZap.screen === 0 && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
-            this._navigateToControlPage(epgZap.data);
+        if (JSON.stringify(epgZap) !== JSON.stringify(this.props.epgZap)) {
+            if (epgZap.disableTouch === true && epgZap.screen === 0 && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
+                this._navigateToControlPage(epgZap.data);
+            }
         }
     }
 
@@ -202,7 +204,7 @@ export default class Home extends Component {
                 ItemSeparatorComponent={this._renderChannelListItemSeparator}
                 data={data}
                 keyExtractor={this._keyExtractor}
-                extraData={this.state}
+                extraData={[this.state, this.props]}
                 renderItem={this._renderChannelListItem}/>
         )
     };
