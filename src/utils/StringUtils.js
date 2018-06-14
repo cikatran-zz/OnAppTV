@@ -7,11 +7,12 @@ export const timeFormatter = (time) => {
 
 export const getGenresData = (data, numberOfItem) => {
     let genres = 'N/A';
-    data.genres.map((genre, index) => {
-        if (index < numberOfItem) {
-            if (index !== 0) genres = genres + ", " + genre.name;
-            else genres = genre.name
-        }
-    })
+    if (data.genres) 
+        data.genres.map((genre, index) => {
+            if (index < numberOfItem) {
+                if (index !== 0) genres = genres + ", " + genre.name;
+                else genres = genre.name
+            }
+        })
     return genres;
 }

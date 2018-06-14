@@ -406,7 +406,8 @@ export default class Home extends Component {
             navigation.navigate('VideoControlModal', {
                 item: item,
                 epg: [item],
-                isLive: false
+                isLive: false,
+                isFromPlaylist: false
             })
         }
 
@@ -665,7 +666,7 @@ export default class Home extends Component {
 
 
 
-        let bannerData = (banner.data == null || banner.data.length == 0) ? null : banner.data[0]
+        let bannerData = (banner.data == null) ? null : banner.data;
         let sections = [
             {data: [bannerData], showHeader: false, renderItem: this._renderBanner},
             {data: [channel.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
