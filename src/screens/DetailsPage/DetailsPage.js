@@ -32,7 +32,8 @@ export default class DetailsPage extends React.Component {
         this.state = {
             item: null,
             isLive: null,
-            isVideoOneLoaded: false
+            isVideoOneLoaded: false,
+            isFromPlaylist: null
         }
     }
 
@@ -40,13 +41,13 @@ export default class DetailsPage extends React.Component {
         if (data == null || data === undefined) return (
             <View style={styles.bannerInfo}/>
         );
-        let director = () => data.directors.length === 0 ? <View/>
+        let director = () => (data.directors.length === 0) || (data.directors === undefined) ? <View/>
             : (<Text style={styles.videoTypeText}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}>
                 {this._getVideoInfomation('Director', data.directors, 2)}
             </Text>);
-        let actor = () => data.casts.length === 0 ? <View/>
+        let actor = () => data.casts.length === 0 || (data.casts === undefined) ? <View/>
             : (<Text style={styles.videoTypeText}
                      numberOfLines={1}
                      ellipsizeMode={'tail'}>
@@ -76,40 +77,54 @@ export default class DetailsPage extends React.Component {
     componentWillReceiveProps(nextProps) {
         const {videoOne} = nextProps;
         const {isVideoOneLoaded} = this.state;
-        const {item, isLive} = this.props.navigation.state.params;
+        const {item, isLive, isFromPlaylist} = this.props.navigation.state.params;
         // Check condition for saved state isVideoOneLoaded
-        if (videoOne.fetched === true && isVideoOneLoaded === false && item.contentId === videoOne.data.contentId) {
-            let item = videoOne.data;
-            if (isLive === true) {
-                /*
-                 Fetching information about EPG next in channel and EPG which are
-                 at the same time on other channels
-                 */
-                // this.props.getEpgs([item.channelData.serviceId])
-                // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10);
+        if (this._isFromPlaylist() === true) {
+            if (item.isSeriesList === true) {
+                // SERIES TYPE
+
             }
-            else if (item.type) {
-                /*
-                 Fetch epg with related content or epg in series
-                 */
-                if (item.type === 'Episode')
-                    this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], 1, 10)
-                else {
-                    this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10)
+            else {
+                // VIDEO TYPE
+                if (videoOne.fetched === true && isVideoOneLoaded === false && item.contentId === videoOne.data.contentId) {
+                    let item = videoOne.data;
+                    if (isLive === true) {
+                        /*
+                        Fetching information about EPG next in channel and EPG which are
+                        at the same time on other channels
+                        */
+                        // this.props.getEpgs([item.channelData.serviceId])
+                        // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
+                        this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10);
+                    }
+                    else if (item.type) {
+                        /*
+                        Fetch epg with related content or epg in series
+                        */
+                        if (item.type === 'Episode')
+                            this.props.getEpgWithSeriesId(item.contentId, [item.seriesId], 1, 10)
+                        else {
+                            this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10)
+                        }
+                    }
+                    this.setState({
+                        isVideoOneLoaded: true
+                    })
                 }
             }
-            this.setState({
-                isVideoOneLoaded: true
-            })
         }
     }
 
     componentDidMount() {
         const {item, isLive, isFromPlaylist} = this.props.navigation.state.params;
         if (item && isLive !== undefined) {
-            if (isFromPlaylist) {
-                this.props.getVideoOne(item.contentId ? item.contentId : "");
+            if (this._isFromPlaylist() === true) {
+                if (item.isSeriesList === true) {
+                    this.props.getVideosInSeriesFromPlaylist(item.contentId ? item.contentId : "", 1, 10);
+                }
+                else {
+                    this.props.getVideoOne(item.contentId ? item.contentId : "");
+                }
                 this.setState({
                     isVideoOneLoaded: false
                 })
@@ -177,7 +192,7 @@ export default class DetailsPage extends React.Component {
     }
 
     setNewState = (item, isLive) => {
-        this.setState({item: JSON.parse(item), isLive})
+        this.setState({item: JSON.parse(item), isLive, isFromPlaylist: false})
     }
 
     componentWillUnmount() {
@@ -242,7 +257,6 @@ export default class DetailsPage extends React.Component {
 
     _renderBannerInfo = ({item}) => {
         let data = this._isFromChannel() ? item.videoData : item
-        const {isFromPlaylist} = this.props.navigation.state.params;
         const {videoOne} = this.props;
 
         return (
@@ -270,9 +284,9 @@ export default class DetailsPage extends React.Component {
                         </View>
                     </View>
                 </View>
-                {this._renderVideoInBannerInfo(isFromPlaylist === true ? videoOne.data : data)}
+                {this._renderVideoInBannerInfo(this._isFromPlaylist() === true ? videoOne.data : data)}
                 <View style={styles.videoDescriptionContainer}>
-                    <Text style={styles.videoDescription}>{this._getLongDescription(data, isFromPlaylist, videoOne)}</Text>
+                    <Text style={styles.videoDescription}>{this._getLongDescription(data, this._isFromPlaylist(), videoOne)}</Text>
                 </View>
             </View>
         )
@@ -400,24 +414,31 @@ export default class DetailsPage extends React.Component {
     _fetchMore = () => {
         this._page++;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
-        if (currentItem && this._isFromChannel() !== undefined) {
-            if (this._isFromChannel() === true ) {
-                /*
-                 Fetching information about EPG next in channel and EPG which are
-                 at the same time on other channels
-                 */
-                // this.props.getEpgs([item.channelData.serviceId])
-                // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                this.props.getEpgWithGenre(currentItem.videoData.contentId, currentItem.genreIds, this._page, 10);
+        if (currentItem && this._isFromChannel() !== undefined && this._isFromPlaylist() !== undefined) {
+            if (this._isFromPlaylist()) {
+                // SERIES TYPE
+                this.props.getVideosInSeriesFromPlaylist(currentItem.contentId, this._page, 10);
             }
-            else if (currentItem.type) {
-                /*
-                 Fetch epg with related content or epg in series
-                 */
-                if (currentItem.type === 'Episode')
-                    this.props.getEpgWithSeriesId(currentItem.contentId, [currentItem.seriesId], this._page, 10)
-                else
-                    this.props.getEpgWithGenre(currentItem.contentId, currentItem.genreIds, this._page, 10)
+            else {
+                // VIDEO TYPE
+                if (this._isFromChannel() === true ) {
+                    /*
+                     Fetching information about EPG next in channel and EPG which are
+                     at the same time on other channels
+                     */
+                    // this.props.getEpgs([item.channelData.serviceId])
+                    // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
+                    this.props.getEpgWithGenre(currentItem.videoData.contentId, currentItem.genreIds, this._page, 10);
+                }
+                else if (currentItem.type) {
+                    /*
+                     Fetch epg with related content or epg in series
+                     */
+                    if (currentItem.type === 'Episode')
+                        this.props.getEpgWithSeriesId(currentItem.contentId, [currentItem.seriesId], this._page, 10)
+                    else
+                        this.props.getEpgWithGenre(currentItem.contentId, currentItem.genreIds, this._page, 10)
+                }
             }
         }
     }
@@ -532,8 +553,7 @@ export default class DetailsPage extends React.Component {
 
     _onBannerPress = (item) => {
         const {epg, navigation, videoOne} = this.props;
-        const {isFromPlaylist} = this.props.navigation.state.params;
-        item = isFromPlaylist === true ? videoOne.data : item;
+        item = this._isFromPlaylist() === true ? (item.isSeriesList === true ? epg.data[0] : videoOne.data) : item;
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
@@ -588,9 +608,11 @@ export default class DetailsPage extends React.Component {
 
     _onScroll(e) {
         this.props.listScrollOffsetY(e.nativeEvent.contentOffset.y)
-    }
+}
 
     _isFromChannel = () => this.state.isLive != null ? this.state.isLive === true : this.props.navigation.state.params.isLive === true
+
+    _isFromPlaylist = () => this.state.isFromPlaylist != null ? this.state.isFromPlaylist : (this.props.navigation.state.params.isFromPlaylist === true)
 
     _renderAppSection = (image, title, description, url) => {
         return (
@@ -787,7 +809,6 @@ const styles = StyleSheet.create({
     },
     videoDescriptionContainer: {
         width: '90%',
-        maxHeight: 162,
         flexDirection: 'column',
     },
     videoDescription: {

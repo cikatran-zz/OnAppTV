@@ -575,6 +575,12 @@ query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int){
             custom
             type
             kind
+            castData {
+              name
+            }
+            directorData {
+              name
+            }
           }
           seriesId
           seasonIndex
@@ -1112,9 +1118,7 @@ query getVideoOne($contentId: String) {
         height
         width
         url
-        _id
       }
-       _id
      }
      state
      custom
@@ -1136,6 +1140,24 @@ query getVideoOne($contentId: String) {
         projectId
       }
    }
+  }
+}
+`;
+
+const seriesIdFromSeriesContentId = gql`
+query getSeriesIdFromSeriesContentId($seriesContentId: String) {
+    viewer {
+    seriesOne(filter: {
+      contentId: $seriesContentId
+    }) {
+      _id
+      directorData {
+        name
+      }
+      castData {
+        name
+      }
+    }
   }
 }
 `;
@@ -1164,6 +1186,7 @@ export default {
         VOD_BY_IDS: VODByIds,
         VOD_BY_GENRES: vodByGenres,
         LIVE_CHANNEL_IN_ZAPPER: liveChannelInZapper,
-        VIDEO_ONE: videoOne
+        VIDEO_ONE: videoOne,
+        SERIES_ID_FROM_SERIES_CONTENT_ID: seriesIdFromSeriesContentId
     }
 };

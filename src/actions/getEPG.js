@@ -70,3 +70,27 @@ export function getEpgWithSeriesIdFailure(error) {
         errorMessage: error
     }
 }
+
+export function getVideosInSeriesFromPlaylist (contentId, page, perPage) {
+    return {
+        type: actionTypes.FETCHING_VIDEO_IN_SERIES_FROM_PLAYLIST,
+        contentId: contentId,
+        page: page,
+        perPage: perPage
+    }
+}
+
+export function getVideosInSeriesFromPlayistSuccess (data, page) {
+    return {
+        type: actionTypes.FETCH_VIDEO_IN_SERIES_FROM_PLAYLIST_SUCCESS,
+        data: data.viewer.videoPagination.items,
+        page: page
+    };
+}
+
+export function getVideosInSeriesFromPlayistFailure (error) {
+    return {
+        type: actionTypes.FETCH_VIDEO_IN_SERIES_FROM_PLAYLIST_FAILURE,
+        errorMessage: error
+    }
+}

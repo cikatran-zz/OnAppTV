@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import DetailsPage from './DetailsPage'
-import { getEpgs, getEpgWithGenres, getEpgWithSeriesId } from '../../actions/getEPG'
+import { getEpgs, getEpgWithGenres, getEpgWithSeriesId, getVideosInSeriesFromPlaylist } from '../../actions/getEPG'
 import { getEpgSameTime } from '../../actions/getEpgSameTime'
 import { getVideoOne } from '../../actions/getVideoOne'
 import videoOneReducer from '../../reducers/videoOneReducer'
@@ -19,7 +19,8 @@ function mapDispatchToProps(dispatch) {
     getEpgWithGenre: (contentId, genresIds, page, perPage) => dispatch(getEpgWithGenres(contentId, genresIds, page, perPage)),
     getEpgWithSeriesId: (contentId, seriesId, page, perPage) => dispatch(getEpgWithSeriesId(contentId, seriesId, page, perPage)),
     getEpgSameTime: (currentTime, channelId) => dispatch(getEpgSameTime(currentTime, channelId)),
-    getVideoOne: (contentId) => dispatch(getVideoOne(contentId))
+    getVideoOne: (contentId) => dispatch(getVideoOne(contentId)),
+    getVideosInSeriesFromPlaylist: (contentId, page, perPage) => dispatch(getVideosInSeriesFromPlaylist(contentId, page, perPage))
   }
 }
 
