@@ -239,6 +239,18 @@ export default class Home extends Component {
     };
 
     // ADS
+    _renderAdsPinkRoundedLabel = (item) => {
+        if (item.data.deal === '') 
+            return (
+                <View/>
+            );
+        else {
+            return (<View style={styles.adsLabelContainer}>
+                        <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
+                    </View>)
+        }    
+    }
+
     _renderAds = ({item}) => {
         if (item.isFetching) {
             return (
@@ -257,10 +269,7 @@ export default class Home extends Component {
             );
         }
 
-        if (item.data.deal === '') 
-            return (
-                <View/>
-            );
+        
 
         let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
@@ -271,9 +280,7 @@ export default class Home extends Component {
                 <ImageBackground
                     style={styles.adsContainer}
                     source={{uri: getImageFromArray(item.data.originalImages, 'logo', 'landscape')}}>
-                    <View style={styles.adsLabelContainer}>
-                        <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
-                    </View>
+                    {this._renderAdsPinkRoundedLabel(item)}
                 </ImageBackground>
             </TouchableOpacity>
         )

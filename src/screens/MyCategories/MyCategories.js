@@ -134,7 +134,12 @@ const styles = StyleSheet.create({
         width: 45,
         height: 26,
         marginLeft: 'auto',
-        marginRight: 32
+        marginRight: 32,
+        transform: [{
+            scaleX: .8
+        }, {
+            scaleY: .8
+        }]
     },
     itemName: {
         fontSize: 16,
@@ -158,4 +163,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         flexWrap: "wrap",
     },
+    itemTextStyle: {
+        fontSize: 16,
+        fontFamily: 'Helvetica'
+    }
 });
