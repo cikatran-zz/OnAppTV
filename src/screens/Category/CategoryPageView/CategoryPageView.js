@@ -10,6 +10,7 @@ import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
 import {getImageFromArray} from "../../../utils/images";
+import { DotsLoader } from 'react-native-indicator'
 
 class CategoryPageView extends Component{
     constructor(props){
@@ -67,7 +68,7 @@ class CategoryPageView extends Component{
         return (
             <TouchableOpacity onPress={()=>this.props.onVideoPress(item,true)}>
                 <View style={styles.liveThumbnailContainer}>
-                    <VideoThumbnail style={styles.liveVideo} showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
+                    <VideoThumbnail style={styles.liveVideo} showProgress={false} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
                     <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
                     <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                     <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
@@ -155,7 +156,8 @@ class CategoryPageView extends Component{
             return (
                 <View
                     style={{height: 50, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
         } else {
@@ -172,7 +174,8 @@ class CategoryPageView extends Component{
             return (
                 <View
                     style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
         } else {

@@ -255,6 +255,11 @@ export default class Home extends Component {
             );
         }
 
+        if (item.data.deal === '') 
+            return (
+                <View/>
+            );
+
         let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
@@ -631,6 +636,8 @@ export default class Home extends Component {
 
 
     _renderResumeVODList = ({item}) => {
+        const {watchingHistory} = this.props;
+
         if (item == null || item[0] == null) {
             return null;
         }
@@ -641,6 +648,7 @@ export default class Home extends Component {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
+                extraData={watchingHistory.data}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderResumeVODItem}/>
         )

@@ -446,10 +446,9 @@ export default class DetailsPage extends React.Component {
 
     _renderList = ({item}) => {
         const {_id} = this.props.epg;
-        const {isFromPlaylist} = this.props.navigation.state.params;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (item == null || _id != null  ) {
-            if (isFromPlaylist === false) {
+            if (this._isFromPlaylist() === false) {
                 // Normal
                 if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
                     return (
@@ -470,7 +469,6 @@ export default class DetailsPage extends React.Component {
                 }
             }
             if (!this._isFromChannel() && _id !== currentItem.contentId) {
-                console.log(_id + " ", currentItem);
                 return (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>

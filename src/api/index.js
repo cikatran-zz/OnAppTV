@@ -745,7 +745,6 @@ export const getWatchingHistory = () => {
                     // result = JSON.parse(result);
                     // if (_.isEmpty(result));
                     //     result = [];
-                    console.log("RES", result);
                     try {
                         let contentIds = result.map((item)=>item.id);
                         client.query({
@@ -761,6 +760,8 @@ export const getWatchingHistory = () => {
                                     finalRes.push(destItem);
                                 }
                             });
+                            if (finalRes.length > 30)
+                                finalRes.splice(29, finalRes.length - 30);
                             resolve(finalRes);
                         }).catch((err)=> {
                             reject(err);
