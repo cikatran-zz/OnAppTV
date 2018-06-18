@@ -23,7 +23,6 @@ export default function epgsReducer(state = initialState, action) {
       };
     case actionTypes.FETCH_EPGS_SUCCESS:
     case actionTypes.FETCH_EPG_GENRES_SUCCESS:
-    case actionTypes.FETCH_EPG_SERIES_SUCCESS:
     case actionTypes.FETCH_VIDEO_IN_SERIES_FROM_PLAYLIST_SUCCESS:
         let tempData = null;
         if (action.page === 1) {
@@ -38,6 +37,29 @@ export default function epgsReducer(state = initialState, action) {
         fetched: true,
         _id: _id
       };
+    case actionTypes.FETCH_EPG_SERIES_SUCCESS:
+      // ALL SEASON ARE SEPERATED
+      let seasonData = [];
+      if (action.page === 1) {
+          tempData = action.data;
+      } else {
+          tempData = _.concat(...state.data, action.data);
+      }
+      let seasonIndexs = _.uniq(_.flatMap(tempData, x => x.seasonIndex));
+      tempData = tempData.map(x => {
+        let dataInSeason = seasonData[seasonIndexs.indexOf(x.seasonIndex)];
+        if (dataInSeason === undefined)
+          dataInSeason = [];
+        dataInSeason.push(x);
+        seasonData[seasonIndexs.indexOf(x.seasonIndex)] = dataInSeason;
+      })    
+      return {
+        ...state,
+        data: seasonData,
+        isFetching: false,
+        fetched: true,
+        _id: _id
+      }
     case actionTypes.FETCH_EPGS_FAILURE:
     case actionTypes.FETCH_EPG_GENRES_FAILURE:
     case actionTypes.FETCH_EPG_SERIES_FAILURE:

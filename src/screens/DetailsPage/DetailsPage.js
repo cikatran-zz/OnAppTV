@@ -116,7 +116,7 @@ export default class DetailsPage extends React.Component {
     }
 
     componentDidMount() {
-        const {item, isLive, isFromPlaylist} = this.props.navigation.state.params;
+        const {item, isLive} = this.props.navigation.state.params;
         if (item && isLive !== undefined) {
             if (this._isFromPlaylist() === true) {
                 if (item.isSeriesList === true) {
@@ -207,6 +207,18 @@ export default class DetailsPage extends React.Component {
             item = this.props.navigation.state.params.item;
         }
 
+        let sections = [
+            {data: [item], showHeader: false, renderItem: this._renderBanner},
+            {data: [item], renderItem: this._renderBannerInfo}];
+
+        if (item.type !== 'Episode')
+            sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
+        else {
+            epg.data.map(x => {
+                sections.push({data: [x], showHeader: false, renderItem: this._renderList})
+            })
+        }
+
         return (
             <View style={styles.container}>
                 <StatusBar
@@ -220,11 +232,7 @@ export default class DetailsPage extends React.Component {
                     stickySectionHeadersEnabled={false}
                     showsVerticalScrollIndicator={false}
                     bounces={false}
-                    sections={[
-                        {data: [item], showHeader: false, renderItem: this._renderBanner},
-                        {data: [item], renderItem: this._renderBannerInfo},
-                        {data: [epg.data], showHeader: false, renderItem: this._renderList},
-                    ]}
+                    sections={sections}
                 />
             </View>
         )
@@ -304,8 +312,8 @@ export default class DetailsPage extends React.Component {
         else return data.longDescription
     }
 
-    _renderPinkIndicatorButton = () => {
-        const {item} = this.props.navigation.state.params
+    _renderPinkIndicatorButton = (itemList) => {
+        let item = this.state.item ? this.state.item : this.props.navigation.state.params.item;
 
         if (this._isFromChannel()) {
             // isLive
@@ -314,8 +322,8 @@ export default class DetailsPage extends React.Component {
 
         switch (item.type) {
             case 'Episode': {
-                let seasonIndex = item.seasonIndex ? item.seasonIndex : ''
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASONS"}/>)
+                let seasonIndex = itemList.length === 0 ? '' : (itemList[0].seasonIndex ? itemList[0].seasonIndex : '')
+                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
             }
             case 'Standalone':
                 return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
@@ -478,10 +486,10 @@ export default class DetailsPage extends React.Component {
         }
 
         return (
-            <View style={{marginBottom: 36}}>
+            <View>
                 <View style={styles.listHeader}>
                     <View style={styles.nextButtonContainer}>
-                        {this._renderPinkIndicatorButton()}
+                        {this._renderPinkIndicatorButton(item)}
                     </View>
                 </View>
                 <FlatList
@@ -682,8 +690,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.whitePrimary,
     },
     list: {
-        width: '100%',
-        paddingBottom: 90
+        width: '100%'
     },
     itemContainer: {
         flexDirection: 'row',
