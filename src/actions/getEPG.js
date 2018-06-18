@@ -35,7 +35,8 @@ export function getEpgWithGenresSuccess(data, page) {
     return {
         type: actionTypes.FETCH_EPG_GENRES_SUCCESS,
         data: data.viewer.videoPagination.items,
-        page: page
+        page: page,
+        max: Math.ceil(data.viewer.videoPagination.count / 10)
     }
 }
 
@@ -60,7 +61,8 @@ export function getEpgWithSeriesIdSuccess (data, page) {
     return {
         type: actionTypes.FETCH_EPG_SERIES_SUCCESS,
         data: data.viewer.videoPagination.items,
-        page: page
+        page: page,
+        max: Math.ceil(data.viewer.videoPagination.count / 10)
     }
 }
 
@@ -84,7 +86,8 @@ export function getVideosInSeriesFromPlayistSuccess (data, page) {
     return {
         type: actionTypes.FETCH_VIDEO_IN_SERIES_FROM_PLAYLIST_SUCCESS,
         data: data.viewer.videoPagination.items,
-        page: page
+        page: page,
+        max: Math.ceil(data.viewer.videoPagination.count / 10)
     };
 }
 

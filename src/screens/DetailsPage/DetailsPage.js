@@ -23,6 +23,8 @@ import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
 import {getGenresData} from '../../utils/StringUtils'
+import _ from 'lodash'
+
 export default class DetailsPage extends React.Component {
     SERIES_TYPE = "seriestype";
     _page = 1;
@@ -211,13 +213,22 @@ export default class DetailsPage extends React.Component {
             {data: [item], showHeader: false, renderItem: this._renderBanner},
             {data: [item], renderItem: this._renderBannerInfo}];
 
-        if (item.type !== 'Episode')
-            sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
-        else {
+        if (this._isFromPlaylist() === true && item.isSeriesList === true) {
+            // Using for series playlist    
             epg.data.map(x => {
                 sections.push({data: [x], showHeader: false, renderItem: this._renderList})
             })
         }
+        else {
+            // Using for normal series
+            if (item.type !== 'Episode')
+                sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
+            else {
+                epg.data.map(x => {
+                    sections.push({data: [x], showHeader: false, renderItem: this._renderList})
+                })
+            }
+        }    
 
         return (
             <View style={styles.container}>
@@ -231,6 +242,7 @@ export default class DetailsPage extends React.Component {
                     keyExtractor={this._keyExtractor}
                     stickySectionHeadersEnabled={false}
                     showsVerticalScrollIndicator={false}
+                    ListFooterComponent={this.__renderListFooter}
                     bounces={false}
                     sections={sections}
                 />
@@ -315,10 +327,7 @@ export default class DetailsPage extends React.Component {
     _renderPinkIndicatorButton = (itemList) => {
         let item = this.state.item ? this.state.item : this.props.navigation.state.params.item;
 
-        if (this._isFromChannel()) {
-            // isLive
-            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
-        }
+        
 
         switch (item.type) {
             case 'Episode': {
@@ -328,6 +337,16 @@ export default class DetailsPage extends React.Component {
             case 'Standalone':
                 return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
             default:
+                if (this._isFromPlaylist() === true && item.isSeriesList === true) {
+                    let seasonIndex = itemList.length === 0 ? '' : (itemList[0].seasonIndex ? itemList[0].seasonIndex : '')
+                    return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
+                }
+
+                if (this._isFromChannel()) {
+                    // isLive
+                    return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
+                }
+
                 return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT"}/>)
         }
     }
@@ -409,9 +428,8 @@ export default class DetailsPage extends React.Component {
         const {epg} = this.props;
         if (epg.isFetching) {
             return (
-                <View
-                    style={{height: 30, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
         } else {
@@ -420,6 +438,13 @@ export default class DetailsPage extends React.Component {
     }
 
     _fetchMore = () => {
+
+        // set limitation for fetch more
+        const {epg} = this.props;
+        if (epg.max !== undefined && this._page === epg.max)
+            return;
+
+
         this._page++;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (currentItem && this._isFromChannel() !== undefined && this._isFromPlaylist() !== undefined) {
@@ -451,6 +476,13 @@ export default class DetailsPage extends React.Component {
         }
     }
 
+    _renderLoadingView = () => {
+        return (
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                </View>
+        )
+    }
 
     _renderList = ({item}) => {
         const {_id} = this.props.epg;
@@ -459,29 +491,32 @@ export default class DetailsPage extends React.Component {
             if (this._isFromPlaylist() === false) {
                 // Normal
                 if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
-                    return (
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                            <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                        </View>
-                    )
+                    return null;
+                    // return (
+                    //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    //         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                    //     </View>
+                    // )
                 }
             }
             else {
                 // From Playlist, getting data from navigation item is different with live item
                 if (this._isFromChannel() && _id !== currentItem.contentId) {
-                    return (
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                            <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                        </View>
-                    )
+                    return null;
+                    // return (
+                    //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    //         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                    //     </View>
+                    // )
                 }
             }
             if (!this._isFromChannel() && _id !== currentItem.contentId) {
-                return (
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                    </View>
-                )
+                return null;
+                // return (
+                //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                //         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                //     </View>
+                // )
             }
         }
 
@@ -557,12 +592,14 @@ export default class DetailsPage extends React.Component {
         else return null
     }
 
-    _onBannerPress = (item) => {
+    _onBannerPress = (bannerItem) => {
         const {epg, navigation, videoOne} = this.props;
-        item = this._isFromPlaylist() === true ? (item.isSeriesList === true ? epg.data[0] : videoOne.data) : item;
+        let item = this._isFromPlaylist() === true ? (bannerItem.isSeriesList === true ? epg.rawData[0] : videoOne.data) : bannerItem;
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
+            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| item.type === 'Episode')
+                data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             let itemIndex = data.findIndex(x => x.contentId ? x.contentId === item.contentId && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
             NativeModules.RNControlPageNavigation
@@ -576,7 +613,10 @@ export default class DetailsPage extends React.Component {
         }
         else {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
+            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| item.type === 'Episode')
+                data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
+            console.log('Data', data);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,

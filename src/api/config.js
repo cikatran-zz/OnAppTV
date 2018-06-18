@@ -478,6 +478,7 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
         }
       }
     })  {
+      count
       items {
           _id
           contentId
@@ -542,7 +543,8 @@ query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int){
             in: $id
         }
       }
-    }, page: $page, perPage: $perPage) {
+    }, page: $page, perPage: $perPage, sort: SEASONINDEX_ASC) {
+        count
         items {
             _id
           contentId

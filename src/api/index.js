@@ -798,11 +798,11 @@ export const getVideosInSeriesFromPlaylist = (contentId, page, perPage) => {
             query: config.queries.SERIES_ID_FROM_SERIES_CONTENT_ID,
             variables: {seriesContentId: contentId}
         }).then(value => {
-            resolve(client.query({
-                query: config.queries.EPG_WITH_SERIES,
-                variables: {id: value.data.viewer.seriesOne._id, page: page, perPage: perPage}
-            }));
-        })
+            //if (value.data.viewer.seriesOne == null) reject(null);
+            resolve(getEpgWithSeriesId(value.data.viewer.seriesOne._id, page, perPage));
+        }).catch(() => {
+            
+        } );
     });
 }
 
