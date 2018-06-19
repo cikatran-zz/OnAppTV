@@ -367,10 +367,10 @@ const liveQueryNoSTB = gql`${firstGQL}${ipLinkParam}${lastGQL}`;
 
 
 const epgQuery = gql`
-query getEPGByChannel($channelId: Float){
+query getEPGByChannel($serviceId: Float, $startTime: String, $endTime: String){
   viewer{
       channelOne(filter: {
-        serviceId: $channelId
+        serviceId: $serviceId
       }
       ) {
         title
@@ -390,7 +390,7 @@ query getEPGByChannel($channelId: Float){
               url
             }
         }
-        epgsData(current: true) {
+        epgsData(startTime: $startTime, endTime: $endTime) {
           videoId
           channelId
           channelData {

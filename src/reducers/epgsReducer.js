@@ -23,10 +23,10 @@ export default function epgsReducer(state = initialState, action) {
       };
     case actionTypes.FETCH_EPGS_SUCCESS:
     case actionTypes.FETCH_EPG_GENRES_SUCCESS:
-        let tempData = null;
+        let tempData = action.data;
         if (action.page === 1) {
             tempData = action.data
-        } else {
+        } else if (action.page !== undefined && action.page != null) {
             tempData = _.concat(...state.data, action.data);
         }
       return {

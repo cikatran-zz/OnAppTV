@@ -254,7 +254,7 @@ export const getLive = (currentTime, page, itemPerPage) => {
                 }));
             } else {
                 resolve(client.query({
-                    query: config.queries.LIVENOSTB,
+                    query: config.queries.LIVESTB,
                     variables: {page: page, perPage: itemPerPage}
                 }));
             }
@@ -305,11 +305,11 @@ export const getNews = () => {
     });
 };
 
-export const getEpgs = (serviceId) => {
+export const getEpgs = (serviceId, startTime, endTime) => {
     console.log(serviceId)
     return client.query({
         query: config.queries.EPG,
-        variables: {id: serviceId}
+        variables: {serviceId: serviceId, startTime: startTime, endTime: endTime}
     })
 };
 

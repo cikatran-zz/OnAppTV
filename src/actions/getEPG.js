@@ -1,9 +1,11 @@
 import * as actionTypes from './actionTypes'
 
-export function getEpgs(serviceId) {
+export function getEpgs(serviceId, startTime, endTime) {
     return {
         type: actionTypes.FETCHING_EPGS,
-        serviceId: serviceId
+        serviceId: serviceId,
+        startTime: startTime,
+        endTime: endTime
     }
 }
 
