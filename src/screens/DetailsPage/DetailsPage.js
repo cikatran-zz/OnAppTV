@@ -23,7 +23,6 @@ import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
 import {getGenresData} from '../../utils/StringUtils'
-import _ from 'lodash'
 
 export default class DetailsPage extends React.Component {
     SERIES_TYPE = "seriestype";
@@ -492,31 +491,16 @@ export default class DetailsPage extends React.Component {
                 // Normal
                 if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
                     return null;
-                    // return (
-                    //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    //         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                    //     </View>
-                    // )
                 }
             }
             else {
                 // From Playlist, getting data from navigation item is different with live item
                 if (this._isFromChannel() && _id !== currentItem.contentId) {
                     return null;
-                    // return (
-                    //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    //         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                    //     </View>
-                    // )
                 }
             }
             if (!this._isFromChannel() && _id !== currentItem.contentId) {
                 return null;
-                // return (
-                //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                //         <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                //     </View>
-                // )
             }
         }
 
@@ -616,7 +600,6 @@ export default class DetailsPage extends React.Component {
             if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| item.type === 'Episode')
                 data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
-            console.log('Data', data);
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,

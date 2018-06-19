@@ -112,7 +112,6 @@ class CategoryPageView extends Component{
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
-                // ListFooterComponent={this._renderLiveFooter}
                 onEndReached={this._fetchMoreLive}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderOnLiveItem}/>
@@ -141,7 +140,6 @@ class CategoryPageView extends Component{
             horizontal={false}
             showsVerticalScrollIndicator={false}
             data={item}
-            // ListFooterComponent={this._renderVODFooter}
             onEndReached={this._fetchMoreVOD}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderVODItem} />)
