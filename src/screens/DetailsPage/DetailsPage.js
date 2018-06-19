@@ -10,19 +10,19 @@ import {
     Text,
     TouchableOpacity,
     View,
-    InteractionManager,
     DeviceEventEmitter,
-    ActivityIndicator
 } from 'react-native'
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
-import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
+import {secondFormatter, timeFormatter, timeFormatterNoDate} from '../../utils/timeUtils'
 import {rootViewTopPadding} from "../../utils/rootViewPadding";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getImageFromArray} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
 import {getGenresData} from '../../utils/StringUtils'
+import VideoThumbnail from '../../components/VideoThumbnail'
+import _ from 'lodash'
 
 export default class DetailsPage extends React.Component {
     SERIES_TYPE = "seriestype";
@@ -95,8 +95,7 @@ export default class DetailsPage extends React.Component {
                         at the same time on other channels
                         */
                         // this.props.getEpgs([item.channelData.serviceId])
-                        // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                        this.props.getEpgWithGenre(item.contentId, item.genreIds, 1, 10);
+                        this.props.getLive(true, 1, 10);
                     }
                     else if (item.type) {
                         /*
@@ -137,9 +136,14 @@ export default class DetailsPage extends React.Component {
                      Fetching information about EPG next in channel and EPG which are
                      at the same time on other channels
                      */
-                    // this.props.getEpgs([item.channelData.serviceId])
-                    // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                    this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, 1, 10);
+                    var date = new Date();
+                    var tmr = new Date();
+                    tmr.setDate(date.getDate() + 1);
+
+
+                    this.props.getEpgs(item.channelData.serviceId, date.toISOString(), tmr.toISOString());
+                    this.props.getLive(true, 1, 10);
+                    //this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, 1, 10);
                 }
                 else if (item.type) {
                     /*
@@ -202,7 +206,7 @@ export default class DetailsPage extends React.Component {
 
     render() {
         // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-        const {epg} = this.props;
+        const {epg, live} = this.props;
         let {item} = this.state;
         if (!item) {
             item = this.props.navigation.state.params.item;
@@ -221,7 +225,18 @@ export default class DetailsPage extends React.Component {
         else {
             // Using for normal series
             if (item.type !== 'Episode')
-                sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
+                if (this._isFromChannel() === true) {
+                    // live 
+                    let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0})
+                        .map(x => x.epgsData[0]);
+
+                    sections.push({data: [epgsDataArray], showHeader: false, renderItem: this._renderSameTimeList})
+                    sections.push({data: [epg.data], showHeader: false, renderItem: this._renderNextInChannelList})
+                }
+                else {
+                    // Standalone
+                    sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
+                }
             else {
                 epg.data.map(x => {
                     sections.push({data: [x], showHeader: false, renderItem: this._renderList})
@@ -323,10 +338,19 @@ export default class DetailsPage extends React.Component {
         else return data.longDescription
     }
 
-    _renderPinkIndicatorButton = (itemList) => {
-        let item = this.state.item ? this.state.item : this.props.navigation.state.params.item;
+    _renderPinkIndicatorButton = (itemList, title) => {
+        if (itemList === undefined || itemList.length === 0 || itemList[0] === undefined) {
+            return null;
+        }
 
-        
+        if (title !== undefined) {
+            // title was passed
+            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={title}/>)
+        }
+
+        console.log(itemList);
+
+        let item = this.state.item ? this.state.item : this.props.navigation.state.params.item;
 
         switch (item.type) {
             case 'Episode': {
@@ -358,19 +382,23 @@ export default class DetailsPage extends React.Component {
         }
     }
 
-    _renderNextInChannelItem = ({item}) => {
+    _renderSameTimeItem = ({item}) => {
+        let currentDate = (new Date()).getTime();
+        let startDate = (new Date(item.startTime)).getTime();
+        let endDate = (new Date(item.endTime)).getTime();
+        let progress = (currentDate - startDate) / (endDate - startDate) * 100;
+
         let data = item.videoData;
+
         let url = getImageFromArray(data.originalImages, 'landscape', 'feature');
         return (
             <View style={{flexDirection: 'column',
                 marginLeft: 8,
                 alignSelf: 'flex-start',
                 alignItems: 'center'}}>
-                <View style={styles.nextInChannelContainer}>
-                    <Image source={{uri: url}}
-                           style={{width: '100%',
-                               height: '100%'}}/>
-                </View>
+                <TouchableOpacity onPress={() => this._onPress(item, this.props.live.data.map(x => x.epgsData[0]), true)}>
+                    <VideoThumbnail style={styles.nextInChannelContainer} imageUrl={url} showProgress={false} progress={progress + "%"}/>\
+                </TouchableOpacity>
                 <Text numberOfLines={1}
                       ellipsizeMode={'tail'}
                       style={styles.nextInChannelItemText}>
@@ -380,45 +408,25 @@ export default class DetailsPage extends React.Component {
         )
     }
 
-    _renderListNextInChannel = (item) => {
+    _renderSameTimeList = ({item}) => {
         if (!item || item.length === 0) return null
+
         return (
             <View>
                 <View style={styles.listHeader}>
                     <View style={styles.nextButtonContainer}>
-                        <PinkRoundedLabel text={"NEXT"}/>
+                        {this._renderPinkIndicatorButton(item, "NEXT")}
                     </View>
                 </View>
                 <FlatList
                     horizontal={true}
                     data={item}
+                    onEndReached={this._fetchMore}
+                    onEndReachedThreshold={0.5}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={this._keyExtractor}
-                    renderItem={this._renderNextInChannelItem}
+                    renderItem={this._renderSameTimeItem}
                 />
-            </View>
-        )
-    }
-
-    _renderListApps = (item) => {
-
-    }
-
-    _renderListEpgInSameTime = ({item}) => {
-        if (!item || item.length === 0) return null
-        return (
-            <View>
-                <View style={styles.listHeader}>
-                    <View style={styles.nextButtonContainer}>
-                        {this._renderPinkIndicatorButton()}
-                    </View>
-                </View>
-                <FlatList
-                    style={styles.list}
-                    horizontal={false}
-                    data={item}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderListVideoItem}/>
             </View>
         )
     }
@@ -439,9 +447,13 @@ export default class DetailsPage extends React.Component {
     _fetchMore = () => {
 
         // set limitation for fetch more
-        const {epg} = this.props;
+        const {epg, live} = this.props;
         if (epg.max !== undefined && this._page === epg.max)
             return;
+        
+        if (live.data.length < this._page * 10)
+            return;    
+
 
 
         this._page++;
@@ -458,9 +470,7 @@ export default class DetailsPage extends React.Component {
                      Fetching information about EPG next in channel and EPG which are
                      at the same time on other channels
                      */
-                    // this.props.getEpgs([item.channelData.serviceId])
-                    // this.props.getEpgSameTime(moment("May 1 08:00:00", "MMM DD hh:mm:ss").toISOString(true), item.channelId)
-                    this.props.getEpgWithGenre(currentItem.videoData.contentId, currentItem.genreIds, this._page, 10);
+                    this.props.getLive(true, this._page, 10);
                 }
                 else if (currentItem.type) {
                     /*
@@ -480,6 +490,46 @@ export default class DetailsPage extends React.Component {
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
+        )
+    }
+
+    _renderNextInChannelList = ({item}) => {
+        const {_id} = this.props.epg;
+        let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
+        if (item == null || _id != null  ) {
+            if (this._isFromPlaylist() === false) {
+                // Normal
+                if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
+                    return null;
+                }
+            }
+            else {
+                // From Playlist, getting data from navigation item is different with live item
+                if (this._isFromChannel() && _id !== currentItem.contentId) {
+                    return null;
+                }
+            }
+            if (!this._isFromChannel() && _id !== currentItem.contentId) {
+                return null;
+            }
+        }
+
+        return (
+            <View>
+                <View style={styles.listHeader}>
+                    <View style={styles.nextButtonContainer}>
+                        {this._renderPinkIndicatorButton(item, "NEXT CHANNELS")}
+                    </View>
+                </View>
+                <FlatList
+                    style={styles.list}
+                    horizontal={false}
+                    data={item}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={this.__renderListFooter}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderListVideoItem}/>
+            </View>
         )
     }
 
@@ -525,7 +575,7 @@ export default class DetailsPage extends React.Component {
     }
 
     _renderListVideoItem = ({item}) => {
-        let videoData = item;
+        let videoData = this._isFromChannel() === true ? item.videoData : item;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (this._isFromChannel() && currentItem.videoData !== undefined && videoData.contentId === currentItem.videoData.contentId) {
             return null;
@@ -539,7 +589,7 @@ export default class DetailsPage extends React.Component {
                 <View style={styles.itemContainer}>
                     <TouchableOpacity
                         style={styles.videoThumbnailContainer}
-                        onPress={() => this._onPress(item)}>
+                        onPress={() => this._onPress(item, null, false)}>
                         <Image
                             style={styles.videoThumbnail}
                             source={{uri: getImageFromArray(videoData.originalImages, 'landscape', 'feature')}}/>
@@ -556,7 +606,7 @@ export default class DetailsPage extends React.Component {
                             {getGenresData(videoData, 3)}
                         </Text>
                         <Text
-                            style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
+                            style={styles.itemTime}>{this._isFromChannel() !== true ? secondFormatter(item.durationInSeconds) : (timeFormatterNoDate(item.startTime) + " - " + timeFormatterNoDate(item.endTime))}</Text>
                     </View>
                     <View style={styles.itemActionsContainer}>
                         <TouchableOpacity onPress={() => {
@@ -608,12 +658,18 @@ export default class DetailsPage extends React.Component {
         }
     }
 
-    _onPress = (item) => {
+    _onPress = (item, passedData, passedIsLive) => {
         const {epg, navigation} = this.props;
+        let data = (passedData == null) ? 
+            (epg.data.length !== 0 ? epg.data : [item]) : passedData;
+
+        if (item.type === 'Episode') {
+            // Episodes devided by series, replace data by raw_data
+            data = epg.rawData
+        }
 
         if (Platform.OS !== 'ios') {
-            let data = epg.data.length !== 0 ? epg.data : [item];
-            if (!data.some(x => x.contentId === item.contentId)) [item].concat(data);
+            if (!data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             let itemIndex = data.findIndex(x => x.contentId ? x.contentId === item.contentId && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
             NativeModules.RNControlPageNavigation
                 .navigateControl(data,
@@ -625,12 +681,15 @@ export default class DetailsPage extends React.Component {
                     () => { console.log("onDetail") });
         }
         else {
-            let data = epg.data.length !== 0 ? epg.data : [item];
-            if (!data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
+            if (!data.some(x => x.contentId === item.contentId)) {
+
+                console.log('EPG', epg);
+                data = [item].concat(data);
+            }
             navigation.replace('VideoControlModal', {
                 item: item,
                 epg: data,
-                isLive: false
+                isLive: passedIsLive !== undefined ? passedIsLive : false
             })
         }
     }
@@ -860,7 +919,6 @@ const styles = StyleSheet.create({
     },
     nextInChannelContainer: {
         borderRadius: 4,
-        borderWidth: 2,
         overflow: 'hidden',
         borderColor: "#95989A",
         width: 150,
@@ -871,9 +929,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     nextInChannelItemText: {
-        marginTop: 18,
+        marginTop: 20,
         color: colors.textMainBlack,
-        fontSize: 15
+        fontSize: 15,
+        marginBottom: 33
     },
     appSectionView: {
         flexDirection: 'row',
