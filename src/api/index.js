@@ -254,7 +254,7 @@ export const getLive = (currentTime, page, itemPerPage) => {
                 }));
             } else {
                 resolve(client.query({
-                    query: config.queries.LIVESTB,
+                    query: config.queries.LIVENOSTB,
                     variables: {page: page, perPage: itemPerPage}
                 }));
             }
