@@ -10,6 +10,13 @@ export const timeFormatter = (time) => {
     return (monthNames[month] + " " + (day < 10 ? '0' + day : day)) + " - " + ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes))
 };
 
+export const timeFormatterNoDate = (time) => {
+    let date = new Date(time);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    return ((hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes));
+}
+
 export const secondFormatter = (duration) => {
   let sec_num = parseInt(duration, 10); // don't forget the second param
   let hours   = Math.floor(sec_num / 3600);

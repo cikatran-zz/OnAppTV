@@ -10,6 +10,7 @@ import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
 import {getImageFromArray} from "../../../utils/images";
+import { DotsLoader } from 'react-native-indicator'
 
 class CategoryPageView extends Component{
     constructor(props){
@@ -67,7 +68,7 @@ class CategoryPageView extends Component{
         return (
             <TouchableOpacity onPress={()=>this.props.onVideoPress(item,true)}>
                 <View style={styles.liveThumbnailContainer}>
-                    <VideoThumbnail style={styles.liveVideo} showProgress={true} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
+                    <VideoThumbnail style={styles.liveVideo} showProgress={false} progress={progress + "%"} imageUrl={image} marginHorizontal={10}/>
                     <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.videoData.title}</Text>
                     <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                     <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.channelData.title}</Text>
@@ -111,7 +112,6 @@ class CategoryPageView extends Component{
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
-                ListFooterComponent={this._renderLiveFooter}
                 onEndReached={this._fetchMoreLive}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderOnLiveItem}/>
@@ -140,11 +140,12 @@ class CategoryPageView extends Component{
             horizontal={false}
             showsVerticalScrollIndicator={false}
             data={item}
-            ListFooterComponent={this._renderVODFooter}
             onEndReached={this._fetchMoreVOD}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderVODItem} />)
     }
+
+    
 
     _renderVODFooter = () => {
         const {vod, genresId} = this.props;
@@ -155,7 +156,8 @@ class CategoryPageView extends Component{
             return (
                 <View
                     style={{height: 50, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
         } else {
@@ -172,7 +174,8 @@ class CategoryPageView extends Component{
             return (
                 <View
                     style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size={"small"} color={colors.textGrey}/>
+                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
         } else {
@@ -205,13 +208,30 @@ class CategoryPageView extends Component{
 
     }
 
-    _renderListFooter = () => (
-        <View style={{
-            width: '100%',
-            height: Dimensions.get("window").height * 0.08 + 20,
-            backgroundColor: 'transparent'
-        }}/>
-    );
+    _renderListFooter = () => {
+        const {vod, genresId, epg} = this.props;
+        let vodMap = vod.vodMap.get(genresId);
+        let epgMap = epg.epgMap.get(genresId);
+        if (!vodMap || !epgMap)
+            return null;
+        if (epgMap.isFetching || vodMap.isFetching) {
+            return (
+                <View
+                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
+                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                </View>
+            )
+        } else {
+            return (
+                <View style={{
+                    width: '100%',
+                    height: Dimensions.get("window").height * 0.08 + 20,
+                    backgroundColor: 'transparent'
+                }}/>
+            );
+        }      
+    };
 
 
     render(){

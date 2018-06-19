@@ -36,6 +36,7 @@ import latestVODByGenresReducer from "./latestVODByGenresReducer";
 import liveEpgInZapperReducer from "./liveEpgZapperReducer";
 import playlistReducer from './playlistReducer';
 import connectStatusReducer from './connectStatusReducer';
+import videoOneReducer from './videoOneReducer';
 
 export default combineReducers({
     nav,
@@ -74,5 +75,6 @@ export default combineReducers({
     latestVODByGenresReducer,
     liveEpgInZapperReducer,
     playlistReducer,
-    connectStatusReducer
+    connectStatusReducer,
+    videoOneReducer
 });

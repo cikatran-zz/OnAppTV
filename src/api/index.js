@@ -7,6 +7,8 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
 import {getImageFromArray} from '../utils/images'
 import _ from 'lodash';
+import 'rxjs'
+import {Observable} from 'rxjs/Observable'
 
 const AUTH_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0SWQiOiI1YWRlZWJkMTVmNGEwNTAwMWU5Nzg5ZDQiLCJpYXQiOjE1MjQ1NTg4MDF9.pOyAXvsRaN3dj_dU5luKjgNyULnN6pNlpBnxGcHax0M';
 
@@ -215,9 +217,17 @@ export const getChannel = (limit) => {
 };
 
 export const getBanner = () => {
-    return client.query({
-        query: config.queries.BANNER
-    });
+    return new Promise((resolve, reject) => {
+        client.query({
+            query: config.queries.BANNER
+        }).then(value => {
+            resolve(client.query({
+                query: config.queries.VIDEO_ONE,
+                variables: ({contentId: value.data.viewer.listOne.contentData[0].contentId})
+            }))
+        });
+    })
+    
 };
 
 export const getPlaylist = (playlist) => {
@@ -295,11 +305,11 @@ export const getNews = () => {
     });
 };
 
-export const getEpgs = (serviceId) => {
+export const getEpgs = (serviceId, startTime, endTime) => {
     console.log(serviceId)
     return client.query({
         query: config.queries.EPG,
-        variables: {id: serviceId}
+        variables: {serviceId: serviceId, startTime: startTime, endTime: endTime}
     })
 };
 
@@ -735,10 +745,8 @@ export const getWatchingHistory = () => {
                     // result = JSON.parse(result);
                     // if (_.isEmpty(result));
                     //     result = [];
-                    console.log("RES", result);
                     try {
                         let contentIds = result.map((item)=>item.id);
-                        console.log("CONTENTIDS", contentIds);
                         client.query({
                             query: config.queries.VOD_BY_IDS,
                             variables: {id: contentIds}
@@ -752,6 +760,8 @@ export const getWatchingHistory = () => {
                                     finalRes.push(destItem);
                                 }
                             });
+                            if (finalRes.length > 30)
+                                finalRes.splice(29, finalRes.length - 30);
                             resolve(finalRes);
                         }).catch((err)=> {
                             reject(err);
@@ -775,5 +785,25 @@ export const getLiveEpgInChannel = (currentTime, serviceId) => {
     })
 }
 
+export const getVideoOne = (contentId) => {
+    return client.query({
+        query: config.queries.VIDEO_ONE,
+        variables: {contentId: contentId}
+    })
+}
+
+export const getVideosInSeriesFromPlaylist = (contentId, page, perPage) => {
+    return new Promise((resolve, reject) => {
+        client.query({
+            query: config.queries.SERIES_ID_FROM_SERIES_CONTENT_ID,
+            variables: {seriesContentId: contentId}
+        }).then(value => {
+            //if (value.data.viewer.seriesOne == null) reject(null);
+            resolve(getEpgWithSeriesId(value.data.viewer.seriesOne._id, page, perPage));
+        }).catch(() => {
+            
+        } );
+    });
+}
 
 

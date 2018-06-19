@@ -10,7 +10,7 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
                 if (firstImageName === 'feature' && scaledImages.length > 2) {
                     image = scaledImages[1].url;
                 } else {
-                    image = scaledImages[scaledImages.length - 1].url;
+                    image = scaledImages[scaledImages.length - 2].url;
                 }
             }
         }

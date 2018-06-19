@@ -11,6 +11,7 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'
 import createFilter from 'redux-persist-transform-filter';
 import liveEpgInZapperReducer from "./reducers/liveEpgZapperReducer";
+import videoOneReducer from './reducers/videoOneReducer'
 
 const navMiddleware = createReactNavigationReduxMiddleware(
     "root",
@@ -25,7 +26,7 @@ const appReducerFilter = createFilter('app', ['data'])
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer', 'categoryReducer', 'liveEpgInZapperReducer', 'playlistReducer'],
+    blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer', 'categoryReducer', 'liveEpgInZapperReducer', 'playlistReducer', 'videoOneReducer'],
     stateReconciler: autoMergeLevel2,
     transforms: [appReducerFilter]
 }

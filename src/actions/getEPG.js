@@ -1,9 +1,11 @@
 import * as actionTypes from './actionTypes'
 
-export function getEpgs(serviceId) {
+export function getEpgs(serviceId, startTime, endTime) {
     return {
         type: actionTypes.FETCHING_EPGS,
-        serviceId: serviceId
+        serviceId: serviceId,
+        startTime: startTime,
+        endTime: endTime
     }
 }
 
@@ -35,7 +37,8 @@ export function getEpgWithGenresSuccess(data, page) {
     return {
         type: actionTypes.FETCH_EPG_GENRES_SUCCESS,
         data: data.viewer.videoPagination.items,
-        page: page
+        page: page,
+        max: Math.ceil(data.viewer.videoPagination.count / 10)
     }
 }
 
@@ -60,13 +63,39 @@ export function getEpgWithSeriesIdSuccess (data, page) {
     return {
         type: actionTypes.FETCH_EPG_SERIES_SUCCESS,
         data: data.viewer.videoPagination.items,
-        page: page
+        page: page,
+        max: Math.ceil(data.viewer.videoPagination.count / 10)
     }
 }
 
 export function getEpgWithSeriesIdFailure(error) {
     return {
         type: actionTypes.FETCH_EPG_SERIES_FAILURE,
+        errorMessage: error
+    }
+}
+
+export function getVideosInSeriesFromPlaylist (contentId, page, perPage) {
+    return {
+        type: actionTypes.FETCHING_VIDEO_IN_SERIES_FROM_PLAYLIST,
+        contentId: contentId,
+        page: page,
+        perPage: perPage
+    }
+}
+
+export function getVideosInSeriesFromPlayistSuccess (data, page) {
+    return {
+        type: actionTypes.FETCH_VIDEO_IN_SERIES_FROM_PLAYLIST_SUCCESS,
+        data: data.viewer.videoPagination.items,
+        page: page,
+        max: Math.ceil(data.viewer.videoPagination.count / 10)
+    };
+}
+
+export function getVideosInSeriesFromPlayistFailure (error) {
+    return {
+        type: actionTypes.FETCH_VIDEO_IN_SERIES_FROM_PLAYLIST_FAILURE,
         errorMessage: error
     }
 }

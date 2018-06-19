@@ -6,7 +6,7 @@ import getLiveEpic from './liveRequestEpic'
 import getVODEpic from  './vodRequestEpic'
 import getAdsEpic from "./adsRequestEpic";
 import getNewsEpic from "./newsRequestEpic";
-import {epgsRequestEpic, epgWithGenre, epgWithSeriesId } from './epgsRequestEpic'
+import {epgsRequestEpic, epgWithGenre, epgWithSeriesId, videoInSeriesFromPlaylist } from './epgsRequestEpic'
 import getBookingEpic from './bookingRequestEpic'
 import getGenresContentEpic from "./genresContentRequestEpic";
 import getZapperContentRequestEpic from './zapperContentRequestEpic'
@@ -33,6 +33,7 @@ import getVODByGenresEpic from "./vodByGenresRequestEpic";
 import getLatestVODByGenresEpic from "./latestVODByGenresRequestEpic";
 import getLiveEpgInChannelEpic from "./liveEpgInZapperEpic";
 import getPlaylistEpic from './playlistRequestEpic'
+import videoOneEpic from './videoOneEpic'
 
 const rootEpic = combineEpics(
     getBannerEpic,
@@ -70,7 +71,9 @@ const rootEpic = combineEpics(
     getVODByGenresEpic,
     getLatestVODByGenresEpic,
     getLiveEpgInChannelEpic,
-    getPlaylistEpic
+    getPlaylistEpic,
+    videoOneEpic,
+    videoInSeriesFromPlaylist
 );
 
 export default rootEpic;

@@ -356,7 +356,7 @@ export default class Settings extends React.PureComponent {
     _renderSectionHeader = ({section}) => {
         if (section.showHeader) {
             return (
-                <View style={styles.headerSectionContainer}>
+                <View style={[styles.headerSectionContainer, {marginTop: section.title === 'ON TV' ? 10 : 25}]}>
                     <PinkRoundedLabel text={section.title} containerStyle={styles.headerSection}/>
                 </View>
             )
@@ -486,6 +486,6 @@ const styles = StyleSheet.create({
     },
     headerSectionContainer: {
         flexDirection: 'row',
-        marginBottom: 10
+        marginBottom: 11
     }
 });

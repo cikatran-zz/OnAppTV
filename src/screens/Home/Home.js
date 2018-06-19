@@ -30,7 +30,7 @@ import {
     colors, textDarkDefault, textLightDefault, borderedImageDefault
 } from '../../utils/themeConfig';
 import {getBlurRadius} from '../../utils/blurRadius'
-import {secondFormatter, timeFormatter} from "../../utils/timeUtils";
+import {getGenresData} from "../../utils/StringUtils";
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
 import {getChannel, getWatchingHistory} from "../../api";
@@ -63,8 +63,10 @@ export default class Home extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {epgZap} = nextProps;
-        if (epgZap.disableTouch === true && epgZap.screen === 0 && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
-            this._navigateToControlPage(epgZap.data);
+        if (JSON.stringify(epgZap) !== JSON.stringify(this.props.epgZap)) {
+            if (epgZap.disableTouch === true && epgZap.screen === 0 && epgZap.isFetching === false && epgZap.data != null && epgZap.data.length != 0) {
+                this._navigateToControlPage(epgZap.data);
+            }
         }
     }
 
@@ -129,7 +131,7 @@ export default class Home extends Component {
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {
             const {item, isLive} = e;
-            this._onVideoPress(JSON.parse(item), isLive);
+            this._onVideoPress(JSON.parse(item), isLive, true);
         });
     };
 
@@ -202,7 +204,7 @@ export default class Home extends Component {
                 ItemSeparatorComponent={this._renderChannelListItemSeparator}
                 data={data}
                 keyExtractor={this._keyExtractor}
-                extraData={this.state}
+                extraData={[this.state, this.props]}
                 renderItem={this._renderChannelListItem}/>
         )
     };
@@ -237,6 +239,18 @@ export default class Home extends Component {
     };
 
     // ADS
+    _renderAdsPinkRoundedLabel = (item) => {
+        if (item.data.deal === '') 
+            return (
+                <View/>
+            );
+        else {
+            return (<View style={styles.adsLabelContainer}>
+                        <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
+                    </View>)
+        }    
+    }
+
     _renderAds = ({item}) => {
         if (item.isFetching) {
             return (
@@ -255,6 +269,8 @@ export default class Home extends Component {
             );
         }
 
+        
+
         let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
@@ -264,9 +280,7 @@ export default class Home extends Component {
                 <ImageBackground
                     style={styles.adsContainer}
                     source={{uri: getImageFromArray(item.data.originalImages, 'logo', 'landscape')}}>
-                    <View style={styles.adsLabelContainer}>
-                        <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
-                    </View>
+                    {this._renderAdsPinkRoundedLabel(item)}
                 </ImageBackground>
             </TouchableOpacity>
         )
@@ -331,8 +345,8 @@ export default class Home extends Component {
         let endDate = (new Date(item.epgsData[0].endTime)).getTime();
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true, false)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData[0].videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
@@ -370,7 +384,7 @@ export default class Home extends Component {
             )
         }
         return (<FlatList
-            style={{flex: 1, marginBottom: 21, marginLeft: 7, marginRight: 8}}
+            style={{flex: 1, marginBottom: 24, marginLeft: 7, marginRight: 8}}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             data={item}
@@ -381,11 +395,12 @@ export default class Home extends Component {
             renderItem={this._renderOnLiveItem}/>)
     };
 
-    _onVideoPress = (item, isLive) => {
+    _onVideoPress = (item, isLive, isFromPlaylist) => {
         const {navigation} = this.props;
         navigation.navigate('DetailsPage', {
             item: item,
-            isLive: isLive
+            isLive: isLive,
+            isFromPlaylist: isFromPlaylist
         })
     };
 
@@ -405,7 +420,8 @@ export default class Home extends Component {
             navigation.navigate('VideoControlModal', {
                 item: item,
                 epg: [item],
-                isLive: false
+                isLive: false,
+                isFromPlaylist: false
             })
         }
 
@@ -415,8 +431,8 @@ export default class Home extends Component {
     _renderVODItem = ({item}) => {
 
         let genres = "";
-        if (item.genresData != null && item.genresData.length > 0) {
-            item.genresData.forEach((genre, index) => {
+        if (item.genres != null && item.genres.length > 0) {
+            item.genres.forEach((genre, index) => {
                 if (genres.length != 0) {
                     genres = genres.concat(", ");
                 }
@@ -427,7 +443,7 @@ export default class Home extends Component {
         }
 
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false, false)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
@@ -505,12 +521,11 @@ export default class Home extends Component {
     }
 
     _renderPlaylistItem = ({item}) => {
-
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false)}>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, item.isLiveList, true)}>
                 <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.type ? item.type : "N/A"}</Text>
+                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres ? getGenresData(item, 3) : "N/A"}</Text>
             </TouchableOpacity>)
     };
 
@@ -546,6 +561,7 @@ export default class Home extends Component {
         return (
             <TouchableOpacity onPress={() => this._navigateToCategory(item.name)}>
                 <View style={styles.liveThumbnailContainer}>
+                    <BlurView blurRadius={getBlurRadius(20)} overlayColor={0x42747474}/>
                     <VideoThumbnail
                         style={styles.videoThumbnail}
                         showProgress={false} textCenter={item.name}
@@ -620,7 +636,7 @@ export default class Home extends Component {
         let progress = lastPosition / videoLength * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onResumePress(item)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={true} progress={progress + "%"} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>
@@ -629,6 +645,8 @@ export default class Home extends Component {
 
 
     _renderResumeVODList = ({item}) => {
+        const {watchingHistory} = this.props;
+
         if (item == null || item[0] == null) {
             return null;
         }
@@ -639,6 +657,7 @@ export default class Home extends Component {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 data={item}
+                extraData={watchingHistory.data}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderResumeVODItem}/>
         )
@@ -664,7 +683,7 @@ export default class Home extends Component {
 
 
 
-        let bannerData = (banner.data == null || banner.data.length == 0) ? null : banner.data[0]
+        let bannerData = (banner.data == null) ? null : banner.data;
         let sections = [
             {data: [bannerData], showHeader: false, renderItem: this._renderBanner},
             {data: [channel.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},

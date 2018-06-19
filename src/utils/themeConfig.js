@@ -25,7 +25,9 @@ export const colors = {
   greyCloseIconBg: '#B9B9B9',
   blackDeleteButton: '#393939',
   blackNoBooking: 'rgba(92,92,92,0.73)',
-  greyOutController: '#AAAFB4'
+  greyOutController: '#AAAFB4',
+  greyFilterCategory: '#747474',
+  textDescriptionColor: '#ACACAC'
 };
 
 export const textDarkDefault = {
