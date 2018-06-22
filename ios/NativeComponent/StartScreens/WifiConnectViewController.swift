@@ -28,10 +28,18 @@ class WifiConnectViewController: UIViewController,SwiperDelegate {
         swiperView.swiperDelegate = self
         swiperView.datas = swiperData
         loadUI()
+        
+        if isPop == nil {
+            isPop = false;
+        }
     }
     
     @IBAction func comeBack(_ sender: UIButton) {
-        self.navigationController?.popViewController(animated: true)
+        if isPop {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     func loadUI() -> Void {
@@ -48,12 +56,18 @@ class WifiConnectViewController: UIViewController,SwiperDelegate {
         self.navigationController?.pushViewController(WlanWPSViewController(), animated: true)
     }
     @IBAction func installAction(_ sender: UIButton) {
-        self.navigationController?.pushViewController(WlanAPViewController(), animated: true)
+        let vc = WlanAPViewController()
+        vc.isPop = isPop
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     func swiperToPage(currentIndex: Int) {
         
     }
     func swiperToLastPage() {
+        
+    }
+    
+    func swiperButtonInClicked(currentIndex: Int) {
         
     }
     

@@ -21,6 +21,7 @@ class ConnectionViewController: UIViewController {
         self.view.backgroundColor = .clear
         connectionView = ConnectView()
         connectionView.connectViewDelegate = self
+        connectionView.add.addTarget(self, action: #selector(addButtonAction(sender:)), for: .touchUpInside)
         self.view.addSubview(connectionView)
     }
 
@@ -61,17 +62,23 @@ extension ConnectionViewController {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    func addButtonAction(sender: UIButton) {
+        let vc = WifiConnectViewController()
+        let nav = NavigationController.init(rootViewController: vc);
+        self.dismiss(animated: true) {
+            UIApplication.shared.delegate?.window??.rootViewController?.present(nav, animated: true, completion: nil)
+        }
+    }
 }
 
 extension ConnectionViewController: ConnectViewDelegate {
-    
-    func connectSuccess() {
+    func connectSuccess(isSave: Bool) {
         NotificationCenter.default.post(name: NSNotification.Name("RefreshNotification") , object: nil)
         self.dismiss(animated: true) {
             let vc = SoftwareUpdateController()
             UIApplication.shared.delegate?.window??.rootViewController?.present(vc, animated: true, completion: nil)
         }
-        
     }
     
     func connectFail(error: String) {

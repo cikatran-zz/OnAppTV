@@ -540,6 +540,8 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
 + (instancetype)sharedApi;
 //UDP操作
 - (void)hIG_UdpOperation;
+//UDP操作
+- (void)hIG_UdpOperationInWan;
 /**
  UDP接收数据
  @param callback 回调
@@ -1405,6 +1407,7 @@ typedef void (^TypeStringAndNumberCallbackBlock)(BOOL isSuccess,NSString *info,i
  */
 - (void)hIG_PlayMediaStartWithPlayPosition:(int)playPosition
                                        uRL:(NSString *)url
+                                  metaData:(NSString *)metaData
                                   callback:(TypeIsSuccessCallbackBlock)callback;
 /**
  根据URL地址播放Media

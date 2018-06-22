@@ -14,6 +14,10 @@ class NavigationController: UINavigationController {
         super.viewDidLoad()
         self.navigationBar.isHidden = true
     }
+    
+    override var childViewControllerForStatusBarStyle: UIViewController {
+        return self.topViewController!;
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

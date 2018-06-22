@@ -9,6 +9,10 @@
 import UIKit
 
 class WlanWPSViewController: UIViewController, SwiperDelegate {
+    func swiperButtonInClicked(currentIndex: Int) {
+        
+    }
+    
     @IBOutlet weak var swiperView: SwiperView!
     @IBOutlet weak var searchBtn: UIButton!
     @IBOutlet weak var installBtn: UIButton!
@@ -73,7 +77,7 @@ class WlanWPSViewController: UIViewController, SwiperDelegate {
     
     @IBAction func searchSTB(_ sender: UIButton) {
         let vc = SoftwareUpdateController();
-        vc.isfirst = true
+        vc.isFirst = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

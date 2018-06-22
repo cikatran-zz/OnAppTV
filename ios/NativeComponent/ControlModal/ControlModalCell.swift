@@ -82,15 +82,17 @@ class ControlModalCell: UICollectionViewCell {
         
         self.data = data
         if let imageURL = URL(string: data.imageURL) {
-            blurImage.kf.setImage(with: imageURL)
-            progressImage.kf.setImage(with: imageURL)
+            blurImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "logo") )
+            progressImage.kf.setImage(with: imageURL, placeholder: UIImage(named: "logo") )
+            //blurImage.kf.setImage(with: imageURL)
+            //progressImage.kf.setImage(with: imageURL)
         }
         
         titleLabel.text = data.title
         genresLabel.text = data.genres
         
         if let logoUrl = URL(string: data.logoImage) {
-            channelImage.kf.setImage(with: logoUrl)
+            channelImage.kf.setImage(with: logoUrl, placeholder: UIImage(named: "logo"))
         } else {
             channelImage.kf.setImage(with: nil)
         }
@@ -390,7 +392,7 @@ extension ControlModalCell {
     @IBAction func onPlayOverTouched(_ sender: UIButton) {
         
         data?.getVideoUrl(callback: { (url) in
-            Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url) { (isSuccess, error) in
+            Api.shared().hIG_PlayMediaStart(withPlayPosition: 0, uRL: url, metaData: self.data?.contentId ?? "") { (isSuccess, error) in
                 if !isSuccess {
                     print(error ?? "")
                 } else {
@@ -446,8 +448,9 @@ extension ControlModalCell {
                 }
             } else if (playState == .notPlayed) {
                 data?.getVideoUrl(callback: { (url) in
-                    WatchingHistory.sharedInstance.getConsumedLength(id: self.data?.contentId ?? "", completion: { (consumedLength) in
-                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url) { (isSuccess, error) in
+                    let contentId = self.data?.contentId ?? ""
+                    WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
+                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url, metaData: contentId) { (isSuccess, error) in
                             if !isSuccess {
                                 print(error ?? "")
                             } else {

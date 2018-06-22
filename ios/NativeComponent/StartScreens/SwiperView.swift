@@ -11,6 +11,7 @@ import UIKit
 protocol SwiperDelegate: NSObjectProtocol {
     func swiperToPage(currentIndex: Int)
     func swiperToLastPage()
+    func swiperButtonInClicked(currentIndex: Int)
 }
 
 class SwiperView: UIView, UIScrollViewDelegate {
@@ -123,7 +124,9 @@ class SwiperView: UIView, UIScrollViewDelegate {
                 let imageViewSize = CGFloat(95 / 375.0) *  self.frame.size.width
                 let imageView_x = (self.frame.size.width - imageViewSize) / 2
                 let imageView_y = CGFloat(82.81 / 377.65) * self.frame.size.height
-                let imageView = UIImageView.init(frame: CGRect.init(x:imageView_x, y: imageView_y, width: imageViewSize, height: imageViewSize))
+                let imageView = UIButton.init(frame: CGRect.init(x:imageView_x, y: imageView_y, width: imageViewSize, height: imageViewSize))
+                imageView.tag = i
+                imageView.addTarget(self, action: #selector(buttonAction(sender:)), for: UIControlEvents.touchUpInside)
                 contentView.addSubview(imageView)
                 
                 let contentLable_y = CGFloat(215.81 / 377.65) * self.frame.size.height
@@ -136,7 +139,7 @@ class SwiperView: UIView, UIScrollViewDelegate {
                 
                 let swiperModel = _datas[i] as! SwiperModel
                 if swiperModel.isShowImageView {
-                    imageView.image = UIImage.init(named: swiperModel.imageView)
+                    imageView.setImage(UIImage.init(named: swiperModel.imageView), for: .normal)
                 } else {
                     imageView.alpha = 0.0
                 }
@@ -146,7 +149,7 @@ class SwiperView: UIView, UIScrollViewDelegate {
                 paragraphStyle.lineSpacing = 10
                 paragraphStyle.alignment = NSTextAlignment.center
                 let setStr = NSMutableAttributedString.init(string:swiperModel.content)
-                setStr.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSRange.init(location: 0, length: swiperModel.content.characters.count))
+                setStr.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSRange.init(location: 0, length: swiperModel.content.count))
                 contentLable.attributedText = setStr
                 let size = CGRect.init(x: contentLable.frame.origin.x, y: contentLable.frame.origin.y, width: contentLable.frame.size.width, height: 100)
                 let contentLableSize = contentLable.textRect(forBounds: size, limitedToNumberOfLines: 2)
@@ -155,6 +158,12 @@ class SwiperView: UIView, UIScrollViewDelegate {
                 contentLable.backgroundColor = UIColor.clear
                 self.scrollView.addSubview(contentView)
             }
+        }
+    }
+    
+    func buttonAction(sender: UIButton) {
+        if swiperDelegate != nil {
+            swiperDelegate.swiperButtonInClicked(currentIndex: sender.tag)
         }
     }
     

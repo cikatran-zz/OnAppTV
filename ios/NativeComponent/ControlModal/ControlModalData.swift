@@ -69,7 +69,7 @@ class ControlModalData {
                 DispatchQueue.global().async {
                     while true {
                         Thread.sleep(forTimeInterval: 1.0)
-                        if (self.playState == .currentPlaying) {
+                        if (self.playState == .currentPlaying || self.playState == .pause) {
                             Api.shared().hIG_PlayMediaGetPosition({ (isSuccess, currentSeconds) in
                                 if (isSuccess) {
                                     self.currentProgress = Double(currentSeconds)/self.durationInSeconds

@@ -25,7 +25,7 @@ class SoftwareUpdateController: UIViewController {
     
     
     var isPop: Bool!
-    var isfirst: Bool!
+    var isFirst: Bool!
     var loadingView: LoadingView!
     let time: TimeInterval = 2.0
     let duration = 0.5
@@ -51,7 +51,7 @@ class SoftwareUpdateController: UIViewController {
 
         defaultSetting()
         
-        if isfirst {
+        if isFirst {
             firstTimeDisplay()
         }else {
             otherDisplay()
@@ -59,8 +59,8 @@ class SoftwareUpdateController: UIViewController {
     }
     
     func defaultSetting() {
-        if isfirst == nil {
-            isfirst = false
+        if isFirst == nil {
+            isFirst = false
         }
         
         if isPop == nil {
@@ -79,10 +79,10 @@ class SoftwareUpdateController: UIViewController {
     func firstTimeDisplay() {
         self.subTitle.text = "Welcome to\na revolutionary TV app’s"
         
+        timerNumber = 0
+        
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(scanStart), userInfo: nil, repeats: true);
         RunLoop.current.add(timer, forMode: .commonModes)
-        
-        timerNumber = 0
         
         Api.shared()?.hIG_UdpReceiveMessage({ (stbs) in
             if stbs?.count != 0 {
@@ -114,7 +114,6 @@ class SoftwareUpdateController: UIViewController {
                             }
                         }
                     }
-
                 }
             }
         })
@@ -131,7 +130,7 @@ class SoftwareUpdateController: UIViewController {
                 }
             }
         })
-
+        
         if timerNumber == timerMax {
             scanStop()
             on.isHidden = true
@@ -141,7 +140,7 @@ class SoftwareUpdateController: UIViewController {
             loadingView.stopAnimating()
             
             topic.text = "Select your STB"
-//            Background
+            //            Background
             let backgroundView_x = CGFloat(45.0 / 375.0) * kScreenWidth
             let backgroundView_y = CGFloat(99.0 / 664.0) * kScreenHeight
             let backgroundView_width = CGFloat(282.0 / 375.0) * kScreenWidth
@@ -153,7 +152,7 @@ class SoftwareUpdateController: UIViewController {
             backgroundView.layer.masksToBounds = true
             backgroundView.layer.cornerRadius = 13
             self.view.addSubview(backgroundView)
-//            Label
+            //            Label
             let label = UILabel.init()
             label.numberOfLines = 0
             label.text = "No STB installed\non your local network !"
@@ -199,58 +198,88 @@ class SoftwareUpdateController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time) {
             self.topic.text = "Channels list update"
             self.content.text = "The channels list is being\nupdated"
-            Api.shared().hIG_ParseXMLLastInJson(withPath: Bundle.main.path(forResource: "channel_database-1", ofType: "xml"), callback: { (jsonString) in
-                Api.shared().hIG_GetSTBConfigureAndCallback({ (model) in
-                    Api.shared().hIG_SetSTBConfigure(with: model, callback: { (bool, error) in
-                        if bool == true {
-                            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + self.time, execute: {
-                                if self.isfirst {
-                                    if self.isSetting {
-                                        self.content.text = ""
-                                        self.loadingView.stopAnimating()
-                                        
-                                        self.antenaView = AntenaView.init()
-                                        
-                                        self.view.addSubview(self.antenaView)
-                                        
-                                        if sysVersion! < 11 {
-                                            self.antenaView.transform = CGAffineTransform.init(scaleX: 0.01, y: 0.01)
-                                            UIView.animate(withDuration: self.duration) {
-                                                self.antenaView.transform = CGAffineTransform.identity
-                                            }
-                                        }else {
-                                            self.antenaView.alpha = 0.0
-                                            UIView.animate(withDuration: self.duration) {
-                                                self.antenaView.alpha = 1.0
-                                            }
-                                        }
-                                        self.bottomLabel.isHidden = false
-                                        
-                                        self.nextButton.layer.masksToBounds = true
-                                        self.nextButton.layer.cornerRadius = self.nextButton.frame.size.height / 2
-                                        self.nextButton.setTitle("Next", for: .normal)
-                                        self.nextButton.setTitle("Next", for: .highlighted)
-                                        self.nextButton.isHidden = false
-                                    }else {
-                                        DispatchQueue.main.async {
-                                            goToReactNative()
-                                        }
-                                    }
-                                }else {
-                                    DispatchQueue.main.async {
-                                        if self.isPop {
-                                            self.navigationController?.popViewController(animated: true)
-                                        }else {
-                                            self.dismiss(animated: true, completion: nil)
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                    })
-                })
-            })
+            
+            self.networkRequest()
         }
+    }
+    
+    func networkRequest() {
+        let bodyString = "{\"query\":\"{\\n  viewer {\\n    configOne(filter: {type: \\\"file-upload\\\", name: \\\"channel_database.xml\\\"}, sort: VERSION_DESC) {\\n      name\\n      version\\n      url\\n    }\\n  }\\n}\\n\"}"
+        RequestUtil.hIG_PostRequest(bodyString: bodyString) { (data, response, error) in
+            if data != nil {
+                let dicT = try? JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [AnyHashable : Any]
+                let datas = dicT!["data"]as! [AnyHashable : Any]
+                let viewer = datas["viewer"]as! [AnyHashable : Any]
+                let configOne = viewer["configOne"]as! [AnyHashable : Any]
+                let url = configOne["url"] as! String
+                self.dataParsing(url: url)
+            }else {
+                self.dataParsingLocal()
+            }
+        }
+    }
+    
+    func dataParsing(url: String) {
+        Api.shared().hIG_ParseXMLLastInJson(withPath: url, callback: { (jsonString) in
+            self.getSTBConfigure()
+        })
+    }
+    
+    func dataParsingLocal() {
+        Api.shared().hIG_ParseXMLLastInJson(withPath: Bundle.main.path(forResource: "channel_database-1", ofType: "xml"), callback: { (jsonString) in
+            self.getSTBConfigure()
+        })
+    }
+    
+    func getSTBConfigure() {
+        Api.shared().hIG_GetSTBConfigureAndCallback({ (model) in
+            Api.shared().hIG_SetSTBConfigure(with: model, callback: { (bool, error) in
+                if bool == true {
+                    if self.isFirst {
+                        if self.isSetting {
+                            self.content.text = ""
+                            self.loadingView.stopAnimating()
+                            
+                            self.antenaView = AntenaView.init()
+                            
+                            self.view.addSubview(self.antenaView)
+                            
+                            if sysVersion! < 11 {
+                                self.antenaView.transform = CGAffineTransform.init(scaleX: 0.01, y: 0.01)
+                                UIView.animate(withDuration: self.duration) {
+                                    self.antenaView.transform = CGAffineTransform.identity
+                                }
+                            }else {
+                                self.antenaView.alpha = 0.0
+                                UIView.animate(withDuration: self.duration) {
+                                    self.antenaView.alpha = 1.0
+                                }
+                            }
+                            self.bottomLabel.isHidden = false
+                            
+                            self.nextButton.layer.masksToBounds = true
+                            self.nextButton.layer.cornerRadius = self.nextButton.frame.size.height / 2
+                            self.nextButton.setTitle("Next", for: .normal)
+                            self.nextButton.setTitle("Next", for: .highlighted)
+                            self.nextButton.isHidden = false
+                        }else {
+                            DispatchQueue.main.async {
+                                goToReactNative()
+                            }
+                        }
+                    }else {
+                        DispatchQueue.main.async {
+                            if self.isPop {
+                                self.navigationController?.popViewController(animated: true)
+                            }else {
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        }
+                    }
+                }
+            })
+        })
+        
     }
     
     @IBAction func nextButtonAction(_ sender: UIButton) {
@@ -300,9 +329,19 @@ class SoftwareUpdateController: UIViewController {
 
 extension SoftwareUpdateController: ConnectViewDelegate {
     
-    func connectSuccess() {
+    func connectSuccess(isSave: Bool) {
         loadingView.startAnimating()
-        otherDisplay()
+        if isSetting {
+            self.on.isHidden = false
+            self.subTitle.isHidden = false
+            self.stb.isHidden = false
+            subTitle.text = "Few more steps !"
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time) {
+                self.otherDisplay()
+            }
+        }else {
+            otherDisplay()
+        }
     }
     
     func connectFail(error: String) {

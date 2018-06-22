@@ -232,6 +232,21 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
         return UIScreen.main.bounds.size
     }
     
+    func playMedia() {
+        self.videosData[self.index.intValue].getVideoUrl { (url) in
+            let contentId = self.videosData[self.index.intValue].contentId
+            WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
+                Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url, metaData: contentId) { (isSuccess, error) in
+                    if !isSuccess {
+                        print(error ?? "")
+                    } else {
+                        self.videosData[self.index.intValue].playState = .currentPlaying
+                    }
+                }
+            });
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if !onceOnly {
             let indexToScrollTo = IndexPath(item: index.intValue, section: 0)
@@ -248,19 +263,26 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         }
                     }
                 } else {
+                    currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying
                     } else {
-                        self.videosData[index.intValue].getVideoUrl { (url) in
-                            WatchingHistory.sharedInstance.getConsumedLength(id: self.videosData[self.index.intValue].contentId, completion: { (consumedLength) in
-                                Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url) { (isSuccess, error) in
-                                    if !isSuccess {
-                                        print(error ?? "")
+                        Api.shared().hIG_GetSTBStatusAndCallback { (isSuccess, statuses, lCN, infoName) in
+                            if (isSuccess) {
+                                if let _ = statuses?.firstObject as? String, let contentId = infoName, contentId == self.videosData[self.index.intValue].contentId {
+                                    if (statuses?.lastObject as! String) == "PLAY_PAUSE" {
+                                        self.videosData[self.index.intValue].playState = .pause
                                     } else {
                                         self.videosData[self.index.intValue].playState = .currentPlaying
                                     }
+                                    
+                                } else {
+                                    self.playMedia()
                                 }
-                            });
+                            } else {
+                                self.playMedia()
+                            }
+                            
                         }
                     }
                     

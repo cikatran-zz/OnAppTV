@@ -168,46 +168,28 @@ class PasswordView: UIView {
     
     func passwordAction(sender: UIButton, string: String) -> String{
         var mutableString = string
+        var tag = 10 + mutableString.count - 1;
         if sender.tag == 31 {
             let image = UIImage.init(named: "password-base");
-            if mutableString.count == 4 {
-                let circle = viewWithTag(13) as! UIImageView
-                circle.image = image;
-            }else if mutableString.count == 3 {
-                let circle = viewWithTag(12) as! UIImageView
-                circle.image = image;
-            }else if mutableString.count == 2 {
-                let circle = viewWithTag(11) as! UIImageView
-                circle.image = image;
-            }else if mutableString.count == 1 {
-                let circle = viewWithTag(10) as! UIImageView
+            if mutableString.count != 0 {
+                let circle = viewWithTag(tag) as! UIImageView
                 circle.image = image;
             }else if mutableString.count == 0 && isConfirm {
                 isConfirm = false
                 password = ""
                 passwordViewLabel.text = "Enter PIN Code"
             }
-//            Remove the last character
+            //            Remove the last character
             if mutableString.count > 0 {
                 mutableString.remove(at: mutableString.index(before: mutableString.endIndex));
             }
         }else {
             if mutableString.count < 4 {
                 mutableString = mutableString + (sender.titleLabel?.text)!
+                tag = 10 + mutableString.count - 1;
                 let image = UIImage.init(named: "password-top");
-                if mutableString.count == 1 {
-                    let circle = viewWithTag(10) as! UIImageView
-                    circle.image = image;
-                }else if mutableString.count == 2 {
-                    let circle = viewWithTag(11) as! UIImageView
-                    circle.image = image;
-                }else if mutableString.count == 3 {
-                    let circle = viewWithTag(12) as! UIImageView
-                    circle.image = image;
-                }else {
-                    let circle = viewWithTag(13) as! UIImageView
-                    circle.image = image;
-                }
+                let circle = viewWithTag(tag) as! UIImageView
+                circle.image = image;
             }
         }
         return mutableString

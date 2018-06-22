@@ -140,6 +140,11 @@
 		6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE78204C2CFC00470C97 /* CustomVolumeView.swift */; };
 		6969BE7B204C32CD00470C97 /* BrightcovePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BE7A204C32CD00470C97 /* BrightcovePlayer.swift */; };
 		6969BEFB204E4A6100470C97 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */; };
+		697A79E820DC9404000FF509 /* JumpToSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697A79B520DC9404000FF509 /* JumpToSystem.swift */; };
+		697A79EA20DC9D7C000FF509 /* RequestsUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697A79E920DC9D7C000FF509 /* RequestsUtil.swift */; };
+		697A79EC20DC9E25000FF509 /* RequestsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697A79EB20DC9E25000FF509 /* RequestsModel.swift */; };
+		697A79EE20DCA00B000FF509 /* HeaderDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697A79ED20DCA00B000FF509 /* HeaderDataModel.swift */; };
+		697A79F020DCA037000FF509 /* GetFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697A79EF20DCA037000FF509 /* GetFileModel.swift */; };
 		698460F42083620100D1679B /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698460F32083620100D1679B /* String+Extension.swift */; };
 		6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2E1209177A60032D3DA /* VODPlaybackRecorder.swift */; };
 		6993D2E520917C260032D3DA /* RNVODPlaybackRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993D2E420917C260032D3DA /* RNVODPlaybackRecorder.m */; };
@@ -732,6 +737,11 @@
 		6969BE78204C2CFC00470C97 /* CustomVolumeView.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = CustomVolumeView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		6969BE7A204C32CD00470C97 /* BrightcovePlayer.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BrightcovePlayer.swift; sourceTree = "<group>"; tabWidth = 4; };
 		6969BEFA204E4A6100470C97 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		697A79B520DC9404000FF509 /* JumpToSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JumpToSystem.swift; sourceTree = "<group>"; };
+		697A79E920DC9D7C000FF509 /* RequestsUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsUtil.swift; sourceTree = "<group>"; };
+		697A79EB20DC9E25000FF509 /* RequestsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsModel.swift; sourceTree = "<group>"; };
+		697A79ED20DCA00B000FF509 /* HeaderDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderDataModel.swift; sourceTree = "<group>"; };
+		697A79EF20DCA037000FF509 /* GetFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFileModel.swift; sourceTree = "<group>"; };
 		698460F32083620100D1679B /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		6989BA412084479100E49F28 /* OnAppTV-sandbox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "OnAppTV-sandbox.entitlements"; path = "OnAppTV/OnAppTV-sandbox.entitlements"; sourceTree = "<group>"; };
 		6993D2E1209177A60032D3DA /* VODPlaybackRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VODPlaybackRecorder.swift; sourceTree = "<group>"; };
@@ -1219,6 +1229,7 @@
 		6947FA7220B3957E0060AD08 /* StartScreens */ = {
 			isa = PBXGroup;
 			children = (
+				697A79B520DC9404000FF509 /* JumpToSystem.swift */,
 				6947FA9620B3C4540060AD08 /* NavigationController.swift */,
 				6947FA9020B3B13F0060AD08 /* AntenaViewCell.swift */,
 				6947FA8E20B3B11F0060AD08 /* AntenaModel.swift */,
@@ -1237,6 +1248,10 @@
 				6947FA7320B395DD0060AD08 /* SoftwareUpdateController.xib */,
 				6947FA9220B3B6E40060AD08 /* GoToReactNativeView.swift */,
 				6947FA9420B3C3C00060AD08 /* OpenSoftwareUpdateVC.swift */,
+				697A79E920DC9D7C000FF509 /* RequestsUtil.swift */,
+				697A79EB20DC9E25000FF509 /* RequestsModel.swift */,
+				697A79ED20DCA00B000FF509 /* HeaderDataModel.swift */,
+				697A79EF20DCA037000FF509 /* GetFileModel.swift */,
 			);
 			path = StartScreens;
 			sourceTree = "<group>";
@@ -2242,6 +2257,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				69025ABC2071EECE00F66EBE /* RNUserKitIdentity.m in Sources */,
 				698460F42083620100D1679B /* String+Extension.swift in Sources */,
+				697A79E820DC9404000FF509 /* JumpToSystem.swift in Sources */,
 				6969BE4D204C29E400470C97 /* CustomControlsView.swift in Sources */,
 				690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */,
 				6993D2EF209189510032D3DA /* RNLivePlaybackRecorder.m in Sources */,
@@ -2252,6 +2268,7 @@
 				6932A6B320825FA600C43924 /* WatchingHistory.swift in Sources */,
 				6947FA7120B3922A0060AD08 /* RNConnectionViewModule.m in Sources */,
 				69025ACB2072303000F66EBE /* RNOANotification.m in Sources */,
+				697A79EA20DC9D7C000FF509 /* RequestsUtil.swift in Sources */,
 				6947FA6A20B38BE50060AD08 /* ConnectModal.swift in Sources */,
 				6927DAAB209ADDD100FFA275 /* BrightcovePlayerManager.swift in Sources */,
 				69A16FD02068DABE00E215B8 /* STBManager.m in Sources */,
@@ -2260,6 +2277,7 @@
 				6947FA6820B38BC40060AD08 /* ConnectViewCell.swift in Sources */,
 				6952405A209822BB00934B0D /* BrightcoveViewController.m in Sources */,
 				6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */,
+				697A79EC20DC9E25000FF509 /* RequestsModel.swift in Sources */,
 				6947FA8F20B3B11F0060AD08 /* AntenaModel.swift in Sources */,
 				6947FA7B20B3973D0060AD08 /* PasswordView.swift in Sources */,
 				6927DD35209B56D000FFA275 /* WebViewJavascriptBridge.m in Sources */,
@@ -2280,6 +2298,7 @@
 				6947FA7C20B3973D0060AD08 /* AntenaView.swift in Sources */,
 				6932A6B1208257A200C43924 /* SpecificRequiredItem+Extension.swift in Sources */,
 				690DB92420A296230021B634 /* Date.swift in Sources */,
+				697A79F020DCA037000FF509 /* GetFileModel.swift in Sources */,
 				6932A6B72082609700C43924 /* JSON.swift in Sources */,
 				6993D2E520917C260032D3DA /* RNVODPlaybackRecorder.m in Sources */,
 				6947FA7620B395DE0060AD08 /* SoftwareUpdateController.swift in Sources */,
@@ -2290,6 +2309,7 @@
 				6947FA9120B3B13F0060AD08 /* AntenaViewCell.swift in Sources */,
 				6947FA9720B3C4540060AD08 /* NavigationController.swift in Sources */,
 				6969BE79204C2CFC00470C97 /* CustomVolumeView.swift in Sources */,
+				697A79EE20DCA00B000FF509 /* HeaderDataModel.swift in Sources */,
 				69025AC82072287C00F66EBE /* OANotificationCenter.swift in Sources */,
 				69D21E5B20525C8200DFA90A /* STBConnectionView.swift in Sources */,
 				69CD24F0208607E70075883F /* Notification.swift in Sources */,
