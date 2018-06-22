@@ -218,29 +218,35 @@ export default class DetailsPage extends React.Component {
 
         if (this._isFromPlaylist() === true && item.isSeriesList === true) {
             // Using for series playlist    
-            epg.data.map(x => {
-                sections.push({data: [x], showHeader: false, renderItem: this._renderList})
-            })
+            if (epg.data != null && epg !== undefined)
+                epg.data.map(x => {
+                    sections.push({data: [x], showHeader: false, renderItem: this._renderList})
+                })
         }
         else {
             // Using for normal series
             if (item.type !== 'Episode')
                 if (this._isFromChannel() === true) {
                     // live 
-                    let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0})
-                        .map(x => x.epgsData[0]);
+                    if (live.data != null && live !== undefined) {
+                        let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0})
+                            .map(x => x.epgsData[0]);
 
-                    sections.push({data: [epgsDataArray], showHeader: false, renderItem: this._renderSameTimeList})
-                    sections.push({data: [epg.data], showHeader: false, renderItem: this._renderNextInChannelList})
+                        sections.push({data: [epgsDataArray], showHeader: false, renderItem: this._renderSameTimeList})
+                    }
+                    if (epg.data != null && epg !== undefined)
+                        sections.push({data: [epg.data], showHeader: false, renderItem: this._renderNextInChannelList})
                 }
                 else {
                     // Standalone
-                    sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
+                    if (epg.data != null && epg !== undefined)
+                        sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
                 }
             else {
-                epg.data.map(x => {
-                    sections.push({data: [x], showHeader: false, renderItem: this._renderList})
-                })
+                if (epg.data != null && epg !== undefined)
+                    epg.data.map(x => {
+                        sections.push({data: [x], showHeader: false, renderItem: this._renderList})
+                    })
             }
         }    
 
