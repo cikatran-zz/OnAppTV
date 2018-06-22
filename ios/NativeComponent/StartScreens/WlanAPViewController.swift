@@ -26,6 +26,7 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
     @IBOutlet weak var textFiledBg1: UIView!
     @IBOutlet weak var textFiledBg2: UIView!
     var timer: Timer!
+    var isPop: Bool!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,6 +90,10 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
         
         NotificationCenter.default.addObserver(self, selector: #selector(transformView(aNSNotification:)), name: .UIKeyboardWillChangeFrame, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.transformView), name: .UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    func test() {
+        print("test")
     }
     
     func panAction(gesture: UIGestureRecognizer) -> Void {
@@ -166,14 +171,27 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
         changeBtn.layer.cornerRadius = CGFloat(227.0 / 375.0) * kScreenWidth * CGFloat(34.0 / 227.0) / 2
     }
     
+    func swiperButtonInClicked(currentIndex: Int) {
+        if currentIndex == 1 {
+            OpenSystemWiFiInterface()
+        }
+    }
+    
+    func OpenSystemWiFiInterface() {
+        JumpToSystem.hIG_JumpSystem(cmd: .WIFI) { (isSuccess) in
+            
+        }
+    }
+    
     @IBAction func connectWlanAP(_ sender: UIButton) {
         if (wifiName.text?.count)! > 0 && (wlanPwd.text?.count)! > 0 {
             Api.shared().hIG_STBWlanAP(withSSID: wifiName.text, password: wlanPwd.text) { (bool, error) in
                 if bool == true {
                     let vc = SoftwareUpdateController();
-                    vc.isfirst = true
+                    vc.isFirst = true
                     vc.timerMax = 40
                     vc.isSetting = true
+                    vc.isPop = self.isPop
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }

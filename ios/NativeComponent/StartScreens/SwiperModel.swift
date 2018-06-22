@@ -11,12 +11,10 @@ import UIKit
 class SwiperModel: NSObject {
 //    Image View
     var imageView:String!
-//     imageView show or not
+//     ImageView show or not
     var isShowImageView: Bool!
 //    title
     var title: String!
 //    content
     var content: String!
-    
-
 }

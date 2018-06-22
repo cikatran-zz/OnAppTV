@@ -21,7 +21,7 @@ let connectView_Height = connectView_Width / connectView_AspectRatio
 let tabbarHeight = kScreenHeight * 0.08
 
 protocol ConnectViewDelegate: NSObjectProtocol {
-    func connectSuccess()
+    func connectSuccess(isSave: Bool)
     func connectFail(error: String)
 }
 
@@ -50,6 +50,7 @@ class ConnectView: UIView {
         }
     }
     weak var connectViewDelegate: ConnectViewDelegate!
+    var isOperation: Bool!
     
     init() {
         super.init(frame: CGRect.init(x: (kScreenWidth - connectView_Width) / 2, y: (kScreenHeight - tabbarHeight - connectView_Height) / 2, width: connectView_Width, height: connectView_Height))
@@ -88,9 +89,12 @@ class ConnectView: UIView {
         let confirm_x = (connectView_Width - confirm_width) / 2
         let confirm_y = CGFloat(377.84 / 490) * connectView_Height
         confirm = UIButton.init(frame: CGRect.init(x: confirm_x, y: confirm_y, width: confirm_width, height: confirm_height))
-        confirm.setBackgroundImage(image(with: UIColor.init(red: 252 / 255.0, green: 53 / 255.0, blue: 91 / 255.0, alpha: 1.0)), for: .normal)
+        confirm.setBackgroundImage(image(with: UIColor.clear), for: .normal)
+        confirm.isEnabled = false
         confirm.layer.masksToBounds = true
         confirm.layer.cornerRadius = confirm_height / 2
+        confirm.layer.borderWidth = 1.0
+        confirm.layer.borderColor = UIColor.init(white: 1.0, alpha: 0.26).cgColor
         confirm.setTitle("Confirm", for: .normal)
         confirm.setTitleColor(UIColor.white, for: .normal)
         confirm.setTitleColor(UIColor.gray, for: .highlighted)
@@ -131,6 +135,7 @@ class ConnectView: UIView {
     func loadData() {
         
         dataSource = [ConnectModel]()
+        isOperation = false
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(scanStart), userInfo: nil, repeats: true);
         RunLoop.current.add(timer, forMode: .commonModes)
@@ -148,9 +153,18 @@ class ConnectView: UIView {
                     if dataModel.name == connectModel.name {
                         if dataModel.isOnline == true {
                             isSave = true
+                            connectModel.isSelect = dataModel.isSelect
                         }else {
                             let index = self.dataSource.index(of: dataModel)
                             self.dataSource.remove(at: index!)
+                        }
+                    }
+                    
+                    if Api.shared().hIG_IsConnect() && !self.isOperation {
+                        if dataModel.name == Api.shared().currentSTBInfo.sTBID {
+                            dataModel.isSelect = true
+                        }else {
+                            dataModel.isSelect = false
                         }
                     }
                 }
@@ -158,12 +172,30 @@ class ConnectView: UIView {
                     self.dataSource.insert(connectModel, at: 0)
                 }
             }
+            self.confirmIsEnabled(isEnabled: false)
+            for dataModel in self.dataSource {
+                if dataModel.isSelect {
+                    self.confirmIsEnabled(isEnabled: true)
+                }
+            }
             self.tableView.reloadData()
         })
     }
     //    MARK: - Scan STB Start
     func scanStart() {
-        Api.shared().hIG_UdpOperation()
+        Api.shared().hIG_GetMobileWifiInfo({ (dic) in
+            if (dic?.keys.contains("SSID"))! {
+                let ssid = dic?["SSID"] as! String;
+                if !ssid.hasPrefix("STB") {
+                    Api.shared().hIG_UdpOperation();
+                }else {
+                    self.dataSource.removeAll()
+                    self.confirmIsEnabled(isEnabled: false)
+                }
+            }else {
+                Api.shared().hIG_UdpOperationInWan()
+            }
+        })
         Api.shared()?.hIG_UndiscoveredSTBList({ (stbs) in
             for temp in stbs! {
                 let stbName = temp as! String
@@ -208,6 +240,7 @@ class ConnectView: UIView {
         for model in self.dataSource {
             if model.isOnline && model.isSelect {
                 isExist = true
+                let isSave = (model.scanInfo.stb.sTBID == Api.shared().currentSTBInfo.sTBID) ? true : false
                 Api.shared().hIG_ConnectSTB(with: model.scanInfo.stb, userName: model.scanInfo.userName, connectSuccessCallback: {
                     
                     UIView.animate(withDuration: 0.5, animations: {
@@ -220,7 +253,7 @@ class ConnectView: UIView {
                         if bool == true {
                             self.removeFromSuperview()
                             if self.connectViewDelegate != nil {
-                                self.connectViewDelegate.connectSuccess()
+                                self.connectViewDelegate.connectSuccess(isSave: isSave)
                             }
                         }
                     })
@@ -271,6 +304,7 @@ extension ConnectView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func switchButtonAction(sender: UISwitch) {
+        isOperation = true
         for model in self.dataSource{
             if self.dataSource.index(of: model) == sender.tag {
                 model.isSelect = sender.isOn;
@@ -282,6 +316,19 @@ extension ConnectView: UITableViewDelegate, UITableViewDataSource {
         let time: TimeInterval = 0.15
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time) {
             self.tableView.reloadData();
+            self.confirmIsEnabled(isEnabled: sender.isOn)
+        }
+    }
+    
+    func confirmIsEnabled(isEnabled: Bool) {
+        confirm.isEnabled = isEnabled
+        if confirm.isEnabled {
+            confirm.layer.borderWidth = 0.0
+            confirm.setBackgroundImage(image(with: UIColor.init(red: 252 / 255.0, green: 53 / 255.0, blue: 91 / 255.0, alpha: 1.0)), for: .normal)
+        }else {
+            confirm.setBackgroundImage(image(with: UIColor.clear), for: .normal)
+            confirm.layer.borderWidth = 1.0
+            confirm.layer.borderColor = UIColor.init(white: 1.0, alpha: 0.26).cgColor
         }
     }
 }

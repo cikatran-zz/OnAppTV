@@ -103,13 +103,27 @@ class BottomTabbar extends Component {
             this.animation.play();
     }
 
+    _onClickMainButton = () => {
+        STBManager.getSTBStatus((error, mediaInfo)=>{
+            console.log("Current playing media", JSON.parse(mediaInfo));
+            const {statuses, infoName, lCN} = JSON.parse(mediaInfo);
+            if (statuses.indexOf("PLAY_DVB") !== -1) {
+                console.log("PLAY_DVB");
+            } else if (statuses.indexOf("PLAY_MEDIA") !== -1) {
+                console.log("PLAY_MEDIA");
+            } else {
+                console.log("NO PLAY");
+            }
+        });
+    };
+
     _renderTab = (tab, i) => {
         const {navigation} = this.props;
         let {index} = navigation.state;
         if (i == 2) {
             return (
                 <TouchableOpacity
-                    onPress={() => console.log('click')}
+                    onPress={() => this._onClickMainButton()}
                     onLongPress={() => (Platform.OS === "ios") && RNConnectionViewModule.show()}
                     style={styles.tab}
                     key={tab}

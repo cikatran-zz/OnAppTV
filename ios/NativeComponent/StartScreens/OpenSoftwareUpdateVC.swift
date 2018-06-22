@@ -20,7 +20,7 @@ class OpenSoftwareUpdateVC: NSObject {
     
     @objc public func open(window: UIWindow) {
         let rootVC = SoftwareUpdateController();
-        rootVC.isfirst = true
+        rootVC.isFirst = true
         window.rootViewController = NavigationController.init(rootViewController: rootVC)
     }
 }
