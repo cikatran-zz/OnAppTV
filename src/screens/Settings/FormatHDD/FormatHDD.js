@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
         marginRight: 30,
         color: '#777777',
         fontSize: 17,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Helvetica Neue'
     },
     guideText: {
         marginLeft: 30,
@@ -170,7 +171,8 @@ const styles = StyleSheet.create({
         color: '#777777',
         fontSize: 17,
         marginBottom: 200,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Helvetica Neue'
     },
     validateButton: {
         marginLeft: 70,

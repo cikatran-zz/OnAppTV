@@ -185,7 +185,8 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(152,152,152,0.32)',
         borderWidth: 1,
         borderRadius: (Platform.OS === 'ios') ? 20 : 40,
-        marginTop: 19.4
+        marginTop: 19.4,
+        fontFamily: 'Helvetica Neue'
     },
     descriptionText2: {
         color: 'rgba(98,98,98,0.41)',

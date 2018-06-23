@@ -160,5 +160,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: colors.greyDescriptionText,
         textAlign: 'center',
+        fontFamily: 'Helvetica Neue'
     }
 });

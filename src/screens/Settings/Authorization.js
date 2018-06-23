@@ -128,8 +128,8 @@ export default class Privacy extends Component {
                     backgroundColor='#00000000'
                     barStyle='dark-content'/>
                 <View style={[styles.toggleView, {marginTop: 46, marginRight: 26}]}>
-                    <Text style={{marginRight: 33}}>Admin Level</Text>
-                    <Text>Blocked</Text>
+                    <Text style={[styles.topTextStyle, {marginRight: 33}]}>Admin Level</Text>
+                    <Text style={styles.topTextStyle}>Blocked</Text>
                 </View>
                 <FlatList
                     style={styles.listContainer}
@@ -185,5 +185,9 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: colors.greyDescriptionText,
         textAlign: 'center',
+    },
+    topTextStyle: {
+        fontFamily: 'Helvetica Neue',
+        fontSize: 12
     }
 });

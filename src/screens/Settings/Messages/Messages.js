@@ -152,7 +152,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'black',
         marginRight: 'auto',
-        marginLeft: 12
+        marginLeft: 12,
+        fontFamily: 'Helvetica Neue'
     },
     itemMessageText: {
         fontSize: 17,
