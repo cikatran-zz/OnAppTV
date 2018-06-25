@@ -66,15 +66,10 @@ class ControlModalData {
     public var playState: PlayState = PlayState.notPlayed {
         didSet {
             if (!self.isLive) {
-                DispatchQueue.global().async {
-                    while true {
-                        Thread.sleep(forTimeInterval: 1.0)
-                        if (self.playState == .currentPlaying || self.playState == .pause) {
-                            NotificationCenter.default.addObserver(self, selector: #selector(self.handleProgressMessage(_:)), name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
-                        } else {
-                            NotificationCenter.default.removeObserver(self, name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
-                        }
-                    }
+                if (self.playState == .currentPlaying || self.playState == .pause) {
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.handleProgressMessage(_:)), name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
+                } else {
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
                 }
             }
             DispatchQueue.main.async {
