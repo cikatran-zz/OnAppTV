@@ -55,7 +55,7 @@ export default class SwitcherList extends React.PureComponent {
     _renderListItem = ({item, index}) => {
         return (
             <View style={styles.listItemContainer}>
-                <Text>{item}</Text>
+                <Text style={styles.itemName}>{item}</Text>
                 {
                     this._renderSwitch(index)
                 }

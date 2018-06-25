@@ -264,7 +264,13 @@ export default class ZapperContent extends Component {
 
     _onBookPress = (liveItem) => {
       let durationInSeconds = Math.round((new Date(liveItem.endTime).getTime() - new Date(liveItem.startTime).getTime()) / 1000)
-
+      let metaDataObj = {
+        "endtime": liveItem.endTime,
+        "starttime": liveItem.startTime,
+        "title": liveItem.videoData.title,
+        "image": getImageFromArray(liveItem.videoData.originalImages, "logo", "feature"),
+        "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
+      };
 
       let jsonString = {
         "record": {
@@ -275,13 +281,7 @@ export default class ZapperContent extends Component {
           "duration" : durationInSeconds
 
         },
-        "metaData": {
-          "endtime": liveItem.endTime,
-          "starttime": liveItem.startTime,
-          "title": liveItem.videoData.title,
-          "image": getImageFromArray(liveItem.videoData.originalImages, "logo", "feature"),
-          "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
-        }
+        "metaData": JSON.stringify(metaDataObj)
       }
 
       console.log('JSON String for record')
@@ -290,7 +290,7 @@ export default class ZapperContent extends Component {
       NativeModules.STBManager.isConnect((connectStr) => {
           let isConnected = JSON.parse(connectStr).is_connected
           if (isConnected) {
-              NativeModules.STBManager.addPvrBooKListWithJson(JSON.stringify(json), (error, events) => {
+              NativeModules.STBManager.addPvrBookListWithJson(JSON.stringify(json), (error, events) => {
                 if (JSON.parse(events[0]) === '1') {
                   this._showAlertDialog("Book successfully");
                 }

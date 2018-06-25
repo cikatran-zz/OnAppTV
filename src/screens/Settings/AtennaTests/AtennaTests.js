@@ -389,6 +389,7 @@ const styles = StyleSheet.create({
     },
     signalText: {
         color: colors.textWhitePrimary,
-        fontSize: 13
+        fontSize: 13,
+        fontFamily: 'Helvetica Neue'
     }
 });

@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     },
     settingItemValue: {
         fontSize: 14,
-        color: colors.greySettingItemText
+        color: colors.greySettingItemText,
+        fontFamily: 'Helvetica Neue'
     },
     settingItemIcon: {
         marginRight: 23

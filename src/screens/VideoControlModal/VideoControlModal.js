@@ -416,6 +416,14 @@ export default class VideoControlModal extends React.Component {
         if (genresData == null) {
             genresData = liveItem.videoData.genres;
         }
+        let metaDataObj = {
+            "endtime": liveItem.endTime,
+            "starttime": liveItem.startTime,
+            "title": liveItem.videoData.title,
+            "image": liveItem.videoData.originalImages[0].url,
+            "subTitle": genresData.length > 0 ? genresData[0].name : ""
+        };
+
         let jsonString = {
             "record_parameter": {
                 "startTime": this._simpleDataFormat(liveItem.startTime),
@@ -425,13 +433,7 @@ export default class VideoControlModal extends React.Component {
                 "duration": durationInSeconds
 
             },
-            "metaData": {
-                "endtime": liveItem.endTime,
-                "starttime": liveItem.startTime,
-                "title": liveItem.videoData.title,
-                "image": liveItem.videoData.originalImages[0].url,
-                "subTitle": genresData.length > 0 ? genresData[0].name : ""
-            }
+            "metaData": JSON.stringify(metaDataObj)
         }
 
         console.log('JSON String for record')
