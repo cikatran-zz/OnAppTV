@@ -35,7 +35,7 @@ export default SettingsStack = StackNavigator({
     AtennaTests: {
         screen: AtennaTests,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Athena tests", navigation, true)
+            ...defaultNavigationOptions("Antenna tests", navigation, true)
         })
     },
     TimeShiftConfig: {

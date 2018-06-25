@@ -97,7 +97,7 @@ export default class DetailsPage extends React.Component {
                         // this.props.getEpgs([item.channelData.serviceId])
                         this.props.getLive(true, 1, 10);
                     }
-                    else if (item.type) {
+                    else if (item.type != null) {
                         /*
                         Fetch epg with related content or epg in series
                         */
@@ -145,7 +145,7 @@ export default class DetailsPage extends React.Component {
                     this.props.getLive(true, 1, 10);
                     //this.props.getEpgWithGenre(item.videoData.contentId, item.genreIds, 1, 10);
                 }
-                else if (item.type) {
+                else if (item.type != null) {
                     /*
                      Fetch epg with related content or epg in series
                      */
@@ -176,7 +176,7 @@ export default class DetailsPage extends React.Component {
                     // this.props.getEpgSameTime(new Date(), item.channelId);
                     this.props.getEpgWithGenre(parsedItem.videoData.contentId, parsedItem.genreIds, 1, 10);
                 }
-                else if (parsedItem.type) {
+                else if (parsedItem.type != null) {
                     /*
                      Fetch epg with related content or epg in series
                      */
@@ -334,11 +334,11 @@ export default class DetailsPage extends React.Component {
 
     _getLongDescription = (data, isFromPlaylist, videoOne) => {
         if (isFromPlaylist) {
-            if (data.type === 'Episode')
+            if (data.type != null && data.type === 'Episode')
                 return videoOne.data ? (videoOne.data.series !== null ? videoOne.data.series.longDescription : '' ) : ''
             else return data.longDescription
         }
-        else if (data.type === 'Episode') {
+        else if (data.type != null && data.type === 'Episode') {
             return data.series.longDescription
         }
         else return data.longDescription
@@ -478,7 +478,7 @@ export default class DetailsPage extends React.Component {
                      */
                     this.props.getLive(true, this._page, 10);
                 }
-                else if (currentItem.type) {
+                else if (currentItem.type != null) {
                     /*
                      Fetch epg with related content or epg in series
                      */
@@ -638,7 +638,7 @@ export default class DetailsPage extends React.Component {
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| item.type === 'Episode')
+            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| ((item.type != null) && (item.type === 'Episode')))
                 data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             let itemIndex = data.findIndex(x => x.contentId ? x.contentId === item.contentId && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
@@ -653,7 +653,7 @@ export default class DetailsPage extends React.Component {
         }
         else {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| item.type === 'Episode')
+            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| ((item.type != null) && (item.type === 'Episode')))
                 data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             navigation.replace('VideoControlModal', {
@@ -669,7 +669,7 @@ export default class DetailsPage extends React.Component {
         let data = (passedData == null) ? 
             (epg.data.length !== 0 ? epg.data : [item]) : passedData;
 
-        if (item.type === 'Episode') {
+        if (item.type != null && item.type === 'Episode') {
             // Episodes devided by series, replace data by raw_data
             data = epg.rawData
         }

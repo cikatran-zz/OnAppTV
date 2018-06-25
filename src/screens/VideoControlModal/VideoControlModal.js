@@ -31,6 +31,7 @@ import moment from 'moment';
 import AlertModal from '../../components/AlertModal'
 const { RNBrightcoveVC } = NativeModules;
 import _ from 'lodash'
+import { getImageFromArray } from '../../utils/images';
 
 const brightcoveVCEmitter = new NativeEventEmitter(RNBrightcoveVC);
 
@@ -261,7 +262,7 @@ export default class VideoControlModal extends React.Component {
     _toggleModal = (actionType) => {
         const {item} = this.props.navigation.state.params
 
-        if (item.type === 'Episode') {
+        if (item.type != null && item.type === 'Episode') {
             this.setState({
                 modalVisibility: !this.state.modalVisibility,
                 modalContent: actionType
@@ -270,7 +271,7 @@ export default class VideoControlModal extends React.Component {
         else {
             const {recordEnabled, favoriteEnabled} = this.state
 
-            if (actionType === 'record') {
+            if (actionType === 'record' && item.type != null) {
                 if (item.type === 'Standalone') {
                     NativeModules.RNUserKitIdentity.checkSignIn((error, result) => {
                         let isSignIn = JSON.parse(result[0]).is_sign_in
@@ -420,7 +421,7 @@ export default class VideoControlModal extends React.Component {
             "endtime": liveItem.endTime,
             "starttime": liveItem.startTime,
             "title": liveItem.videoData.title,
-            "image": liveItem.videoData.originalImages[0].url,
+            "image": getImageFromArray(liveItem.videoData.originalImages, "landscape", "feature"),
             "subTitle": genresData.length > 0 ? genresData[0].name : ""
         };
 
@@ -537,7 +538,7 @@ export default class VideoControlModal extends React.Component {
             iconUrl = item.originalImages[0].url
         }
 
-        if (item.type === 'Episode') {
+        if (item.type != null && item.type === 'Episode') {
             return (
                 <Modal animationType={'fade'} transparent={true}
                        visible={this.state.modalVisibility} onRequestClose={() => console.log('close')}>

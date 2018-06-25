@@ -27,6 +27,14 @@ export default class RecordList extends React.Component {
         }
     };
 
+    _setState = (openModal, data, dataArr) => {
+        this.setState({
+            openModal: openModal,
+            data: data,
+            dataArr: dataArr
+        });
+    }
+
     _toggleModal = (item, callback) => {
 
         if (item || item === -1) {
@@ -52,19 +60,13 @@ export default class RecordList extends React.Component {
                 }
 
                 NativeModules.STBManager.usbRemoveWithJson(JSON.stringify(target), (error, events) => {
-                    console.log(events[0])
                     if (JSON.parse(events[0]).return === '1') {
                         NativeModules.RNUserKit.storeProperty("download_list", {dataArr: deletedList}, (e, r) => {
                         })
-                        this.setState({
-                            openModal: false,
-                            data: {},
-                            dataArr: deletedList
-                        })
+                        this._setState(false, {}, deletedList);
                     }
                     else {
                         let mess = 'Remove file failure!'
-                        console.log(mess, target)
                         if (callback !== null) {
                             callback(mess)
                         }
@@ -75,21 +77,16 @@ export default class RecordList extends React.Component {
                 /*
                 Bookmark delete zone
                  */
-                let deletedList = [].concat(pvrList).filter(x => x.record_parameter.recordName !== data.record_parameter.recordName)
+                let deletedList = [].concat(pvrList).filter(x => x.recordName !== data.title)
                 let target = {
-                    recordName: data.record_parameter.recordName
+                    recordName: data.title
                 }
                 NativeModules.STBManager.deletePvrWithJsonString(JSON.stringify(target), (error, events) => {
-                    if (JSON.parse(events[0]).return === 1) {
-                        this.setState({
-                            openModal: !this.state.openModal,
-                            data: {},
-                            dataArr: deletedList
-                        })
+                    if (JSON.parse(events[0]).return === "1") {
+                        this._setState(!this.state.openModal, {}, deletedList);
                     }
                     else {
                         console.log('Remove PVR file falure!')
-                        console.log(target)
                     }
                 })
             }
@@ -99,7 +96,10 @@ export default class RecordList extends React.Component {
     }
 
     _getSubtitle = (item) => {
-        if (item.type === 'Episode') {
+        if (item.type == null) {
+            return "N/A";
+        }
+        else if (item.type === 'Episode') {
             return 'Season ' + item.seasonIndex + ' - Episode ' + item.episodeIndex
         }
         else if (item.type === undefined) {
@@ -115,8 +115,7 @@ export default class RecordList extends React.Component {
     _keyExtractor = (item, index) => index
 
     _renderItem = ({item}) => {
-
-      let iconUrl = getImageFromArray(item.originalImages, "landscape", "feature");
+        let iconUrl = item.image;
 
         return (
           <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
@@ -151,13 +150,13 @@ export default class RecordList extends React.Component {
     }
 
     _recordTransform = (item) => {
+        if (item == null || item === undefined)
+            return null;
         let metaData = JSON.parse(item.metaData)
         return {
             title: metaData.title,
             durationInSeconds: item.duration,
-            originalImages: [{
-                url: metaData.image
-            }],
+            image: metaData.image,
             subTitle: metaData.subTitle
         }
     }
@@ -166,7 +165,6 @@ export default class RecordList extends React.Component {
         const {header, pvrList, downloaded, downloadedUserKit} = this.props;
         const {data, dataArr} = this.state
         let displayDataArr
-
         if (pvrList) displayDataArr = pvrList.map(x => this._recordTransform(x))
         else displayDataArr = dataArr ? dataArr : (downloadedUserKit ? downloadedUserKit.filter(x => this._isInDownloaded(x, downloaded)) : [])
 
