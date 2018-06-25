@@ -70,20 +70,9 @@ class ControlModalData {
                     while true {
                         Thread.sleep(forTimeInterval: 1.0)
                         if (self.playState == .currentPlaying || self.playState == .pause) {
-                            Api.shared().hIG_PlayMediaGetPosition({ (isSuccess, currentSeconds) in
-                                if (isSuccess) {
-                                    self.currentProgress = Double(currentSeconds)/self.durationInSeconds
-                                } else {
-                                    DispatchQueue.main.async {
-                                        if (oldValue != self.playState) {
-                                            WatchingHistory.sharedInstance.remove(id: self.contentId, completion: nil, errorBlock: nil)
-                                            self.delegate?.playReachEnd(controlModalData: self)
-                                        }
-                                    }
-                                }
-                            })
+                            NotificationCenter.default.addObserver(self, selector: #selector(self.handleProgressMessage(_:)), name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
                         } else {
-                            break
+                            NotificationCenter.default.removeObserver(self, name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
                         }
                     }
                 }
@@ -117,6 +106,20 @@ class ControlModalData {
     public var uniqueID = UUID().uuidString
     
     var delegate: ControlModalDataDelegate? = nil
+    
+    @objc public func handleProgressMessage(_ notification: NSNotification) {
+        if let dict = notification.object as? [String: Any], let isSuccess = dict["isSuccess"] as? NSNumber , let currentSeconds = dict["value"] as? NSNumber {
+            print("PLAY: New seconds", currentSeconds)
+            if (isSuccess.boolValue) {
+                self.currentProgress = currentSeconds.doubleValue/self.durationInSeconds
+            } else {
+                DispatchQueue.main.async {
+                    WatchingHistory.sharedInstance.remove(id: self.contentId, completion: nil, errorBlock: nil)
+                    self.delegate?.playReachEnd(controlModalData: self)
+                }
+            }
+        }
+    }
     
     public init(json: [String: Any]) {
         
