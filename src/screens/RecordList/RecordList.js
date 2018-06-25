@@ -118,14 +118,18 @@ export default class RecordList extends React.Component {
         let iconUrl = item.image;
 
         return (
-          <TouchableOpacity style={styles.itemContainer} onPress={() => this._playPvr(item)}>
+          <TouchableOpacity style={styles.itemContainer}
+            // onPress={() => this._playPvr(item)}
+           >
             <VideoThumbnail style={styles.thumbnailStyle} imageUrl={iconUrl} marginHorizontal={17}/>
             <View style={{flexDirection: 'column', marginRight: 60}}>
               <Text style={styles.itemTitle} numberOfLines={1} ellipsizeMode={'tail'}>{item.title}</Text>
               <Text style={styles.itemType}>{this._getSubtitle(item)}</Text>
               <Text style={styles.itemTime}>{secondFormatter(item.durationInSeconds)}</Text>
             </View>
-            <TouchableOpacity style={styles.optionIcon} onPress={() => this._toggleModal(item, null)}>
+            <TouchableOpacity style={styles.optionIcon}
+                //  onPress={() => this._toggleModal(item, null)}
+                 >
               <Image source={require('../../assets/ic_three_dots.png')}/>
             </TouchableOpacity>
             </TouchableOpacity>
@@ -243,7 +247,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         color: colors.textMainBlack,
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: 15,
+        width: '80%'
     },
     itemType: {
         marginTop: 2,
