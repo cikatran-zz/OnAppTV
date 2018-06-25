@@ -127,6 +127,10 @@ export default class Home extends Component {
             this._livePage = 1;
             this.props.getLive(true, 1, 20);
             this.props.getWatchingHistory();
+            // this.props.getList();
+            // this.props.getPvrList();
+            // this.props.getUsbDirFiles('/C/Downloads/');
+            // this.props.getRecordList();
             Orientation.lockToPortrait();
         });
         DeviceEventEmitter.addListener('bannerDetailsPage', (e) => {

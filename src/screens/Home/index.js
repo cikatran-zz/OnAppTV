@@ -11,6 +11,10 @@ import {getWatchingHistory} from "../../actions/getWatchingHistory";
 import {getPlaylist} from '../../actions/getPlaylist'
 import { getLiveEpgInZapper } from '../../actions/getLiveEpgInZapper'
 import { disableTouch} from '../../actions/disableTouch'
+import getBookList from '../../actions/getBookList'
+import getRecordList from '../../actions/getRecordList'
+import { readUsbDir } from '../../actions/getUsbDir'
+import { getPvrList } from '../../actions/getPvrList'
 import actions from '../../actions'
 
 function mapStateToProps(state) {
@@ -43,7 +47,11 @@ function mapDispatchToProps(dispatch) {
         getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),
         disableTouch: (isDisable, screen) => dispatch(disableTouch(isDisable, screen)),
         setStatusConnected: () => dispatch(actions.getConnectStatus.setStatusConnected()),
-        setStatusDisconnected: () => dispatch(actions.getConnectStatus.setStatusDisconnected())
+        setStatusDisconnected: () => dispatch(actions.getConnectStatus.setStatusDisconnected()),
+        getList: () => dispatch(getBookList()),
+        getRecordList: () => dispatch(getRecordList()),
+        getUsbDirFiles: (dir_path) => dispatch(readUsbDir(dir_path)),
+        getPvrList: () => dispatch(getPvrList())
     }
 }
 

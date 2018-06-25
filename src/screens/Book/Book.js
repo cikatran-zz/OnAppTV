@@ -20,11 +20,11 @@ export default class Book extends React.Component {
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             StatusBar.setBarStyle('dark-content');
             (Platform.OS != 'ios') && StatusBar.setBackgroundColor('transparent')
-            this.props.getList();
-            this.props.getPvrList();
-            this.props.getUsbDirFiles('/C/Downloads/');
             NativeModules.STBManager.isConnect((connectStr) => {
                 if (JSON.parse(connectStr).is_connected === true) {
+                    this.props.getList();
+                    this.props.getPvrList();
+                    this.props.getUsbDirFiles('/C/Downloads/');
                     NativeModules.RNUserKit.getProperty("download_list", (e, arr) => {
                         if (!e) {
                             let downloadedArrFromUserKit = JSON.parse(arr).dataArr
