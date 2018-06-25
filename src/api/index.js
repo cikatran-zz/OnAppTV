@@ -700,32 +700,42 @@ export const readUsbDir = (dir_path) => {
     })
 }
 
-export const getPvrList = () => {
+export const getPvrInfo = (recordName) => {
     return new Promise((resolve, reject) => {
+        let json = {
+            recordName: recordName
+        };
+        NativeModules.STBManager.getPvrInfoWithJsonString(JSON.stringify(json), (error, events) => {
+            let pvr = JSON.parse(events[0]);
+            if (pvr !== undefined && pvr != null) pvr["recordName"] = recordName;
+            resolve(pvr)
+        });
+    })
+}
+
+export const getPvrList = async () => {
+
+    const getPvrListInJson = new Promise((resolve, reject) => {
         NativeModules.STBManager.getPvrListInJson((error, events) => {
-            resolve(JSON.parse(events[0]))
-
-        })
-    }).then(value => {
-        let promises = value.map(x => {
-          return new Promise((resolve, reject) => {
-            let json = {
-              recordName: x
+            if (error) {
+                reject(error)
             }
-            NativeModules.STBManager.getPvrInfoWithJsonString(JSON.stringify(json), (error, events) => {
-              console.log(events)
-              resolve(JSON.parse(events[0]))
-            })
-          })
-
-        })
-        return new Promise((resolve, reject) => {
-          Promise.all(promises).then(value => {
-              console.log(value)
-              resolve(value)
-          })
+            resolve(JSON.parse(events[0]))
+            
         })
     })
+    const pvrList =  await getPvrListInJson;
+    let results = []
+    for (var index in pvrList) {
+        let pvr
+        try {
+            pvr = await getPvrInfo(pvrList[index]);
+        } catch (e) {
+            console.log('ERRROR getPvrInfo', e)
+        }
+        results.push(pvr)
+    }
+    return results
 };
 
 export const getEpgSameTime = (currentTime, channelId) => {
