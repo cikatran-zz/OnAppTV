@@ -260,9 +260,10 @@ export default class VideoControlModal extends React.Component {
     }
 
     _toggleModal = (actionType) => {
-        const {item} = this.props.navigation.state.params
+        const {item, isLive} = this.props.navigation.state.params
+        let parsedItem = isLive === true ? item.videoData : item;
 
-        if (item.type != null && item.type === 'Episode') {
+        if (parsedItem.type === 'Episode') {
             this.setState({
                 modalVisibility: !this.state.modalVisibility,
                 modalContent: actionType
@@ -271,8 +272,8 @@ export default class VideoControlModal extends React.Component {
         else {
             const {recordEnabled, favoriteEnabled} = this.state
 
-            if (actionType === 'record' && item.type != null) {
-                if (item.type === 'Standalone') {
+            if (actionType === 'record') {
+                if (isLive === false && parsedItem.type === 'Standalone') {
                     NativeModules.RNUserKitIdentity.checkSignIn((error, result) => {
                         let isSignIn = JSON.parse(result[0]).is_sign_in
                         if (isSignIn) {
@@ -292,7 +293,6 @@ export default class VideoControlModal extends React.Component {
                             this._showDownloadModal()
                         }
                     })
-
                 }
                 else {
                     if (recordEnabled) {
