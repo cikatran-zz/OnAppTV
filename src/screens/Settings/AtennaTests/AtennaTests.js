@@ -169,7 +169,7 @@ export default class AtennaTests extends React.PureComponent {
                 this.satellite.lowLOF = this.dataSourceLowLOF[lowIndex];
                 this.satellite.highLOF = this.dataSourceHighLOF[highIndex];
                 let config = this.state.listConfigure;
-                config[idx].value = satelliteObj.lowLOF + "/" + satelliteObj.highLOF;
+                config[idx].value = this.satellite.lowLOF + "/" + this.satellite.highLOF;
                 this.setState({listConfigure: config});
             } else if (idx === 4) {
                 let index = this.transponderModelIndex;
