@@ -21,16 +21,16 @@ public class WatchingHistory: NSObject {
     
     public func remove(id: String, completion: ((Any)-> Void)?,  errorBlock: ((Any)-> Void)?) {
         queue.async {
-            let semaphore = DispatchSemaphore(value: 0)
+            //let semaphore = DispatchSemaphore(value: 0)
             UserKit.mainInstance().profile.arrayRemove(UserKitKeys.ContinueWatching.rawValue, propertiesKey: UserKitKeys.Id.rawValue, dbOperatorType: .equal, propertiesValue: id, successBlock: { (result) in
                 
-                semaphore.signal()
+                //semaphore.signal()
                 completion?(result)
             }) { (error) in
-                semaphore.signal()
+                //semaphore.signal()
                 errorBlock?(error)
             }
-            semaphore.wait()
+            //semaphore.wait()
         }
     }
     
@@ -60,21 +60,21 @@ public class WatchingHistory: NSObject {
     
     public func updateWatchingHistory(id: String, properties: [String: Any], completion: ((Any)-> Void)?, errorBlock: ((Any)-> Void)?) {
         queue.async {
-            let semaphore = DispatchSemaphore(value: 0)
+            //let semaphore = DispatchSemaphore(value: 0)
             UserKit.mainInstance().profile.arrayRemove(UserKitKeys.ContinueWatching.rawValue, propertiesKey: UserKitKeys.Id.rawValue, dbOperatorType: .equal, propertiesValue: id, successBlock: { (result) in
                 
                 UserKit.mainInstance().profile.append(properties: properties, successBlock: { (result) in
-                    semaphore.signal()
+                    //semaphore.signal()
                     completion?(result)
                 }, failBlock: { (error) in
-                    semaphore.signal()
+                    //semaphore.signal()
                     errorBlock?(error)
                 })
             }) { (error) in
-                semaphore.signal()
+                //semaphore.signal()
                 errorBlock?(error)
             }
-            semaphore.wait()
+            //semaphore.wait()
         }
     }
     

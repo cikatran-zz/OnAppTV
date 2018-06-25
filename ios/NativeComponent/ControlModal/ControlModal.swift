@@ -235,8 +235,14 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
     func playMedia() {
         self.videosData[self.index.intValue].getVideoUrl { (url) in
             let contentId = self.videosData[self.index.intValue].contentId
+            var start = CFAbsoluteTimeGetCurrent()
             WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
+                var elapsed = CFAbsoluteTimeGetCurrent() - start
+                print("PLAY: QUERY TIME: \(elapsed)")
+                start = CFAbsoluteTimeGetCurrent()
                 Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url, metaData: contentId) { (isSuccess, error) in
+                    elapsed = CFAbsoluteTimeGetCurrent() - start
+                    print("PLAY: CALLING FUNCTION TIME: \(elapsed)")
                     if !isSuccess {
                         print(error ?? "")
                     } else {

@@ -17,6 +17,7 @@
 #import "OnAppTV-Swift.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "BrightcoveViewController.h"
+#import <STBAPI/STBAPI.h>
 
 @implementation AppDelegate
 
@@ -88,7 +89,32 @@
             [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.progressUpdate" object:NULL];
         }
     });
+    
+    if (_serialQueue == NULL) {
+        _serialQueue = dispatch_queue_create("onapp.controlmodal.progressQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    
+    dispatch_async(_serialQueue, ^{
+        [self postUpdateProgressMessage];
+    });
+    
     return YES;
+}
+
+- (void) postUpdateProgressMessage {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+    [[Api sharedApi] hIG_PlayMediaGetPosition:^(BOOL isSuccess, int value) {
+        [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.VODprogress" object: @{@"isSuccess": [[NSNumber alloc] initWithBool:isSuccess], @"value": [[NSNumber alloc] initWithInt:value] }];
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 2000000000));
+    if (CFAbsoluteTimeGetCurrent() - start < 2) {
+        [NSThread sleepForTimeInterval:2];
+    }
+    dispatch_async(_serialQueue, ^{
+        [self postUpdateProgressMessage];
+    });
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

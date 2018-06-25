@@ -12,5 +12,6 @@
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) RCTRootView *reactNativeView;
+@property dispatch_queue_t serialQueue;
 
 @end
