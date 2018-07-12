@@ -267,18 +267,11 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         } else {
                             self.videosData[self.index.intValue].playState = .currentPlaying
                             
-                            let recordModel = RecordModel()
-                            recordModel.lCN = Int32(self.videosData[self.index.intValue].lcn)
-                            recordModel.startTime = self.videosData[self.index.intValue].startTime
-                            recordModel.recordMode = 1
-                            recordModel.recordName = "timeshift"
-                            Api.shared().hIG_RecordPvrStart(
-                                withRecordParameter: recordModel,
-                                metaData: "",
-                                callback: { (isSuccess, error) in
-                                    // handle callback
-                                    print(error ?? "")
-                            })
+                            recordTimeshift(
+                                lcn: Int32(self.videosData[self.index.intValue].lcn),
+                                startTime: self.videosData[self.index.intValue].startTime,
+                                duration: Int32(self.videosData[self.index.intValue].durationInSeconds)
+                            )
                         }
                     }
                 } else {

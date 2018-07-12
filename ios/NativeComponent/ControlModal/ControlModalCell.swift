@@ -434,18 +434,11 @@ extension ControlModalCell {
                     } else {
                         self.data?.playState = .currentPlaying
                         
-                        let recordModel = RecordModel()
-                        recordModel.lCN = Int32(self.data?.lcn ?? 0)
-                        recordModel.startTime = self.data?.startTime
-                        recordModel.recordMode = 1
-                        recordModel.recordName = "timeshift"
-                        Api.shared().hIG_RecordPvrStart(
-                            withRecordParameter: recordModel,
-                            metaData: "",
-                            callback: { (isSuccess, error) in
-                                // handle callback
-                                print(error ?? "")
-                        })
+                        recordTimeshift(
+                            lcn: Int32(self.data!.lcn),
+                            startTime: self.data!.startTime,
+                            duration: Int32(self.data!.durationInSeconds)
+                        )
                     }
                 }
             }
