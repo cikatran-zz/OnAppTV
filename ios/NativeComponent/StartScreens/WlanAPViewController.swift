@@ -13,15 +13,11 @@ import Foundation
 class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate {
     
     @IBOutlet weak var swiperView: SwiperView!
-    @IBOutlet weak var bottomView: UIView!
-    @IBOutlet weak var searchBtn: UIButton!
-    @IBOutlet weak var installBtn: UIButton!
     @IBOutlet weak var wifiTitle: UILabel!
     @IBOutlet weak var wlanView: UIView!
     @IBOutlet weak var wifiName: UITextField!
     @IBOutlet weak var wlanPwd: UITextField!
     @IBOutlet weak var connectWlan: UIButton!
-    @IBOutlet weak var changeBtn: UIButton!
     @IBOutlet weak var showPwd: UIButton!
     @IBOutlet weak var textFiledBg1: UIView!
     @IBOutlet weak var textFiledBg2: UIView!
@@ -35,16 +31,6 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
     }
     
     func loadUI() -> Void {
-        searchBtn.layer.borderWidth = 1
-        searchBtn.layer.borderColor = UIColor.init(red: 132/255.0, green: 132/255.0, blue: 132/255.0, alpha: 0.25).cgColor
-        searchBtn.backgroundColor = UIColor.clear
-        searchBtn.layer.cornerRadius = CGFloat(232.2 / 375.0) * kScreenWidth * CGFloat(33.35 / 232.2) / 2
-        
-        installBtn.layer.borderWidth = 1
-        installBtn.layer.borderColor = UIColor.init(red: 132/255.0, green: 132/255.0, blue: 132/255.0, alpha: 0.25).cgColor
-        installBtn.backgroundColor = UIColor.clear
-        installBtn.layer.cornerRadius = CGFloat(232.2 / 375.0) * kScreenWidth * CGFloat(33.35 / 232.2) / 2
-        
         showPwd.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
         showPwd.titleEdgeInsets = UIEdgeInsets.init(top: 0, left: 20, bottom: 0, right: 0)
         showPwd.imageEdgeInsets = UIEdgeInsets.init(top: 0, left: 10, bottom: 0, right: 0)
@@ -55,12 +41,30 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
         textFiledBg2.layer.cornerRadius = CGFloat(335.0 / 375.0) * kScreenWidth * CGFloat(41.0 / 335.0) / 2
         textFiledBg1.layer.borderWidth = 1.0
         textFiledBg2.layer.borderWidth = 1.0
-        textFiledBg1.layer.borderColor = UIColor.init(red: 231.0 / 255.0, green: 231.0 / 255.0, blue: 231.0 / 255.0, alpha: 1.0).cgColor
-        textFiledBg2.layer.borderColor = UIColor.init(red: 231.0 / 255.0, green: 231.0 / 255.0, blue: 231.0 / 255.0, alpha: 1.0).cgColor
+        textFiledBg1.layer.borderColor = UIColor.init(red: 226.0 / 255.0, green: 226.0 / 255.0, blue: 226.0 / 255.0, alpha: 1.0).cgColor
+        textFiledBg2.layer.borderColor = UIColor.init(red: 226.0 / 255.0, green: 226.0 / 255.0, blue: 226.0 / 255.0, alpha: 1.0).cgColor
         
         let swiperGesture = UISwipeGestureRecognizer.init(target: self, action:#selector(panAction(gesture:)) )
         swiperGesture.direction = UISwipeGestureRecognizerDirection.right
         wlanView.addGestureRecognizer(swiperGesture)
+        
+        let placeholderWifiName = NSMutableAttributedString.init(string: "Wifi")
+        placeholderWifiName.addAttribute(NSFontAttributeName, value: UIFont.init(name: "Helvetica", size: 13)!, range: NSRange.init(location: 0, length: placeholderWifiName.length))
+        placeholderWifiName.addAttribute(NSForegroundColorAttributeName, value: UIColor.init(red: 57.0 / 255.0, green: 57.0 / 255.0, blue: 57.0 / 255.0, alpha: 0.57), range: NSRange.init(location: 0, length: placeholderWifiName.length))
+        
+        let placeholderPassword = NSMutableAttributedString.init(string: "Password")
+        placeholderPassword.addAttribute(NSFontAttributeName, value: UIFont.init(name: "Helvetica", size: 13)!, range: NSRange.init(location: 0, length: placeholderPassword.length))
+        placeholderPassword.addAttribute(NSForegroundColorAttributeName, value: UIColor.init(red: 57.0 / 255.0, green: 57.0 / 255.0, blue: 57.0 / 255.0, alpha: 0.57), range: NSRange.init(location: 0, length: placeholderPassword.length))
+        
+        if sysVersion! < 11 {
+            placeholderWifiName.addAttributes([NSBaselineOffsetAttributeName:-1], range: NSRange.init(location: 0, length: placeholderWifiName.length))
+            placeholderPassword.addAttributes([NSBaselineOffsetAttributeName:-1], range: NSRange.init(location: 0, length: placeholderPassword.length))
+        }
+        
+        wifiName.attributedPlaceholder = placeholderWifiName
+        wlanPwd.attributedPlaceholder = placeholderPassword
+        
+        connectWlan.layer.cornerRadius = CGFloat(227.0 / 375.0) * kScreenWidth * CGFloat(34.0 / 227.0) / 2
         
         wifiName.delegate = self
         wlanPwd.delegate = self
@@ -73,15 +77,18 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
         let swiperData = NSMutableArray.init()
         let imageViews = ["", "start-settings.png", ""];
         let isShowImages = [false, true, false];
-        let titles = ["Step 1", "Step 2", ""];
-        let contents = ["Press on CH+ key of your STB during 3s\nuntil the LED flashes", "Open the Setting Menu of your device\nselect the WiFi Menu", ""];
-        
+        let titles = ["Step 1", "Step 2", "Step 3"];
+        let contents = ["Press on CH+ key of your STB during\n3s until the LED flashes", "1. Open the WIFI Menu in the Settings\n2. Select the WiFi : STB-XXXXXXXX\n3. When connected, come back to the\nAPP and go to next step", ""];
+        let textCenters = [false, true, false];
+        let subscriptions = ["","Press this button to open the Settings",""]
         for i in 0 ..< titles.count {
             let swiperModel = SwiperModel()
             swiperModel.imageView = imageViews[i]
             swiperModel.isShowImageView = isShowImages[i]
             swiperModel.title = titles[i]
             swiperModel.content = contents[i]
+            swiperModel.isContentTextCenter = textCenters[i]
+            swiperModel.subscription = subscriptions[i]
             swiperData.add(swiperModel)
         }
         
@@ -89,7 +96,7 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
         swiperView.datas = swiperData
         
         NotificationCenter.default.addObserver(self, selector: #selector(transformView(aNSNotification:)), name: .UIKeyboardWillChangeFrame, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.transformView), name: .UIKeyboardWillChangeFrame, object: nil)
+        //        NotificationCenter.default.addObserver(self, selector: #selector(self.transformView), name: .UIKeyboardWillChangeFrame, object: nil)
     }
     
     func test() {
@@ -97,9 +104,7 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
     }
     
     func panAction(gesture: UIGestureRecognizer) -> Void {
-        wlanView.alpha = 0
-        swiperView.alpha = 1.0
-        bottomView.alpha = 1.0
+        wlanView.isHidden = true
         swiperView.scrollViewToPosition()
     }
     
@@ -120,55 +125,17 @@ class WlanAPViewController: UIViewController, SwiperDelegate, UITextViewDelegate
         })
     }
     
-    @IBAction func searchAction(_ sender: UIButton) {
-        
-    }
-    
-    @IBAction func installWPS(_ sender: UIButton) {
-        let vc = WlanWPSViewController();
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     @IBAction func comeBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
     
     func swiperToPage(currentIndex: Int) {
-        if currentIndex == 1 {
-            searchBtn.setTitle("Press here to continue", for: .normal)
-        } else if (currentIndex == 0) {
-            searchBtn.setTitle("Search your STB", for: .normal)
+        if currentIndex != 2 {
+            wlanView.isHidden = true
         }
     }
     func swiperToLastPage() {
-        // 隐藏 swiperView 和 bottomView
-        swiperView.alpha = 0
-        bottomView.alpha = 0
-        wlanView.alpha = 1.0
-
-        let placeholderWifiName = NSMutableAttributedString.init(string: "wifi")
-        placeholderWifiName.addAttribute(NSFontAttributeName, value: UIFont.init(name: "SF UI Text", size: 14)!, range: NSRange.init(location: 0, length: placeholderWifiName.length))
-        placeholderWifiName.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange.init(location: 0, length: placeholderWifiName.length))
-        
-    
-        let placeholderPassword = NSMutableAttributedString.init(string: "Password")
-        placeholderPassword.addAttribute(NSFontAttributeName, value: UIFont.init(name: "SF UI Text", size: 14)!, range: NSRange.init(location: 0, length: placeholderPassword.length))
-        placeholderPassword.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange.init(location: 0, length: placeholderPassword.length))
-        
-        if sysVersion! < 11 {
-            placeholderWifiName.addAttributes([NSBaselineOffsetAttributeName:-1], range: NSRange.init(location: 0, length: placeholderWifiName.length))
-            placeholderPassword.addAttributes([NSBaselineOffsetAttributeName:-1], range: NSRange.init(location: 0, length: placeholderPassword.length))
-        }
-        
-        wifiName.attributedPlaceholder = placeholderWifiName
-        wlanPwd.attributedPlaceholder = placeholderPassword
-        
-        connectWlan.backgroundColor = UIColor.init(red: 253/255.0, green: 53/255.0, blue: 91/255.0, alpha: 1.0)
-        connectWlan.layer.cornerRadius = CGFloat(227.0 / 375.0) * kScreenWidth * CGFloat(34.0 / 227.0) / 2
-        
-        changeBtn.layer.borderWidth = 1
-        changeBtn.layer.borderColor = UIColor.init(red: 227/255.0, green: 227/255.0, blue: 227/255.0, alpha: 1).cgColor
-        changeBtn.layer.cornerRadius = CGFloat(227.0 / 375.0) * kScreenWidth * CGFloat(34.0 / 227.0) / 2
+        wlanView.isHidden = false
     }
     
     func swiperButtonInClicked(currentIndex: Int) {
@@ -232,12 +199,12 @@ extension WlanAPViewController: UITextFieldDelegate {
             if endRect.origin.y < y {
                 let deltaY = endRect.origin.y - y
                 UIView.animate(withDuration: 0.1) {
-                    self.wlanView.transform = CGAffineTransform.init(translationX: 0, y: deltaY)
+                    self.view.transform = CGAffineTransform.init(translationX: 0, y: deltaY)
                 }
             }
         }else if endRect.origin.y - beginRect.origin.y > 0 {
             UIView.animate(withDuration: 0.1) {
-                self.wlanView.transform = CGAffineTransform.identity
+                self.view.transform = CGAffineTransform.identity
             }
         }else {
             

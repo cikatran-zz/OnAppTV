@@ -23,7 +23,6 @@ class SoftwareUpdateController: UIViewController {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var install: UIButton!
     
-    
     var isPop: Bool!
     var isFirst: Bool!
     var loadingView: LoadingView!
@@ -79,6 +78,7 @@ class SoftwareUpdateController: UIViewController {
     func firstTimeDisplay() {
         self.subTitle.text = "Welcome to\na revolutionary TV app’s"
         
+        isSetting = true
         timerNumber = 0
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(scanStart), userInfo: nil, repeats: true);
@@ -122,14 +122,20 @@ class SoftwareUpdateController: UIViewController {
     func scanStart() {
         timerNumber = timerNumber + 1
         
-        Api.shared().hIG_GetMobileWifiInfo({ (dic) in
-            if (dic?.keys.contains("SSID"))! {
-                let ssid = dic?["SSID"] as! String;
-                if !ssid.hasPrefix("STB") {
-                    Api.shared().hIG_UdpOperation();
+        if (TARGET_IPHONE_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
+            Api.shared().hIG_UdpOperation();
+        }else{
+            Api.shared().hIG_GetMobileWifiInfo({ (dic) in
+                if (dic?.keys.contains("SSID"))! {
+                    let ssid = dic?["SSID"] as! String;
+                    if !ssid.hasPrefix("STB") {
+                        Api.shared().hIG_UdpOperation();
+                    }
+                }else {
+                    Api.shared().hIG_UdpOperationInWan()
                 }
-            }
-        })
+            })
+        }
         
         if timerNumber == timerMax {
             scanStop()
@@ -194,16 +200,28 @@ class SoftwareUpdateController: UIViewController {
         
         self.topic.text = "Software update"
         self.content.text = "The Software of your STB\nis being updated,\nit will take less than 1 minute"
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time) {
+        self.getSoftware()
+    }
+    
+    func getSoftware() {
+        let bodyString = "{\"query\":\"{\\n  viewer {\\n    configOne(filter: {type: \\\"file-upload\\\", name: \\\"sig_app_upgrade.hi-global.bin\\\"}, sort: VERSION_DESC) {\\n      name\\n      version\\n      url\\n    }\\n  }\\n}\\n\"}"
+        RequestUtil.hIG_PostRequest(bodyString: bodyString) { (data, response, error) in
+            if data != nil {
+                let dicT = try? JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! [AnyHashable : Any]
+                let datas = dicT!["data"]as! [AnyHashable : Any]
+                let viewer = datas["viewer"]as! [AnyHashable : Any]
+                let configOne = viewer["configOne"]
+                print(configOne!)
+            }
             self.topic.text = "Channels list update"
             self.content.text = "The channels list is being\nupdated"
-            
-            self.networkRequest()
+            self.getDatabase()
         }
     }
     
-    func networkRequest() {
+    
+    
+    func getDatabase() {
         let bodyString = "{\"query\":\"{\\n  viewer {\\n    configOne(filter: {type: \\\"file-upload\\\", name: \\\"channel_database.xml\\\"}, sort: VERSION_DESC) {\\n      name\\n      version\\n      url\\n    }\\n  }\\n}\\n\"}"
         RequestUtil.hIG_PostRequest(bodyString: bodyString) { (data, response, error) in
             if data != nil {

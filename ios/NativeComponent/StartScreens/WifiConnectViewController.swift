@@ -8,25 +8,13 @@
 
 import UIKit
 
-class WifiConnectViewController: UIViewController,SwiperDelegate {
+class WifiConnectViewController: UIViewController {
     @IBOutlet weak var searchBtn: UIButton!
     @IBOutlet weak var installBtn: UIButton!
-    @IBOutlet weak var bottomView: UIView!
-//    var swiperView: SwiperView!
-    @IBOutlet weak var swiperView: SwiperView!
     var isPop: Bool!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let swiperData = NSMutableArray.init()
-        let swiperModel = SwiperModel()
-        swiperModel.imageView = ""
-        swiperModel.isShowImageView = false
-        swiperModel.title = "Select your Wifi connection mode"
-        swiperModel.content = "Does your Wifi router have a WPS key ?"
-        swiperData.add(swiperModel)
-        swiperView.swiperDelegate = self
-        swiperView.datas = swiperData
         loadUI()
         
         if isPop == nil {
@@ -59,16 +47,6 @@ class WifiConnectViewController: UIViewController,SwiperDelegate {
         let vc = WlanAPViewController()
         vc.isPop = isPop
         self.navigationController?.pushViewController(vc, animated: true)
-    }
-    func swiperToPage(currentIndex: Int) {
-        
-    }
-    func swiperToLastPage() {
-        
-    }
-    
-    func swiperButtonInClicked(currentIndex: Int) {
-        
     }
     
     override func didReceiveMemoryWarning() {

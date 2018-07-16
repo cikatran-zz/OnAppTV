@@ -40,8 +40,9 @@ enum JumpType : String {
 
 class JumpToSystem: UIDevice {
     
-    class func hIG_CurrentSystemVersion() -> Float {
-        return Float(current.systemVersion)!
+    class func hIG_CurrentSystemVersion() -> Int {
+        let versions = current.systemVersion.components(separatedBy: ".");
+        return Int(versions[0])!
     }
 
     class func hIG_JumpSystem(cmd: JumpType, statusBlock: @escaping (Bool) -> Void) {
