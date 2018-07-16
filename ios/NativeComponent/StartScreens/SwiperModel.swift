@@ -17,4 +17,8 @@ class SwiperModel: NSObject {
     var title: String!
 //    content
     var content: String!
+    //    Is Content Text Center
+    var isContentTextCenter: Bool!
+    //    subscription
+    var subscription: String!
 }

@@ -19,7 +19,7 @@ class SwiperView: UIView, UIScrollViewDelegate {
 //    滚动视图对象
     var scrollView: UIScrollView!
 //    视图中的小圆点
-    var pageControl: UIPageControl!
+    var pageControl: PageControl!
 //    动态数组对象
     var _datas:NSMutableArray!
 //    var datas: NSMutableArray!
@@ -46,14 +46,13 @@ class SwiperView: UIView, UIScrollViewDelegate {
     func setUI() -> Void {
         
         var frame = self.frame
-        frame.size.height = kScreenWidth * self.frame.size.height / self.frame.size.width
+        frame.size.height = kScreenHeight
         frame.size.width = kScreenWidth
         self.frame = frame
         
         if scrollView == nil {
 //            scrollView的可视范围
             scrollView = UIScrollView.init(frame: CGRect.init(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height))
-            scrollView.backgroundColor = UIColor.yellow
             self.addSubview(scrollView)
 //            设置委托
             self.scrollView.delegate = self
@@ -69,8 +68,8 @@ class SwiperView: UIView, UIScrollViewDelegate {
         }
         
         if pageControl == nil {
-            let pageControl_y = CGFloat(382.6 / 421.65) * self.frame.size.height
-            pageControl = UIPageControl.init(frame: CGRect.init(x: self.frame.origin.x, y: pageControl_y, width: self.frame.size.width, height: 7.43))
+            let pageControl_y = CGFloat(554.53 / 667.0) * self.frame.size.height
+            pageControl = PageControl.init(frame: CGRect.init(x: self.frame.origin.x, y: pageControl_y, width: self.frame.size.width, height: 15.67))
             pageControl.center.x = screenWidth / 2
             pageControl.pageIndicatorTintColor = UIColor.init(red: 241/255.0, green: 241/255.0, blue: 241/255.0, alpha: 1)
             pageControl.currentPageIndicatorTintColor = UIColor.init(red: 252/255.0, green: 53/255.0, blue: 91/255.0, alpha: 1)
@@ -112,7 +111,7 @@ class SwiperView: UIView, UIScrollViewDelegate {
                 scrollView.addSubview(contentView)
                 
                 let titleLable = UILabel.init()
-                let titleLable_y = CGFloat(186.81 / 377.65) * self.frame.size.height
+                let titleLable_y = CGFloat(140.0 / 667.0) * self.frame.size.height
                 titleLable.textAlignment = NSTextAlignment.center
                 titleLable.font = UIFont.init(name: "SF UI Text", size: 17)
                 titleLable.text = " "
@@ -123,19 +122,27 @@ class SwiperView: UIView, UIScrollViewDelegate {
                 
                 let imageViewSize = CGFloat(95 / 375.0) *  self.frame.size.width
                 let imageView_x = (self.frame.size.width - imageViewSize) / 2
-                let imageView_y = CGFloat(82.81 / 377.65) * self.frame.size.height
+                let imageView_y = CGFloat(277.0 / 667.0) * self.frame.size.height
                 let imageView = UIButton.init(frame: CGRect.init(x:imageView_x, y: imageView_y, width: imageViewSize, height: imageViewSize))
                 imageView.tag = i
                 imageView.addTarget(self, action: #selector(buttonAction(sender:)), for: UIControlEvents.touchUpInside)
                 contentView.addSubview(imageView)
                 
-                let contentLable_y = CGFloat(215.81 / 377.65) * self.frame.size.height
+                let contentLable_y = CGFloat(170.0 / 667.0) * self.frame.size.height
                 let contentLable = UILabel.init(frame: CGRect.init(x: 0, y: contentLable_y, width: contentView.frame.size.width, height: self.frame.size.height - contentLable_y))
-                contentLable.font = UIFont.init(name:"SF UI Text" , size: 13)
+                contentLable.font = UIFont.init(name:"SF UI Text" , size: 17)
                 contentLable.textAlignment = NSTextAlignment.center
                 contentLable.textColor = UIColor.init(red: 57/255.0, green: 57/255.0, blue: 57/255.0, alpha: 0.57)
                 contentLable.numberOfLines = 0
                 contentView.addSubview(contentLable)
+                
+                let subscription_y = CGFloat(382.0 / 667.0) * self.frame.size.height
+                let subscription = UILabel.init(frame: CGRect.init(x: 0, y: subscription_y, width: contentView.frame.size.width, height: self.frame.size.height - subscription_y))
+                subscription.font = UIFont.init(name:"SF UI Text" , size: 13)
+                subscription.textAlignment = NSTextAlignment.center
+                subscription.textColor = UIColor.init(red: 57/255.0, green: 57/255.0, blue: 57/255.0, alpha: 0.57)
+                subscription.numberOfLines = 0
+                contentView.addSubview(subscription)
                 
                 let swiperModel = _datas[i] as! SwiperModel
                 if swiperModel.isShowImageView {
@@ -144,18 +151,33 @@ class SwiperView: UIView, UIScrollViewDelegate {
                     imageView.alpha = 0.0
                 }
                 titleLable.text = swiperModel.title
-//                contentLable.text = swiperModel.content
+                //                contentLable.text = swiperModel.content
                 let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.lineSpacing = 10
+                paragraphStyle.lineSpacing = 0.4
                 paragraphStyle.alignment = NSTextAlignment.center
-                let setStr = NSMutableAttributedString.init(string:swiperModel.content)
+                var setStr = NSMutableAttributedString.init(string:swiperModel.content)
                 setStr.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSRange.init(location: 0, length: swiperModel.content.count))
                 contentLable.attributedText = setStr
-                let size = CGRect.init(x: contentLable.frame.origin.x, y: contentLable.frame.origin.y, width: contentLable.frame.size.width, height: 100)
-                let contentLableSize = contentLable.textRect(forBounds: size, limitedToNumberOfLines: 2)
+                var size = CGRect.init(x: contentLable.frame.origin.x, y: contentLable.frame.origin.y, width: contentLable.frame.size.width, height: 100)
+                let contentLableSize = contentLable.textRect(forBounds: size, limitedToNumberOfLines: 4)
                 contentLable.frame = contentLableSize
                 contentLable.center.x = contentView.bounds.size.width / 2
-                contentLable.backgroundColor = UIColor.clear
+                
+                if swiperModel.isContentTextCenter {
+                    contentLable.textAlignment = NSTextAlignment.left
+                }
+                
+                if swiperModel.subscription != nil {
+                    subscription.text = swiperModel.subscription
+                    
+                    setStr = NSMutableAttributedString.init(string:swiperModel.subscription)
+                    setStr.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSRange.init(location: 0, length: swiperModel.subscription.count))
+                    subscription.attributedText = setStr
+                    size = CGRect.init(x: subscription.frame.origin.x, y: subscription.frame.origin.y, width: subscription.frame.size.width, height: 100)
+                    let subscriptionSize = subscription.textRect(forBounds: size, limitedToNumberOfLines: 4)
+                    subscription.frame = subscriptionSize
+                    subscription.center.x = contentView.bounds.size.width / 2
+                }
                 self.scrollView.addSubview(contentView)
             }
         }

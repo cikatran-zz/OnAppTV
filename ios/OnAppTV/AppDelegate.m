@@ -104,10 +104,33 @@
 - (void) postUpdateProgressMessage {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
-    [[Api sharedApi] hIG_PlayMediaGetPosition:^(BOOL isSuccess, int value) {
-        [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.VODprogress" object: @{@"isSuccess": [[NSNumber alloc] initWithBool:isSuccess], @"value": [[NSNumber alloc] initWithInt:value] }];
+    if ([[Api sharedApi] hIG_IsConnect]) {
+        [[Api sharedApi] hIG_GetSTBStatusAndCallback:^(BOOL isSuccess, NSMutableArray *statuses, int lCN, NSString *infoName) {
+            if (isSuccess) {
+                BOOL isPlayMedia = NO;
+                for (int i = 0; i < [statuses count]; i++) {
+                    NSString *status = (NSString *)[statuses objectAtIndex:i];
+                    if ([status isEqual: @"PLAY_MEDIA"]) {
+                        isPlayMedia = YES;
+                        break;
+                    }
+                }
+                if (isPlayMedia) {
+                    [[Api sharedApi] hIG_PlayMediaGetPosition:^(BOOL isSuccess, int value) {
+                        [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.VODprogress" object: @{@"isSuccess": [[NSNumber alloc] initWithBool:isSuccess], @"value": [[NSNumber alloc] initWithInt:value] }];
+                        dispatch_semaphore_signal(semaphore);
+                    }];
+                } else {
+                    dispatch_semaphore_signal(semaphore);
+                }
+            } else {
+                dispatch_semaphore_signal(semaphore);
+            }
+        }];
+    } else {
         dispatch_semaphore_signal(semaphore);
-    }];
+    }
+    
     dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 2000000000));
     if (CFAbsoluteTimeGetCurrent() - start < 2) {
         [NSThread sleepForTimeInterval:2];

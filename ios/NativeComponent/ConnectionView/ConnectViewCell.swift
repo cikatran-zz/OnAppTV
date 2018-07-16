@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import STBAPI
 
 class ConnectViewCell: UITableViewCell {
     
-    var dotImage: UIImageView!
+    var dotImage: UIButton!
     var name: UILabel!
     var switchBackground: UIView!
     var switchButton: UISwitch!
@@ -23,12 +24,12 @@ class ConnectViewCell: UITableViewCell {
                 name.text  = " "
             }
             if newValue.isOnline {
-                dotImage.image = UIImage.init(named: "connectView-dot_green")
+                dotImage.setImage(UIImage.init(named: "connectView-dot_green"), for: UIControlState.normal)
                 switchButton.isHidden = false
                 switchBackground.isHidden = false
                 name.alpha = 1.0
             }else {
-                dotImage.image = UIImage.init(named: "connectView-dot_gray")
+                dotImage.setImage(UIImage.init(named: "connectView-dot_gray"), for: UIControlState.normal)
                 switchButton.isHidden = true
                 switchBackground.isHidden = true
                 name.alpha = 0.56
@@ -51,10 +52,12 @@ class ConnectViewCell: UITableViewCell {
     
     func setupSubViews() {
         //        Dot
-        dotImage = UIImageView.init(image: UIImage.init(named: "connectView-dot_gray"))
-        let dot_x = CGFloat(29.0 / 282.0) * self.frame.size.width
-        let dot_y = (self.frame.size.height - dotImage.frame.size.height ) / 2
-        dotImage.frame = CGRect.init(x: dot_x, y: dot_y, width: dotImage.frame.size.width, height: dotImage.frame.size.height)
+        dotImage = UIButton.init()
+        dotImage.setImage(UIImage.init(named: "connectView-dot_gray"), for: UIControlState.normal)
+        let dot_x = CGFloat(13.0 / 282.0) * self.frame.size.width
+        let dot_width = CGFloat(40.0 / 282.0) * self.frame.size.width
+        dotImage.frame = CGRect.init(x: dot_x, y: 0, width: dot_width, height: self.frame.size.height)
+        dotImage.addTarget(self, action: #selector(standby), for: UIControlEvents.touchUpInside)
         addSubview(dotImage)
         //        Label
         name = UILabel.init()
@@ -105,5 +108,12 @@ class ConnectViewCell: UITableViewCell {
         
         // Configure the view for the selected state
     }
+    
+    func standby() {
+        if Api.shared().hIG_IsConnect() && Api.shared().currentSTBInfo.sTBID.isEqual(name.text){
+            Api.shared().hIG_STBStandby()
+        }
+    }
+    
     
 }
