@@ -124,7 +124,7 @@ class BottomTabbar extends Component {
             return (
                 <TouchableOpacity
                     onPress={() => this._onClickMainButton()}
-                    onLongPress={() => (Platform.OS === "ios") && RNConnectionViewModule.show()}
+                    onLongPress={() => RNConnectionViewModule.show()}
                     style={styles.tab}
                     key={tab}
                 >
