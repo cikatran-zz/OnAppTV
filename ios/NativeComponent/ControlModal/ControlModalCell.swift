@@ -443,6 +443,7 @@ extension ControlModalCell {
                 }
             }
         } else {
+            stopRecordTimeshift()
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
                 Api.shared().hIG_PlayMediaResume { (isSuccess, error) in

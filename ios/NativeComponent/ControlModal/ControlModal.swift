@@ -275,6 +275,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         }
                     }
                 } else {
+                    stopRecordTimeshift()
                     currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying
