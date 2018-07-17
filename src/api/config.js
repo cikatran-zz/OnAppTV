@@ -91,6 +91,9 @@ query queryPlaylist($playList: String) {
         title
         longDescription
         shortDescription
+        genres {
+          name
+        }
         originalImages {
           scaledImage {
             url
@@ -161,7 +164,16 @@ query{
 const  vodQuery = gql`
 query queryVOD($perPage: Int, $page: Int){
   viewer{
-    videoPagination(perPage: $perPage, page: $page) {
+    videoPagination(perPage: $perPage, page: $page, filter: {
+      _operators: {
+        type: {
+          nin: "Episode"
+        },
+        sourceName: {
+          in: ["brightcove"]
+        }
+      }
+    }) {
     	items {
     	  contentId
     	  durationInSeconds
@@ -475,6 +487,9 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
         },
         type: {
           nin: "Episode"
+        },
+        sourceName: {
+          in: ["brightcove"]
         }
       }
     })  {
@@ -674,6 +689,9 @@ query genresVOD($genresId: MongoID, $page: Int, $perPage: Int){
         },
         type: {
           nin: "Episode"
+        },
+        sourceName: {
+          in: ["brightcove"]
         }
       }
     }) {

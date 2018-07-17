@@ -9,7 +9,6 @@
     "bundle-android": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./android/app/src/main/assets/index.android.bundle' --dev=false --platform='android' --assets-dest='./android/app/src/main/res'",
     "codepush-ios": "code-push release-react mstage/onapptv-ios ios -d Production -m true -t \"1.1\"",
     "codepush-android": "code-push release-react mstage/onapptv-android android -d Production -m true -t \"1.1\""
-
   },
   "dependencies": {
     "@nart/react-native-swiper": "^1.5.13",
