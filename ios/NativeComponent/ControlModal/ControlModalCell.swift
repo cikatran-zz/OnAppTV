@@ -41,6 +41,9 @@ class ControlModalCell: UICollectionViewCell {
     @IBOutlet weak var dismissButtonTop: NSLayoutConstraint!
     @IBOutlet weak var infoButtonBottom: NSLayoutConstraint!
     
+    @IBOutlet weak var redBarWidth: NSLayoutConstraint!
+    @IBOutlet weak var redBarLeading: NSLayoutConstraint!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
