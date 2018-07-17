@@ -141,19 +141,19 @@ class ControlModalCell: UICollectionViewCell {
 extension ControlModalCell {
     
     func showHideComponents() {
-        //if (data?.isLive ?? false) {
+        if (data?.isLive ?? false) {
             // Show logo channel + red line
-            //channelImage.isHidden = false
-            //redBar.isHidden = true
+            channelImage.isHidden = false
+            redBar.isHidden = false
             // Hide orientation button
-            //orientationButton.isHidden = true
-        //} else {
+            orientationButton.isHidden = true
+        } else {
             // Show orientation button
             orientationButton.isHidden = false
             // Hide logo channel + red line
             channelImage.isHidden = true
             redBar.isHidden = true
-        //}
+        }
     }
     
     func updateLabelsWith(_ newCurrentTime: Double) {
