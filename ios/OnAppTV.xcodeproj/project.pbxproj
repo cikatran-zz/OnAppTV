@@ -156,6 +156,7 @@
 		69A16FD22068DB6600E215B8 /* STBAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69A16FD12068DB6600E215B8 /* STBAPI.framework */; };
 		69BD179D20319DB500E33978 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD179A20319D8900E33978 /* libART.a */; };
 		69BD17D82032988000E33978 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BD17BE2032986D00E33978 /* libRCTOrientation.a */; };
+		69BE948E20FC80EA000C9C15 /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69BE948D20FC80EA000C9C15 /* PageControl.swift */; };
 		69C4DABA20AA8CA8000E4B4F /* database _IBC_2017-2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DA8A20AA8CA7000E4B4F /* database _IBC_2017-2.xml */; };
 		69C4DABB20AA8CA8000E4B4F /* database _IBC_2018.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DAB820AA8CA7000E4B4F /* database _IBC_2018.xml */; };
 		69C4DABC20AA8CA8000E4B4F /* channel_database-1.xml in Resources */ = {isa = PBXBuildFile; fileRef = 69C4DAB920AA8CA7000E4B4F /* channel_database-1.xml */; };
@@ -759,6 +760,7 @@
 		69A16FD12068DB6600E215B8 /* STBAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = STBAPI.framework; sourceTree = "<group>"; };
 		69BD179420319D8900E33978 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		69BD17AB2032986D00E33978 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
+		69BE948D20FC80EA000C9C15 /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		69C4DA8A20AA8CA7000E4B4F /* database _IBC_2017-2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2017-2.xml"; path = "STBHTML/database _IBC_2017-2.xml"; sourceTree = "<group>"; };
 		69C4DAB820AA8CA7000E4B4F /* database _IBC_2018.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "database _IBC_2018.xml"; path = "STBHTML/database _IBC_2018.xml"; sourceTree = "<group>"; };
 		69C4DAB920AA8CA7000E4B4F /* channel_database-1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "channel_database-1.xml"; path = "STBHTML/channel_database-1.xml"; sourceTree = "<group>"; };
@@ -1255,6 +1257,7 @@
 				697A79EB20DC9E25000FF509 /* RequestsModel.swift */,
 				697A79ED20DCA00B000FF509 /* HeaderDataModel.swift */,
 				697A79EF20DCA037000FF509 /* GetFileModel.swift */,
+				69BE948D20FC80EA000C9C15 /* PageControl.swift */,
 			);
 			path = StartScreens;
 			sourceTree = "<group>";
@@ -2265,6 +2268,7 @@
 				690EEFE72057915E0099484A /* UserKitIdentityModule.swift in Sources */,
 				6993D2EF209189510032D3DA /* RNLivePlaybackRecorder.m in Sources */,
 				6927DD36209B56D000FFA275 /* WebViewJavascriptBridge_JS.m in Sources */,
+				69BE948E20FC80EA000C9C15 /* PageControl.swift in Sources */,
 				6993D2EB209181050032D3DA /* EPG+Extension.swift in Sources */,
 				69F9A4E7202418D700832440 /* RNTBrightcovePlayerManager.m in Sources */,
 				69D21F2E205270A200DFA90A /* RNTSTBConnectionViewManager.m in Sources */,

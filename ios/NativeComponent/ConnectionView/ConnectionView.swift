@@ -183,19 +183,24 @@ class ConnectView: UIView {
     }
     //    MARK: - Scan STB Start
     func scanStart() {
-        Api.shared().hIG_GetMobileWifiInfo({ (dic) in
-            if (dic?.keys.contains("SSID"))! {
-                let ssid = dic?["SSID"] as! String;
-                if !ssid.hasPrefix("STB") {
-                    Api.shared().hIG_UdpOperation();
+        if (TARGET_IPHONE_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
+            Api.shared().hIG_UdpOperation();
+        }else{
+            Api.shared().hIG_GetMobileWifiInfo({ (dic) in
+                if (dic?.keys.contains("SSID"))! {
+                    let ssid = dic?["SSID"] as! String;
+                    if !ssid.hasPrefix("STB") {
+                        Api.shared().hIG_UdpOperation();
+                    }else {
+                        self.dataSource.removeAll()
+                        self.confirmIsEnabled(isEnabled: false)
+                    }
                 }else {
-                    self.dataSource.removeAll()
-                    self.confirmIsEnabled(isEnabled: false)
+                    Api.shared().hIG_UdpOperationInWan()
                 }
-            }else {
-                Api.shared().hIG_UdpOperationInWan()
-            }
-        })
+            })
+        }
+        
         Api.shared()?.hIG_UndiscoveredSTBList({ (stbs) in
             for temp in stbs! {
                 let stbName = temp as! String
