@@ -106,7 +106,7 @@ android {
     defaultConfig {
         applicationId "com.onapptv"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 26
         multiDexEnabled true
         versionCode 1
         versionName "1.1"
@@ -196,7 +196,7 @@ dependencies {
     implementation project(':react-native-fetch-blob')
 //    compile project(':react-native-gesture-handler')
     implementation project(':react-native-fbsdk')
-    implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
+    implementation 'com.facebook.android:facebook-android-sdk:4+'
     implementation project(':custombrightcoveplayer')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.0'

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <SeekBar
+        android:id="@+id/wlan_ap_change_alpha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wifi connection"
+        android:textSize="17dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="5dp"
+        android:textColor="@color/colorGrayText"
+        android:id="@+id/wlan_ap_topic" />
+
+    <com.onapptv.ConnectionView.Custom.View.Swiper.SwiperView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/wlan_ap_swiperView"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="invisible"
+        android:id="@+id/wlan_ap_connect">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WIFI"
+            android:textColor="@color/colorBlackText57"
+            android:textSize="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="206.5dp"
+            android:id="@+id/wlan_ap_connect_wifi" />
+
+        <EditText
+            android:layout_width="322dp"
+            android:layout_height="40dp"
+            android:id="@+id/wlan_ap_wifi_name"
+            android:background="@drawable/edit"
+            android:layout_below="@id/wlan_ap_connect_wifi"
+            android:layout_marginTop="11.5dp"
+            android:layout_centerHorizontal="true"
+            android:hint="Wifi"
+            android:textSize="13dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/colorBlackText57" />
+
+        <EditText
+            android:layout_width="322dp"
+            android:layout_height="40dp"
+            android:id="@+id/wlan_ap_wifi_password"
+            android:background="@drawable/edit"
+            android:layout_below="@id/wlan_ap_wifi_name"
+            android:layout_marginTop="22dp"
+            android:layout_centerHorizontal="true"
+            android:hint="Password"
+            android:textSize="13dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:inputType="textPassword"
+            android:textColorHint="@color/colorBlackText57" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show password"
+            android:textSize="12dp"
+            android:textColor="@color/colorBlackText57"
+            android:layout_below="@id/wlan_ap_wifi_password"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="30dp"
+            android:checked="false"
+            android:button="@drawable/checkbox"
+            android:background="@null"
+            android:paddingLeft="5dp"
+            android:id="@+id/wlan_ap_connect_check_box" />
+
+        <Button
+            android:layout_width="236dp"
+            android:layout_height="32dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/colored_button"
+            android:gravity="center"
+            android:text="Validate"
+            android:textColor="@color/colorWhite"
+            android:textSize="17dp"
+            android:layout_below="@id/wlan_ap_connect_check_box"
+            android:layout_marginTop="28dp"
+            android:id="@+id/wlan_ap_validate" />
+    </RelativeLayout>
+    <Button
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:id="@+id/wlan_ap_close"
+        android:background="@drawable/start_wifi_connect_close"
+        android:layout_marginVertical="4dp"
+        android:layout_marginRight="18dp"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>

@@ -26,6 +26,7 @@ public class OnAppTVPackage implements ReactPackage {
         modules.add(new WatchingHistoryFramework(reactContext));
         modules.add(new BrightcoveVCModules(reactContext));
         modules.add(new ControlPageNavigationModules(reactContext));
+        modules.add(new RNConnectionViewModule(reactContext));
 
         return modules;
     }
