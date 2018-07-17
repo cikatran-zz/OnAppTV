@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <item name="tabbar_title" type="id"></item>
+    <item name="tabbar_image" type="id"></item>
+    <item name="tabbar_badge" type="id" />
+    <item name="tabbar_item" type="id" />
+</resources>

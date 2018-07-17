@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <SeekBar
+        android:id="@+id/wifi_connect_change_alpha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STB‘s Wifi connection"
+        android:textSize="17dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="5dp"
+        android:textColor="@color/colorGrayText"
+        android:id="@+id/wifi_connect_topic" />
+
+    <Button
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:id="@+id/wifi_connect_close"
+        android:background="@drawable/start_wifi_connect_close"
+        android:layout_marginVertical="4dp"
+        android:layout_marginRight="18dp"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select your Wifi connection mode"
+        android:textSize="17dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="222dp"
+        android:textColor="@color/selfColorRed"
+        android:id="@+id/wifi_connect_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Does your Wifi router have a WPS key ?"
+        android:textSize="13dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="252dp"
+        android:textColor="@color/colorBlackText"
+        android:id="@+id/wifi_connect_subtitle" />
+
+    <Button
+        android:layout_width="223dp"
+        android:layout_height="32dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/colored_button"
+        android:gravity="center"
+        android:text="Install with WPS mode"
+        android:textColor="@color/colorWhite"
+        android:textSize="17dp"
+        android:layout_marginVertical="409dp"
+        android:id="@+id/wifi_connect_wps" />
+
+    <Button
+        android:layout_width="223dp"
+        android:layout_height="32dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/clear_button_black"
+        android:gravity="center"
+        android:text="Install in manual mode"
+        android:textColor="@color/colorDark"
+        android:textSize="17dp"
+        android:layout_marginVertical="459dp"
+        android:id="@+id/wifi_connect_manual" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Press here for more details"
+        android:textColor="@color/selfColorRed"
+        android:textSize="13dp"
+        android:layout_marginVertical="496dp"
+        android:id="@+id/wifi_connect_details"
+        android:background="@color/colorClear" />
+
+    <Button
+        android:layout_width="62dp"
+        android:layout_height="42dp"
+        android:id="@+id/wifi_connect_wps_button"
+        android:background="@drawable/start_wifi_connect_wps"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="27dp"
+        android:layout_marginRight="32dp" />
+</RelativeLayout>
