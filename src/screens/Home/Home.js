@@ -23,6 +23,12 @@ import {
     DeviceEventEmitter,
     ActivityIndicator, NativeEventEmitter
 } from 'react-native';
+
+const {
+    CachedImage,
+    ImageCacheProvider,
+    ImageCacheManager,
+} = require('react-native-cached-image');
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'
 import BlurView from '../../components/BlurView'
@@ -39,18 +45,19 @@ import {DotsLoader} from "react-native-indicator";
 import {getImageFromArray} from "../../utils/images";
 import moment from 'moment';
 
-const { RNConnectionViewModule } = NativeModules;
+const {RNConnectionViewModule} = NativeModules;
 const connectionViewEmitter = new NativeEventEmitter(RNConnectionViewModule);
 
 
 export default class Home extends Component {
     _livePage = 1;
     _vodPage = 1;
+
     constructor(props) {
         super(props);
         this.alertVC = null;
 
-        this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event)=> {
+        this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event) => {
             this.fetchData();
             this.props.setStatusConnected();
         });
@@ -85,8 +92,12 @@ export default class Home extends Component {
                         true,
                         true, // Use true at isFromBanner because similar behavior
                         true,
-                        () => { console.log("onDismiss") },
-                        () => { console.log("onDetail") });
+                        () => {
+                            console.log("onDismiss")
+                        },
+                        () => {
+                            console.log("onDetail")
+                        });
             }
             else {
                 navigation.navigate('VideoControlModal', {
@@ -163,9 +174,11 @@ export default class Home extends Component {
             imageUrl = item.image;
         }
         return (
-            <TouchableOpacity style={{padding: 0}} onPress={() => this._onChannelPress(item)} disabled={this.props.epgZap.disableTouch == null ? false : this.props.epgZap.disableTouch}>
+            <TouchableOpacity style={{padding: 0}} onPress={() => this._onChannelPress(item)}
+                              disabled={this.props.epgZap.disableTouch == null ? false : this.props.epgZap.disableTouch}>
                 <View style={styles.itemContainer}>
                     <Image
+                        removeClippedSubviews={true}
                         style={styles.itemImage}
                         resizeMode={'cover'}
                         source={{uri: imageUrl}}/>
@@ -201,15 +214,22 @@ export default class Home extends Component {
             data = [null];
         }
         return (
-            <FlatList
-                style={styles.listHorizontal}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={this._renderChannelListItemSeparator}
-                data={data}
-                keyExtractor={this._keyExtractor}
-                extraData={[this.state, this.props]}
-                renderItem={this._renderChannelListItem}/>
+            <ImageCacheProvider
+                urlsToPreload={data}
+                onPreloadComplete={() => console.log('done')}
+            >
+                <FlatList
+                    style={styles.listHorizontal}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    ItemSeparatorComponent={this._renderChannelListItemSeparator}
+                    data={data}
+                    keyExtractor={this._keyExtractor}
+                    extraData={[this.state, this.props]}
+                    renderItem={this._renderChannelListItem}
+                />
+            </ImageCacheProvider>
+
         )
     };
 
@@ -224,11 +244,13 @@ export default class Home extends Component {
             <TouchableOpacity onPress={() => this._onBannerPress(item, false)}>
                 <View style={styles.slotMachineContainer}>
                     <ImageBackground
+                        removeClippedSubviews={true}
                         style={styles.slotMachineImage}
                         source={{uri: getImageFromArray(item.originalImages, 'portrait', 'landscape')}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
-                            <PinkRoundedLabel text="NEW MOVIE" containerStyle={{alignSelf: 'flex-end', marginBottom: 14}}/>
+                            <PinkRoundedLabel text="NEW MOVIE"
+                                              containerStyle={{alignSelf: 'flex-end', marginBottom: 14}}/>
                             <Text style={styles.bannerTitle}>
                                 {item.title}
                             </Text>
@@ -244,22 +266,22 @@ export default class Home extends Component {
 
     // ADS
     _renderAdsPinkRoundedLabel = (item) => {
-        if (item.data.deal === '') 
+        if (item.data.deal === '')
             return (
                 <View/>
             );
         else {
             return (<View style={styles.adsLabelContainer}>
-                        <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
-                    </View>)
-        }    
+                <PinkRoundedLabel text={item.data.deal} style={{fontSize: 10, color: colors.whitePrimary}}/>
+            </View>)
+        }
     }
 
     _renderAds = ({item}) => {
         if (item.isFetching) {
             return (
                 <View
-                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <DotsLoader color={colors.textGrey} size={10} betweenSpace={10}/>
                 </View>
             )
@@ -267,21 +289,21 @@ export default class Home extends Component {
         if (item.data === null) {
             return (
                 <View
-                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style={styles.errorMessage}>Can't load image</Text>
                 </View>
             );
         }
 
-        
 
         let url = item.data.url ? item.data.url : 'https://www.hi-global.tv';
         return (
             <TouchableOpacity onPress={() => Linking.openURL(url)} style={{marginBottom: 36}}>
-                <View style={[styles.placeHolder,{bottom: 0}]}>
+                <View style={[styles.placeHolder, {bottom: 0}]}>
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>
                 <ImageBackground
+                    removeClippedSubviews={true}
                     style={styles.adsContainer}
                     source={{uri: getImageFromArray(item.data.originalImages, 'logo', 'landscape')}}>
                     {this._renderAdsPinkRoundedLabel(item)}
@@ -294,7 +316,7 @@ export default class Home extends Component {
         if (item.isFetching) {
             return (
                 <View
-                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
@@ -303,7 +325,7 @@ export default class Home extends Component {
         if (item.data === null) {
             return (
                 <View
-                    style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style={styles.errorMessage}>Can't load image</Text>
                 </View>
             );
@@ -311,14 +333,16 @@ export default class Home extends Component {
 
         let imageUrl = getImageFromArray(item.data.originalImages, 'landscape', 'feature');
         return (
-            <TouchableOpacity onPress={()=> Linking.openURL(item.data.url)}
-                                style={{width: '100%',
-                                        alignSelf: 'center'}}>
+            <TouchableOpacity onPress={() => Linking.openURL(item.data.url)}
+                              style={{
+                                  width: '100%',
+                                  alignSelf: 'center'
+                              }}>
                 <View style={styles.notificationContainer}>
                     <View style={[styles.placeHolder, {borderRadius: 10}]}>
                         <Text style={styles.textPlaceHolder}>On App TV</Text>
                     </View>
-                    <Image style={styles.notificationImage} source={{uri: imageUrl}}/>
+                    <Image removeClippedSubviews={true} style={styles.notificationImage} source={{uri: imageUrl}}/>
                     <Text style={styles.notificationTitle}>{item.data.title}</Text>
                     <Text style={styles.notificationSubTitle}>{item.data.shortDescription}</Text>
                 </View>
@@ -349,8 +373,10 @@ export default class Home extends Component {
         let endDate = (new Date(item.epgsData[0].endTime)).getTime();
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true, false)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer}
+                              onPress={() => this._onVideoPress(item.epgsData[0], true, false)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"}
+                                imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData[0].videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
@@ -387,16 +413,24 @@ export default class Home extends Component {
                 </View>
             )
         }
-        return (<FlatList
-            style={{flex: 1, marginBottom: 24, marginLeft: 7, marginRight: 8}}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            data={item}
-            onEndReachedThreshold={5}
-            ListFooterComponent={this._renderLiveFooter}
-            onEndReached={this._fetchMoreLive}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderOnLiveItem}/>)
+        return (
+            <ImageCacheProvider
+                urlsToPreload={item}
+                onPreloadComplete={() => console.log('done')}
+            >
+                <FlatList
+                    style={{flex: 1, marginBottom: 24, marginLeft: 7, marginRight: 8}}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={item}
+                    onEndReachedThreshold={5}
+                    ListFooterComponent={this._renderLiveFooter}
+                    onEndReached={this._fetchMoreLive}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderOnLiveItem}
+                />
+            </ImageCacheProvider>
+        )
     };
 
     _onVideoPress = (item, isLive, isFromPlaylist) => {
@@ -417,8 +451,12 @@ export default class Home extends Component {
                     false,
                     true,
                     false,
-                    () => { console.log("onDismiss") },
-                    () => { console.log("onDetail") });
+                    () => {
+                        console.log("onDismiss")
+                    },
+                    () => {
+                        console.log("onDetail")
+                    });
         }
         else {
             navigation.navigate('VideoControlModal', {
@@ -447,8 +485,10 @@ export default class Home extends Component {
         }
 
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false, false)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer}
+                              onPress={() => this._onVideoPress(item, false, false)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false}
+                                imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>)
@@ -458,7 +498,7 @@ export default class Home extends Component {
         if (vod.isFetching) {
             return (
                 <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    style={{height: 74, width: 100, justifyContent: 'center', alignItems: 'center'}}>
                     <ActivityIndicator size={"small"} color={colors.textGrey}/>
                 </View>
             )
@@ -472,7 +512,7 @@ export default class Home extends Component {
         if (live.isFetching) {
             return (
                 <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
+                    style={{height: 74, width: 100, justifyContent: 'center', alignItems: 'center'}}>
                     <ActivityIndicator size={"small"} color={colors.textGrey}/>
                 </View>
             )
@@ -491,16 +531,22 @@ export default class Home extends Component {
             )
         }
         return (
-            <FlatList
-                style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                data={item}
-                onEndReachedThreshold={0.5}
-                ListFooterComponent={this._renderVODFooter}
-                onEndReached={this._fetchMoreVOD}
-                keyExtractor={this._keyExtractor}
-                renderItem={this._renderVODItem}/>
+            <ImageCacheProvider
+                urlsToPreload={item}
+                onPreloadComplete={() => console.log('done')}
+            >
+                <FlatList
+                    style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={item}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={this._renderVODFooter}
+                    onEndReached={this._fetchMoreVOD}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderVODItem}
+                />
+            </ImageCacheProvider>
         )
     }
 
@@ -513,23 +559,34 @@ export default class Home extends Component {
             )
         }
         return (
-            <FlatList
-                style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                data={item}
-                onEndReachedThreshold={0.5}
-                keyExtractor={this._keyExtractor}
-                renderItem={this._renderPlaylistItem}/>
+            <ImageCacheProvider
+                urlsToPreload={item}
+                onPreloadComplete={() => console.log('done')}
+            >
+                <FlatList
+
+                    style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={item}
+                    extraData={this.state}
+                    onEndReachedThreshold={0.5}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderPlaylistItem}
+                />
+            </ImageCacheProvider>
         )
     }
 
     _renderPlaylistItem = ({item}) => {
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, item.isLiveList, true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer}
+                              onPress={() => this._onVideoPress(item, item.isLiveList, true)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false}
+                                imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
-                <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{item.genres ? getGenresData(item, 3) : "N/A"}</Text>
+                <Text numberOfLines={1}
+                      style={styles.textLiveVideoInfo}>{item.genres ? getGenresData(item, 3) : "N/A"}</Text>
             </TouchableOpacity>)
     };
 
@@ -542,9 +599,9 @@ export default class Home extends Component {
 
     _navigateToCategory = (cate) => {
         const {navigation, category} = this.props;
-        console.log("Home_cat",category);
+        console.log("Home_cat", category);
         let favoriteData = _.slice(category.favorite, 0, category.favorite.length - 1);
-        console.log("Home_dat",favoriteData);
+        console.log("Home_dat", favoriteData);
         navigation.navigate('Category', {data: favoriteData, fromItem: cate});
     };
 
@@ -585,7 +642,8 @@ export default class Home extends Component {
                 showsHorizontalScrollIndicator={false}
                 data={item}
                 keyExtractor={this._keyExtractor}
-                renderItem={this._renderCategoryItem}/>
+                renderItem={this._renderCategoryItem}
+            />
         )
     };
 
@@ -640,7 +698,8 @@ export default class Home extends Component {
         let progress = lastPosition / videoLength * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onResumePress(item)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"}
+                                imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>
@@ -654,16 +713,20 @@ export default class Home extends Component {
         if (item == null || item[0] == null) {
             return null;
         }
-
         return (
-            <FlatList
-                style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                data={item}
-                extraData={watchingHistory.data}
-                keyExtractor={this._keyExtractor}
-                renderItem={this._renderResumeVODItem}/>
+            <ImageCacheProvider
+                urlsToPreload={item}
+                onPreloadComplete={() => console.log('done')}
+            >
+                <FlatList
+                    style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={item}
+                    extraData={watchingHistory.data}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderResumeVODItem}/>
+            </ImageCacheProvider>
         )
     };
 
@@ -676,7 +739,12 @@ export default class Home extends Component {
                 playlistData = playlistMap.playlist;
         }
         if (playlistData !== null && playlistData.length > 0) {
-            sections.push({data: [playlistData], title: playlistTitle, showHeader: true, renderItem: this._renderPlaylist});
+            sections.push({
+                data: [playlistData],
+                title: playlistTitle,
+                showHeader: true,
+                renderItem: this._renderPlaylist
+            });
         }
 
     }
@@ -686,24 +754,35 @@ export default class Home extends Component {
         const {banner, live, vod, ads, category, news, watchingHistory, channel} = this.props;
 
 
-
         let bannerData = (banner.data == null) ? null : banner.data;
         let sections = [
             {data: [bannerData], showHeader: false, renderItem: this._renderBanner},
             {data: [channel.favoriteChannels], showHeader: false, renderItem: this._renderChannelList},
-            ];
+        ];
 
         if (live.data != null && live.data.length > 0) {
-            let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0});
+            let epgsDataArray = _.filter(live.data, (item) => {
+                return item.epgsData != null && item.epgsData.length > 0
+            });
             if (epgsDataArray.length > 0)
-                sections.push({data: [epgsDataArray], title: "ON LIVE", showHeader: true, renderItem: this._renderOnLiveList});
+                sections.push({
+                    data: [epgsDataArray],
+                    title: "ON LIVE",
+                    showHeader: true,
+                    renderItem: this._renderOnLiveList
+                });
         }
 
-        sections.push({data: [watchingHistory.data], showHeader: true,title: "RESUME", renderItem: this._renderResumeVODList});
+        sections.push({
+            data: [watchingHistory.data],
+            showHeader: true,
+            title: "RESUME",
+            renderItem: this._renderResumeVODList
+        });
 
         sections.push({data: [ads], showHeader: false, renderItem: this._renderAds});
 
-        sections.push({ data: [category.favorite], showHeader: false, renderItem: this._renderCategoryList});
+        sections.push({data: [category.favorite], showHeader: false, renderItem: this._renderCategoryList});
 
         this._addPlaylistSection("VIDEOS FOR YOU", sections);
         this._addPlaylistSection("SERIES FOR YOU", sections);
@@ -713,11 +792,9 @@ export default class Home extends Component {
         this._addPlaylistSection("POPULAR VIDEOS", sections);
 
 
-
         if (vod.data !== null && vod.data.length > 0) {
             sections.push({data: [vod.data], title: "ON VOD", showHeader: true, renderItem: this._renderVODList});
         }
-
 
 
         sections.push({data: [news], showHeader: false, renderItem: this._renderFooter});
