@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
     <color name="thumbColor">#FFFFFF</color>
     <color name="trackColor">#33FFFFFF</color>
     <color name="mainPinkColor">#FF2D55</color>
     <color name="blackScrub">#111113</color>
+
+    <color name="colorClear">#00000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite07">#11FFFFFF</color>
+    <color name="colorWhite13">#21FFFFFF</color>
+    <color name="colorWhite21">#35FFFFFF</color>
+    <color name="colorWhite25">#3FFFFFFF</color>
+    <color name="colorWhite28">#47FFFFFF</color>
+    <color name="colorWhite45">#72FFFFFF</color>
+    <color name="colorWhite70">#B2FFFFFF</color>
+    <color name="colorWhite78">#C6FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlack09">#16000000</color>
+    <color name="colorBlack13">#21000000</color>
+    <color name="colorBlack20">#33000000</color>
+    <color name="colorBlack70">#B2000000</color>
+    <color name="colorDark">#848484</color>
+    <color name="colorDark25">#3F848484</color>
+    <color name="colorDarkWhite26">#42737373</color>
+    <color name="colorDarkGrey">#747474</color>
+    <color name="colorDarkGrey12">#1E747474</color>
+    <color name="colorDarkGrey26">#42747474</color>
+    <color name="colorDarkGrey42">#6B747474</color>
+    <color name="colorBlackBorderDark">#3F6A6A6A</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="selfColorRed">#FC355B</color>
+    <color name="selfColorRedDark">#C12643</color>
+    <color name="colorTabBg">#DBDBDB</color>
+    <color name="colorGrayText">#777777</color>
+    <color name="colorBlackText">#39393939</color>
+    <color name="colorBlackText57">#91393939</color>
+
+    <color name="digitalColor">#C6cbcbcb</color>
 </resources>

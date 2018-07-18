@@ -7,6 +7,13 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import tv.hi_global.stbapi.Api;
+import tv.hi_global.stbapi.implementation.Api_Implementation;
 
 public class MainActivity extends ReactActivity {
 
@@ -64,8 +71,32 @@ public class MainActivity extends ReactActivity {
 //        } else {
 //            // Permission has already been granted
 //        }
+        Api_Implementation.sharedManager().hIG_setContext(this);
+
+        Api.sharedApi().hIG_ReceiverNotifyEvent((hig_notify_event, s) -> {
+            WritableMap map = Arguments.createMap();
+            map.putInt("data", hig_notify_event.getValue());
+            sendEvent((ReactContext) getBaseContext(),
+                    "statusEvent",
+                    map);
+        });
+
+        Api.sharedApi().hIG_DisconnectAndCallback(s -> {
+            WritableMap map = Arguments.createMap();
+            map.putString("data", s);
+            sendEvent((ReactContext) getBaseContext(),
+                    "disconnectEvent",
+                    map);
+        });
     }
 
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
     /**
      * Returns the name of the main component registered from JavaScript.
      * This is used to schedule rendering of the component.
