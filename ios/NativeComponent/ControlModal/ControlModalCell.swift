@@ -121,10 +121,16 @@ class ControlModalCell: UICollectionViewCell {
         onTVLabelColor = onTVLabel.textColor
         blurImage.clipsToBounds = true
         progressImage.clipsToBounds = true
-        redBar.isHidden = true
         if (UIScreen.main.bounds.height == 812 && UIScreen.main.bounds.width == 375) {
             dismissButtonTop.constant += 20
             infoButtonBottom.constant -= 34
+        }
+        
+        let playState = (data?.playState ?? .notPlayed)
+        if (playState == .currentPlaying || playState == .pause) {
+            redBar.isHidden = false
+        } else {
+            redBar.isHidden = true
         }
     }
     
@@ -144,7 +150,7 @@ extension ControlModalCell {
         if (data?.isLive ?? false) {
             // Show logo channel + red line
             channelImage.isHidden = false
-            redBar.isHidden = false
+            //redBar.isHidden = false
             // Hide orientation button
             orientationButton.isHidden = true
         } else {
@@ -218,7 +224,6 @@ extension ControlModalCell {
         let newWidth = translation.x + progressWidth.constant
         // TODO: - Check more for live video and isPlaying
         if (data?.isLive ?? false) {
-            
         } else {
             let playState = (data?.playState ?? .notPlayed)
             if (newWidth >= 0 && newWidth <= progressView.frame.width &&  (playState == .currentPlaying || playState == .pause)) {
@@ -298,6 +303,7 @@ extension ControlModalCell: ControlModalDataDelegate {
                 // normal color
                 //onTVLabel.textColor = onTVLabelColor
                 self.playbackButton.setImage(UIImage(named: "ic_play_with_border"), for: .normal)
+                redBar.isHidden = true
             } else if (playState == .currentPlaying) {
                 // more dark color
                 //onTVLabel.textColor = onTVDarkerLabelColor
@@ -305,8 +311,9 @@ extension ControlModalCell: ControlModalDataDelegate {
                 if (needUpdateAll) {
                     self.onPlayMedia?()
                 }
+                redBar.isHidden = false
             } else {
-                
+                redBar.isHidden = false
                 //onTVLabel.textColor = onTVDarkerLabelColor
                 playOverButton.isEnabled = false
                 rewindButton.isEnabled = false
