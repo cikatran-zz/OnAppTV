@@ -45,7 +45,7 @@ public class AntenaView extends RelativeLayout implements AntenaButtonDelegate {
 
     private List<AntenaModel> dataSource;
 
-    private String[] titles = {"DiSeqC1.0", "DiSepC 1.1", "LNB Type", "22 Khz", "Transponder"};
+    private String[] titles = {"DiSeqC1.0", "DiSepC 1.1", "LNB Type", "22 kHz", "Transponder"};
     private String[] diSeqC10s = {"None", "LNB1", "LNB2", "LNB3", "LNB4"};
     private String[] diSeqC11s = {"None", "LNB1", "LNB2", "LNB3", "LNB4", "LNB5", "LNB6", "LNB7", "LNB8", "LNB9", "LNB10", "LNB11", "LNB12", "LNB13", "LNB14", "LNB15", "LNB16"};
     private String[] lNBValue = {"OFF", "ON", "AUTO"};
