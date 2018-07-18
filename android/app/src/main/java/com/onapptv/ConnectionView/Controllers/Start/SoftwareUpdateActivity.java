@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.onapptv.ConnectionView.Controllers.BaseActivity;
 import com.onapptv.ConnectionView.Controllers.TabbarActivity;
 import com.onapptv.ConnectionView.Custom.View.Antena.AntenaView;
@@ -26,6 +31,7 @@ import com.onapptv.ConnectionView.Custom.View.Password.PasswordViewDelegate;
 import com.onapptv.ConnectionView.util.DensityUtil;
 import com.onapptv.ConnectionView.util.Request.RequestUtil;
 import com.onapptv.ConnectionView.util.StatusBarUtil;
+import com.onapptv.MainActivity;
 import com.onapptv.R;
 
 import org.json.JSONException;
@@ -43,6 +49,7 @@ import tv.hi_global.stbapi.Api;
 import tv.hi_global.stbapi.Model.ConfigureModel;
 import tv.hi_global.stbapi.handler.Run;
 import tv.hi_global.stbapi.handler.runable.Action;
+import tv.hi_global.stbapi.implementation.Api_Implementation;
 
 public class SoftwareUpdateActivity extends BaseActivity implements PasswordViewDelegate, ConnectViewDelegate {
 
@@ -89,6 +96,32 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
         } else {
             otherDisplay();
         }
+
+        Api_Implementation.sharedManager().hIG_setContext(this);
+
+        Api.sharedApi().hIG_ReceiverNotifyEvent((hig_notify_event, s) -> {
+            WritableMap map = Arguments.createMap();
+            map.putInt("data", hig_notify_event.getValue());
+            sendEvent((ReactContext) getBaseContext(),
+                    "statusEvent",
+                    map);
+        });
+
+        Api.sharedApi().hIG_DisconnectAndCallback(s -> {
+            WritableMap map = Arguments.createMap();
+            map.putString("data", s);
+            sendEvent((ReactContext) getBaseContext(),
+                    "disconnectEvent",
+                    map);
+        });
+    }
+
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 
     void defaultSetting() {
@@ -386,8 +419,8 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
                                     next.setBackgroundDrawable(getResources().getDrawable(R.drawable.colored_button));
                                     next.setVisibility(View.VISIBLE);
                                 } else {
-//                                    intent.setClass(SoftwareUpdateActivity.this, TabbarActivity.class);
-//                                    startActivity(intent);
+                                    intent.setClass(SoftwareUpdateActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }
                             } else {
@@ -402,8 +435,9 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
 
     void nextButtonAction() {
         if (next.getText() == "Skip") {
-//            intent = new Intent(SoftwareUpdateActivity.this, TabbarActivity.class);
-//            startActivity(intent);
+            intent = new Intent(SoftwareUpdateActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
             finish();
         } else {
             setAlphaAnimation(antenaView, 1.0f, 0.0f, (long) (0.5 * 1000));
@@ -471,8 +505,9 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
 
     @Override
     public void setPasswordSuccess() {
-//        intent.setClass(SoftwareUpdateActivity.this, TabbarActivity.class);
-//        startActivity(intent);
+        intent.setClass(SoftwareUpdateActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
         finish();
     }
 

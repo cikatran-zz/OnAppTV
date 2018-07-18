@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.onapptv.ConnectionView.Controllers.TabbarActivity;
+import com.onapptv.MainActivity;
 import com.onapptv.R;
 
 import tv.hi_global.stbapi.Api;
@@ -40,7 +41,7 @@ public class LaunchActivity extends AppCompatActivity {
             intent.putExtra("isFirst", true);
 
         } else {
-            intent.setClass(LaunchActivity.this, TabbarActivity.class);
+            intent.setClass(LaunchActivity.this, MainActivity.class);
         }
         new Handler().postDelayed(new Runnable() {
             @Override

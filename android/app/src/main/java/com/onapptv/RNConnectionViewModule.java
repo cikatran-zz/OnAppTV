@@ -21,6 +21,7 @@ public class RNConnectionViewModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void show() {
-        getCurrentActivity().startActivity(new Intent(getCurrentActivity(), TabbarActivity.class));
+        Intent intent = new Intent(getCurrentActivity(), TabbarActivity.class);
+        getCurrentActivity().startActivity(intent);
     }
 }

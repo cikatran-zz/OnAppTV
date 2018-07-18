@@ -13,6 +13,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import tv.hi_global.stbapi.Api;
+import tv.hi_global.stbapi.implementation.Api_Implementation;
 
 public class MainActivity extends ReactActivity {
 
@@ -70,6 +71,8 @@ public class MainActivity extends ReactActivity {
 //        } else {
 //            // Permission has already been granted
 //        }
+        Api_Implementation.sharedManager().hIG_setContext(this);
+
         Api.sharedApi().hIG_ReceiverNotifyEvent((hig_notify_event, s) -> {
             WritableMap map = Arguments.createMap();
             map.putInt("data", hig_notify_event.getValue());

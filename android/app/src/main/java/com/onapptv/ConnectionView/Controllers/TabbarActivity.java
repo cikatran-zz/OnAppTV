@@ -62,7 +62,7 @@ public class TabbarActivity extends BaseActivity implements ConnectViewDelegate,
     private float mListTouchDownY;
     private int POSITION_CURRENT_STATE = 0; //listView 滑动到顶部还是底部的状态
     private boolean mScrolling;
-
+    private boolean isAdded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,10 +194,10 @@ public class TabbarActivity extends BaseActivity implements ConnectViewDelegate,
     }
 
     void addButtonAction() {
+        isAdded = true;
         Intent intent = new Intent();
         intent.setClass(TabbarActivity.this, WifiConnectActivity.class);
         startActivity(intent);
-        disappearedConnectionView();
     }
 
     private void rotationAnimation(View centerView) {
@@ -304,6 +304,14 @@ public class TabbarActivity extends BaseActivity implements ConnectViewDelegate,
         finish();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isAdded) {
+            finish();
+        }
+    }
+
     /**
      * 加载数据
      *
@@ -358,6 +366,7 @@ public class TabbarActivity extends BaseActivity implements ConnectViewDelegate,
     public void connectSuccess(Boolean isSave) {
         connectView = null;
         if (!isSave) {
+            isAdded = true;
             Intent intent = new Intent();
             intent.setClass(TabbarActivity.this, SoftwareUpdateActivity.class);
             startActivity(intent);

@@ -1,5 +1,6 @@
 package com.onapptv.ConnectionView.Custom.View.Connect;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.onapptv.ConnectionView.Controllers.Start.LaunchActivity;
 import com.onapptv.ConnectionView.Custom.Model.ConnectModel;
 import com.onapptv.ConnectionView.Custom.View.Blur.BlurringView;
 import com.onapptv.ConnectionView.util.DensityUtil;
@@ -99,7 +101,12 @@ public class ConnectView extends RelativeLayout implements ConnectViewSwithchLis
             public void run() {
                 mBlurringView.setBlurRadius(15);
                 mBlurringView.setDownsampleFactor(8);
-                mBlurringView.setOverlayColor(getResources().getColor(R.color.digitalColor));
+                if (((Activity) getContext()).getClass() == LaunchActivity.class) {
+                    mBlurringView.setOverlayColor(getResources().getColor(R.color.colorClear));
+                }
+                else {
+                    mBlurringView.setOverlayColor(getResources().getColor(R.color.digitalColor));
+                }
                 mBlurringView.setRadius(DensityUtil.dip2px(mContext, 13));
                 mBlurringView.setLayoutParams(layoutParams);
                 // Give the blurring view a reference to the blurred view.
