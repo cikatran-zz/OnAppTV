@@ -274,6 +274,8 @@ extension ControlModalCell: ControlModalDataDelegate {
             return
         }
         progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
+        redBarWidth.constant = CGFloat(((data?.redBarProgress ?? 0) - (data?.redBarStartPoint ?? 0)))*self.progressImage.frame.width
+        redBarLeading.constant = CGFloat((data?.redBarStartPoint ?? 0))*self.progressImage.frame.width
         
         // Update label
         if (data?.isLive ?? false) {
@@ -449,6 +451,9 @@ extension ControlModalCell {
                             startTime: self.data!.startTime,
                             duration: Int32(self.data!.durationInSeconds)
                         )
+                        self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
+                        self.data?.redBarProgress = 0
+                        self.data?.updateLiveProgress()
                     }
                 }
             }

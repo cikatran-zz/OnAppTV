@@ -272,6 +272,9 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                                 startTime: self.videosData[self.index.intValue].startTime,
                                 duration: Int32(self.videosData[self.index.intValue].durationInSeconds)
                             )
+                            self.videosData[self.index.intValue].redBarStartPoint = self.videosData[self.index.intValue].currentProgress
+                            self.videosData[self.index.intValue].redBarProgress = 0
+                            self.videosData[self.index.intValue].updateLiveProgress()
                         }
                     }
                 } else {
