@@ -57,10 +57,20 @@ export default class Home extends Component {
         super(props);
         this.alertVC = null;
 
-        this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event) => {
-            this.fetchData();
-            this.props.setStatusConnected();
-        });
+        if (Platform.OS !== 'ios') 
+            DeviceEventEmitter.addListener('RefreshConnection', (event) => {
+                const {isConnect} = event;
+                if (isConnect === true) {
+                    this.fetchData();
+                    this.props.setStatusConnected();
+                }
+            })
+        else {
+            this.subscription = connectionViewEmitter.addListener('RefreshConnection', (event)=> {
+                this.fetchData();
+                this.props.setStatusConnected();
+            });
+        }
         this.state = {};
     };
 

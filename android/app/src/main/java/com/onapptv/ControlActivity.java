@@ -40,6 +40,12 @@ public class ControlActivity extends AppCompatActivity implements FragmentContro
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle oldInstanceState) {
+        super.onSaveInstanceState(oldInstanceState);
+        oldInstanceState.clear();
+    }
+
+    @Override
     public void nextPage() {
         int current = mViewPager.getCurrentItem();
         if (current < (mViewPager.getAdapter().getCount() - 1)) {
