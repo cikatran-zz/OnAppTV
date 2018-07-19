@@ -224,6 +224,16 @@ extension ControlModalCell {
         let newWidth = translation.x + progressWidth.constant
         // TODO: - Check more for live video and isPlaying
         if (data?.isLive ?? false) {
+            let playState = (data?.playState ?? .notPlayed)
+            if (newWidth >= redBarLeading.constant
+                && newWidth <= (redBarLeading.constant + redBarWidth.constant)
+                &&  (playState == .currentPlaying || playState == .pause)) {
+                progressWidth.constant = progressWidth.constant + translation.x
+                let durationInSeconds = data?.durationInSeconds ?? 0
+                let progress = progressWidth.constant / progressView.frame.width
+                let currentTime = Double(progress) * durationInSeconds
+                updateLabelsWith(currentTime)
+            }
         } else {
             let playState = (data?.playState ?? .notPlayed)
             if (newWidth >= 0 && newWidth <= progressView.frame.width &&  (playState == .currentPlaying || playState == .pause)) {
