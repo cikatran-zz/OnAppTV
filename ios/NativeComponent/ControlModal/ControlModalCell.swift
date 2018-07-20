@@ -204,6 +204,16 @@ extension ControlModalCell {
     }
     
     func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
+//        Api.shared().hIG_RecordPvrStop { (isSuccess, error) in
+//            if (isSuccess) {
+//                Api.shared().hIG_PlayPvrStart(withRecordName: TIMESHIFT_FILE_NAME, playPosition: Int32(currentTime), callback: { (isSuccess, error) in
+//                    if (!isSuccess) {
+//                        print(error ?? "")
+//                    }
+//                    callback(isSuccess)
+//                })
+//            }
+//        }
         Api.shared().hIG_PlayPvrStart(withRecordName: TIMESHIFT_FILE_NAME, playPosition: Int32(currentTime), callback: { (isSuccess, error) in
             if (!isSuccess) {
                 print(error ?? "")
@@ -259,7 +269,15 @@ extension ControlModalCell {
     
     public func doneDraggingProgressView() {
         if (data?.isLive ?? false) {
-            
+            let channelDuration = data!.endTime.timeIntervalSince1970 - data!.startTime.timeIntervalSince1970
+            let recordDuration = (getCurrentTime().timeIntervalSince1970 - data!.startTime.timeIntervalSince1970) - (data!.redBarStartPoint * channelDuration)
+            let progress = (progressWidth.constant - redBarLeading.constant) / redBarWidth.constant
+            let currentTime = Double(progress) * recordDuration
+            self.shiftTo(currentTime) { (isSuccess) in
+                if (isSuccess) {
+                    self.data?.currentProgress = currentTime/recordDuration + self.data!.redBarStartPoint
+                }
+            }
         } else {
             let durationInSeconds = data?.durationInSeconds ?? 0
             let progress = progressWidth.constant / progressImage.frame.width
