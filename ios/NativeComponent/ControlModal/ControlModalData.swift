@@ -51,11 +51,13 @@ class ControlModalData {
     // For Live
     public var startTime: Date = getCurrentTime() {
         didSet {
+            // TODO: calculate progress after seeking timeshift
             currentProgress = (getCurrentTime().timeIntervalSince1970-startTime.timeIntervalSince1970)/(endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970)
         }
     }
     public var endTime: Date = getCurrentTime() {
         didSet {
+            // TODO: calculate progress after seeking timeshift
             currentProgress = (getCurrentTime().timeIntervalSince1970-startTime.timeIntervalSince1970)/(endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970)
         }
     }

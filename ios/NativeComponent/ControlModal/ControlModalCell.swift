@@ -204,21 +204,13 @@ extension ControlModalCell {
     }
     
     func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
-//        Api.shared().hIG_RecordPvrStop { (isSuccess, error) in
-//            if (isSuccess) {
-//                Api.shared().hIG_PlayPvrStart(withRecordName: TIMESHIFT_FILE_NAME, playPosition: Int32(currentTime), callback: { (isSuccess, error) in
-//                    if (!isSuccess) {
-//                        print(error ?? "")
-//                    }
-//                    callback(isSuccess)
-//                })
-//            }
-//        }
-        Api.shared().hIG_PlayPvrStart(withRecordName: TIMESHIFT_FILE_NAME, playPosition: Int32(currentTime), callback: { (isSuccess, error) in
-            if (!isSuccess) {
-                print(error ?? "")
-            }
-            callback(isSuccess)
+        Api.shared().hIG_PlayPvrSetPosition(
+            withPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime),
+            callback: { (isSuccess, error) in
+                if (!isSuccess) {
+                    print(error ?? "")
+                }
+                callback(isSuccess)
         })
     }
 }
@@ -275,7 +267,8 @@ extension ControlModalCell {
             let currentTime = Double(progress) * recordDuration
             self.shiftTo(currentTime) { (isSuccess) in
                 if (isSuccess) {
-                    self.data?.currentProgress = currentTime/recordDuration + self.data!.redBarStartPoint
+                    // TODO: calculate progress after seeking timeshift
+//                    self.data?.currentProgress = currentTime/recordDuration + self.data!.redBarStartPoint
                 }
             }
         } else {
