@@ -47,7 +47,7 @@ class VideoThumbnail extends React.PureComponent {
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>
                 <View style={styles.imageContainer} blurRadius={blurRadius}>
-                    <CachedImage style={styles.imageContainer} source={source}/>
+                    <CachedImage style={styles.imageContainer} source={source} activityIndicatorProps={{opacity:0}}/>
                     <View style={[styles.progressView, this._runProgressView()]}/>
                     {console.log(source)}
                     <Text style={styles.textCenter}>{textCenter}</Text>
