@@ -25,9 +25,7 @@ import {
 } from 'react-native';
 
 const {
-    CachedImage,
     ImageCacheProvider,
-    ImageCacheManager,
 } = require('react-native-cached-image');
 import PinkRoundedLabel from '../../components/PinkRoundedLabel';
 import VideoThumbnail from '../../components/VideoThumbnail'

@@ -6,16 +6,6 @@ import {
     CachedImage
 } from 'react-native-cached-image';
 
-import imageCacheHoc from 'react-native-image-cache-hoc';
-
-/**
- * Pass the native <Image> component into imageCacheHoc() to create the advanced image component <CacheableImage>.
- *
- * imageCacheHoc() takes an options object as the second parameter (refer to options section of README.md)
- */
-const CacheableImage = imageCacheHoc(Image, {
-    fileHostWhitelist: ['i.redd.it']
-});
 import {colors, textWhiteDefault} from '../utils/themeConfig'
 
 class VideoThumbnail extends React.PureComponent {
