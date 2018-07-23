@@ -47,6 +47,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     }
     
     public var onFinished: RCTDirectEventBlock = { event in }
+    public var updateConsumedLength: (NSNumber)->Void = { consumed in }
     public var onDone: ()->Void = {}
     
     
@@ -59,7 +60,7 @@ public class BrightcovePlayer: UIView, BCOVPUIPlayerViewDelegate {
     fileprivate var rewindAnimationView: LOTAnimationView = LOTAnimationView(contentsOf: URL(string: "https://www.lottiefiles.com/storage/datafiles/rT1xFybxaeBO4Qf/data.json")! )
     
     fileprivate var filmstrip: [Double: ImageResource] = [Double: ImageResource]()
-    public var lastPosition: Double = 0
+    public var playPosition: NSNumber = 0
     fileprivate var isStopped: Bool = false
     
     // MARK: - Life cycle
@@ -254,7 +255,7 @@ extension BrightcovePlayer {
     fileprivate func continueWatching() {
         
         self.playbackController?.pause()
-        self.playbackController?.seek(to: CMTimeMakeWithSeconds(self.lastPosition, 1) , completionHandler: { isCompleted in
+        self.playbackController?.seek(to: CMTimeMakeWithSeconds(self.playPosition.doubleValue, 1) , completionHandler: { isCompleted in
             self.playbackController?.play()
         })
     }
@@ -266,15 +267,16 @@ extension BrightcovePlayer {
     ///   - currentSeconds: current playhead position in seconds
     private func storeVideoToUserKit() {
         
-        if controlsView.videoDuration - controlsView.currentTime >= 30 {
+        //if controlsView.videoDuration - controlsView.currentTime >= 20 {
             var movieJSON = [String: Any]()
             movieJSON[UserKitKeys.StopPosition.rawValue] = controlsView.currentTime as Any
             movieJSON[UserKitKeys.Id.rawValue] = self.videoId as Any
             let properties: [String: Any] = [ UserKitKeys.ContinueWatching.rawValue: movieJSON as Any]
-            WatchingHistory.sharedInstance.updateWatchingHistory(id: self.videoId ?? "", properties: properties, completion: nil, errorBlock: nil)
-        } else {
-            WatchingHistory.sharedInstance.remove(id: self.videoId ?? "", completion: nil, errorBlock: nil)
-        }
+        updateConsumedLength(NSNumber(value: controlsView.currentTime))
+            //WatchingHistory.sharedInstance.updateWatchingHistory(id: self.videoId ?? "", properties: properties, completion: nil, errorBlock: nil)
+//        } else {
+//            WatchingHistory.sharedInstance.remove(id: self.videoId ?? "", completion: nil, errorBlock: nil)
+//        }
     }
     
     public func stop() {
@@ -298,12 +300,12 @@ extension BrightcovePlayer {
                     }
                     self.playbackController?.setVideos([v] as NSArray)
                     self.controlsView.videoDuration = (v.properties["duration"] as? Double ?? 0) / 1000
-                    WatchingHistory.sharedInstance.getConsumedLength(id: videoId, completion: { (consumedLength) in
-                        if (self.lastPosition == 0) {
-                            self.lastPosition = consumedLength
-                        }
+//                    WatchingHistory.sharedInstance.getConsumedLength(id: videoId, completion: { (consumedLength) in
+//                        if (self.lastPosition == 0) {
+//                            self.lastPosition = consumedLength
+//                        }
                         self.continueWatching()
-                    })
+//                    })
                 } else {
                     print("Error retrieving video: \(error?.localizedDescription ?? "unknown error")")
                 }

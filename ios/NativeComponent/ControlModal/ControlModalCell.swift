@@ -349,6 +349,7 @@ extension ControlModalCell: ControlModalDataDelegate {
 extension ControlModalCell {
     
     @IBAction func dismissButtonTouched(_ sender: UIButton) {
+        self.data?.updateDataToServer()
         onClosePress()
     }
     
@@ -403,6 +404,7 @@ extension ControlModalCell {
     }
     
     @IBAction func infoButtonTouched(_ sender: UIButton) {
+        self.data?.updateDataToServer()
         onDetailPress()
     }
     
@@ -449,21 +451,16 @@ extension ControlModalCell {
             } else if (playState == .notPlayed) {
                 data?.getVideoUrl(callback: { (url) in
                     let contentId = self.data?.contentId ?? ""
-                    var start = CFAbsoluteTimeGetCurrent()
-                    WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
-                        var elapsed = CFAbsoluteTimeGetCurrent() - start
-                        print("PLAY: QUERY TIME: \(elapsed)")
-                        start = CFAbsoluteTimeGetCurrent()
-                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url, metaData: contentId) { (isSuccess, error) in
-                            elapsed = CFAbsoluteTimeGetCurrent() - start
-                            print("PLAY: CALLING FUNCTION TIME: \(elapsed)")
+                    let playPosition = self.data?.playPosition ?? 0
+                    //WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
+                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(playPosition), uRL: url, metaData: contentId) { (isSuccess, error) in
                             if !isSuccess {
                                 print(error ?? "")
                             } else {
                                 self.data?.playState = .currentPlaying
                             }
                         }
-                    });
+                    //});
                     
                 })
             } else {

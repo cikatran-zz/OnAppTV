@@ -71,6 +71,9 @@ class ControlModalData {
                 } else {
                     NotificationCenter.default.removeObserver(self, name: NSNotification.Name("onapp.controlmodal.VODprogress"), object: nil)
                 }
+                if (self.playState != .currentPlaying) {
+                    self.updateDataToServer()
+                }
             }
             DispatchQueue.main.async {
                 if (oldValue != self.playState) {
@@ -85,11 +88,12 @@ class ControlModalData {
                 self.delegate?.progressChanged(controlModalData: self)
             }
             if (!self.isLive) {
-                var movieJSON = [String: Any]()
-                movieJSON[UserKitKeys.StopPosition.rawValue] = currentProgress * self.durationInSeconds
-                movieJSON[UserKitKeys.Id.rawValue] = self.contentId as Any
-                let properties: [String: Any] = [ UserKitKeys.ContinueWatching.rawValue: movieJSON as Any]
-                WatchingHistory.sharedInstance.updateWatchingHistory(id: self.contentId, properties: properties, completion: nil, errorBlock: nil)
+                controller?.updateWatchingHistory(["id": self.contentId, "stop_position": currentProgress * self.durationInSeconds])
+//                var movieJSON = [String: Any]()
+//                movieJSON[UserKitKeys.StopPosition.rawValue] = currentProgress * self.durationInSeconds
+//                movieJSON[UserKitKeys.Id.rawValue] = self.contentId as Any
+//                let properties: [String: Any] = [ UserKitKeys.ContinueWatching.rawValue: movieJSON as Any]
+                //WatchingHistory.sharedInstance.updateWatchingHistory(id: self.contentId, properties: properties, completion: nil, errorBlock: nil)
             }
         }
     }
@@ -99,8 +103,10 @@ class ControlModalData {
     public var isLive = false
     public var contentId = ""
     public var uniqueID = UUID().uuidString
+    public var playPosition: Double = 0
     
     var delegate: ControlModalDataDelegate? = nil
+    weak var controller: ControlModal? = nil
     
     @objc public func handleProgressMessage(_ notification: NSNotification) {
         if let dict = notification.object as? [String: Any], let isSuccess = dict["isSuccess"] as? NSNumber , let currentSeconds = dict["value"] as? NSNumber {
@@ -109,10 +115,16 @@ class ControlModalData {
                 self.currentProgress = currentSeconds.doubleValue/self.durationInSeconds
             } else {
                 DispatchQueue.main.async {
-                    WatchingHistory.sharedInstance.remove(id: self.contentId, completion: nil, errorBlock: nil)
+                    //WatchingHistory.sharedInstance.remove(id: self.contentId, completion: nil, errorBlock: nil)
                     self.delegate?.playReachEnd(controlModalData: self)
                 }
             }
+        }
+    }
+    
+    public func updateDataToServer() {
+        if (!self.isLive) {
+            //WatchingHistory.sharedInstance.sync()
         }
     }
     

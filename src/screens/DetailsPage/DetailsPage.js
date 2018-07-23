@@ -13,7 +13,7 @@ import {
     DeviceEventEmitter,
 } from 'react-native'
 import {
-    CachedImage,
+    CachedImage, ImageCacheProvider,
 } from 'react-native-cached-image';
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'

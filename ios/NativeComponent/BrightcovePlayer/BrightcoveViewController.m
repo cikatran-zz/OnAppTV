@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSString *policyKey;
 @property (strong, nonatomic) NSDictionary *metaData;
 @property (strong, nonatomic) NSNumber *playhead;
+@property RCTUpdateConsumedLength updateBlock;
 @property RCTDoneBlock doneBlock;
 
 @end
@@ -31,7 +32,8 @@
     _brightcovePlayer.policyKey = _policyKey;
     _brightcovePlayer.metaData = _metaData;
     _brightcovePlayer.onDone = _doneBlock;
-    _brightcovePlayer.lastPosition = [_playhead doubleValue];
+    _brightcovePlayer.updateConsumedLength = _updateBlock;
+    _brightcovePlayer.playPosition = _playhead;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -61,7 +63,8 @@
                        policyKey:(NSString *)policyKey
                         metaData:(NSDictionary *)metaData
                         playhead: (NSNumber * __nonnull)playhead
-                          onDone:(RCTDoneBlock)doneCallback{
+                          onDone:(RCTDoneBlock)doneCallback
+          onUpdateConsumedLength:(RCTUpdateConsumedLength)updateConsumedLength{
     
     _videoId = videoId;
     _accountId = accountId;
@@ -69,6 +72,7 @@
     _metaData = metaData;
     _doneBlock = doneCallback;
     _playhead = playhead;
+    _updateBlock = updateConsumedLength;
 }
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification {

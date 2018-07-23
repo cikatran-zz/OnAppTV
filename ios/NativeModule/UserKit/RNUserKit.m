@@ -37,6 +37,16 @@ RCT_EXPORT_METHOD(storeProperty: (NSString *)key
                                             }];
 }
 
+RCT_EXPORT_METHOD(storePropertyDict: (NSDictionary *) dict callback: (RCTResponseSenderBlock)callback) {
+    [[UserKitModule sharedInstance] storePropertyWithProperties:dict
+                                                   successBlock:^(NSDictionary<NSString *,id> * result) {
+                                                       callback(@[[NSNull null], @[result]]);
+                                                    }
+                                                     errorBlock:^(NSString * error) {
+                                                         callback(@[error, [NSNull null]]);
+                                                     }];
+}
+
 RCT_EXPORT_METHOD(getProperty: (NSString *)key
                   callback: (RCTResponseSenderBlock)callback) {
     [[UserKitModule sharedInstance] getPropertyWithKey:key
