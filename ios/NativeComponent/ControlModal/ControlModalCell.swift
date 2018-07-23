@@ -268,8 +268,7 @@ extension ControlModalCell {
             let currentTime = Double(progress) * recordDuration
             self.shiftTo(currentTime) { (isSuccess) in
                 if (isSuccess) {
-                    // TODO: calculate progress after seeking timeshift
-//                    self.data?.currentProgress = currentTime/recordDuration + self.data!.redBarStartPoint
+                    self.data?.timeshiftOffset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
                 }
             }
         } else {

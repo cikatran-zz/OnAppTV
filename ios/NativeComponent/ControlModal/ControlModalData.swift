@@ -97,6 +97,7 @@ class ControlModalData {
     }
     public var redBarStartPoint: Double = 0         // 0.0 - 1.0
     public var redBarProgress: Double = 0           // 0.0 - 1.0
+    public var timeshiftOffset: Double = 0
     
     public var isLive = false
     public var contentId = ""
@@ -164,7 +165,7 @@ class ControlModalData {
     }
     
     @objc func updateLiveProgress() {
-        self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
+        self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970) + timeshiftOffset
         self.redBarProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
     }
     
