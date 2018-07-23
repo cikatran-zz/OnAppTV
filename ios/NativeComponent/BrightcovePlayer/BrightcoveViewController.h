@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 typedef void (^RCTDoneBlock)();
+typedef void (^RCTUpdateConsumedLength)(NSNumber *);
 
 @interface BrightcoveViewController : UIViewController
 
@@ -17,7 +18,8 @@ typedef void (^RCTDoneBlock)();
                        policyKey: (NSString *)policyKey
                         metaData: (NSDictionary *)metaData
                         playhead: (NSNumber *)playhead
-                          onDone: (RCTDoneBlock) doneCallback;
+                          onDone: (RCTDoneBlock) doneCallback
+          onUpdateConsumedLength: (RCTUpdateConsumedLength)updateConsumedLength;
 
 
 @end

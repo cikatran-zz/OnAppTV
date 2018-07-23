@@ -37,7 +37,6 @@ import {getBlurRadius} from '../../utils/blurRadius'
 import {getGenresData} from "../../utils/StringUtils";
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
-import {getChannel, getWatchingHistory} from "../../api";
 import AlertModal from "../../components/AlertModal";
 import {DotsLoader} from "react-native-indicator";
 import {getImageFromArray} from "../../utils/images";
@@ -145,7 +144,7 @@ export default class Home extends Component {
             this.props.getChannel();
             this._livePage = 1;
             this.props.getLive(true, 1, 20);
-            this.props.getWatchingHistory();
+           // this.props.getWatchingHistory();
             // this.props.getList();
             // this.props.getPvrList();
             // this.props.getUsbDirFiles('/C/Downloads/');
@@ -718,7 +717,8 @@ export default class Home extends Component {
     _renderResumeVODList = ({item}) => {
         const {watchingHistory} = this.props;
 
-        if (item == null || item[0] == null) {
+        if (item == null || item[0] == null || !watchingHistory.fetchedMetaData || watchingHistory.error) {
+            console.log("Render watching history", watchingHistory);
             return null;
         }
         return (

@@ -117,6 +117,7 @@
                 }
                 if (isPlayMedia) {
                     [[Api sharedApi] hIG_PlayMediaGetPosition:^(BOOL isSuccess, int value) {
+                        NSLog(@"PLAY POSITION", value);
                         [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.VODprogress" object: @{@"isSuccess": [[NSNumber alloc] initWithBool:isSuccess], @"value": [[NSNumber alloc] initWithInt:value] }];
                         dispatch_semaphore_signal(semaphore);
                     }];

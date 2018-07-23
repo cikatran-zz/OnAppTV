@@ -14,7 +14,7 @@
 RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"DismissBrightcove"];
+    return @[@"DismissBrightcove", @"updateConsumedLength"];
 }
 
 RCT_EXPORT_METHOD(navigateWithVideoId: (NSString *)videoId
@@ -35,6 +35,9 @@ RCT_EXPORT_METHOD(navigateWithVideoId: (NSString *)videoId
                               onDone:^{
                                   [currentWindow.rootViewController dismissViewControllerAnimated:YES completion:NULL];
                                   [self sendEventWithName:@"DismissBrightcove" body:@{@"name": @"DismissBrightcove"}];
+                              }
+              onUpdateConsumedLength:^(NSNumber * consumedLength) {
+                  [self sendEventWithName:@"updateConsumedLength" body:@{@"id": videoId, @"stop_position": consumedLength}];
                               }];
         
         [currentWindow.rootViewController presentViewController:vc animated:YES completion:nil];

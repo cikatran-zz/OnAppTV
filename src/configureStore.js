@@ -26,7 +26,7 @@ const appReducerFilter = createFilter('app', ['data'])
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer', 'categoryReducer', 'liveEpgInZapperReducer', 'playlistReducer', 'videoOneReducer'],
+    blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer', 'categoryReducer', 'liveEpgInZapperReducer', 'playlistReducer', 'videoOneReducer', 'watchingHistoryReducer'],
     stateReconciler: autoMergeLevel2,
     transforms: [appReducerFilter]
 }
@@ -34,8 +34,8 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, app)
 
 if (__DEV__) {
-    // const logger = createLogger({ collapsed: true });
-    // applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware, logger);
+    const logger = createLogger({ collapsed: true });
+    applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware, logger);
 }
 
 const enhancer = compose(
