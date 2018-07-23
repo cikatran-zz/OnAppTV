@@ -13,6 +13,10 @@
 
 RCT_EXPORT_MODULE();
 
+- (NSArray<NSString *> *)supportedEvents {
+    return @[@"updateWatchingHistory"];
+}
+
 RCT_EXPORT_METHOD(remove: (NSString *)contentId callback: (RCTResponseSenderBlock)callback) {
     [[WatchingHistory sharedInstance] removeWithId:contentId completion:^(id _Nonnull result) {
         callback(@[[NSNull null], @"success"]);

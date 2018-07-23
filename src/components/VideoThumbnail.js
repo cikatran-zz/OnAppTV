@@ -49,7 +49,6 @@ class VideoThumbnail extends React.PureComponent {
                 <View style={styles.imageContainer} blurRadius={blurRadius}>
                     <CachedImage style={styles.imageContainer} source={source} activityIndicatorProps={{opacity:0}}/>
                     <View style={[styles.progressView, this._runProgressView()]}/>
-                    {console.log(source)}
                     <Text style={styles.textCenter}>{textCenter}</Text>
                 </View>
                 {this._renderRedlineProgress()}

@@ -54,8 +54,19 @@ class ControlModal: UIView {
     }
     public var items: JSONArr = [] {
         didSet {
-            videosData = items.map{ ControlModalData(json: asJsonObj($0))}
+            videosData = items.map{
+                let modal = ControlModalData(json: asJsonObj($0))
+                modal.controller = self
+                return modal
+            }
+            syncContinueWatching()
             collectionView.reloadData()
+        }
+    }
+    public var continueWatching: JSONArr = [] {
+        didSet {
+            continueWatching.forEach{continueWatchingData[asJsonObj($0)["contentId"] as? String ?? ""] = asJsonObj($0)["stop_position"] as? Double ?? 0}
+            syncContinueWatching()
         }
     }
     
@@ -67,8 +78,10 @@ class ControlModal: UIView {
     public var onBookmark: RCTDirectEventBlock = { event in }
     public var onFavorite: RCTDirectEventBlock = { event in }
     public var onProgress: RCTDirectEventBlock = { event in }
+    public var updateWatchingHistory: RCTDirectEventBlock = { event in }
     // Datasource
     var videosData: [ControlModalData] = []
+    var continueWatchingData: [String: Double] = [:]
     
     // Default UI
     var volumeValue: Float = Float(Api.shared().hIG_GetVolume()) / 100
@@ -84,6 +97,12 @@ class ControlModal: UIView {
         }
         set {
             
+        }
+    }
+    
+    func syncContinueWatching() {
+        for (index, element) in videosData.enumerated() {
+            videosData[index].playPosition = continueWatchingData[element.contentId] as? Double ?? 0
         }
     }
     
@@ -235,21 +254,16 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
     func playMedia() {
         self.videosData[self.index.intValue].getVideoUrl { (url) in
             let contentId = self.videosData[self.index.intValue].contentId
-            var start = CFAbsoluteTimeGetCurrent()
-            WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
-                var elapsed = CFAbsoluteTimeGetCurrent() - start
-                print("PLAY: QUERY TIME: \(elapsed)")
-                start = CFAbsoluteTimeGetCurrent()
-                Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url, metaData: contentId) { (isSuccess, error) in
-                    elapsed = CFAbsoluteTimeGetCurrent() - start
-                    print("PLAY: CALLING FUNCTION TIME: \(elapsed)")
+            let playPosition = self.videosData[self.index.intValue].playPosition
+            //WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
+                Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(playPosition), uRL: url, metaData: contentId) { (isSuccess, error) in
                     if !isSuccess {
                         print(error ?? "")
                     } else {
                         self.videosData[self.index.intValue].playState = .currentPlaying
                     }
                 }
-            });
+            //});
         }
     }
     
@@ -266,9 +280,15 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                             print(error ?? "")
                         } else {
                             self.videosData[self.index.intValue].playState = .currentPlaying
+                            
+                            recordTimeshift(lcn: Int32(self.videosData[self.index.intValue].lcn))
+                            self.videosData[self.index.intValue].redBarStartPoint = self.videosData[self.index.intValue].currentProgress
+                            self.videosData[self.index.intValue].redBarProgress = 0
+                            self.videosData[self.index.intValue].updateLiveProgress()
                         }
                     }
                 } else {
+                    stopRecordTimeshift()
                     currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying

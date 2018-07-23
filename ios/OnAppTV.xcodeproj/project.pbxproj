@@ -179,6 +179,7 @@
 		CC40F05A00924368B7051154 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE0BD7F0BD7346FBAF6ADA1B /* FontAwesome.ttf */; };
 		CE217F2E26D4493C9117281C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B2F42C5B1614A10B2B0B67C /* SimpleLineIcons.ttf */; };
 		E76066255A4942C9AEDF8FBC /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8901BA4A63C1446EA9E2CB35 /* libRNGestureHandler.a */; };
+		F470E41B20F7339600F6B7CE /* TimeshiftHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F470E41A20F7339600F6B7CE /* TimeshiftHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -808,6 +809,7 @@
 		DE0BD7F0BD7346FBAF6ADA1B /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		E14F494B2F28401B887205F0 /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
 		F1ED615A3403825005C24C7B /* Pods-OnAppTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnAppTV.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnAppTV/Pods-OnAppTV.debug.xcconfig"; sourceTree = "<group>"; };
+		F470E41A20F7339600F6B7CE /* TimeshiftHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeshiftHelper.swift; sourceTree = "<group>"; };
 		F73B5AC3F8114036B7B1C791 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		FF185B81A36D43528C9604E9 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1166,6 +1168,7 @@
 				6927DFB920A10FE300FFA275 /* RNControlModalManager.m */,
 				690DB8AD20A1922F0021B634 /* ControlModalData.swift */,
 				690DB8F420A1F0070021B634 /* BrightcoveRequestVideo.swift */,
+				F470E41A20F7339600F6B7CE /* TimeshiftHelper.swift */,
 			);
 			path = ControlModal;
 			sourceTree = "<group>";
@@ -2313,6 +2316,7 @@
 				6993D2E2209177A60032D3DA /* VODPlaybackRecorder.swift in Sources */,
 				697A79EC20DC9E25000FF509 /* RequestsModel.swift in Sources */,
 				6947FA8F20B3B11F0060AD08 /* AntenaModel.swift in Sources */,
+				F470E41B20F7339600F6B7CE /* TimeshiftHelper.swift in Sources */,
 				6947FA7B20B3973D0060AD08 /* PasswordView.swift in Sources */,
 				6927DD35209B56D000FFA275 /* WebViewJavascriptBridge.m in Sources */,
 				6927DFBA20A10FE300FFA275 /* RNControlModalManager.m in Sources */,

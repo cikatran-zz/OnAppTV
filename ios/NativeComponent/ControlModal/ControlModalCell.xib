@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -38,6 +38,8 @@
                 <outlet property="progressView" destination="qWz-tA-wI5" id="so4-sp-xs9"/>
                 <outlet property="progressWidth" destination="lRi-Zm-ez0" id="kih-ec-x4W"/>
                 <outlet property="redBar" destination="gIe-es-xgO" id="IrA-hT-MeF"/>
+                <outlet property="redBarLeading" destination="4z7-SH-4pM" id="eqN-lW-GHU"/>
+                <outlet property="redBarWidth" destination="78N-r7-NDt" id="LYb-uE-p01"/>
                 <outlet property="rewindButton" destination="GaW-cC-VEg" id="nOG-5M-Kmy"/>
                 <outlet property="startTimeLabel" destination="BVK-Uv-ECz" id="qe0-ql-4nM"/>
                 <outlet property="titleLabel" destination="3OZ-gc-2gq" id="0ir-U6-CjI"/>
