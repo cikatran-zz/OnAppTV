@@ -31,7 +31,7 @@ func recordTimeshift(lcn: Int32, startTime: Date, duration: Int32) {
                                 print("Start record \(recordSuccess) \(recordError)")
                                 if (recordSuccess) {
                                     // A delay is required for PlayPvrStart to work
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                         Api.shared().hIG_PlayPvrStart(withRecordName: TIMESHIFT_FILE_NAME, playPosition: 0) { (playSuccess, playError) in
                                             print("Start play \(playSuccess) \(playError)")
                                         }
