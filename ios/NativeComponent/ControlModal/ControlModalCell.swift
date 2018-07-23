@@ -150,7 +150,6 @@ extension ControlModalCell {
         if (data?.isLive ?? false) {
             // Show logo channel + red line
             channelImage.isHidden = false
-            //redBar.isHidden = false
             // Hide orientation button
             orientationButton.isHidden = true
         } else {
@@ -234,9 +233,8 @@ extension ControlModalCell {
     public func changeProgressView(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: progressView)
         let newWidth = translation.x + progressWidth.constant
-        // TODO: - Check more for live video and isPlaying
         if (data?.isLive ?? false) {
-            let SAFE_ZONE_OFFSET: CGFloat = 1   // A workaround to prevent user from seeking to unplayable position of timeshift record
+            let SAFE_ZONE_OFFSET: CGFloat = 1   // A workaround to prevent user from seeking to unplayable position of timeshift record.
             let playState = (data?.playState ?? .notPlayed)
             if (newWidth >= (redBarLeading.constant)
                 && newWidth <= (redBarLeading.constant + redBarWidth.constant - SAFE_ZONE_OFFSET)
