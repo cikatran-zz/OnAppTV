@@ -267,11 +267,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         } else {
                             self.videosData[self.index.intValue].playState = .currentPlaying
                             
-                            recordTimeshift(
-                                lcn: Int32(self.videosData[self.index.intValue].lcn),
-                                startTime: self.videosData[self.index.intValue].startTime,
-                                duration: Int32(self.videosData[self.index.intValue].durationInSeconds)
-                            )
+                            recordTimeshift(lcn: Int32(self.videosData[self.index.intValue].lcn))
                             self.videosData[self.index.intValue].redBarStartPoint = self.videosData[self.index.intValue].currentProgress
                             self.videosData[self.index.intValue].redBarProgress = 0
                             self.videosData[self.index.intValue].updateLiveProgress()

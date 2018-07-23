@@ -10,7 +10,7 @@ import STBAPI
 
 let TIMESHIFT_FILE_NAME = "timeshift"
 
-func recordTimeshift(lcn: Int32, startTime: Date, duration: Int32) {
+func recordTimeshift(lcn: Int32) {
     Api.shared().hIG_RecordPvrStop { (stopSuccess, stopError) in
         print("Stop Record \(stopSuccess) \(stopError)")
         Api.shared().hIG_DeletePvr(withRecordName: TIMESHIFT_FILE_NAME, callback: { (deleteSuccess, deleteError) in

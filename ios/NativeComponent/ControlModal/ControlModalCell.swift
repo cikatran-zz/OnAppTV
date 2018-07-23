@@ -476,11 +476,7 @@ extension ControlModalCell {
                     } else {
                         self.data?.playState = .currentPlaying
                         
-                        recordTimeshift(
-                            lcn: Int32(self.data!.lcn),
-                            startTime: self.data!.startTime,
-                            duration: Int32(self.data!.durationInSeconds)
-                        )
+                        recordTimeshift(lcn: Int32(self.data!.lcn))
                         self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
                         self.data?.redBarProgress = 0
                         self.data?.updateLiveProgress()
