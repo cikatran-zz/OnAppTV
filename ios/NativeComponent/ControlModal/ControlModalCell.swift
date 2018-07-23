@@ -240,7 +240,7 @@ extension ControlModalCell {
                 && newWidth <= (redBarLeading.constant + redBarWidth.constant - SAFE_ZONE_OFFSET)
                 &&  (playState == .currentPlaying || playState == .pause)) {
                 progressWidth.constant = progressWidth.constant + translation.x
-                let durationInSeconds = data?.durationInSeconds ?? 0
+                let durationInSeconds = (data?.endTime.timeIntervalSince1970 ?? 0) - (data?.startTime.timeIntervalSince1970 ?? 0)
                 let progress = progressWidth.constant / progressView.frame.width
                 let currentTime = Double(progress) * durationInSeconds
                 updateLabelsWith(currentTime)
