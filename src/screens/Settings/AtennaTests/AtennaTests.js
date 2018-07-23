@@ -21,11 +21,11 @@ export default class AtennaTests extends React.PureComponent {
         this.state = {
             listConfigure: [
                 {
-                    name: "DiSeqC1.0",
+                    name: "DiSEqC1.0",
                     value: "",
                     key: "diSEqC10"
                 }, {
-                    name: "DiSepC1.1",
+                    name: "DiSEqC1.1",
                     value: "",
                     key: "diSEqC11"
                 },
@@ -34,7 +34,7 @@ export default class AtennaTests extends React.PureComponent {
                     value: ""
                 },
                 {
-                    name: "22 Khz",
+                    name: "22 kHz",
                     value: "",
                     key: "lNBValue"
                 },

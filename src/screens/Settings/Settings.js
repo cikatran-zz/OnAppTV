@@ -23,7 +23,7 @@ export default class Settings extends React.PureComponent {
                 title: "ON TV",
                 list: [
                     {
-                        name: "Audio Language",
+                        name: "Audio language",
                         value: "English",
                         canBeNavigated: true,
                         screen: 'AudioLanguage',
@@ -39,7 +39,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_subtitle_black.png')
                     },
                     {
-                        name: "Video Resolution",
+                        name: "Video resolution",
                         value: "1080P",
                         canBeNavigated: true,
                         screen: 'Resolution',
@@ -47,7 +47,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_resolution.png')
                     },
                     {
-                        name: "Video Format",
+                        name: "Video format",
                         value: "4:3 Letter Box",
                         canBeNavigated: true,
                         screen: 'VideoFormat',
@@ -55,7 +55,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_video_format.png')
                     },
                     {
-                        name: "Parental Control",
+                        name: "Parental control",
                         value: "",
                         canBeNavigated: true,
                         screen: 'ParentalControl',
@@ -151,7 +151,7 @@ export default class Settings extends React.PureComponent {
                 title: "ABOUT ON",
                 list: [
                     {
-                        name: "App’s TV Version",
+                        name: "App’s TV version",
                         value: "1.0",
                         canBeNavigated: false,
                         screen: '',
@@ -183,7 +183,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "Serial Number",
+                        name: "Serial number",
                         value: "70550295000010",
                         canBeNavigated: false,
                         screen: '',
@@ -199,7 +199,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "Boot Loader version",
+                        name: "Boot loader version",
                         value: "",
                         canBeNavigated: false,
                         screen: 'BootLoaderVersion',
@@ -223,7 +223,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "Smartcard",
+                        name: "Smartcard number",
                         value: "10056144",
                         canBeNavigated: false,
                         screen: '',
@@ -231,7 +231,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "ACS Library",
+                        name: "ACS library version",
                         value: "5841-6.1.0.9-AS+SC-E80050",
                         canBeNavigated: false,
                         screen: '',
@@ -239,7 +239,7 @@ export default class Settings extends React.PureComponent {
                         icon: require('../../assets/ic_info.png')
                     },
                     {
-                        name: "CAM",
+                        name: "CAMLock value",
                         value: "None",
                         canBeNavigated: false,
                         screen: '',
