@@ -236,9 +236,10 @@ extension ControlModalCell {
         let newWidth = translation.x + progressWidth.constant
         // TODO: - Check more for live video and isPlaying
         if (data?.isLive ?? false) {
+            let SAFE_ZONE_OFFSET: CGFloat = 1   // A workaround to prevent user from seeking to unplayable position of timeshift record
             let playState = (data?.playState ?? .notPlayed)
-            if (newWidth >= redBarLeading.constant
-                && newWidth <= (redBarLeading.constant + redBarWidth.constant)
+            if (newWidth >= (redBarLeading.constant)
+                && newWidth <= (redBarLeading.constant + redBarWidth.constant - SAFE_ZONE_OFFSET)
                 &&  (playState == .currentPlaying || playState == .pause)) {
                 progressWidth.constant = progressWidth.constant + translation.x
                 let durationInSeconds = data?.durationInSeconds ?? 0
