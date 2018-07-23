@@ -316,7 +316,7 @@ public class FragmentControlPage extends Fragment {
                         if (mData != null) {
                             // VOD
                             if (isPlaying == null) {
-                                Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, "", (aBoolean, s) -> {
+                                Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, mData.get("contentId").toString(), (aBoolean, s) -> {
                                             if (mData.get("durationInSeconds") != null)
                                                 mTimer.execute();
                                         }

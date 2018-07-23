@@ -76,7 +76,7 @@ public class MainActivity extends ReactActivity {
         Api.sharedApi().hIG_ReceiverNotifyEvent((hig_notify_event, s) -> {
             WritableMap map = Arguments.createMap();
             map.putInt("data", hig_notify_event.getValue());
-            sendEvent((ReactContext) getBaseContext(),
+            sendEvent(((MainApplication) getApplication()).getReactContext(),
                     "statusEvent",
                     map);
         });
@@ -84,7 +84,7 @@ public class MainActivity extends ReactActivity {
         Api.sharedApi().hIG_DisconnectAndCallback(s -> {
             WritableMap map = Arguments.createMap();
             map.putString("data", s);
-            sendEvent((ReactContext) getBaseContext(),
+            sendEvent(((MainApplication) getApplication()).getReactContext(),
                     "disconnectEvent",
                     map);
         });
