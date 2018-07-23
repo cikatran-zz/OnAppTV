@@ -280,9 +280,15 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                             print(error ?? "")
                         } else {
                             self.videosData[self.index.intValue].playState = .currentPlaying
+                            
+                            recordTimeshift(lcn: Int32(self.videosData[self.index.intValue].lcn))
+                            self.videosData[self.index.intValue].redBarStartPoint = self.videosData[self.index.intValue].currentProgress
+                            self.videosData[self.index.intValue].redBarProgress = 0
+                            self.videosData[self.index.intValue].updateLiveProgress()
                         }
                     }
                 } else {
+                    stopRecordTimeshift()
                     currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying

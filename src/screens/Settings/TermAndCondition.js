@@ -16,62 +16,64 @@ import * as Orientation from "react-native-orientation";
 import {rootViewTopPadding} from "../../utils/rootViewPadding";
 
 const text = "ACCEPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
-    "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the \n" +
-    "related services, hereinafter referred to as “the Services”, you irrevocably agree to be\n" +
+    "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the " +
+    "related services, hereinafter referred to as “the Services”, you irrevocably agree to be" +
     " bound by the Mobile Apps general terms and conditions.\n" +
-    "The French language version of the Mobile Apps general terms and conditions shall \n" +
-    "prevail if there is any discrepancy between this version and versions translated into \n" +
+    "The French language version of the Mobile Apps general terms and conditions shall " +
+    "prevail if there is any discrepancy between this version and versions translated into " +
     "other languages.\n" +
     "ADAPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
-    "ON-MAD reserves the right to adapt the Mobile Apps general terms and conditions, \n" +
-    "the latest valid version of which can be viewed on the website www.ON-MAD.net, at any \n" +
+    "ON-MAD reserves the right to adapt the Mobile Apps general terms and conditions, " +
+    "the latest valid version of which can be viewed on the website www.ON-MAD.net, at any " +
     "time and before use.\n" +
-    "Continuing to use the App after the Mobile Apps general terms and conditions have \n" +
+    "Continuing to use the App after the Mobile Apps general terms and conditions have " +
     "been changed will imply that you have irrevocably accepted the new version.\n" +
-    "You have the option at any time not to start or continue to use the App if you do \n" +
-    "not accept the Mobile Apps general terms and conditions in the version in force \n" +
+    "You have the option at any time not to start or continue to use the App if you do " +
+    "not accept the Mobile Apps general terms and conditions in the version in force " +
     "when it is used.\n" +
     "INTELLECTUAL PROPERTY\n" +
-    "As long as you respect the Mobile Apps general terms and conditions, \n" +
-    "ON-MAD grants you a non-exclusive, non-transferable and revocable licence \n" +
-    "to use the App. ACCEPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
-    "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the \n" +
-    "related services, hereinafter referred to as “the Services”, you irrevocably agree to be\n" +
+    "As long as you respect the Mobile Apps general terms and conditions, " +
+    "ON-MAD grants you a non-exclusive, non-transferable and revocable licence " +
+    "to use the App.\n" +
+    "ACCEPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
+    "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the " +
+    "related services, hereinafter referred to as “the Services”, you irrevocably agree to be" +
     " bound by the Mobile Apps general terms and conditions.\n" +
-    "The French language version of the Mobile Apps general terms and conditions shall \n" +
-    "prevail if there is any discrepancy between this version and versions translated into \n" +
+    "The French language version of the Mobile Apps general terms and conditions shall " +
+    "prevail if there is any discrepancy between this version and versions translated into " +
     "other languages.\n" +
     "ADAPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
-    "ON-MAD reserves the right to adapt the Mobile Apps general terms and conditions, \n" +
-    "the latest valid version of which can be viewed on the website www.ON-MAD.net, at any \n" +
+    "ON-MAD reserves the right to adapt the Mobile Apps general terms and conditions, " +
+    "the latest valid version of which can be viewed on the website www.ON-MAD.net, at any " +
     "time and before use.\n" +
-    "Continuing to use the App after the Mobile Apps general terms and conditions have \n" +
+    "Continuing to use the App after the Mobile Apps general terms and conditions have " +
     "been changed will imply that you have irrevocably accepted the new version.\n" +
-    "You have the option at any time not to start or continue to use the App if you do \n" +
-    "not accept the Mobile Apps general terms and conditions in the version in force \n" +
+    "You have the option at any time not to start or continue to use the App if you do " +
+    "not accept the Mobile Apps general terms and conditions in the version in force " +
     "when it is used.\n" +
     "INTELLECTUAL PROPERTY\n" +
-    "As long as you respect the Mobile Apps general terms and conditions, \n" +
-    "ON-MAD grants you a non-exclusive, non-transferable and revocable licence \n" +
-    "to use the App. ACCEPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
-    "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the \n" +
-    "related services, hereinafter referred to as “the Services”, you irrevocably agree to be\n" +
+    "As long as you respect the Mobile Apps general terms and conditions, " +
+    "ON-MAD grants you a non-exclusive, non-transferable and revocable licence " +
+    "to use the App.\n" +
+    "ACCEPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
+    "By using an ON-MAD application, hereinafter referred to as “the App”, to enjoy the " +
+    "related services, hereinafter referred to as “the Services”, you irrevocably agree to be" +
     " bound by the Mobile Apps general terms and conditions.\n" +
-    "The French language version of the Mobile Apps general terms and conditions shall \n" +
-    "prevail if there is any discrepancy between this version and versions translated into \n" +
+    "The French language version of the Mobile Apps general terms and conditions shall " +
+    "prevail if there is any discrepancy between this version and versions translated into " +
     "other languages.\n" +
     "ADAPTING THE MOBILE APPS GENERAL TERMS AND CONDITIONS\n" +
-    "ON-MAD reserves the right to adapt the Mobile Apps general terms and conditions, \n" +
-    "the latest valid version of which can be viewed on the website www.ON-MAD.net, at any \n" +
+    "ON-MAD reserves the right to adapt the Mobile Apps general terms and conditions, " +
+    "the latest valid version of which can be viewed on the website www.ON-MAD.net, at any " +
     "time and before use.\n" +
-    "Continuing to use the App after the Mobile Apps general terms and conditions have \n" +
+    "Continuing to use the App after the Mobile Apps general terms and conditions have " +
     "been changed will imply that you have irrevocably accepted the new version.\n" +
-    "You have the option at any time not to start or continue to use the App if you do \n" +
-    "not accept the Mobile Apps general terms and conditions in the version in force \n" +
+    "You have the option at any time not to start or continue to use the App if you do " +
+    "not accept the Mobile Apps general terms and conditions in the version in force " +
     "when it is used.\n" +
     "INTELLECTUAL PROPERTY\n" +
-    "As long as you respect the Mobile Apps general terms and conditions, \n" +
-    "ON-MAD grants you a non-exclusive, non-transferable and revocable licence \n" +
+    "As long as you respect the Mobile Apps general terms and conditions, " +
+    "ON-MAD grants you a non-exclusive, non-transferable and revocable licence " +
     "to use the App.\n" +
     "……..\n";
 
