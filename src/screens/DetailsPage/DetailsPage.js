@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import {
     CachedImage,
+    ImageCacheProvider,
 } from 'react-native-cached-image';
 import {colors} from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
