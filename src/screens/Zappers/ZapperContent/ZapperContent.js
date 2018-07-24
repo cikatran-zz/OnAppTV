@@ -53,11 +53,11 @@ export default class ZapperContent extends Component {
             return;
         }
 
-        if (Math.abs(gestureState.dy) < 10) {
-            this.setState({dragging: false})
-            // this.props.onChangedScrollEnabled(true);
-            return;
-        }
+        // if (Math.abs(gestureState.dy) < 10) {
+        //     this.setState({dragging: false})
+        //     // this.props.onChangedScrollEnabled(true);
+        //     return;
+        // }
         this.setState({dragging: true})
         // this.props.onChangedScrollEnabled(false);
         this.setPosition(evt.nativeEvent.pageY);
