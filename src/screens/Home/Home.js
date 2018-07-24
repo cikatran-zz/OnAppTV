@@ -162,6 +162,16 @@ export default class Home extends Component {
         if (item.image != null) {
             imageUrl = item.image;
         }
+        if (item == "MORE") {
+            return (
+                <TouchableOpacity onPress={() => this._navigateToZappers()}>
+                    <View style={[styles.itemContainer, {borderWidth: 1, borderColor: 'rgba(149,152,154,32)'}]}>
+                        <Text style={styles.channelText}>MORE</Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        }
+
         return (
             <TouchableOpacity style={{padding: 0}} onPress={() => this._onChannelPress(item)} disabled={this.props.epgZap.disableTouch == null ? false : this.props.epgZap.disableTouch}>
                 <View style={styles.itemContainer}>
