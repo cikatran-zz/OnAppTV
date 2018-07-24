@@ -43,43 +43,38 @@ export default class ZapperContent extends Component {
     _onPanResponderMove = (evt, gestureState) => {
         if (evt.nativeEvent.pageY < minTop) {
             this.setState({dragging: false})
-            this.props.onChangedScrollEnabled(true);
+            // this.props.onChangedScrollEnabled(true);
             return;
         }
 
         if (evt.nativeEvent.pageY > maxHeight ) {
             this.setState({dragging: false})
-            this.props.onChangedScrollEnabled(true);
+            // this.props.onChangedScrollEnabled(true);
             return;
         }
 
         if (Math.abs(gestureState.dy) < 10) {
             this.setState({dragging: false})
-            this.props.onChangedScrollEnabled(true);
+            // this.props.onChangedScrollEnabled(true);
             return;
         }
         this.setState({dragging: true})
-        this.props.onChangedScrollEnabled(false);
+        // this.props.onChangedScrollEnabled(false);
         this.setPosition(evt.nativeEvent.pageY);
     };
 
-    getCurrentPosition() {
-        return this.currentPosition;
-    }
-
-    setCurrentPosition(position) {
-
+    setCurrentPosition() {
         this.props.getZapperContent(this._timeAtMove.toISOString(true));
     }
 
-    _onStartShouldSetPanResponder = (event) => {
+    _onStartShouldSetPanResponder = (evt) => {
         return true;
     };
 
-    _onPanResponderRelease = (evt, gestureState) => {
+    _onPanResponderRelease = () => {
         this.setState({dragging: false});
-        this.props.onChangedScrollEnabled(true);
-        this.setCurrentPosition(evt.nativeEvent.pageY);
+        // this.props.onChangedScrollEnabled(true);
+        this.setCurrentPosition();
         return true;
     }
 
@@ -154,7 +149,6 @@ export default class ZapperContent extends Component {
     };
 
     _onContentSizeChange = (width, height) => {
-        console.log("Content Size: ", height)
         this.contentHeight = height;
     }
 
@@ -311,7 +305,6 @@ export default class ZapperContent extends Component {
 
     _renderRecordModal = () => {
         const {currentEpg} = this.state;
-        console.log('Current Epg', currentEpg);
         let epgItem = currentEpg;
 
         let iconUrl = '';
