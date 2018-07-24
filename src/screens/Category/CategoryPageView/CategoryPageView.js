@@ -145,43 +145,7 @@ class CategoryPageView extends Component{
             renderItem={this._renderVODItem} />)
     }
 
-    
 
-    _renderVODFooter = () => {
-        const {vod, genresId} = this.props;
-        let vodMap = vod.vodMap.get(genresId);
-        if (!vodMap)
-            return null;
-        if (vodMap.isFetching) {
-            return (
-                <View
-                    style={{height: 50, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
-                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            )
-        } else {
-            return null;
-        }
-    }
-
-    _renderLiveFooter = () => {
-        const {epg, genresId} = this.props;
-        let epgMap = epg.epgMap.get(genresId);
-        if (!epgMap)
-            return null;
-        if (epgMap.isFetching) {
-            return (
-                <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
-                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            )
-        } else {
-            return null;
-        }
-    }
 
     _fetchMoreLive = () => {
         const {genresId, epg} = this.props;
@@ -216,10 +180,8 @@ class CategoryPageView extends Component{
             return null;
         if (epgMap.isFetching || vodMap.isFetching) {
             return (
-                <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
-                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                <View style={{width: '100%', justifyContent:'center', alignItems:'center'}}>
+                    <DotsLoader color={colors.textGrey} size={10} betweenSpace={5}/>
                 </View>
             )
         } else {
