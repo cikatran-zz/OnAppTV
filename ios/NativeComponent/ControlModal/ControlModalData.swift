@@ -175,6 +175,7 @@ class ControlModalData {
     }
     
     @objc func updateLiveProgress() {
+        // TODO: hold currentProgress on Paused.
         self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970) + timeshiftOffset
         self.redBarProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
     }

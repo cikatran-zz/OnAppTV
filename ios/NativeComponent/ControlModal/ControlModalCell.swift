@@ -228,6 +228,10 @@ extension ControlModalCell {
         let translation = sender.translation(in: progressView)
         let newWidth = translation.x + progressWidth.constant
         if (data?.isLive ?? false) {
+            let timeshiftInfo = TimeshiftInfo.sharedInstance
+            if (timeshiftInfo.getModel().lCN != data!.lcn) {
+                return
+            }
             let SAFE_ZONE_OFFSET: CGFloat = 1   // A workaround to prevent user from seeking to unplayable position of timeshift record.
             let playState = (data?.playState ?? .notPlayed)
             if (newWidth >= (redBarLeading.constant)
