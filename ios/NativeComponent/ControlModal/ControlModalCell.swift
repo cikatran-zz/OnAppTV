@@ -203,15 +203,9 @@ extension ControlModalCell {
     }
     
     func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
-        Api.shared().hIG_PlayPvrStart(
-            withRecordName: TIMESHIFT_FILE_NAME,
-            playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime),
-            callback: { (isSuccess, error) in
-                if (!isSuccess) {
-                    print(error ?? "")
-                }
-                callback(isSuccess)
-        })
+        playTimeshift(playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime)) { (isSuccess) in
+            callback(isSuccess)
+        }
     }
 }
 
