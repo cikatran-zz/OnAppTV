@@ -17,9 +17,10 @@ class TimeshiftInfo: NSObject {
     
     private override init() {
         super.init()
-        record.duration = 0
-        record.recordMode = 0
-        record.recordName = TIMESHIFT_FILE_NAME
+        model.duration = 0
+        model.recordMode = 0
+        model.recordName = TIMESHIFT_FILE_NAME
+        clear()
     }
     
     @objc public func getModel() -> RecordModel {
@@ -29,5 +30,10 @@ class TimeshiftInfo: NSObject {
     @objc public func setModel(lcn: Int32, startTime: Date) {
         model.lCN = lcn
         model.startTime = startTime
+    }
+    
+    @objc public func clear() {
+        model.lCN = -1
+        model.startTime = nil
     }
 }

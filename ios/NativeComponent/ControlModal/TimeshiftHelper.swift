@@ -54,3 +54,11 @@ func playTimeshift(playPosition: Int32, callback:@escaping (Bool)-> Void) {
             callback(isSuccess)
     })
 }
+
+func cleanTimeshift() {
+    let timeshiftInfo = TimeshiftInfo.sharedInstance
+    stopRecordTimeshift(callback: { (stopSuccess) in
+        deleteTimeshiftRecord()
+        timeshiftInfo.clear()
+    })
+}
