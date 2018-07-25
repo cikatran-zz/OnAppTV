@@ -10,7 +10,7 @@ import STBAPI
 
 let TIMESHIFT_FILE_NAME = "timeshift"
 
-func recordTimeshift(lcn: Int32, callback:@escaping (Bool)-> Void) {
+func recordTimeshift(model: RecordModel, callback:@escaping (Bool)-> Void) {
     Api.shared().hIG_RecordPvrStop { (stopSuccess, stopError) in
         Api.shared().hIG_DeletePvr(withRecordName: TIMESHIFT_FILE_NAME, callback: { (deleteSuccess, deleteError) in
             Api.shared()?.hIG_GetUSBDisks({ (usbDiskArray) in
@@ -19,13 +19,8 @@ func recordTimeshift(lcn: Int32, callback:@escaping (Bool)-> Void) {
                     let partiton = disk.partitionArr.lastObject as! PartitonModel;
                     Api.shared().hIG_SetPvrPath(withPartition: partiton, callback: { (setPathSuccess, setPathError) in
                         if setPathSuccess == true {
-                            let record = RecordModel()
-                            record.lCN = lcn
-                            record.startTime = Date.init()
-                            record.duration = 0
-                            record.recordMode = 0
-                            record.recordName = TIMESHIFT_FILE_NAME
-                            Api.shared().hIG_RecordPvrStart(withRecordParameter: record, metaData: "", callback: { (recordSuccess, recordError) in
+                            let recordMetaData = "\(model.lCN),\(model.startTime)"
+                            Api.shared().hIG_RecordPvrStart(withRecordParameter: model, metaData: recordMetaData, callback: { (recordSuccess, recordError) in
                                 callback(recordSuccess)
                             })
                         }
@@ -43,10 +38,10 @@ func stopRecordTimeshift(callback:@escaping (Bool)-> Void) {
     }
 }
 
-func deleteTimeshiftRecord(callback:@escaping (Bool)-> Void) {
+func deleteTimeshiftRecord() {
     print("DELETE EXISTING TIMESHIFT RECORD")
     Api.shared().hIG_DeletePvr(withRecordName: TIMESHIFT_FILE_NAME) { (isSuccess, error) in
-        callback(isSuccess)
+        // nothing to do
     }
 }
 
