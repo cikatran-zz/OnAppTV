@@ -6,8 +6,8 @@
 
 import React, {Component} from 'react';
 import {
-    StyleSheet, View, StatusBar, ImageBackground, Text, Animated, ScrollView, Image, Dimensions, FlatList,
-    TouchableOpacity, NativeModules, Platform, InteractionManager, ActivityIndicator, DeviceEventEmitter
+    StyleSheet, View, StatusBar, ImageBackground, Text, Image, Dimensions, FlatList,
+    TouchableOpacity, NativeModules, Platform, InteractionManager,
 } from 'react-native';
 import Orientation from 'react-native-orientation';
 import _ from 'lodash';
@@ -17,6 +17,7 @@ import ChannelModal from "../ChannelModal/ChannelModal";
 import {colors} from "../../../utils/themeConfig";
 import IndicatorModal from "../../../components/IndicatorModal";
 import AlertModal from "../../../components/AlertModal";
+import { DotsLoader } from 'react-native-indicator'
 
 const favoriteImg = require('../../../assets/ic_favorite.png');
 const allImg = require('../../../assets/ic_all.png');
@@ -224,7 +225,7 @@ export default class ZapperChannel extends Component {
                 <ImageBackground style={{flex:1, justifyContent:'center', alignItems:'center'}}
                                  source={imgBackground}
                                  blurRadius={30}>
-                    <ActivityIndicator size="large" color={colors.whitePrimary}/>
+                    <DotsLoader color={colors.whitePrimary} size={10} betweenSpace={5}/>
                 </ImageBackground>
             </View>)
         }

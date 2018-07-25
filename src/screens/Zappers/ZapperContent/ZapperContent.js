@@ -1,7 +1,7 @@
 
 import React, {Component} from 'react';
 import {
-    StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
+    StyleSheet, View, StatusBar, ImageBackground, Animated, PanResponder,
     Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules, Modal, Platform
 } from 'react-native'
 import ZapperCell from '../../../components/ZapperCell';
@@ -11,7 +11,7 @@ import moment from 'moment';
 import { getBlurRadius } from '../../../utils/blurRadius'
 import BlurView from '../../../components/BlurView'
 import { rootViewTopPadding } from '../../../utils/rootViewPadding'
-import IndicatorModal from "../../../components/IndicatorModal";
+import { DotsLoader } from 'react-native-indicator'
 import AlertModal from "../../../components/AlertModal";
 import {getImageFromArray} from '../../../utils/images'
 
@@ -200,7 +200,7 @@ export default class ZapperContent extends Component {
         if ( content.isFetching) {
             return (
                 <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size="large" color={colors.whitePrimary}/>
+                    <DotsLoader color={colors.whitePrimary} size={10} betweenSpace={5}/>
                 </View>
             );
         }
