@@ -288,8 +288,14 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                             }
                         }
                     } else {
-                        self.videosData[self.index.intValue].playState = .notPlayed
-                        // TODO: restore redBar progress.
+                        // Restore redBar progress.
+                        playTimeshift(playPosition: 0) { (playSuccess) in
+                            if (playSuccess) {
+                                self.videosData[self.index.intValue].redBarStartPoint = timeshiftInfo.redBarCheckPoint!
+                                self.videosData[self.index.intValue].updateLiveProgress()
+                                self.videosData[self.index.intValue].playState = .currentPlaying
+                            }
+                        }
                     }
                 } else {
                     // Stop & delete timeshift when played a media.

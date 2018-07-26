@@ -494,13 +494,14 @@ extension ControlModalCell {
                 let timeshiftInfo = TimeshiftInfo.sharedInstance
                 if (Int32(data!.lcn) == timeshiftInfo.getModel().lCN) {
                     Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
-                        if (!resumeSuccess) {
+                        if (resumeSuccess != true) {
                             self.shiftTo(0) { (playSuccess) in
-                                if (playSuccess) {
-                                    self.data?.playState = .currentPlaying
+                                if (!playSuccess) {
+                                    self.data?.playState = .pause
                                 }
                             }
                         }
+                        self.data?.playState = .currentPlaying
                     }
                 } else {
                     Api.shared().hIG_SetZap(withLCN: Int32(self.data?.lcn ?? 0)) { (isSuccess, message) in
@@ -519,16 +520,16 @@ extension ControlModalCell {
                     // start record timeshift
                     let timeshiftInfo = TimeshiftInfo.sharedInstance
                     let channel = Int32(data!.lcn)
-                    let meta = "\(channel),\(self.data!.redBarStartPoint)"
                     
                     timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
-                    recordTimeshift(model: timeshiftInfo.getModel(), metaData: meta) { (recordSuccess) in
+                    recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess) in
                         if (recordSuccess) {
                             // Do nothing.
                         }
                     }
                     self.data?.updateLiveProgress()
                     self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
+                    timeshiftInfo.redBarCheckPoint = data!.redBarStartPoint
                 } else {
                     Api.shared().hIG_PlayPvrPause { (_, _) in
                     }
