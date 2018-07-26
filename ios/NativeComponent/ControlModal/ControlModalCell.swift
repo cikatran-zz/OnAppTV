@@ -493,9 +493,13 @@ extension ControlModalCell {
                 // play timeshift
                 let timeshiftInfo = TimeshiftInfo.sharedInstance
                 if (Int32(data!.lcn) == timeshiftInfo.getModel().lCN) {
-                    shiftTo(0) { (playSuccess) in
-                        if (playSuccess) {
-                            self.data?.playState = .currentPlaying
+                    Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
+                        if (!resumeSuccess) {
+                            self.shiftTo(0) { (playSuccess) in
+                                if (playSuccess) {
+                                    self.data?.playState = .currentPlaying
+                                }
+                            }
                         }
                     }
                 } else {
@@ -511,19 +515,24 @@ extension ControlModalCell {
                     }
                 }
             } else if (playState == .currentPlaying) {
-                // start record timeshift
-                let timeshiftInfo = TimeshiftInfo.sharedInstance
-                let channel = Int32(data!.lcn)
-
-                timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
-                recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess) in
-                    if (recordSuccess) {
-                        // Do nothing.
+                if (redBar.isHidden == true) {
+                    // start record timeshift
+                    let timeshiftInfo = TimeshiftInfo.sharedInstance
+                    let channel = Int32(data!.lcn)
+                    let meta = "\(channel),\(self.data!.redBarStartPoint),\(self.data!.redBarProgress)"
+                    
+                    timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
+                    recordTimeshift(model: timeshiftInfo.getModel(), metaData: meta) { (recordSuccess) in
+                        if (recordSuccess) {
+                            // Do nothing.
+                        }
+                    }
+                    self.data?.updateLiveProgress()
+                    self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
+                } else {
+                    Api.shared().hIG_PlayPvrPause { (_, _) in
                     }
                 }
-                self.data?.updateLiveProgress()
-                self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
-
                 self.data?.playState = .pause
             }
         } else {
