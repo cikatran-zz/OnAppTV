@@ -300,9 +300,11 @@ extension ControlModalCell: ControlModalDataDelegate {
         if (isDragging) {
             return
         }
-        progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
-        redBarWidth.constant = CGFloat(((data?.redBarProgress ?? 0) - (data?.redBarStartPoint ?? 0)))*self.progressImage.frame.width
-        redBarLeading.constant = CGFloat((data?.redBarStartPoint ?? 0))*self.progressImage.frame.width
+        if (data?.playState != .pause) {
+            progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
+        }
+        redBarWidth.constant = CGFloat(((data!.redBarProgress) - (data!.redBarStartPoint)))*self.progressImage.frame.width
+        redBarLeading.constant = CGFloat((data!.redBarStartPoint))*self.progressImage.frame.width
         
         // Update label
         if (data?.isLive ?? false) {

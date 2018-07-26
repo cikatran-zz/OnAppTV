@@ -175,9 +175,9 @@ class ControlModalData {
     }
     
     @objc func updateLiveProgress() {
-        // TODO: hold currentProgress on Paused.
-        self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970) + timeshiftOffset
-        self.redBarProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
+        let newProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
+        self.currentProgress = newProgress + timeshiftOffset
+        self.redBarProgress = newProgress
     }
     
     func getImageFromArr(name: String, arr: JSONArr) -> String {
