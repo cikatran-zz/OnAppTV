@@ -203,6 +203,7 @@ extension ControlModalCell {
     }
     
     func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
+        self.data!.timeshiftOffset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
         playTimeshift(playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime)) { (isSuccess) in
             callback(isSuccess)
         }
@@ -269,7 +270,6 @@ extension ControlModalCell {
             let currentTime = Double(progress) * recordDuration
             self.shiftTo(currentTime) { (isSuccess) in
                 if (isSuccess) {
-                    self.data!.timeshiftOffset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
                     self.data?.playState = .currentPlaying
                 } else {
                     self.data?.playState = .notPlayed
@@ -310,8 +310,8 @@ extension ControlModalCell: ControlModalDataDelegate {
         if (data?.playState != .pause) {
             progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
         }
-        redBarWidth.constant = CGFloat(((data!.redBarProgress) - (data!.redBarStartPoint)))*self.progressImage.frame.width
-        redBarLeading.constant = CGFloat((data!.redBarStartPoint))*self.progressImage.frame.width
+        redBarWidth.constant = CGFloat(((data?.redBarProgress ?? 0) - (data?.redBarStartPoint ?? 0)))*self.progressImage.frame.width
+        redBarLeading.constant = CGFloat((data?.redBarStartPoint ?? 0))*self.progressImage.frame.width
         
         // Update label
         if (data?.isLive ?? false) {
@@ -491,8 +491,10 @@ extension ControlModalCell {
                 // play timeshift
                 let timeshiftInfo = TimeshiftInfo.sharedInstance
                 if (Int32(data!.lcn) == timeshiftInfo.getModel().lCN) {
-                    playTimeshift(playPosition: 0) { (playSuccess) in
-                        self.data?.playState = .currentPlaying
+                    shiftTo(0) { (playSuccess) in
+                        if (playSuccess) {
+                            self.data?.playState = .currentPlaying
+                        }
                     }
                 } else {
                     Api.shared().hIG_SetZap(withLCN: Int32(self.data?.lcn ?? 0)) { (isSuccess, message) in
@@ -508,8 +510,7 @@ extension ControlModalCell {
             } else if (playState == .currentPlaying) {
                 // start record timeshift
                 let timeshiftInfo = TimeshiftInfo.sharedInstance
-                self.data?.playState = .pause
-                let channel = Int32(self.data!.lcn)
+                let channel = Int32(data!.lcn)
 
                 timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
                 recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess) in
@@ -519,7 +520,10 @@ extension ControlModalCell {
                 }
                 self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
                 self.data?.redBarProgress = 0
+                self.data?.timeshiftOffset = 0
                 self.data?.updateLiveProgress()
+
+                self.data?.playState = .pause
             }
         } else {
             // Stop & delete timeshift when played a media.
