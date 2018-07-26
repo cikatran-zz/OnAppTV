@@ -46,10 +46,11 @@ func deleteTimeshiftRecord() {
 }
 
 func playTimeshift(playPosition: Int32, callback:@escaping (Bool)-> Void) {
-    print("PLAYING TIMESHIFT at position: " + String(playPosition))
+    let position = (playPosition < 0) ? 0 : playPosition
+    print("PLAYING TIMESHIFT at position: " + String(position))
     Api.shared().hIG_PlayPvrStart(
         withRecordName: TIMESHIFT_FILE_NAME,
-        playPosition: playPosition,
+        playPosition: position,
         callback: { (isSuccess, error) in
             callback(isSuccess)
     })
