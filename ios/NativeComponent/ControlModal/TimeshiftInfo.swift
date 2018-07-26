@@ -32,6 +32,10 @@ class TimeshiftInfo: NSObject {
         model.startTime = startTime
     }
     
+    @objc public func setChannel(lcn: Int32) {
+        model.lCN = lcn
+    }
+    
     @objc public func clear() {
         model.lCN = -1
         model.startTime = nil
@@ -45,7 +49,7 @@ class TimeshiftInfo: NSObject {
                 let redBarStartPoint: Double = Double(data?[1] ?? "0")!
                 callback(lCN, redBarStartPoint)
             } else {
-                callback(-1, 0, 0)
+                callback(-1, 0)
             }
         }
     }
