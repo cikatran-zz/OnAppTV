@@ -37,14 +37,13 @@ class TimeshiftInfo: NSObject {
         model.startTime = nil
     }
     
-    @objc public func getSavedInfo(callback:@escaping (Int32, Double, Double)-> Void) {
+    @objc public func getSavedInfo(callback:@escaping (Int32, Double)-> Void) {
         Api.shared().hIG_GetPvrInfo(withRecordName: TIMESHIFT_FILE_NAME) { (isSuccess, pvrModel) in
             if (isSuccess) {
                 let data = pvrModel?.metaData.components(separatedBy: ",")
                 let lCN: Int32 = Int32(data?[0] ?? "-1")!
                 let redBarStartPoint: Double = Double(data?[1] ?? "0")!
-                let redBarProgress: Double = Double(data?[2] ?? "0")!
-                callback(lCN, redBarStartPoint, redBarProgress)
+                callback(lCN, redBarStartPoint)
             } else {
                 callback(-1, 0, 0)
             }

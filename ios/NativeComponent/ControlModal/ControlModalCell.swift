@@ -519,7 +519,7 @@ extension ControlModalCell {
                     // start record timeshift
                     let timeshiftInfo = TimeshiftInfo.sharedInstance
                     let channel = Int32(data!.lcn)
-                    let meta = "\(channel),\(self.data!.redBarStartPoint),\(self.data!.redBarProgress)"
+                    let meta = "\(channel),\(self.data!.redBarStartPoint)"
                     
                     timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
                     recordTimeshift(model: timeshiftInfo.getModel(), metaData: meta) { (recordSuccess) in

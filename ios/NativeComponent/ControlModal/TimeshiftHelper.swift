@@ -10,7 +10,7 @@ import STBAPI
 
 let TIMESHIFT_FILE_NAME = "timeshift"
 
-func recordTimeshift(model: RecordModel, callback:@escaping (Bool)-> Void) {
+func recordTimeshift(model: RecordModel, metaData: String, callback:@escaping (Bool)-> Void) {
     Api.shared().hIG_RecordPvrStop { (stopSuccess, stopError) in
         Api.shared().hIG_DeletePvr(withRecordName: TIMESHIFT_FILE_NAME, callback: { (deleteSuccess, deleteError) in
             Api.shared()?.hIG_GetUSBDisks({ (usbDiskArray) in
@@ -19,8 +19,7 @@ func recordTimeshift(model: RecordModel, callback:@escaping (Bool)-> Void) {
                     let partiton = disk.partitionArr.lastObject as! PartitonModel;
                     Api.shared().hIG_SetPvrPath(withPartition: partiton, callback: { (setPathSuccess, setPathError) in
                         if setPathSuccess == true {
-                            let recordMetaData = "\(model.lCN),\(model.startTime)"
-                            Api.shared().hIG_RecordPvrStart(withRecordParameter: model, metaData: recordMetaData, callback: { (recordSuccess, recordError) in
+                            Api.shared().hIG_RecordPvrStart(withRecordParameter: model, metaData: metaData, callback: { (recordSuccess, recordError) in
                                 callback(recordSuccess)
                             })
                         }
