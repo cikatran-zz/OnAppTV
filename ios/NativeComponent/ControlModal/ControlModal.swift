@@ -288,11 +288,11 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                             }
                         }
                     } else {
-                        // Restore redBar progress.
+                        // Restore redBar progress. Need more testing.
+                        // FIXME: timeshift not played
+                        self.videosData[self.index.intValue].redBarStartPoint = timeshiftInfo.redBarCheckPoint!
                         playTimeshift(playPosition: 0) { (playSuccess) in
                             if (playSuccess) {
-                                self.videosData[self.index.intValue].redBarStartPoint = timeshiftInfo.redBarCheckPoint!
-                                self.videosData[self.index.intValue].updateLiveProgress()
                                 self.videosData[self.index.intValue].playState = .currentPlaying
                             }
                         }
