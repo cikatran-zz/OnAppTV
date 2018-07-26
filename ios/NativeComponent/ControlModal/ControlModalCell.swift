@@ -493,15 +493,19 @@ extension ControlModalCell {
                 // play timeshift
                 let timeshiftInfo = TimeshiftInfo.sharedInstance
                 if (Int32(data!.lcn) == timeshiftInfo.getModel().lCN) {
-                    Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
-                        if (resumeSuccess != true) {
-                            self.shiftTo(0) { (playSuccess) in
-                                if (!playSuccess) {
-                                    self.data?.playState = .pause
-                                }
+                    if (timeshiftInfo.isPvrPlayed == false) {
+                        self.shiftTo(0) { (playSuccess) in
+                            if (playSuccess) {
+                                self.data?.playState = .currentPlaying
+                                timeshiftInfo.isPvrPlayed = true
                             }
                         }
-                        self.data?.playState = .currentPlaying
+                    } else {
+                        Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
+                            if (resumeSuccess) {
+                                self.data?.playState = .currentPlaying
+                            }
+                        }
                     }
                 } else {
                     Api.shared().hIG_SetZap(withLCN: Int32(self.data?.lcn ?? 0)) { (isSuccess, message) in
@@ -524,7 +528,7 @@ extension ControlModalCell {
                     timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
                     recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess) in
                         if (recordSuccess) {
-                            // Do nothing.
+                            timeshiftInfo.isPvrPlayed = false
                         }
                     }
                     self.data?.updateLiveProgress()
