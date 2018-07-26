@@ -284,6 +284,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                                 self.videosData[self.index.intValue].playState = .currentPlaying
                                 // Stop & delete timeshift after zapped to another channel.
                                 cleanTimeshift()
+                                self.videosData[self.index.intValue].timeshiftOffset = 0
                             }
                         }
                     } else {
@@ -293,6 +294,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                 } else {
                     // Stop & delete timeshift when played a media.
                     cleanTimeshift()
+                    self.videosData[self.index.intValue].timeshiftOffset = 0
                     currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying

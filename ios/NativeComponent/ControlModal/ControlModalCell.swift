@@ -307,11 +307,13 @@ extension ControlModalCell: ControlModalDataDelegate {
         if (isDragging) {
             return
         }
-        if (data?.playState != .pause) {
-            progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
-        }
         redBarWidth.constant = CGFloat(((data?.redBarProgress ?? 0) - (data?.redBarStartPoint ?? 0)))*self.progressImage.frame.width
         redBarLeading.constant = CGFloat((data?.redBarStartPoint ?? 0))*self.progressImage.frame.width
+        if (data?.playState != .pause) {
+            progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
+        } else if (progressWidth.constant < redBarLeading.constant && redBar.isHidden == false) {
+            progressWidth.constant = redBarLeading.constant
+        }
         
         // Update label
         if (data?.isLive ?? false) {
@@ -501,9 +503,10 @@ extension ControlModalCell {
                         if (!isSuccess) {
                             print(message ?? "")
                         } else {
-                            self.data?.playState = .currentPlaying
                             // Stop & delete timeshift after zapped to another channel.
                             cleanTimeshift()
+                            self.data?.timeshiftOffset = 0
+                            self.data?.playState = .currentPlaying
                         }
                     }
                 }
@@ -518,16 +521,15 @@ extension ControlModalCell {
                         // Do nothing.
                     }
                 }
-                self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
-                self.data?.redBarProgress = 0
-                self.data?.timeshiftOffset = 0
                 self.data?.updateLiveProgress()
+                self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
 
                 self.data?.playState = .pause
             }
         } else {
             // Stop & delete timeshift when played a media.
             cleanTimeshift()
+            self.data?.timeshiftOffset = 0
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
                 Api.shared().hIG_PlayMediaResume { (isSuccess, error) in
