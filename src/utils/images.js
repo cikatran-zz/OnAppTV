@@ -1,3 +1,5 @@
+import {PixelRatio} from 'react-native'
+
 export function getImageFromArray(images, firstImageName, secondImageName) {
     if (images == null || images.length == 0) {
         return 'https://i.imgur.com/7eKo6Q7.png'
@@ -31,4 +33,35 @@ export function getImageFromArray(images, firstImageName, secondImageName) {
     }
     //image = (image == null) ? images[0].url : image;
     return image;
+}
+
+export const IMAGE_TYPE = {
+    LOGO: "Logo",
+    PORTRAIT: "P",
+    LANDSCAPE: "L"
+}
+
+export const IMAGE_SIZE = {
+    SMALL: "S",
+    MEDIUM: "M",
+    LARGE: "L"
+}
+
+export function getOnAppTVImage(thumbnail, type, size) {
+    let sizeScale = '1x';
+    switch (PixelRatio.get()) {
+        case 2:
+            sizeScale = '1x'
+            break;
+        case 3:
+            sizeScale = '2x'
+            break;
+        case 3.5:
+            sizeScale = '3x'
+            break;
+        default:
+            sizeScale = '1x'
+            break;
+    }
+    return thumbnail[`${type}_${size}_${sizeScale}`][`url`];
 }

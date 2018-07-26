@@ -20,18 +20,7 @@ query queryChannel($serviceIDs: [Float]!){
         shortDescription
         createdAt
         updatedAt
-        originalImages {
-          height
-          width
-          url
-          name
-          fileName
-          scaledImage {
-              height
-              width
-              url
-            }
-        }
+        thumbnails
       }
     }
   }

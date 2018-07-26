@@ -205,7 +205,7 @@ export default class Home extends Component {
         <View style={styles.itemContainerSeparator}/>
     );
 
-    _renderChannelList = ({item}) => {
+     _renderChannelList = ({item}) => {
         let data = item;
         if (_.isEmpty(data)) {
             data = [null];

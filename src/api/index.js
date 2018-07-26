@@ -5,7 +5,7 @@ import {HttpLink} from 'apollo-link-http';
 import {onError} from 'apollo-link-error'
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {NativeModules, Platform} from 'react-native'
-import {getImageFromArray} from '../utils/images'
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from '../utils/images'
 import _ from 'lodash';
 import 'rxjs'
 import {Observable} from 'rxjs/Observable'
@@ -201,7 +201,7 @@ export const getChannel = (limit) => {
             let ids = {}
             let data = response.data.viewer.channelPagination.items;
             for (let i = 0; i < data.length; i++) {
-                images[data[i].serviceId] = getImageFromArray(data[i].originalImages, "logo", "feature");
+                images[data[i].serviceId] = getOnAppTVImage(data[i].thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.SMALL);
                 shortTitles[data[i].serviceId] = data[i].shortDescription;
                 ids[data[i].serviceId] = data[i]._id;
             }
