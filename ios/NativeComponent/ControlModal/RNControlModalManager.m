@@ -16,9 +16,10 @@ RCT_EXPORT_MODULE()
     return [[ControlModal alloc] init];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(index, NSNumber);
-RCT_EXPORT_VIEW_PROPERTY(isLive, BOOL);
-RCT_EXPORT_VIEW_PROPERTY(items, NSArray);
+RCT_EXPORT_VIEW_PROPERTY(index, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(isLive, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(items, NSArray)
+RCT_EXPORT_VIEW_PROPERTY(continueWatching, NSArray)
 RCT_EXPORT_VIEW_PROPERTY(onClose, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onDetail, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onAlert, RCTDirectEventBlock)
@@ -27,5 +28,6 @@ RCT_EXPORT_VIEW_PROPERTY(onIndexChanged, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onBookmark, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFavorite, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onProgress, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(updateWatchingHistory, RCTDirectEventBlock)
 
 @end

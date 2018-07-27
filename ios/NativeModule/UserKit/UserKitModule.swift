@@ -56,6 +56,22 @@ class UserKitModule: NSObject {
         }
     }
     
+    @objc public func storeProperty(properties: [String: Any], successBlock: @escaping ([String: Any]) -> Void, errorBlock: @escaping (String?)->Void) {
+        module.profile.set(properties: properties, successBlock: { (results) in
+            if let resultsDict = results as? [String: Any] {
+                successBlock(resultsDict)
+            } else {
+                errorBlock(asJSONString(["message": "Unknown error"]))
+            }
+        }) { (error) in
+            if let errorM = error as? ErrorModel {
+                errorBlock(errorM.toString())
+            } else {
+                errorBlock(error as? String)
+            }
+        }
+    }
+    
     @objc public func getProperty(key: String, successBlock: @escaping (String?) -> Void, errorBlock: @escaping (String?)->Void) {
         module.profile.getProperty(key, successBlock: { (results) in
             if let resultsDict = results as? [String: Any] {

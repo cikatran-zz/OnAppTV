@@ -2,6 +2,10 @@ import React from 'react'
 import {
     StyleSheet, ImageBackground, View, Text, Image, TouchableOpacity
 } from 'react-native'
+import {
+    CachedImage
+} from 'react-native-cached-image';
+
 import {colors, textWhiteDefault} from '../utils/themeConfig'
 
 class VideoThumbnail extends React.PureComponent {
@@ -42,10 +46,11 @@ class VideoThumbnail extends React.PureComponent {
                 <View style={styles.placeHolder}>
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>
-                <ImageBackground imageStyle={{borderRadius: 3}} style={styles.imageContainer} source={source} blurRadius={blurRadius}>
+                <View style={styles.imageContainer} blurRadius={blurRadius}>
+                    <CachedImage style={styles.imageContainer} source={source} activityIndicatorProps={{opacity:0}}/>
                     <View style={[styles.progressView, this._runProgressView()]}/>
                     <Text style={styles.textCenter}>{textCenter}</Text>
-                </ImageBackground>
+                </View>
                 {this._renderRedlineProgress()}
             </View>
         )

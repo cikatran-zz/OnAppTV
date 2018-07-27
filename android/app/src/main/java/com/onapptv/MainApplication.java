@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;

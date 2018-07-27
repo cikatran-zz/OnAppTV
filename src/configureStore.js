@@ -26,7 +26,7 @@ const appReducerFilter = createFilter('app', ['data'])
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer', 'categoryReducer', 'liveEpgInZapperReducer', 'playlistReducer', 'videoOneReducer'],
+    blacklist: ['nav', 'settingsReducer', 'epgByGenresReducer', 'vodByGenresReducer', 'latestVODByGenresReducer', 'categoryReducer', 'liveEpgInZapperReducer', 'playlistReducer', 'videoOneReducer', 'watchingHistoryReducer'],
     stateReconciler: autoMergeLevel2,
     transforms: [appReducerFilter]
 }

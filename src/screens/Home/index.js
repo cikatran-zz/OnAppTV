@@ -7,7 +7,7 @@ import {getVOD}from '../../actions/getVOD'
 import {getAds} from "../../actions/getAds";
 import {getCategory} from "../../actions/getCategory";
 import {getNews} from "../../actions/getNews";
-import {getWatchingHistory} from "../../actions/getWatchingHistory";
+import {getWatchingHistory} from "../../actions/watchingHistory";
 import {getPlaylist} from '../../actions/getPlaylist'
 import { getLiveEpgInZapper } from '../../actions/getLiveEpgInZapper'
 import { disableTouch} from '../../actions/disableTouch'
@@ -41,7 +41,7 @@ function mapDispatchToProps(dispatch) {
         getAds: () => dispatch(getAds()),
         getCategory: () => dispatch(getCategory()),
         getNews: () => dispatch(getNews()),
-        getWatchingHistory: () => dispatch(getWatchingHistory()),
+        getWatchingHistory: () => dispatch(getWatchingHistory(dispatch)),
         getChannel: () => dispatch(getChannel()),
         getPlaylist: (playlist) => dispatch(getPlaylist(playlist)),
         getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),

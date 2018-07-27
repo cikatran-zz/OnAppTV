@@ -41,6 +41,9 @@ class ControlModalCell: UICollectionViewCell {
     @IBOutlet weak var dismissButtonTop: NSLayoutConstraint!
     @IBOutlet weak var infoButtonBottom: NSLayoutConstraint!
     
+    @IBOutlet weak var redBarWidth: NSLayoutConstraint!
+    @IBOutlet weak var redBarLeading: NSLayoutConstraint!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -118,10 +121,16 @@ class ControlModalCell: UICollectionViewCell {
         onTVLabelColor = onTVLabel.textColor
         blurImage.clipsToBounds = true
         progressImage.clipsToBounds = true
-        redBar.isHidden = true
         if (UIScreen.main.bounds.height == 812 && UIScreen.main.bounds.width == 375) {
             dismissButtonTop.constant += 20
             infoButtonBottom.constant -= 34
+        }
+        
+        let playState = (data?.playState ?? .notPlayed)
+        if (playState == .currentPlaying || playState == .pause) {
+            redBar.isHidden = false
+        } else {
+            redBar.isHidden = true
         }
     }
     
@@ -138,19 +147,18 @@ class ControlModalCell: UICollectionViewCell {
 extension ControlModalCell {
     
     func showHideComponents() {
-        //if (data?.isLive ?? false) {
+        if (data?.isLive ?? false) {
             // Show logo channel + red line
-            //channelImage.isHidden = false
-            //redBar.isHidden = true
+            channelImage.isHidden = false
             // Hide orientation button
-            //orientationButton.isHidden = true
-        //} else {
+            orientationButton.isHidden = true
+        } else {
             // Show orientation button
             orientationButton.isHidden = false
             // Hide logo channel + red line
             channelImage.isHidden = true
             redBar.isHidden = true
-        //}
+        }
     }
     
     func updateLabelsWith(_ newCurrentTime: Double) {
@@ -193,6 +201,18 @@ extension ControlModalCell {
             callback(isSuccess)
         }
     }
+    
+    func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
+        Api.shared().hIG_PlayPvrStart(
+            withRecordName: TIMESHIFT_FILE_NAME,
+            playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime),
+            callback: { (isSuccess, error) in
+                if (!isSuccess) {
+                    print(error ?? "")
+                }
+                callback(isSuccess)
+        })
+    }
 }
 
 // MARK: - Gestures
@@ -213,9 +233,18 @@ extension ControlModalCell {
     public func changeProgressView(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: progressView)
         let newWidth = translation.x + progressWidth.constant
-        // TODO: - Check more for live video and isPlaying
         if (data?.isLive ?? false) {
-            
+            let SAFE_ZONE_OFFSET: CGFloat = 1   // A workaround to prevent user from seeking to unplayable position of timeshift record.
+            let playState = (data?.playState ?? .notPlayed)
+            if (newWidth >= (redBarLeading.constant)
+                && newWidth <= (redBarLeading.constant + redBarWidth.constant - SAFE_ZONE_OFFSET)
+                &&  (playState == .currentPlaying || playState == .pause)) {
+                progressWidth.constant = progressWidth.constant + translation.x
+                let durationInSeconds = (data?.endTime.timeIntervalSince1970 ?? 0) - (data?.startTime.timeIntervalSince1970 ?? 0)
+                let progress = progressWidth.constant / progressView.frame.width
+                let currentTime = Double(progress) * durationInSeconds
+                updateLabelsWith(currentTime)
+            }
         } else {
             let playState = (data?.playState ?? .notPlayed)
             if (newWidth >= 0 && newWidth <= progressView.frame.width &&  (playState == .currentPlaying || playState == .pause)) {
@@ -232,7 +261,15 @@ extension ControlModalCell {
     
     public func doneDraggingProgressView() {
         if (data?.isLive ?? false) {
-            
+            let channelDuration = data!.endTime.timeIntervalSince1970 - data!.startTime.timeIntervalSince1970
+            let recordDuration = (getCurrentTime().timeIntervalSince1970 - data!.startTime.timeIntervalSince1970) - (data!.redBarStartPoint * channelDuration)
+            let progress = (progressWidth.constant - redBarLeading.constant) / redBarWidth.constant
+            let currentTime = Double(progress) * recordDuration
+            self.shiftTo(currentTime) { (isSuccess) in
+                if (isSuccess) {
+                    self.data?.timeshiftOffset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
+                }
+            }
         } else {
             let durationInSeconds = data?.durationInSeconds ?? 0
             let progress = progressWidth.constant / progressImage.frame.width
@@ -266,6 +303,8 @@ extension ControlModalCell: ControlModalDataDelegate {
             return
         }
         progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
+        redBarWidth.constant = CGFloat(((data?.redBarProgress ?? 0) - (data?.redBarStartPoint ?? 0)))*self.progressImage.frame.width
+        redBarLeading.constant = CGFloat((data?.redBarStartPoint ?? 0))*self.progressImage.frame.width
         
         // Update label
         if (data?.isLive ?? false) {
@@ -295,6 +334,7 @@ extension ControlModalCell: ControlModalDataDelegate {
                 // normal color
                 //onTVLabel.textColor = onTVLabelColor
                 self.playbackButton.setImage(UIImage(named: "ic_play_with_border"), for: .normal)
+                redBar.isHidden = true
             } else if (playState == .currentPlaying) {
                 // more dark color
                 //onTVLabel.textColor = onTVDarkerLabelColor
@@ -302,8 +342,9 @@ extension ControlModalCell: ControlModalDataDelegate {
                 if (needUpdateAll) {
                     self.onPlayMedia?()
                 }
+                redBar.isHidden = false
             } else {
-                
+                redBar.isHidden = false
                 //onTVLabel.textColor = onTVDarkerLabelColor
                 playOverButton.isEnabled = false
                 rewindButton.isEnabled = false
@@ -349,6 +390,7 @@ extension ControlModalCell: ControlModalDataDelegate {
 extension ControlModalCell {
     
     @IBAction func dismissButtonTouched(_ sender: UIButton) {
+        self.data?.updateDataToServer()
         onClosePress()
     }
     
@@ -403,6 +445,7 @@ extension ControlModalCell {
     }
     
     @IBAction func infoButtonTouched(_ sender: UIButton) {
+        self.data?.updateDataToServer()
         onDetailPress()
     }
     
@@ -433,10 +476,16 @@ extension ControlModalCell {
                         print(message ?? "")
                     } else {
                         self.data?.playState = .currentPlaying
+                        
+                        recordTimeshift(lcn: Int32(self.data!.lcn))
+                        self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
+                        self.data?.redBarProgress = 0
+                        self.data?.updateLiveProgress()
                     }
                 }
             }
         } else {
+            stopRecordTimeshift()
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
                 Api.shared().hIG_PlayMediaResume { (isSuccess, error) in
@@ -449,21 +498,16 @@ extension ControlModalCell {
             } else if (playState == .notPlayed) {
                 data?.getVideoUrl(callback: { (url) in
                     let contentId = self.data?.contentId ?? ""
-                    var start = CFAbsoluteTimeGetCurrent()
-                    WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
-                        var elapsed = CFAbsoluteTimeGetCurrent() - start
-                        print("PLAY: QUERY TIME: \(elapsed)")
-                        start = CFAbsoluteTimeGetCurrent()
-                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(consumedLength), uRL: url, metaData: contentId) { (isSuccess, error) in
-                            elapsed = CFAbsoluteTimeGetCurrent() - start
-                            print("PLAY: CALLING FUNCTION TIME: \(elapsed)")
+                    let playPosition = self.data?.playPosition ?? 0
+                    //WatchingHistory.sharedInstance.getConsumedLength(id: contentId, completion: { (consumedLength) in
+                        Api.shared().hIG_PlayMediaStart(withPlayPosition: Int32(playPosition), uRL: url, metaData: contentId) { (isSuccess, error) in
                             if !isSuccess {
                                 print(error ?? "")
                             } else {
                                 self.data?.playState = .currentPlaying
                             }
                         }
-                    });
+                    //});
                     
                 })
             } else {

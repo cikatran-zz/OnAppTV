@@ -47,7 +47,7 @@ export default SettingsStack = StackNavigator({
     AudioLanguage: {
         screen: AudioLanguage,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Audio Language", navigation, true)
+            ...defaultNavigationOptions("Audio language", navigation, true)
         })
     },
     Subtitles: {
@@ -65,7 +65,7 @@ export default SettingsStack = StackNavigator({
     VideoFormat: {
         screen: VideoFormat,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Video Format", navigation, true)
+            ...defaultNavigationOptions("Video format", navigation, true)
         })
     },
     Messages: {
@@ -77,13 +77,13 @@ export default SettingsStack = StackNavigator({
     MySubscription: {
         screen: MySubscription,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("My Subscription", navigation, true)
+            ...defaultNavigationOptions("My subscription", navigation, true)
         })
     },
     ParentalControl: {
         screen: ParentalControl,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Parental Control", navigation, true)
+            ...defaultNavigationOptions("Parental control", navigation, true)
         })
     },
     PersonalInformation: {
@@ -113,7 +113,7 @@ export default SettingsStack = StackNavigator({
     SelectOperator: {
         screen: SelectOperator,
         navigationOptions: ({navigation}) => ({
-            ...defaultNavigationOptions("Select Operator", navigation, true)
+            ...defaultNavigationOptions("Select operator", navigation, true)
         })
     },
     TermAndCondition: {

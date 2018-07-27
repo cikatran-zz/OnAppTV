@@ -17,6 +17,7 @@ func goToReactNative() {
         
         let viewController = UIViewController()
         viewController.view = rootView
+        viewController.view.backgroundColor = UIColor(red: 1.0, green: 45.0/255, blue: 85.0/255, alpha: 1.0)
         currentWindow??.rootViewController = viewController
         
     }

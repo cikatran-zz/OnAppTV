@@ -7,6 +7,7 @@ let controlModal = {
         index: PropTypes.number,
         isLive: PropTypes.bool,
         items: PropTypes.array,
+        continueWatching: PropTypes.array,
         onClose: PropTypes.func,
         onDetail: PropTypes.func,
         onAlert: PropTypes.func,
@@ -15,6 +16,7 @@ let controlModal = {
         onBookmark: PropTypes.func,
         onFavorite: PropTypes.func,
         onProgress: PropTypes.func,
+        updateWatchingHistory: PropTypes.func,
         ...ViewPropTypes, // include the default view properties
     },
 };

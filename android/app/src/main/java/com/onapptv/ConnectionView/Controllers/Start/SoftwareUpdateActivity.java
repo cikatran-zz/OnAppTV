@@ -96,32 +96,6 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
         } else {
             otherDisplay();
         }
-
-        Api_Implementation.sharedManager().hIG_setContext(this);
-
-        Api.sharedApi().hIG_ReceiverNotifyEvent((hig_notify_event, s) -> {
-            WritableMap map = Arguments.createMap();
-            map.putInt("data", hig_notify_event.getValue());
-            sendEvent((ReactContext) getBaseContext(),
-                    "statusEvent",
-                    map);
-        });
-
-        Api.sharedApi().hIG_DisconnectAndCallback(s -> {
-            WritableMap map = Arguments.createMap();
-            map.putString("data", s);
-            sendEvent((ReactContext) getBaseContext(),
-                    "disconnectEvent",
-                    map);
-        });
-    }
-
-    private void sendEvent(ReactContext reactContext,
-                           String eventName,
-                           @Nullable WritableMap params) {
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(eventName, params);
     }
 
     void defaultSetting() {
@@ -303,7 +277,7 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
         subTitle.setVisibility(View.INVISIBLE);
 
         topic.setText("Software update");
-        content.setText("The Software of your STB\nis being updated,\nit will take less than 1 minute");
+        content.setText("The software of your STB\nis being updated,\nit will take less than 1 minute");
 
         getSoftware();
     }
@@ -331,8 +305,8 @@ public class SoftwareUpdateActivity extends BaseActivity implements PasswordView
                         Run.onUiAsync(new Action() {
                             @Override
                             public void call() {
-                                topic.setText("Channels list update");
-                                content.setText("The channels list is being\nupdated");
+                                topic.setText("Channel list update");
+                                content.setText("The channel list is being\nupdated");
                             }
                         });
                         getDatabase();

@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.onapptv.ConnectionView.Controllers.Start.SoftwareUpdateActivity;
 import com.onapptv.ConnectionView.Controllers.Start.WifiConnectActivity;
 import com.onapptv.ConnectionView.Custom.Model.TabbarItemModel;
@@ -30,10 +35,13 @@ import com.onapptv.ConnectionView.Custom.View.Connect.ConnectView;
 import com.onapptv.ConnectionView.Custom.View.Connect.ConnectViewDelegate;
 import com.onapptv.ConnectionView.util.StatusBarUtil;
 import com.onapptv.ConnectionView.util.WindowManager;
+import com.onapptv.MainApplication;
 import com.onapptv.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tv.hi_global.stbapi.Api;
 
 
 public class TabbarActivity extends BaseActivity implements ConnectViewDelegate, TabbarViewDelegate {
@@ -308,6 +316,14 @@ public class TabbarActivity extends BaseActivity implements ConnectViewDelegate,
     protected void onResume() {
         super.onResume();
         if (isAdded) {
+            boolean isConnect = false;
+            if (Api.sharedApi().hIG_IsConnect())
+                isConnect = true;
+            WritableMap events = Arguments.createMap();
+            events.putBoolean("isConnect", isConnect);
+            sendEvent(((MainApplication) getApplication()).getReactContext(),
+                    "RefreshConnection",
+                    events);
             finish();
         }
     }
@@ -475,5 +491,13 @@ public class TabbarActivity extends BaseActivity implements ConnectViewDelegate,
         if (rotateAnimation != null && rotateAnimation.hasStarted()) {
             pauseAnimation(centerView);
         }
+    }
+
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 }
