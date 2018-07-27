@@ -63,7 +63,7 @@ export default class MyCategories extends Component {
 
         for (var i = 0; i < keys.length; i++) {
             if (this.state.toggleState[keys[i]]) {
-                favorites.push({name: keys[i], favorite: 1, id: data[i].id, originalImages: data[i].originalImages});
+                favorites.push({name: keys[i], favorite: 1, id: data[i].id, thumbnails: data[i].thumbnails});
             }
         }
         this.props.updateFavorite(favorites);

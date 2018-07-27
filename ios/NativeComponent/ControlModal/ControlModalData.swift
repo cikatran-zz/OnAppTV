@@ -16,6 +16,18 @@ enum PlayState {
     case disconnect
 }
 
+enum IMAGE_TYPE: String {
+    case LOGO = "Logo"
+    case PORTRAIT = "P"
+    case LANDSCAPE = "L"
+}
+
+enum IMAGE_SIZE: String {
+    case SMALL = "S"
+    case MEDIUM = "M"
+    case LARGE = "L"
+}
+
 protocol ControlModalDataDelegate {
     func progressChanged(controlModalData: ControlModalData)
     func playStateChanged(controlModalData: ControlModalData)
@@ -25,7 +37,7 @@ protocol ControlModalDataDelegate {
 class ControlModalData {
     
     struct JSONKeys {
-        static let originalImages = "originalImages"
+        static let thumbnails = "thumbnails"
         static let url = "url"
         static let portrait = "portrait"
         static let logo = "logo"
@@ -122,7 +134,7 @@ class ControlModalData {
             // LIVE
             isLive = true
             
-            self.imageURL = getImageFromArr(name: JSONKeys.portrait, arr: asJsonArr(videoData[JSONKeys.originalImages]))
+            self.imageURL = getOnAppTVImage(thumbnails: asJsonObj(videoData[JSONKeys.thumbnails]) , type: IMAGE_TYPE.PORTRAIT.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
             self.title = (videoData[JSONKeys.title] as? String) ?? ""
             parseGenres(asJsonArr(videoData[JSONKeys.genresData]))
             
@@ -142,14 +154,14 @@ class ControlModalData {
             
             let channelData = asJsonObj(json[JSONKeys.channelData])
             self.lcn = channelData[JSONKeys.lcn] as? Int ?? 0
-            self.logoImage = getImageFromArr(name: JSONKeys.logo, arr: asJsonArr(channelData[JSONKeys.originalImages]))
+            self.logoImage = getOnAppTVImage(thumbnails: asJsonObj(channelData[JSONKeys.thumbnails]), type: IMAGE_TYPE.LOGO.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
             
             
             NotificationCenter.default.addObserver(self, selector: #selector(updateLiveProgress), name: NSNotification.Name("onapp.controlmodal.progressUpdate"), object: nil)
         } else {
             // VOD
             isLive = false
-            self.imageURL = getImageFromArr(name: JSONKeys.portrait, arr: asJsonArr(json[JSONKeys.originalImages]))
+            self.imageURL = getOnAppTVImage(thumbnails: asJsonObj(json[JSONKeys.thumbnails]), type: IMAGE_TYPE.PORTRAIT.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
             self.durationInSeconds = (json[JSONKeys.durationInSeconds] as? Double) ?? 0
             self.title = (json[JSONKeys.title] as? String) ?? ""
             parseGenres(asJsonArr(json[JSONKeys.genresData]))
@@ -165,16 +177,18 @@ class ControlModalData {
         self.currentProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
     }
     
-    func getImageFromArr(name: String, arr: JSONArr) -> String {
-        
-        for i in 0..<arr.count {
-            let image = arr[i]
-            if let imageName = asJsonObj(image)[JSONKeys.name] as? String, imageName == name {
-                return (asJsonObj(image)[JSONKeys.url] as? String) ?? ""
-            }
+    
+    func getOnAppTVImage(thumbnails: JSONObj, type: String, size: String) -> String {
+        let scale = UIScreen.main.scale
+        var sizeScale = "1x"
+        if (scale < 2.0) {
+            sizeScale = "1x"
+        } else if(scale < 3.0) {
+            sizeScale = "2x"
+        } else {
+            sizeScale = "3x"
         }
-        
-        return (asJsonObj(arr.first)[JSONKeys.url] as? String) ?? ""
+        return (asJsonObj(thumbnails["\(type)_\(size)_\(sizeScale)"])["url"] as? String) ?? ""
     }
     
     func parseGenres(_ jsonArr: JSONArr) {

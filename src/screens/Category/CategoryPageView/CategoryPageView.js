@@ -9,7 +9,7 @@ import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
 import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
-import {getImageFromArray} from "../../../utils/images";
+import {getOnAppTVImage, IMAGE_TYPE, IMAGE_SIZE} from "../../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
 
 class CategoryPageView extends Component{
@@ -35,7 +35,7 @@ class CategoryPageView extends Component{
 
                 <View style={styles.slotMachineContainer}>
                 { item.map((it, index)=> {
-                    let image = getImageFromArray(it.originalImages, 'feature', 'landscape');
+                    let image = getOnAppTVImage(it.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
                     return (
                         <TouchableOpacity key={index} onPress={()=>this.props.onVideoPress(it,false)}>
                             <Image
@@ -49,7 +49,7 @@ class CategoryPageView extends Component{
         )
     };
     _renderOnLiveItem = ({item}) => {
-        let image = getImageFromArray(item.videoData.originalImages, 'landscape', null);
+        let image = getOnAppTVImage(item.videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         let genres = '';
         if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
             item.videoData.genresData.forEach((genre, index) => {
@@ -91,7 +91,7 @@ class CategoryPageView extends Component{
         return (
             <TouchableOpacity onPress={()=>this.props.onVideoPress(item,false)}>
                 <View style={styles.vodThumbnailContainer}>
-                    <VideoThumbnail style={styles.vodVideo} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', null)}/>
+                    <VideoThumbnail style={styles.vodVideo} showProgress={false} imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE)}/>
                     <View style={{flexDirection: 'column', marginTop: 0, paddingRight: 14, flex: 1}}>
                         <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
                         <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>

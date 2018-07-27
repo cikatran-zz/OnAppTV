@@ -13,7 +13,7 @@ import BlurView from '../../../components/BlurView'
 import { rootViewTopPadding } from '../../../utils/rootViewPadding'
 import { DotsLoader } from 'react-native-indicator'
 import AlertModal from "../../../components/AlertModal";
-import {getImageFromArray} from '../../../utils/images'
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from '../../../utils/images'
 
 const minTop = 70;
 const {height} = Dimensions.get('window')
@@ -102,7 +102,7 @@ export default class ZapperContent extends Component {
         let image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
         //get first Image
         if (item !== undefined) {
-            image = getImageFromArray(item.videoData.originalImages, "logo", "feature");
+            image = getOnAppTVImage(item.videoData.thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.SMALL);
         }
         return image;
     }
@@ -262,7 +262,7 @@ export default class ZapperContent extends Component {
         "endtime": liveItem.endTime,
         "starttime": liveItem.startTime,
         "title": liveItem.videoData.title,
-        "image": getImageFromArray(liveItem.videoData.originalImages, "logo", "feature"),
+        "image": getOnAppTVImage(liveItem.videoData.thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.SMALL),
         "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
       };
 
@@ -310,7 +310,7 @@ export default class ZapperContent extends Component {
         let iconUrl = '';
         let title = 'No data available';
         if (epgItem !== undefined) {
-            iconUrl = getImageFromArray(epgItem.videoData.originalImages, "landscape", "feature");
+            iconUrl = getOnAppTVImage(epgItem.videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL);
             if (epgItem.videoData && epgItem.videoData.title) {
                 title = epgItem.videoData.title
             }

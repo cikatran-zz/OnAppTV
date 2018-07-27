@@ -20,6 +20,7 @@ import Modal from '../../components/DeleteBookmarModal'
 import {timeFormatter} from '../../utils/timeUtils'
 import {checkInTime} from '../../book-download-util/bookUtils'
 import HeaderLabel from "../../components/HeaderLabel";
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from '../../utils/images'
 
 export default class Bookmark extends React.Component {
     constructor(props) {
@@ -110,7 +111,7 @@ export default class Bookmark extends React.Component {
 
         return (
             <View style={{flexDirection: 'row'}}>
-                <VideoThumbnail style={styles.thumbnailStyle} imageUrl={item.metaData.image} marginHorizontal={17}/>
+                <VideoThumbnail style={styles.thumbnailStyle} imageUrl={getOnAppTVImage(item.metaData.image, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)} marginHorizontal={17}/>
                 <View style={{flexDirection: 'column', marginRight: 60}}>
                     <Text style={styles.itemTitle}>{item.metaData.title}</Text>
                     <Text style={styles.itemType}>{item.metaData.subTitle}</Text>
@@ -127,7 +128,7 @@ export default class Bookmark extends React.Component {
     _renderScheduledItem = ({item}) => {
         return (
             <View style={styles.horizontalItemContainer}>
-                <VideoThumbnail style={styles.scheduledThumbnailStyle} imageUrl={item.metaData.image} marginHorizontal={17}/>
+                <VideoThumbnail style={styles.scheduledThumbnailStyle} imageUrl={getOnAppTVImage(item.metaData.image, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)} marginHorizontal={17}/>
                 <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.textTitle}>{item.metaData.title}</Text>
                 <Text style={styles.textType}>{item.metaData.subTitle}</Text>
                 <Text style={styles.textTime}>{timeFormatter(item.record.startTime)} - {item.metaData.endtime}</Text>
@@ -389,15 +390,3 @@ const styles = StyleSheet.create({
     }
 })
 
-const fakeData = {
-    url: "http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg",
-    videoData: {
-        title: "Test",
-        type: "Documentary",
-        originalImages: [{
-            url: "http://hitwallpaper.com/wp-content/uploads/2013/06/Cartoons-Disney-Company-Simba-The-Lion-King-3d-Fresh-New-Hd-Wallpaper-.jpg"
-        }]
-    }
-}
-
-const fakeList = [fakeData, fakeData, fakeData, fakeData, fakeData]

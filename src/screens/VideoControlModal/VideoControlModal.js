@@ -31,7 +31,7 @@ import moment from 'moment';
 import AlertModal from '../../components/AlertModal'
 const { RNBrightcoveVC } = NativeModules;
 import _ from 'lodash'
-import { getImageFromArray } from '../../utils/images';
+import { getOnAppTVImage, IMAGE_TYPE, IMAGE_SIZE } from '../../utils/images';
 
 const brightcoveVCEmitter = new NativeEventEmitter(RNBrightcoveVC);
 
@@ -421,7 +421,7 @@ export default class VideoControlModal extends React.Component {
             "endtime": liveItem.endTime,
             "starttime": liveItem.startTime,
             "title": liveItem.videoData.title,
-            "image": getImageFromArray(liveItem.videoData.originalImages, "landscape", "feature"),
+            "image": getOnAppTVImage(liveItem.videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE),
             "subTitle": genresData.length > 0 ? genresData[0].name : ""
         };
 
@@ -534,8 +534,8 @@ export default class VideoControlModal extends React.Component {
         const {seriesInfo} = this.props;
 
         let iconUrl = ''
-        if (item.originalImages && item.originalImages.length > 0) {
-            iconUrl = item.originalImages[0].url
+        if (item.thumbnails && !_.isEmpty(item.thumbnails)) {
+            iconUrl = getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)
         }
 
         if (item.type != null && item.type === 'Episode') {

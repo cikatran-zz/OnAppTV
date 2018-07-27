@@ -284,12 +284,12 @@ export const getCategory = () => {
                     let categoriesResults = [];
                     for (let i = 0; i < categories.length; i++) {
                         let name = categories[i].name;
-                        let originalImages = categories[i].originalImages;
+                        let thumbnails = categories[i].thumbnails;
                         categoriesResults.push({
                             id: categories[i]._id,
                             name: name,
                             favorite:  (favoriteCategories[name] == null) ? 0 : favoriteCategories[name],
-                            originalImages: originalImages
+                            thumbnails: thumbnails
                         });
                     }
                     resolve(categoriesResults);

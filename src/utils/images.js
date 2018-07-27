@@ -49,19 +49,12 @@ export const IMAGE_SIZE = {
 
 export function getOnAppTVImage(thumbnail, type, size) {
     let sizeScale = '1x';
-    switch (PixelRatio.get()) {
-        case 2:
-            sizeScale = '1x'
-            break;
-        case 3:
-            sizeScale = '2x'
-            break;
-        case 3.5:
-            sizeScale = '3x'
-            break;
-        default:
-            sizeScale = '1x'
-            break;
+    if (PixelRatio.get() < 2) {
+        sizeScale = '1x'
+    } else if(PixelRatio.get() < 3) {
+        sizeScale = '2x'
+    } else {
+        sizeScale = '3x'
     }
     return thumbnail[`${type}_${size}_${sizeScale}`][`url`];
 }
