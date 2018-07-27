@@ -22,11 +22,7 @@ import { secondFormatter, timeFormatter, timeFormatterNoDate } from '../../utils
 import { rootViewTopPadding } from "../../utils/rootViewPadding";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
-<<<<<<< HEAD
 import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from "../../utils/images";
-=======
-import { getImageFromArray } from "../../utils/images";
->>>>>>> b5c23aee365fc59b7894dc63955e81b9d57d9370
 import { DotsLoader } from 'react-native-indicator'
 import { getGenresData } from '../../utils/StringUtils'
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -649,11 +645,7 @@ export default class DetailsPage extends React.Component {
                         onPress={() => this._onPress(item, null, false)}>
                         <CachedImage
                             style={styles.videoThumbnail}
-<<<<<<< HEAD
                             source={{uri: getOnAppTVImage(videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE)}}/>
-=======
-                            source={{ uri: getImageFromArray(videoData.originalImages, 'landscape', 'feature') }}/>
->>>>>>> b5c23aee365fc59b7894dc63955e81b9d57d9370
                     </TouchableOpacity>
                     <View style={styles.itemInformationContainer}>
                         <Text style={styles.itemTitle}
