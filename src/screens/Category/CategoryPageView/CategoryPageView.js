@@ -9,7 +9,7 @@ import PinkRoundedLabel from '../../../components/PinkRoundedLabel';
 import {secondFormatter, timeFormatter} from "../../../utils/timeUtils";
 import {rootViewTopPadding} from "../../../utils/rootViewPadding";
 import HeaderLabel from "../../../components/HeaderLabel";
-import {getImageFromArray} from "../../../utils/images";
+import {getOnAppTVImage, IMAGE_TYPE, IMAGE_SIZE} from "../../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
 
 class CategoryPageView extends Component{
@@ -35,7 +35,7 @@ class CategoryPageView extends Component{
 
                 <View style={styles.slotMachineContainer}>
                 { item.map((it, index)=> {
-                    let image = getImageFromArray(it.originalImages, 'feature', 'landscape');
+                    let image = getOnAppTVImage(it.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
                     return (
                         <TouchableOpacity key={index} onPress={()=>this.props.onVideoPress(it,false)}>
                             <Image
@@ -49,7 +49,7 @@ class CategoryPageView extends Component{
         )
     };
     _renderOnLiveItem = ({item}) => {
-        let image = getImageFromArray(item.videoData.originalImages, 'landscape', null);
+        let image = getOnAppTVImage(item.videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         let genres = '';
         if (item.videoData.genresData != null && item.videoData.genresData.length > 0) {
             item.videoData.genresData.forEach((genre, index) => {
@@ -91,7 +91,7 @@ class CategoryPageView extends Component{
         return (
             <TouchableOpacity onPress={()=>this.props.onVideoPress(item,false)}>
                 <View style={styles.vodThumbnailContainer}>
-                    <VideoThumbnail style={styles.vodVideo} showProgress={false} imageUrl={getImageFromArray(item.originalImages, 'landscape', null)}/>
+                    <VideoThumbnail style={styles.vodVideo} showProgress={false} imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE)}/>
                     <View style={{flexDirection: 'column', marginTop: 0, paddingRight: 14, flex: 1}}>
                         <Text numberOfLines={2} style={styles.textVODTitle}>{item.title}</Text>
                         <Text numberOfLines={1} style={styles.textVODInfo}>{genres}</Text>
@@ -145,43 +145,7 @@ class CategoryPageView extends Component{
             renderItem={this._renderVODItem} />)
     }
 
-    
 
-    _renderVODFooter = () => {
-        const {vod, genresId} = this.props;
-        let vodMap = vod.vodMap.get(genresId);
-        if (!vodMap)
-            return null;
-        if (vodMap.isFetching) {
-            return (
-                <View
-                    style={{height: 50, width: '100%' ,justifyContent:'center', alignItems:'center'}}>
-                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            )
-        } else {
-            return null;
-        }
-    }
-
-    _renderLiveFooter = () => {
-        const {epg, genresId} = this.props;
-        let epgMap = epg.epgMap.get(genresId);
-        if (!epgMap)
-            return null;
-        if (epgMap.isFetching) {
-            return (
-                <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
-                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
-            )
-        } else {
-            return null;
-        }
-    }
 
     _fetchMoreLive = () => {
         const {genresId, epg} = this.props;
@@ -216,10 +180,8 @@ class CategoryPageView extends Component{
             return null;
         if (epgMap.isFetching || vodMap.isFetching) {
             return (
-                <View
-                    style={{height: 74, width: 100 ,justifyContent:'center', alignItems:'center'}}>
-                    {/* <ActivityIndicator size={"small"} color={colors.textGrey}/> */}
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+                <View style={{width: '100%', justifyContent:'center', alignItems:'center'}}>
+                    <DotsLoader color={colors.textGrey} size={10} betweenSpace={5}/>
                 </View>
             )
         } else {

@@ -20,18 +20,7 @@ query queryChannel($serviceIDs: [Float]!){
         shortDescription
         createdAt
         updatedAt
-        originalImages {
-          height
-          width
-          url
-          name
-          fileName
-          scaledImage {
-              height
-              width
-              url
-            }
-        }
+        thumbnails
       }
     }
   }
@@ -54,15 +43,7 @@ query queryZapperByTime($currentTime: Date, $channelIds: [String]){
       }
       videoData {
         title
-        originalImages {
-          url
-          name
-          scaledImage {
-              height
-              width
-              url
-            }
-        }
+        thumbnails
         genres {
           name
         }
@@ -91,14 +72,8 @@ query queryPlaylist($playList: String) {
         title
         longDescription
         shortDescription
+        thumbnails
         genres {
-          name
-        }
-        originalImages {
-          scaledImage {
-            url
-          }
-          fileName
           name
         }
         type
@@ -121,15 +96,7 @@ query {
         title
         longDescription
         shortDescription
-        originalImages {
-          scaledImage {
-            height
-            width
-            url
-          }
-          fileName
-          name
-        }
+        thumbnails
         type
         kind
       }
@@ -143,18 +110,7 @@ query{
   viewer{
     adsOne{
       deal
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-        scaledImage {
-              height
-              width
-              url
-            }
-      }
+      thumbnails
       url
     }
   }
@@ -189,18 +145,7 @@ query queryVOD($perPage: Int, $page: Int){
     	  
     	  updatedAt
     	  createdAt
-        originalImages {
-          height
-          width
-          url
-          name
-          fileName
-          scaledImage {
-              height
-              width
-              url
-          }
-        }
+        thumbnails
         genreIds
         genres {
           name
@@ -233,16 +178,7 @@ query{
     genreMany {
       _id
       name
-      originalImages{
-        name
-        fileName
-        scaledImage {
-          height
-          width
-          url
-          _id
-        }
-      }
+      thumbnails
   	}
 	}
 }
@@ -258,18 +194,7 @@ query{
       url
       updatedAt
       createdAt
-      originalImages {
-        scaledImage {
-          height
-          width
-          url
-        }
-        height
-        width
-        url
-        name
-        fileName
-      }
+      thumbnails
     }
   }
 }
@@ -312,18 +237,7 @@ const lastGQL = `}
             title
             longDescription
             shortDescription
-            originalImages {
-              height
-              width
-              url
-              name
-              fileName
-              scaledImage {
-                  height
-                  width
-                  url
-              }
-            }
+            thumbnails
             genres {
               name
             }
@@ -390,18 +304,7 @@ query getEPGByChannel($serviceId: Float, $startTime: String, $endTime: String){
         shortDescription
         createdAt
         updatedAt
-        originalImages {
-              height
-              width
-              url
-              name
-              fileName
-                          scaledImage {
-              height
-              width
-              url
-            }
-        }
+        thumbnails
         epgsData(startTime: $startTime, endTime: $endTime) {
           videoId
           channelId
@@ -409,34 +312,12 @@ query getEPGByChannel($serviceId: Float, $startTime: String, $endTime: String){
             title
             lcn
             serviceId
-            originalImages {
-              height
-              width
-              url
-              name
-              fileName
-                          scaledImage {
-              height
-              width
-              url
-            }
-            }
+            thumbnails
           }
           startTime
           endTime
           videoData {
-            originalImages {
-              height
-              width
-              url
-              name
-              fileName
-                          scaledImage {
-              height
-              width
-              url
-            }
-            }
+            thumbnails
             genres {
               name
             }
@@ -504,18 +385,7 @@ query getRelated($genreIds: [MongoID], $page: Int, $perPage: Int){
             name
           }
           title
-          originalImages {
-            height
-            width
-            url
-            name
-            fileName
-            scaledImage {
-              height
-              width
-              url
-            }
-          }
+          thumbnails
           genreIds
           longDescription
           shortDescription
@@ -570,18 +440,7 @@ query getSeriesEpg($id: [MongoID], $page: Int, $perPage: Int){
             name
           }
           title
-          originalImages {
-            height
-            width
-            url
-            name
-            fileName
-            scaledImage {
-              height
-              width
-              url
-            }
-          }
+          thumbnails
           longDescription
           shortDescription
           series {
@@ -655,18 +514,7 @@ query genresVOD($genresId: [MongoID]){
         name
       }
       durationInSeconds
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-        scaledImage {
-          height
-          width
-          url
-        }
-      }
+      thumbnails
       custom
       directors {
         name
@@ -718,18 +566,7 @@ query genresVOD($genresId: MongoID, $page: Int, $perPage: Int){
     	  
     	  updatedAt
     	  createdAt
-        originalImages {
-          height
-          width
-          url
-          name
-          fileName
-          scaledImage {
-              height
-              width
-              url
-          }
-        }
+        thumbnails
         genreIds
         genres {
           name
@@ -785,18 +622,7 @@ query genresEPGs($currentTime: Date, $genresId: MongoID, $limit: Int, $skip: Int
         genres {
           name
         }
-        originalImages {
-          height
-          width
-          url
-          name
-          fileName
-          scaledImage {
-              height
-              width
-              url
-            }
-        }
+        thumbnails
         directors {
             name
           },
@@ -889,15 +715,7 @@ query getEpgSameTime($currentTime: Date, $id: [MongoID]){
       }
       videoData {
         title
-        originalImages {
-          name
-          url
-          scaledImage {
-              height
-              width
-              url
-            }
-        }
+        thumbnails
         genres {
           name
         }
@@ -965,18 +783,7 @@ query getVODs($id: [String]!){
       episodeIndex
       type
       custom
-      originalImages {
-        height
-        width
-        url
-        name
-        fileName
-        scaledImage {
-              height
-              width
-              url
-            }
-      },
+      thumbnails
       genres {
         name
       }
@@ -1034,18 +841,7 @@ query liveChannelInZapper($serviceId: [Float], $perPage: Int){
             title
             longDescription
             shortDescription
-            originalImages {
-              height
-              width
-              url
-              name
-              fileName
-              scaledImage {
-                  height
-                  width
-                  url
-              }
-            }
+            thumbnails
             genres {
               name
             }
@@ -1128,18 +924,7 @@ query getVideoOne($contentId: String) {
      longDescription
      shortDescription
      sourceImage
-     originalImages {
-       height
-       width
-       url
-       name
-       fileName
-      scaledImage {
-        height
-        width
-        url
-      }
-     }
+     thumbnails
      state
      custom
      createdAt

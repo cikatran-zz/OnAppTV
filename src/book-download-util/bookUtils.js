@@ -19,7 +19,7 @@ export function addToBookPvr (epg, lcn) {
       "endtime": timeFormatter(epg.endTime),
       "starttime": timeFormatter(epg.startTime),
       "title": epg.videoData.title,
-      "image": epg.videoData.originalImages[0].url,
+      "image": epg.videoData.thumbnails,
       "subTitle": epg.videoData.type
     }
   }
@@ -52,7 +52,7 @@ export function deletePvrBook (epg, lcn) {
       "endtime": timeFormatter(epg.endTime),
       "starttime": timeFormatter(epg.startTime),
       "title": epg.videoData.title,
-      "image": epg.videoData.originalImages[0].url,
+      "image": epg.videoData.thumbnails,
       "subTitle": epg.videoData.type
     }
   }

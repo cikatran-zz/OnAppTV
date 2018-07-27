@@ -39,7 +39,7 @@ import Orientation from 'react-native-orientation';
 import _ from 'lodash';
 import AlertModal from "../../components/AlertModal";
 import {DotsLoader} from "react-native-indicator";
-import {getImageFromArray} from "../../utils/images";
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from "../../utils/images";
 import moment from 'moment';
 
 const {RNConnectionViewModule} = NativeModules;
@@ -180,6 +180,16 @@ export default class Home extends Component {
         if (item.image != null) {
             imageUrl = item.image;
         }
+        if (item == "MORE") {
+            return (
+                <TouchableOpacity onPress={() => this._navigateToZappers()}>
+                    <View style={[styles.itemContainer, {borderWidth: 1, borderColor: 'rgba(149,152,154,32)'}]}>
+                        <Text style={styles.channelText}>MORE</Text>
+                    </View>
+                </TouchableOpacity>
+            )
+        }
+
         return (
             <TouchableOpacity style={{padding: 0}} onPress={() => this._onChannelPress(item)}
                               disabled={this.props.epgZap.disableTouch == null ? false : this.props.epgZap.disableTouch}>
@@ -215,7 +225,7 @@ export default class Home extends Component {
         <View style={styles.itemContainerSeparator}/>
     );
 
-    _renderChannelList = ({item}) => {
+     _renderChannelList = ({item}) => {
         let data = item;
         if (_.isEmpty(data)) {
             data = [null];
@@ -253,7 +263,7 @@ export default class Home extends Component {
                     <ImageBackground
                         removeClippedSubviews={true}
                         style={styles.slotMachineImage}
-                        source={{uri: getImageFromArray(item.originalImages, 'portrait', 'landscape')}}>
+                        source={{uri: getOnAppTVImage(item.thumbnails, IMAGE_TYPE.PORTRAIT, IMAGE_SIZE.LARGE)}}>
                         <View style={[styles.slotMachineImage, {backgroundColor: '#1C1C1C', opacity: 0.36}]}/>
                         <View style={styles.bannerinfo}>
                             <PinkRoundedLabel text="NEW MOVIE"
@@ -312,7 +322,7 @@ export default class Home extends Component {
                 <ImageBackground
                     removeClippedSubviews={true}
                     style={styles.adsContainer}
-                    source={{uri: getImageFromArray(item.data.originalImages, 'logo', 'landscape')}}>
+                    source={{uri: getOnAppTVImage(item.data.thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.LARGE)}}>
                     {this._renderAdsPinkRoundedLabel(item)}
                 </ImageBackground>
             </TouchableOpacity>
@@ -338,7 +348,7 @@ export default class Home extends Component {
             );
         }
 
-        let imageUrl = getImageFromArray(item.data.originalImages, 'landscape', 'feature');
+        let imageUrl = getOnAppTVImage(item.data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         return (
             <TouchableOpacity onPress={() => Linking.openURL(item.data.url)}
                               style={{
@@ -380,10 +390,8 @@ export default class Home extends Component {
         let endDate = (new Date(item.epgsData[0].endTime)).getTime();
         let progress = (currentDate - startDate) / (endDate - startDate) * 100;
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer}
-                              onPress={() => this._onVideoPress(item.epgsData[0], true, false)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"}
-                                imageUrl={getImageFromArray(item.epgsData[0].videoData.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item.epgsData[0], true, false)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getOnAppTVImage(item.epgsData[0].videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.epgsData[0].videoData.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
                 <Text numberOfLines={1}
@@ -492,10 +500,8 @@ export default class Home extends Component {
         }
 
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer}
-                              onPress={() => this._onVideoPress(item, false, false)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false}
-                                imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, false, false)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>)
@@ -587,10 +593,8 @@ export default class Home extends Component {
 
     _renderPlaylistItem = ({item}) => {
         return (
-            <TouchableOpacity style={styles.liveThumbnailContainer}
-                              onPress={() => this._onVideoPress(item, item.isLiveList, true)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false}
-                                imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+            <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onVideoPress(item, item.isLiveList, true)}>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title ? item.title : "No Title"}</Text>
                 <Text numberOfLines={1}
                       style={styles.textLiveVideoInfo}>{item.genres ? getGenresData(item, 3) : "N/A"}</Text>
@@ -634,7 +638,7 @@ export default class Home extends Component {
                         style={styles.videoThumbnail}
                         showProgress={false} textCenter={item.name}
                         marginHorizontal={10}
-                        imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}
+                        imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}
                         isGenres={true}/>
                 </View>
             </TouchableOpacity>
@@ -705,8 +709,7 @@ export default class Home extends Component {
         let progress = lastPosition / videoLength * 100;
         return (
             <TouchableOpacity style={styles.liveThumbnailContainer} onPress={() => this._onResumePress(item)}>
-                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"}
-                                imageUrl={getImageFromArray(item.originalImages, 'landscape', 'feature')}/>
+                <VideoThumbnail style={styles.videoThumbnail} showProgress={false} progress={progress + "%"} imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}/>
                 <Text numberOfLines={1} style={styles.textLiveVideoTitle}>{item.title}</Text>
                 <Text numberOfLines={1} style={styles.textLiveVideoInfo}>{genres}</Text>
             </TouchableOpacity>
@@ -957,11 +960,11 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 130,
         borderRadius: 10,
-        resizeMode: 'cover'
+        resizeMode: 'cover',
     },
     notificationTitle: {
         ...textDarkDefault,
-        marginVertical: 5
+        marginVertical: 18,
     },
     notificationSubTitle: {
         ...textLightDefault
@@ -1033,7 +1036,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        bottom: 50,
+        height: 130,
         zIndex: -1,
         borderWidth: 0.5,
         borderColor: colors.textGrey,

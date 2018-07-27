@@ -22,7 +22,11 @@ import { secondFormatter, timeFormatter, timeFormatterNoDate } from '../../utils
 import { rootViewTopPadding } from "../../utils/rootViewPadding";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
+<<<<<<< HEAD
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from "../../utils/images";
+=======
 import { getImageFromArray } from "../../utils/images";
+>>>>>>> b5c23aee365fc59b7894dc63955e81b9d57d9370
 import { DotsLoader } from 'react-native-indicator'
 import { getGenresData } from '../../utils/StringUtils'
 import VideoThumbnail from '../../components/VideoThumbnail'
@@ -303,7 +307,7 @@ export default class DetailsPage extends React.Component {
     _renderBanner = ({ item }) => {
         let data = this._isFromChannel() ? item.videoData : item
         let url;
-        url = getImageFromArray(data.originalImages, 'feature', 'landscape');
+        url = getOnAppTVImage(data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         return (
             <View style={styles.topContainer}>
                 <TouchableOpacity style={{
@@ -435,7 +439,7 @@ export default class DetailsPage extends React.Component {
 
         let data = item.videoData;
 
-        let url = getImageFromArray(data.originalImages, 'landscape', 'feature');
+        let url = getOnAppTVImage(data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         return (
             <View style={{
                 flexDirection: 'column',
@@ -645,7 +649,11 @@ export default class DetailsPage extends React.Component {
                         onPress={() => this._onPress(item, null, false)}>
                         <CachedImage
                             style={styles.videoThumbnail}
+<<<<<<< HEAD
+                            source={{uri: getOnAppTVImage(videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE)}}/>
+=======
                             source={{ uri: getImageFromArray(videoData.originalImages, 'landscape', 'feature') }}/>
+>>>>>>> b5c23aee365fc59b7894dc63955e81b9d57d9370
                     </TouchableOpacity>
                     <View style={styles.itemInformationContainer}>
                         <Text style={styles.itemTitle}

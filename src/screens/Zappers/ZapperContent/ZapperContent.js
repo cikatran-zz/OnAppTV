@@ -1,7 +1,7 @@
 
 import React, {Component} from 'react';
 import {
-    StyleSheet, View, StatusBar, ImageBackground, ActivityIndicator, Animated, PanResponder,
+    StyleSheet, View, StatusBar, ImageBackground, Animated, PanResponder,
     Text, Image, Dimensions, FlatList, TouchableOpacity, NativeModules, Modal, Platform
 } from 'react-native'
 import ZapperCell from '../../../components/ZapperCell';
@@ -11,9 +11,9 @@ import moment from 'moment';
 import { getBlurRadius } from '../../../utils/blurRadius'
 import BlurView from '../../../components/BlurView'
 import { rootViewTopPadding } from '../../../utils/rootViewPadding'
-import IndicatorModal from "../../../components/IndicatorModal";
+import { DotsLoader } from 'react-native-indicator'
 import AlertModal from "../../../components/AlertModal";
-import {getImageFromArray} from '../../../utils/images'
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from '../../../utils/images'
 
 const minTop = 70;
 const {height} = Dimensions.get('window')
@@ -43,43 +43,38 @@ export default class ZapperContent extends Component {
     _onPanResponderMove = (evt, gestureState) => {
         if (evt.nativeEvent.pageY < minTop) {
             this.setState({dragging: false})
-            this.props.onChangedScrollEnabled(true);
+            // this.props.onChangedScrollEnabled(true);
             return;
         }
 
         if (evt.nativeEvent.pageY > maxHeight ) {
             this.setState({dragging: false})
-            this.props.onChangedScrollEnabled(true);
+            // this.props.onChangedScrollEnabled(true);
             return;
         }
 
-        if (Math.abs(gestureState.dy) < 10) {
-            this.setState({dragging: false})
-            this.props.onChangedScrollEnabled(true);
-            return;
-        }
+        // if (Math.abs(gestureState.dy) < 10) {
+        //     this.setState({dragging: false})
+        //     // this.props.onChangedScrollEnabled(true);
+        //     return;
+        // }
         this.setState({dragging: true})
-        this.props.onChangedScrollEnabled(false);
+        // this.props.onChangedScrollEnabled(false);
         this.setPosition(evt.nativeEvent.pageY);
     };
 
-    getCurrentPosition() {
-        return this.currentPosition;
-    }
-
-    setCurrentPosition(position) {
-
+    setCurrentPosition() {
         this.props.getZapperContent(this._timeAtMove.toISOString(true));
     }
 
-    _onStartShouldSetPanResponder = (event) => {
+    _onStartShouldSetPanResponder = (evt) => {
         return true;
     };
 
-    _onPanResponderRelease = (evt, gestureState) => {
+    _onPanResponderRelease = () => {
         this.setState({dragging: false});
-        this.props.onChangedScrollEnabled(true);
-        this.setCurrentPosition(evt.nativeEvent.pageY);
+        // this.props.onChangedScrollEnabled(true);
+        this.setCurrentPosition();
         return true;
     }
 
@@ -107,7 +102,7 @@ export default class ZapperContent extends Component {
         let image = 'https://static.telus.com/common/cms/images/tv/optik/channel-logos/79/OMNI-Pacific.gif'
         //get first Image
         if (item !== undefined) {
-            image = getImageFromArray(item.videoData.originalImages, "logo", "feature");
+            image = getOnAppTVImage(item.videoData.thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.SMALL);
         }
         return image;
     }
@@ -154,7 +149,6 @@ export default class ZapperContent extends Component {
     };
 
     _onContentSizeChange = (width, height) => {
-        console.log("Content Size: ", height)
         this.contentHeight = height;
     }
 
@@ -206,7 +200,7 @@ export default class ZapperContent extends Component {
         if ( content.isFetching) {
             return (
                 <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
-                    <ActivityIndicator size="large" color={colors.whitePrimary}/>
+                    <DotsLoader color={colors.whitePrimary} size={10} betweenSpace={5}/>
                 </View>
             );
         }
@@ -268,7 +262,7 @@ export default class ZapperContent extends Component {
         "endtime": liveItem.endTime,
         "starttime": liveItem.startTime,
         "title": liveItem.videoData.title,
-        "image": getImageFromArray(liveItem.videoData.originalImages, "logo", "feature"),
+        "image": getOnAppTVImage(liveItem.videoData.thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.SMALL),
         "subTitle": liveItem.videoData.genresData.length > 0 ? liveItem.videoData.genresData[0].name : ""
       };
 
@@ -311,13 +305,12 @@ export default class ZapperContent extends Component {
 
     _renderRecordModal = () => {
         const {currentEpg} = this.state;
-        console.log('Current Epg', currentEpg);
         let epgItem = currentEpg;
 
         let iconUrl = '';
         let title = 'No data available';
         if (epgItem !== undefined) {
-            iconUrl = getImageFromArray(epgItem.videoData.originalImages, "landscape", "feature");
+            iconUrl = getOnAppTVImage(epgItem.videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL);
             if (epgItem.videoData && epgItem.videoData.title) {
                 title = epgItem.videoData.title
             }
