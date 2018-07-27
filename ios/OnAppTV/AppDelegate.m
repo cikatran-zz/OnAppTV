@@ -29,7 +29,8 @@
 
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];  // Initialize AppCenter analytics
 
-  [AppCenterReactNative register];  // Initialize AppCenter 
+  [AppCenterReactNative register];  // Initialize AppCenter
+    application.statusBarStyle = UIStatusBarStyleLightContent;
     
     
     #ifdef DEBUG
@@ -56,7 +57,7 @@
         UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
         backgroundView.translatesAutoresizingMaskIntoConstraints = YES;
         backgroundView.backgroundColor = [[UIColor alloc] initWithRed:255.0/255 green:45.0/255 blue:85.0/255 alpha:1.0];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"ic_on_stb"] ];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"ic_onapp_logo"] ];
         imageView.translatesAutoresizingMaskIntoConstraints = NO;
         [backgroundView addSubview:imageView];
         [backgroundView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];

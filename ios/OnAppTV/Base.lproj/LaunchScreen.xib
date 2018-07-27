@@ -15,14 +15,14 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_on_stb" translatesAutoresizingMaskIntoConstraints="NO" id="zTv-bw-kgx">
-                    <rect key="frame" x="162.5" y="185" width="155" height="110"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_onapp_logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ax2-2m-TFx">
+                    <rect key="frame" x="166" y="185" width="148" height="110"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="0.1764705882352941" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="zTv-bw-kgx" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="I1y-Hh-Gcb"/>
-                <constraint firstItem="zTv-bw-kgx" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="bqg-s0-A6v"/>
+                <constraint firstItem="Ax2-2m-TFx" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="EhM-PH-g4z"/>
+                <constraint firstItem="Ax2-2m-TFx" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="u2I-F5-17m"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -30,6 +30,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_on_stb" width="155" height="110"/>
+        <image name="ic_onapp_logo" width="148" height="110"/>
     </resources>
 </document>
