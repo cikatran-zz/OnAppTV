@@ -721,7 +721,6 @@ export default class Home extends Component {
         const {watchingHistory} = this.props;
 
         if (item == null || item[0] == null || !watchingHistory.fetchedMetaData || watchingHistory.error) {
-            console.log("Render watching history", watchingHistory);
             return null;
         }
         return (

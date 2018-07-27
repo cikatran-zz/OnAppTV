@@ -959,7 +959,6 @@ const styles = StyleSheet.create({
     videoTypeText: {
         fontSize: 12,
         color: '#383838',
-        color: colors.textDescriptionColor
     },
     videoDescriptionContainer: {
         width: '90%',
