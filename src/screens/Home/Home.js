@@ -233,7 +233,7 @@ export default class Home extends Component {
         return (
             <ImageCacheProvider
                 urlsToPreload={data}
-                onPreloadComplete={() => console.log('done')}
+                onPreloadComplete={()=>{}}
             >
                 <FlatList
                     style={styles.listHorizontal}
@@ -431,7 +431,7 @@ export default class Home extends Component {
         return (
             <ImageCacheProvider
                 urlsToPreload={item}
-                onPreloadComplete={() => console.log('done')}
+                onPreloadComplete={()=>{}}
             >
                 <FlatList
                     style={{flex: 1, marginBottom: 24, marginLeft: 7, marginRight: 8}}
@@ -546,7 +546,7 @@ export default class Home extends Component {
         return (
             <ImageCacheProvider
                 urlsToPreload={item}
-                onPreloadComplete={() => console.log('done')}
+                onPreloadComplete={()=>{}}
             >
                 <FlatList
                     style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
@@ -574,7 +574,7 @@ export default class Home extends Component {
         return (
             <ImageCacheProvider
                 urlsToPreload={item}
-                onPreloadComplete={() => console.log('done')}
+                onPreloadComplete={() => {}}
             >
                 <FlatList
 
@@ -636,7 +636,9 @@ export default class Home extends Component {
                     <BlurView blurRadius={getBlurRadius(20)} overlayColor={0x42747474}/>
                     <VideoThumbnail
                         style={styles.videoThumbnail}
-                        showProgress={false} textCenter={item.name}
+                        showProgress={false}
+                        isCategory={true}
+                        textCenter={item.name}
                         marginHorizontal={10}
                         imageUrl={getOnAppTVImage(item.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}
                         isGenres={true}/>
@@ -726,7 +728,7 @@ export default class Home extends Component {
         return (
             <ImageCacheProvider
                 urlsToPreload={item}
-                onPreloadComplete={() => console.log('done')}
+                onPreloadComplete={()=>{}}
             >
                 <FlatList
                     style={{marginBottom: 21, marginLeft: 7, marginRight: 8}}
