@@ -63,7 +63,7 @@
         [backgroundView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
         [backgroundView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
         backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [rootViewController.view insertSubview:backgroundView atIndex:0];
+        //[rootViewController.view insertSubview:backgroundView atIndex:0];
         
         self.window.rootViewController = rootViewController;
     } else {

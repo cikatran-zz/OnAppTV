@@ -36,10 +36,17 @@ class OANotificationCenter: NSObject, UNUserNotificationCenterDelegate {
                         }
                         return Notification(jsonObj: asJsonObj(["title": title as Any, "body": asJsonObj(userInfo["aps"])["alert"] as Any]) )
                     }
-                    Notification.updateNotifications(notis: notis, successBlock: {}, errorBlock: { _ in });
+                    Notification.updateNotifications(notis: notis, successBlock: {
+                        callback()
+                        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                    }, errorBlock: { _ in
+                        callback()
+                    });
                 });
+            } else {
+                callback()
             }
-            callback()
         })
     }
     
