@@ -13,9 +13,9 @@
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(requestPermission) {
+RCT_EXPORT_METHOD(requestPermission: (RCTResponseSenderBlock)callback) {
     [[OANotificationCenter sharedInstance] requestPermissionWithCallback:^{
-        
+        callback(@[]);
     }];
 }
 

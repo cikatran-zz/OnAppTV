@@ -644,14 +644,28 @@ export const getSeriesInfo = (seriesId) => {
 
 export const getNotification = () => {
     return new Promise((resolve, reject) => {
-        NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-            try {
-                let json = JSON.parse(result[0]).data
-                resolve(json);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        if (Platform.OS === "ios") {
+            NativeModules.RNOANotification.requestPermission(()=>{
+                NativeModules.RNUserKit.getProperty("notification", (error, result) => {
+                    try {
+                        let json = JSON.parse(result[0]).data
+                        resolve(json);
+                    } catch (err) {
+                        reject(err);
+                    }
+                });
+            });
+        } else {
+            NativeModules.RNUserKit.getProperty("notification", (error, result) => {
+                try {
+                    let json = JSON.parse(result[0]).data
+                    resolve(json);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
     })
 };
 
