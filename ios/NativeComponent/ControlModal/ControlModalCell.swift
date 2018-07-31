@@ -532,9 +532,11 @@ extension ControlModalCell {
                     let channel = Int32(data!.lcn)
                     
                     timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
-                    recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess) in
+                    recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess, error) in
                         if (recordSuccess) {
                             timeshiftInfo.isPvrPlaying = false
+                        } else {
+                            self.onAlert?(error)
                         }
                     }
                     self.data?.updateLiveProgress()
