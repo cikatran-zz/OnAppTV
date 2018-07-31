@@ -16,7 +16,7 @@ import VideoThumbnail from '../../components/VideoThumbnail'
 import {colors} from '../../utils/themeConfig'
 import {secondFormatter, timeFormatter} from '../../utils/timeUtils'
 import HeaderLabel from "../../components/HeaderLabel";
-import { getImageFromArray } from '../../utils/images'
+
 
 export default class RecordList extends React.Component {
     constructor(props) {

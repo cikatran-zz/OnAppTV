@@ -5,6 +5,8 @@ import {colors} from '../utils/themeConfig'
 import BlurView from './BlurView'
 import {getBlurRadius} from '../utils/blurRadius'
 import {DotsLoader} from 'react-native-indicator';
+import _ from 'lodash'
+import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from '../utils/images'
 
 
 export default class DeleteBookmarkModal extends React.PureComponent {
@@ -29,7 +31,7 @@ export default class DeleteBookmarkModal extends React.PureComponent {
     if (metaData)
       return (
         <View style={styles.contentContainer}>
-          <Image source={{uri: metaData.image}} style={styles.banner}/>
+          <Image source={{uri: getOnAppTVImage(metaData.image, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}} style={styles.banner}/>
           <Text style={styles.title}>{metaData.title}</Text>
           <View style={styles.deleteBookmarkContainer}>
             <Text style={styles.deleteText}>Delete this bookmark</Text>
@@ -70,11 +72,11 @@ export default class DeleteBookmarkModal extends React.PureComponent {
 
   _renderRecordContent = (data) => {
       if (!data) return null
-    if (data.originalImages && data.originalImages.length > 0) {
+    if (data.thumbnails && !_.isEmpty(data.thumbnails)) {
 
       return (
         <View style={styles.contentContainer}>
-          <Image source={{uri: data.originalImages[0].url}} style={styles.banner}/>
+          <Image source={{uri: getOnAppTVImage(data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.SMALL)}} style={styles.banner}/>
           <Text style={styles.title}>{data.title}</Text>
           <View style={styles.deleteRecordContainer}>
             <Text style={styles.deleteText}>Edit the title</Text>

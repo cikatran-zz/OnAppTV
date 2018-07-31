@@ -12,7 +12,6 @@ import TermAndCondition from "./screens/Settings/TermAndCondition";
 import Authentication from "./screens/Authentication";
 import SignIn from "./screens/Authentication/SignIn";
 import SignUp from "./screens/Authentication/SignUp";
-import LocalVideoModal from './screens/VideoControlModal/LocalVCM';
 import DetailsPage from './screens/DetailsPage'
 import BrightcovePlayerScreen from './screens/BrightcovePlayer'
 import {
@@ -75,9 +74,6 @@ export const ScreenStack = StackNavigator({
     },
     SignUp: {
         screen: SignUp
-    },
-    LocalVideoModal: {
-        screen: LocalVideoModal
     },
     DetailsPage: {
         screen: DetailsPage

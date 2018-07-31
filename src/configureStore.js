@@ -34,8 +34,8 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, app)
 
 if (__DEV__) {
-    const logger = createLogger({ collapsed: true });
-    applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware, logger);
+    // const logger = createLogger({ collapsed: true });
+    // applyMiddlewares = applyMiddleware(epicMiddleware, navMiddleware, logger);
 }
 
 const enhancer = compose(

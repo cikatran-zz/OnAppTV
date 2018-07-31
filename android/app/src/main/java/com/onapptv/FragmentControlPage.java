@@ -6,24 +6,17 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -33,13 +26,8 @@ import android.widget.TextView;
 import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.model.DeliveryType;
 import com.brightcove.player.model.Video;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -47,31 +35,50 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 import com.onapptv.custombrightcoveplayer.GlideApp;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import tv.hi_global.stbapi.Api;
-import userkit.sdk.UserKit;
-
-import static com.liulishuo.filedownloader.model.FileDownloadStatus.progress;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class FragmentControlPage extends Fragment {
     private final String NO_VIDEO_URL = "no_video_url";
+    private enum IMAGE_TYPE {
+        LOGO("Logo"),
+        PORTRAIT("P"),
+        LANDSCAPE("L");
+        private String type;
+
+        IMAGE_TYPE(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
+        }
+    }
+
+    private enum IMAGE_SIZE {
+        SMALL("S"),
+        MEDIUM("M"),
+        LARGE("L");
+        private String size;
+
+        IMAGE_SIZE(String size) {
+            this.size = size;
+        }
+
+        public String getSize() {
+            return size;
+        }
+    }
 
     SeekBar mRealSeek, mFakeSeek;
     RelativeLayout mTopContainer;
@@ -316,7 +323,7 @@ public class FragmentControlPage extends Fragment {
                         if (mData != null) {
                             // VOD
                             if (isPlaying == null) {
-                                Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, (aBoolean, s) -> {
+                                Api.sharedApi().hIG_PlayMediaStart(0, videoUrl, "", (aBoolean, s) -> {
                                             if (mData.get("durationInSeconds") != null)
                                                 mTimer.execute();
                                         }
@@ -475,22 +482,22 @@ public class FragmentControlPage extends Fragment {
 
         if (ControlPageAdapter.isLive()) {
             GlideApp.with(getContext())
-                    .load(getImageFromArray((ArrayList<HashMap>) ((HashMap) mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
+                    .load(getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mTopBanner);
             GlideApp.with(getContext())
-                    .load(getImageFromArray((ArrayList<HashMap>) ((HashMap )mDataLive.get("videoData")).get("originalImages"), "portrait", "feature"))
+                    .load(getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mMainBanner);
         }
         else {
             GlideApp.with(getContext())
-                    .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
+                    .load(getOnAppTVImage((HashMap)  mData.get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mTopBanner);
             GlideApp.with(getContext())
-                    .load(getImageFromArray((ArrayList<HashMap>) mData.get("originalImages"), "portrait", "feature"))
+                    .load(getOnAppTVImage((HashMap) mData.get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mMainBanner);
@@ -583,7 +590,7 @@ public class FragmentControlPage extends Fragment {
         metaData.put("endtime",mDataLive.get("endTime").toString());
         metaData.put("starttime", mDataLive.get("startTime").toString());
         metaData.put("title", title);
-        metaData.put("image", getImageFromArray((ArrayList) ((HashMap) mDataLive.get("videoData")).get("originalImages"), "landscape", "feature"));
+        metaData.put("image", getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.LANDSCAPE.getType(), IMAGE_SIZE.LARGE.getSize()));
         metaData.put("subTitle", getGenresFromArray((ArrayList<HashMap>) ((HashMap) mDataLive.get("videoData")).get("genresData")));
         recordObj.put("record_parameter", recordParams);
         recordObj.put("metaData", metaData);
@@ -668,21 +675,20 @@ public class FragmentControlPage extends Fragment {
         }
     }
 
-    String getImageFromArray(ArrayList<HashMap> images, String firstName, String secondName) {
-        if (images == null || images.size() == 0) {
-            return "https://i.imgur.com/7eKo6Q7.png";
+    String getOnAppTVImage(HashMap image, String type, String size) {
+        String sizeScale = "1x";
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        Float density = metrics.density;
+        if (density < 2) {
+            sizeScale = "1x";
+        } else if(density < 3) {
+            sizeScale = "2x";
+        } else {
+            sizeScale = "3x";
         }
-        String image = null;
-        for (int i = 0; i < images.size(); i++) {
-            String itemName = (String) images.get(i).get("name");
-            if (itemName != null) {
-                if (itemName.equals(firstName)) image = (String) images.get(i).get("url");
-                if (image == null && itemName.equals(secondName))
-                    image = (String) images.get(i).get("url");
-            }
-        }
-        if (image == null) image = (String) images.get(0).get("url");
-        return image;
+        String param = type + "_" + size + "_" + sizeScale;
+        String imageUrl = (String) ((HashMap) image.get(param)).get("url");
+        return imageUrl;
     }
 
     String getGenresFromArray(ArrayList<HashMap> genres) {
