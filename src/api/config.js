@@ -72,10 +72,10 @@ query queryPlaylist($playList: String) {
         title
         longDescription
         shortDescription
+        thumbnails
         genres {
           name
         }
-        thumbnails
         type
         kind
       }

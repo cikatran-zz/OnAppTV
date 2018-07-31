@@ -41,7 +41,8 @@ public class ControlPageNavigationModules extends ReactContextBaseJavaModule {
         arguments.putBoolean("isLive", isLive);
         arguments.putBoolean("isFromBanner", isFromBanner);
         arguments.putBoolean("isFromChannel", isFromChannel);
-        arguments.putSerializable("epg", epg.toArrayList());
+        SingletonDataTransaction sdt = SingletonDataTransaction.getInstance();
+        sdt.setDataSerialize(epg.toArrayList());
         intent.putExtra("control_page", arguments);
         getCurrentActivity().startActivityForResult(intent, DETAILS_PAGE_REQUEST);
     }

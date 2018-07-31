@@ -644,14 +644,28 @@ export const getSeriesInfo = (seriesId) => {
 
 export const getNotification = () => {
     return new Promise((resolve, reject) => {
-        NativeModules.RNUserKit.getProperty("notification", (error, result) => {
-            try {
-                let json = JSON.parse(result[0]).data
-                resolve(json);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        if (Platform.OS === "ios") {
+            NativeModules.RNOANotification.requestPermission(()=>{
+                NativeModules.RNUserKit.getProperty("notification", (error, result) => {
+                    try {
+                        let json = JSON.parse(result[0]).data
+                        resolve(json);
+                    } catch (err) {
+                        reject(err);
+                    }
+                });
+            });
+        } else {
+            NativeModules.RNUserKit.getProperty("notification", (error, result) => {
+                try {
+                    let json = JSON.parse(result[0]).data
+                    resolve(json);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
     })
 };
 
@@ -745,48 +759,82 @@ export const getEpgSameTime = (currentTime, channelId) => {
     })
 };
 
-export const getWatchingHistory = () => {
-    return new Promise((resolve, reject) => {
+export const getContentByIds = (ids) => {
+    return client.query({
+        query: config.queries.VOD_BY_IDS,
+        variables: {id: ids}
+    });
+};
 
+export const getWatchingHistory = () => {
+    return new Promise((resolve, reject)=> {
         NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
             let result = JSON.parse(results[0]);
             if (result.is_sign_in) {
                 NativeModules.RNWatchingHistory.getWatchingHistory((error, result) => {
-                    // result = JSON.parse(result);
-                    // if (_.isEmpty(result));
-                    //     result = [];
-                    try {
-                        let contentIds = result.map((item)=>item.id);
-                        client.query({
-                            query: config.queries.VOD_BY_IDS,
-                            variables: {id: contentIds}
-                        }).then((values)=>{
-                            let finalRes = [];
-                            result.forEach((item)=> {
-                                let destItems = values.data.viewer.videoMany.filter((it)=> it.contentId === item.id);
-                                if (destItems.length > 0) {
-                                    let destItem = _.cloneDeep(destItems[0]);
-                                    destItem["stop_position"] = item.stop_position;
-                                    finalRes.push(destItem);
-                                }
-                            });
-                            if (finalRes.length > 30)
-                                finalRes.splice(29, finalRes.length - 30);
-                            resolve(finalRes);
-                        }).catch((err)=> {
-                            reject(err);
-                        });
-                    }catch (err) {
-                        reject({message: "Not found VOD"})
-                    }
+                    resolve(result)
                 });
             } else {
                 reject({message: "Not logged in"});
             }
         });
-
-    })
+    });
 };
+
+export const updateWatchingHistory = (data) => {
+    return new Promise((resolve, reject)=>{
+        NativeModules.RNUserKit.storePropertyDict({"continue_watching": data}, (e, r) => {
+            if (r && !e) {
+                resolve(r);
+            }else {
+                reject(e);
+            }
+        });
+    });
+};
+
+// export const getWatchingHistory = () => {
+//     return new Promise((resolve, reject) => {
+//
+//         NativeModules.RNUserKitIdentity.checkSignIn((error, results) => {
+//             let result = JSON.parse(results[0]);
+//             if (result.is_sign_in) {
+//                 NativeModules.RNWatchingHistory.getWatchingHistory((error, result) => {
+//                     // result = JSON.parse(result);
+//                     // if (_.isEmpty(result));
+//                     //     result = [];
+//                     try {
+//                         let contentIds = result.map((item)=>item.id);
+//                         client.query({
+//                             query: config.queries.VOD_BY_IDS,
+//                             variables: {id: contentIds}
+//                         }).then((values)=>{
+//                             let finalRes = [];
+//                             result.forEach((item)=> {
+//                                 let destItems = values.data.viewer.videoMany.filter((it)=> it.contentId === item.id);
+//                                 if (destItems.length > 0) {
+//                                     let destItem = _.cloneDeep(destItems[0]);
+//                                     destItem["stop_position"] = item.stop_position;
+//                                     finalRes.push(destItem);
+//                                 }
+//                             });
+//                             if (finalRes.length > 30)
+//                                 finalRes.splice(29, finalRes.length - 30);
+//                             resolve(finalRes);
+//                         }).catch((err)=> {
+//                             reject(err);
+//                         });
+//                     }catch (err) {
+//                         reject({message: "Not found VOD"})
+//                     }
+//                 });
+//             } else {
+//                 reject({message: "Not logged in"});
+//             }
+//         });
+//
+//     })
+// };
 
 export const getLiveEpgInChannel = (currentTime, serviceId) => {
     return client.query({

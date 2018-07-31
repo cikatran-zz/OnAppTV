@@ -24,7 +24,8 @@ class App extends Component {
                         }}>
                             <Image source={onAppIc}/>
                         </View>
-                    } persistor={persistor}>
+                    }
+                    persistor={persistor}>
                     <AppNavigator/>
                 </PersistGate>
             </Provider>

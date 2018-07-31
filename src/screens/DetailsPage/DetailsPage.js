@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import {
     Dimensions,
     FlatList,
@@ -12,17 +12,22 @@ import {
     View,
     DeviceEventEmitter,
 } from 'react-native'
-import {colors} from '../../utils/themeConfig'
+import {
+    CachedImage,
+    ImageCacheProvider,
+} from 'react-native-cached-image';
+import { colors } from '../../utils/themeConfig'
 import PinkRoundedLabel from '../../components/PinkRoundedLabel'
-import {secondFormatter, timeFormatter, timeFormatterNoDate} from '../../utils/timeUtils'
-import {rootViewTopPadding} from "../../utils/rootViewPadding";
+import { secondFormatter, timeFormatter, timeFormatterNoDate } from '../../utils/timeUtils'
+import { rootViewTopPadding } from "../../utils/rootViewPadding";
 import Orientation from "react-native-orientation";
 import AlertModal from "../../components/AlertModal";
 import {getOnAppTVImage, IMAGE_SIZE, IMAGE_TYPE} from "../../utils/images";
 import { DotsLoader } from 'react-native-indicator'
-import {getGenresData} from '../../utils/StringUtils'
+import { getGenresData } from '../../utils/StringUtils'
 import VideoThumbnail from '../../components/VideoThumbnail'
 import _ from 'lodash'
+
 
 export default class DetailsPage extends React.Component {
     SERIES_TYPE = "seriestype";
@@ -42,29 +47,41 @@ export default class DetailsPage extends React.Component {
         if (data == null || data === undefined) return (
             <View style={styles.bannerInfo}/>
         );
-        let director = () => (data.directors.length === 0) || (data.directors === undefined) ? <View/>
-            : (<Text style={styles.videoTypeText}
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}>
-                {this._getVideoInfomation('Director', data.directors, 2)}
-            </Text>);
-        let actor = () => data.casts.length === 0 || (data.casts === undefined) ? <View/>
-            : (<Text style={styles.videoTypeText}
-                     numberOfLines={1}
-                     ellipsizeMode={'tail'}>
-                {this._getVideoInfomation('Actors', data.casts, 3)}
-            </Text>)
+        let director = () => {
+            if (data.directors) {
+                if (data.directors.length !== 0 && data.directors !== undefined) {
+                    return (<Text style={styles.videoTypeText}
+                                  numberOfLines={1}
+                                  ellipsizeMode={'tail'}>
+                        {this._getVideoInfomation('Director', data.directors, 2)}
+                    </Text>)
+                }
+            }
+            return <View/>
+        };
+        let actor = () => {
+            if (data.casts) {
+                if (data.casts.length !== 0 && data.casts !== undefined) {
+                    return (<Text style={styles.videoTypeText}
+                                  numberOfLines={1}
+                                  ellipsizeMode={'tail'}>
+                        {this._getVideoInfomation('Actors', data.casts, 3)}
+                    </Text>)
+                }
+            }
+            return <View/>
+        };
         return (
             <View style={styles.bannerInfo}>
                 {director()}
                 {actor()}
             </View>
         );
-    }
+    };
 
     _getVideoInfomation = (kindOfData, data, numberOfItem) => {
         let info = kindOfData + ': ';
-        data.map((value,index) => {
+        data.map((value, index) => {
             if (index < numberOfItem) {
                 if (index !== 0) info = info + "," + value.name;
                 else info = info + value.name
@@ -76,9 +93,9 @@ export default class DetailsPage extends React.Component {
     _keyExtractor = (item, index) => index;
 
     componentWillReceiveProps(nextProps) {
-        const {videoOne} = nextProps;
-        const {isVideoOneLoaded} = this.state;
-        const {item, isLive, isFromPlaylist} = this.props.navigation.state.params;
+        const { videoOne } = nextProps;
+        const { isVideoOneLoaded } = this.state;
+        const { item, isLive, isFromPlaylist } = this.props.navigation.state.params;
         // Check condition for saved state isVideoOneLoaded
         if (this._isFromPlaylist() === true) {
             if (item.isSeriesList === true) {
@@ -116,7 +133,7 @@ export default class DetailsPage extends React.Component {
     }
 
     componentDidMount() {
-        const {item, isLive} = this.props.navigation.state.params;
+        const { item, isLive } = this.props.navigation.state.params;
         if (item && isLive !== undefined) {
             if (this._isFromPlaylist() === true) {
                 if (item.isSeriesList === true) {
@@ -129,7 +146,7 @@ export default class DetailsPage extends React.Component {
                     isVideoOneLoaded: false
                 })
                 // TODO: check live playlist
-             }
+            }
             else {
                 if (isLive === true) {
                     /*
@@ -162,8 +179,8 @@ export default class DetailsPage extends React.Component {
             this.props.navigation.goBack(null);
         })
 
-        DeviceEventEmitter.addListener('reloadDetailsPage', (e) =>  {
-            const {item, isLive} = e;
+        DeviceEventEmitter.addListener('reloadDetailsPage', (e) => {
+            const { item, isLive } = e;
             this.setNewState(item, isLive);
             let parsedItem = JSON.parse(item);
             if (parsedItem && isLive !== undefined) {
@@ -185,7 +202,8 @@ export default class DetailsPage extends React.Component {
                     else
                         this.props.getEpgWithGenre(parsedItem.contentId, parsedItem.genreIds, 1, 10);
                 }
-            };
+            }
+            ;
         });
 
         Orientation.lockToPortrait();
@@ -197,7 +215,7 @@ export default class DetailsPage extends React.Component {
     }
 
     setNewState = (item, isLive) => {
-        this.setState({item: JSON.parse(item), isLive, isFromPlaylist: false})
+        this.setState({ item: JSON.parse(item), isLive, isFromPlaylist: false })
     }
 
     componentWillUnmount() {
@@ -206,21 +224,21 @@ export default class DetailsPage extends React.Component {
 
     render() {
         // EPGs is EPG array, video is an EPG or videoModel depend on videoType
-        const {epg, live} = this.props;
-        let {item} = this.state;
+        const { epg, live } = this.props;
+        let { item } = this.state;
         if (!item) {
             item = this.props.navigation.state.params.item;
         }
 
         let sections = [
-            {data: [item], showHeader: false, renderItem: this._renderBanner},
-            {data: [item], renderItem: this._renderBannerInfo}];
+            { data: [item], showHeader: false, renderItem: this._renderBanner },
+            { data: [item], renderItem: this._renderBannerInfo }];
 
         if (this._isFromPlaylist() === true && item.isSeriesList === true) {
             // Using for series playlist    
             if (epg.data != null && epg !== undefined)
                 epg.data.map(x => {
-                    sections.push({data: [x], showHeader: false, renderItem: this._renderList})
+                    sections.push({ data: [x], showHeader: false, renderItem: this._renderList })
                 })
         }
         else {
@@ -229,26 +247,36 @@ export default class DetailsPage extends React.Component {
                 if (this._isFromChannel() === true) {
                     // live 
                     if (live.data != null && live !== undefined) {
-                        let epgsDataArray = _.filter(live.data, (item) =>  { return item.epgsData != null && item.epgsData.length > 0})
+                        let epgsDataArray = _.filter(live.data, (item) => {
+                            return item.epgsData != null && item.epgsData.length > 0
+                        })
                             .map(x => x.epgsData[0]);
 
-                        sections.push({data: [epgsDataArray], showHeader: false, renderItem: this._renderSameTimeList})
+                        sections.push({
+                            data: [epgsDataArray],
+                            showHeader: false,
+                            renderItem: this._renderSameTimeList
+                        })
                     }
                     if (epg.data != null && epg !== undefined)
-                        sections.push({data: [epg.data], showHeader: false, renderItem: this._renderNextInChannelList})
+                        sections.push({
+                            data: [epg.data],
+                            showHeader: false,
+                            renderItem: this._renderNextInChannelList
+                        })
                 }
                 else {
                     // Standalone
                     if (epg.data != null && epg !== undefined)
-                        sections.push({data: [epg.data], showHeader: false, renderItem: this._renderList});
+                        sections.push({ data: [epg.data], showHeader: false, renderItem: this._renderList });
                 }
             else {
                 if (epg.data != null && epg !== undefined)
                     epg.data.map(x => {
-                        sections.push({data: [x], showHeader: false, renderItem: this._renderList})
+                        sections.push({ data: [x], showHeader: false, renderItem: this._renderList })
                     })
             }
-        }    
+        }
 
         return (
             <View style={styles.container}>
@@ -256,7 +284,9 @@ export default class DetailsPage extends React.Component {
                     translucent={true}
                     backgroundColor='#ffffff'
                     barStyle='dark-content'/>
-                <AlertModal ref={(modal) => { this.alertVC = modal }}/>
+                <AlertModal ref={(modal) => {
+                    this.alertVC = modal
+                }}/>
                 <SectionList
                     style={styles.container}
                     keyExtractor={this._keyExtractor}
@@ -270,54 +300,62 @@ export default class DetailsPage extends React.Component {
         )
     }
 
-    _renderBanner = ({item}) => {
+    _renderBanner = ({ item }) => {
         let data = this._isFromChannel() ? item.videoData : item
         let url;
         url = getOnAppTVImage(data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         return (
             <View style={styles.topContainer}>
-                <TouchableOpacity style={{padding: 15,
-                    alignSelf: 'flex-start'}}
+                <TouchableOpacity style={{
+                    padding: 15,
+                    alignSelf: 'flex-start'
+                }}
                                   onPress={() => this.props.navigation.goBack()}>
                     <Image source={require('../../assets/ic_dismiss_black.png')}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bannerThumbnailContainer}
                                   onPress={() => this._onBannerPress(item)}>
-                    <Image source={{uri: url}}
+                    <Image source={{ uri: url }}
                            style={styles.banner}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={{position: 'absolute',
+                <TouchableOpacity style={{
+                    position: 'absolute',
                     bottom: 6,
-                    left: 21}}>
+                    left: 21
+                }}>
                     <Image source={require('../../assets/ic_change_orientation.png')}/>
                 </TouchableOpacity>
             </View>
         )
     };
 
-    _renderBannerInfo = ({item}) => {
+    _renderBannerInfo = ({ item }) => {
         let data = this._isFromChannel() ? item.videoData : item
-        const {videoOne} = this.props;
+        const { videoOne } = this.props;
 
         return (
             <View style={styles.bannerContainer}>
                 <View style={styles.bannerInfoContainer}>
-                    <View style={{height: 16, width: '100%', flexDirection: 'row'}}>
+                    <View style={{ height: 16, width: '100%', flexDirection: 'row' }}>
                         <Text style={styles.videoTitleText}
                               numberOfLines={1}
                               ellipsizeMode={'tail'}>
                             {data.title}
                         </Text>
                         <View style={styles.bannerButtonsContainer}>
-                            <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
+                            <TouchableOpacity onPress={() => {
+                                this.alertVC.setState({ isShow: true, message: "Coming soon" })
+                            }}>
                                 <Image source={require('../../assets/lowerpage_record.png')}
                                        style={styles.videoPlayButton}/>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=> {this.alertVC.setState({isShow: true, message: "Coming soon"})}}>
+                            <TouchableOpacity onPress={() => {
+                                this.alertVC.setState({ isShow: true, message: "Coming soon" })
+                            }}>
                                 <Image source={require('../../assets/lowerpage_heart.png')}
                                        style={styles.videoLoveButton}/>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=> this._shareExecution(item.title, '')}>
+                            <TouchableOpacity onPress={() => this._shareExecution(item.title, '')}>
                                 <Image source={require('../../assets/share.png')}
                                        style={styles.videoShareButton}/>
                             </TouchableOpacity>
@@ -326,7 +364,8 @@ export default class DetailsPage extends React.Component {
                 </View>
                 {this._renderVideoInBannerInfo(this._isFromPlaylist() === true ? videoOne.data : data)}
                 <View style={styles.videoDescriptionContainer}>
-                    <Text style={styles.videoDescription}>{this._getLongDescription(data, this._isFromPlaylist(), videoOne)}</Text>
+                    <Text
+                        style={styles.videoDescription}>{this._getLongDescription(data, this._isFromPlaylist(), videoOne)}</Text>
                 </View>
             </View>
         )
@@ -335,7 +374,7 @@ export default class DetailsPage extends React.Component {
     _getLongDescription = (data, isFromPlaylist, videoOne) => {
         if (isFromPlaylist) {
             if (data.type != null && data.type === 'Episode')
-                return videoOne.data ? (videoOne.data.series !== null ? videoOne.data.series.longDescription : '' ) : ''
+                return videoOne.data ? (videoOne.data.series !== null ? videoOne.data.series.longDescription : '') : ''
             else return data.longDescription
         }
         else if (data.type != null && data.type === 'Episode') {
@@ -351,7 +390,7 @@ export default class DetailsPage extends React.Component {
 
         if (title !== undefined) {
             // title was passed
-            return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={title}/>)
+            return (<PinkRoundedLabel containerStyle={{ marginBottom: 21 }} text={title}/>)
         }
 
         console.log(itemList);
@@ -361,34 +400,34 @@ export default class DetailsPage extends React.Component {
         switch (item.type) {
             case 'Episode': {
                 let seasonIndex = itemList.length === 0 ? '' : (itemList[0].seasonIndex ? itemList[0].seasonIndex : '')
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
+                return (<PinkRoundedLabel containerStyle={{ marginBottom: 21 }} text={"SEASON " + seasonIndex}/>)
             }
             case 'Standalone':
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
+                return (<PinkRoundedLabel containerStyle={{ marginBottom: 21 }} text={"RELATED"}/>)
             default:
                 if (this._isFromPlaylist() === true && item.isSeriesList === true) {
                     let seasonIndex = itemList.length === 0 ? '' : (itemList[0].seasonIndex ? itemList[0].seasonIndex : '')
-                    return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"SEASON " + seasonIndex}/>)
+                    return (<PinkRoundedLabel containerStyle={{ marginBottom: 21 }} text={"SEASON " + seasonIndex}/>)
                 }
 
                 if (this._isFromChannel()) {
                     // isLive
-                    return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"RELATED"}/>)
+                    return (<PinkRoundedLabel containerStyle={{ marginBottom: 21 }} text={"RELATED"}/>)
                 }
 
-                return (<PinkRoundedLabel containerStyle={{marginBottom: 21}} text={"NEXT"}/>)
+                return (<PinkRoundedLabel containerStyle={{ marginBottom: 21 }} text={"NEXT"}/>)
         }
     }
 
     _renderLogoChannel = (urlArray) => {
         let logoUrl;
-        if (urlArray && urlArray.length > 0) logoUrl = {uri: urlArray[0].url}
+        if (urlArray && urlArray.length > 0) logoUrl = { uri: urlArray[0].url }
         if (this._isFromChannel() && logoUrl) {
             return (<Image source={logoUrl}/>)
         }
     }
 
-    _renderSameTimeItem = ({item}) => {
+    _renderSameTimeItem = ({ item }) => {
         let currentDate = (new Date()).getTime();
         let startDate = (new Date(item.startTime)).getTime();
         let endDate = (new Date(item.endTime)).getTime();
@@ -398,12 +437,16 @@ export default class DetailsPage extends React.Component {
 
         let url = getOnAppTVImage(data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE);
         return (
-            <View style={{flexDirection: 'column',
+            <View style={{
+                flexDirection: 'column',
                 marginLeft: 8,
                 alignSelf: 'flex-start',
-                alignItems: 'center'}}>
-                <TouchableOpacity onPress={() => this._onPress(item, this.props.live.data.map(x => x.epgsData[0]), true)}>
-                    <VideoThumbnail style={styles.nextInChannelContainer} imageUrl={url} showProgress={false} progress={progress + "%"}/>\
+                alignItems: 'center'
+            }}>
+                <TouchableOpacity
+                    onPress={() => this._onPress(item, this.props.live.data.map(x => x.epgsData[0]), true)}>
+                    <VideoThumbnail style={styles.nextInChannelContainer} imageUrl={url} showProgress={false}
+                                    progress={progress + "%"}/>\
                 </TouchableOpacity>
                 <Text numberOfLines={1}
                       ellipsizeMode={'tail'}
@@ -414,7 +457,7 @@ export default class DetailsPage extends React.Component {
         )
     }
 
-    _renderSameTimeList = ({item}) => {
+    _renderSameTimeList = ({ item }) => {
         if (!item || item.length === 0) return null
 
         return (
@@ -424,24 +467,29 @@ export default class DetailsPage extends React.Component {
                         {this._renderPinkIndicatorButton(item, "NEXT")}
                     </View>
                 </View>
-                <FlatList
-                    horizontal={true}
-                    data={item}
-                    onEndReached={this._fetchMore}
-                    onEndReachedThreshold={0.5}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderSameTimeItem}
-                />
+                <ImageCacheProvider
+                    urlsToPreload={item}
+                    onPreloadComplete={() => console.log('done')}
+                >
+                    <FlatList
+                        horizontal={true}
+                        data={item}
+                        onEndReached={this._fetchMore}
+                        onEndReachedThreshold={0.5}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={this._keyExtractor}
+                        renderItem={this._renderSameTimeItem}
+                    />
+                </ImageCacheProvider>
             </View>
         )
     }
 
     __renderListFooter = () => {
-        const {epg} = this.props;
+        const { epg } = this.props;
         if (epg.isFetching) {
             return (
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
                 </View>
             )
@@ -453,13 +501,12 @@ export default class DetailsPage extends React.Component {
     _fetchMore = () => {
 
         // set limitation for fetch more
-        const {epg, live} = this.props;
+        const { epg, live } = this.props;
         if (epg.max !== undefined && this._page === epg.max)
             return;
-        
-        if (live.data.length < this._page * 10)
-            return;    
 
+        if (live.data.length < this._page * 10)
+            return;
 
 
         this._page++;
@@ -471,7 +518,7 @@ export default class DetailsPage extends React.Component {
             }
             else {
                 // VIDEO TYPE
-                if (this._isFromChannel() === true ) {
+                if (this._isFromChannel() === true) {
                     /*
                      Fetching information about EPG next in channel and EPG which are
                      at the same time on other channels
@@ -493,16 +540,16 @@ export default class DetailsPage extends React.Component {
 
     _renderLoadingView = () => {
         return (
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
-                </View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <DotsLoader color={colors.textGrey} size={20} betweenSpace={10}/>
+            </View>
         )
     }
 
-    _renderNextInChannelList = ({item}) => {
-        const {_id} = this.props.epg;
+    _renderNextInChannelList = ({ item }) => {
+        const { _id } = this.props.epg;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
-        if (item == null || _id != null  ) {
+        if (item == null || _id != null) {
             if (this._isFromPlaylist() === false) {
                 // Normal
                 if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
@@ -539,10 +586,10 @@ export default class DetailsPage extends React.Component {
         )
     }
 
-    _renderList = ({item}) => {
-        const {_id} = this.props.epg;
+    _renderList = ({ item }) => {
+        const { _id } = this.props.epg;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
-        if (item == null || _id != null  ) {
+        if (item == null || _id != null) {
             if (this._isFromPlaylist() === false) {
                 // Normal
                 if (this._isFromChannel() && currentItem.videoData !== undefined && _id !== currentItem.videoData.contentId) {
@@ -580,7 +627,7 @@ export default class DetailsPage extends React.Component {
         )
     }
 
-    _renderListVideoItem = ({item}) => {
+    _renderListVideoItem = ({ item }) => {
         let videoData = this._isFromChannel() === true ? item.videoData : item;
         let currentItem = this.state.item ? this.state.item : this.props.navigation.state.params.item;
         if (this._isFromChannel() && currentItem.videoData !== undefined && videoData.contentId === currentItem.videoData.contentId) {
@@ -596,7 +643,7 @@ export default class DetailsPage extends React.Component {
                     <TouchableOpacity
                         style={styles.videoThumbnailContainer}
                         onPress={() => this._onPress(item, null, false)}>
-                        <Image
+                        <CachedImage
                             style={styles.videoThumbnail}
                             source={{uri: getOnAppTVImage(videoData.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE)}}/>
                     </TouchableOpacity>
@@ -616,12 +663,12 @@ export default class DetailsPage extends React.Component {
                     </View>
                     <View style={styles.itemActionsContainer}>
                         <TouchableOpacity onPress={() => {
-                            this.alertVC.setState({isShow: true, message: "Comming soon"})
+                            this.alertVC.setState({ isShow: true, message: "Comming soon" })
                         }}>
                             <Image source={require('../../assets/lowerpage_record.png')} style={styles.itemPlayButton}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {
-                            this.alertVC.setState({isShow: true, message: "Comming soon"})
+                            this.alertVC.setState({ isShow: true, message: "Comming soon" })
                         }}>
                             <Image source={require('../../assets/lowerpage_heart.png')} style={styles.itemLoveButton}/>
                         </TouchableOpacity>
@@ -633,12 +680,12 @@ export default class DetailsPage extends React.Component {
     }
 
     _onBannerPress = (bannerItem) => {
-        const {epg, navigation, videoOne} = this.props;
+        const { epg, navigation, videoOne } = this.props;
         let item = this._isFromPlaylist() === true ? (bannerItem.isSeriesList === true ? epg.rawData[0] : videoOne.data) : bannerItem;
 
         if (Platform.OS !== 'ios') {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| ((item.type != null) && (item.type === 'Episode')))
+            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true) || ((item.type != null) && (item.type === 'Episode')))
                 data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             let itemIndex = data.findIndex(x => x.contentId ? x.contentId === item.contentId && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn)
@@ -648,12 +695,16 @@ export default class DetailsPage extends React.Component {
                     this._isFromChannel(),
                     false,
                     false,
-                    () => { console.log("onDismiss") },
-                    () => { console.log("onDetail") });
+                    () => {
+                        console.log("onDismiss")
+                    },
+                    () => {
+                        console.log("onDetail")
+                    });
         }
         else {
             let data = !this._isFromChannel() && epg.data.length !== 0 ? epg.data : [item];
-            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true )|| ((item.type != null) && (item.type === 'Episode')))
+            if ((this._isFromPlaylist() === true && bannerItem.isSeriesList === true) || ((item.type != null) && (item.type === 'Episode')))
                 data = epg.rawData;
             if (!this._isFromChannel() && !data.some(x => x.contentId === item.contentId)) data = [item].concat(data);
             navigation.replace('VideoControlModal', {
@@ -665,8 +716,8 @@ export default class DetailsPage extends React.Component {
     }
 
     _onPress = (item, passedData, passedIsLive) => {
-        const {epg, navigation} = this.props;
-        let data = (passedData == null) ? 
+        const { epg, navigation } = this.props;
+        let data = (passedData == null) ?
             (epg.data.length !== 0 ? epg.data : [item]) : passedData;
 
         if (item.type != null && item.type === 'Episode') {
@@ -683,8 +734,12 @@ export default class DetailsPage extends React.Component {
                     false,
                     false,
                     false,
-                    () => { console.log("onDismiss") },
-                    () => { console.log("onDetail") });
+                    () => {
+                        console.log("onDismiss")
+                    },
+                    () => {
+                        console.log("onDetail")
+                    });
         }
         else {
             if (!data.some(x => x.contentId === item.contentId)) {
@@ -702,7 +757,7 @@ export default class DetailsPage extends React.Component {
 
     _onScroll(e) {
         this.props.listScrollOffsetY(e.nativeEvent.contentOffset.y)
-}
+    }
 
     _isFromChannel = () => this.state.isLive != null ? this.state.isLive === true : this.props.navigation.state.params.isLive === true
 
@@ -710,15 +765,21 @@ export default class DetailsPage extends React.Component {
 
     _renderAppSection = (image, title, description, url) => {
         return (
-            <View style={{flexDirection: 'column', marginHorizontal: 15, marginBottom: 36, alignItems: 'flex-start'}}>
-                <PinkRoundedLabel containerStyle={{marginBottom: 12}} text={"APP'S"}/>
+            <View style={{ flexDirection: 'column', marginHorizontal: 15, marginBottom: 36, alignItems: 'flex-start' }}>
+                <PinkRoundedLabel containerStyle={{ marginBottom: 12 }} text={"APP'S"}/>
                 <View style={styles.appSectionView}>
-                    <Image source={{uri: (image == null) ? 'https://i.imgur.com/7eKo6Q7.png' : image}} style={styles.appImage}/>
+                    <Image source={{ uri: (image == null) ? 'https://i.imgur.com/7eKo6Q7.png' : image }}
+                           style={styles.appImage}/>
                     <View style={styles.appTextView}>
                         <Text style={styles.videoTitleText}>{title}</Text>
                         <Text style={styles.videoDescription}>{description}</Text>
                     </View>
-                    <TouchableOpacity onPress={()=> Linking.openURL(url)} style={{marginRight: 0, marginLeft: 'auto', flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <TouchableOpacity onPress={() => Linking.openURL(url)} style={{
+                        marginRight: 0,
+                        marginLeft: 'auto',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end'
+                    }}>
                         <View style={styles.getButtonView}>
                             <Text style={styles.getButtonText}>GET</Text>
                         </View>
@@ -729,7 +790,7 @@ export default class DetailsPage extends React.Component {
     };
 
     // APPS
-    _renderApps = ({item}) => {
+    _renderApps = ({ item }) => {
         if (Platform.OS === "ios") {
             if (item.app_ios_url === "" || item.app_ios_url === null) {
                 return null
@@ -756,7 +817,7 @@ export default class DetailsPage extends React.Component {
     };
 
 }
-const {w, h} = Dimensions.get("window")
+const { w, h } = Dimensions.get("window")
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -898,7 +959,6 @@ const styles = StyleSheet.create({
     videoTypeText: {
         fontSize: 12,
         color: '#383838',
-        color: colors.textDescriptionColor
     },
     videoDescriptionContainer: {
         width: '90%',
@@ -969,7 +1029,7 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         overflow: 'hidden',
         borderColor: 'rgba(78,78,78,0.3)',
-        borderWidth:1
+        borderWidth: 1
     }
 })
 

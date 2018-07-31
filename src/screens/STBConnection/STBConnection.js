@@ -5,11 +5,12 @@
  */
 
 import React, {Component} from 'react';
-import {NativeModules, Platform, StatusBar, StyleSheet} from 'react-native';
+import {Image, NativeModules, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import STBConnectionView from '../../components/STBConnectionView'
 import Orientation from 'react-native-orientation';
 import {NavigationActions} from "react-navigation";
 import ControlModal from "../../components/ControlModal";
+import {colors} from "../../utils/themeConfig";
 
 export default class STBConnection extends Component {
 
@@ -54,7 +55,15 @@ export default class STBConnection extends Component {
     }
 
     render() {
-        return null;
+        const onAppIc = require('../../assets/ic_on_stb.png')
+        return (<View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: colors.mainPink
+        }}>
+            <Image source={onAppIc}/>
+        </View>);
     }
 }
 

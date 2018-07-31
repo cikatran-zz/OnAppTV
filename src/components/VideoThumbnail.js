@@ -2,6 +2,10 @@ import React from 'react'
 import {
     StyleSheet, ImageBackground, View, Text, Image, TouchableOpacity
 } from 'react-native'
+import {
+    CachedImage
+} from 'react-native-cached-image';
+
 import {colors, textWhiteDefault} from '../utils/themeConfig'
 
 class VideoThumbnail extends React.PureComponent {
@@ -32,6 +36,7 @@ class VideoThumbnail extends React.PureComponent {
 
     render() {
         const {imageUrl, textCenter, isGenres, style} = this.props;
+        console.log("TEXT CENTER", textCenter);
         let blurRadius = isGenres ? 1 : 0;
         let source = require('../assets/bg_category.png');
         if (imageUrl != null) {
@@ -42,10 +47,11 @@ class VideoThumbnail extends React.PureComponent {
                 <View style={styles.placeHolder}>
                     <Text style={styles.textPlaceHolder}>On App TV</Text>
                 </View>
-                <ImageBackground imageStyle={{borderRadius: 3}} style={styles.imageContainer} source={source} blurRadius={blurRadius}>
+                <View style={styles.imageContainer} blurRadius={blurRadius}>
+                    <CachedImage style={styles.imageBackground} source={source} activityIndicatorProps={{opacity:0}}/>
                     <View style={[styles.progressView, this._runProgressView()]}/>
                     <Text style={styles.textCenter}>{textCenter}</Text>
-                </ImageBackground>
+                </View>
                 {this._renderRedlineProgress()}
             </View>
         )
@@ -64,6 +70,11 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 3,
         overflow: 'hidden',
+    },
+    imageBackground: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%'
     },
     progressView: {
         backgroundColor: colors.progressColor,

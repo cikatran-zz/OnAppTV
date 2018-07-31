@@ -56,5 +56,8 @@ export function getOnAppTVImage(thumbnail, type, size) {
     } else {
         sizeScale = '3x'
     }
-    return thumbnail[`${type}_${size}_${sizeScale}`][`url`];
+    if (thumbnail) {
+        return thumbnail[`${type}_${size}_${sizeScale}`][`url`];
+    }
+    return "";
 }

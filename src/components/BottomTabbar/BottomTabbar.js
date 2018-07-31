@@ -33,12 +33,14 @@ class BottomTabbar extends Component {
     componentDidMount() {
         // Won't have connection with STB at the first time
         this.props.setStatusDisconnected();
-        DeviceEventEmitter.addListener('statusEvent',this._handleStatusEvent);
-        DeviceEventEmitter.addListener('disconnectEvent',this._handleDisconnectEvent);
+
         if (Platform.OS === "ios") {
             const stbEmitter = new NativeEventEmitter(STBManager);
             stbEmitter.addListener("statusEvent", (event)=> this._handleStatusEvent(event));
             stbEmitter.addListener("disconnectEvent", this._handleDisconnectEvent)
+        } else {
+            DeviceEventEmitter.addListener('statusEvent',this._handleStatusEvent);
+            DeviceEventEmitter.addListener('disconnectEvent',this._handleDisconnectEvent);
         }
     }
 

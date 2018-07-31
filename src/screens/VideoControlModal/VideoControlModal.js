@@ -35,7 +35,9 @@ import { getOnAppTVImage, IMAGE_TYPE, IMAGE_SIZE } from '../../utils/images';
 
 const brightcoveVCEmitter = new NativeEventEmitter(RNBrightcoveVC);
 
-const {width, height} = Dimensions.get("window")
+const {width, height} = Dimensions.get("window");
+const ACCOUNT_ID = '5706818955001';
+const POLICY_KEY = 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I';
 export default class VideoControlModal extends React.Component {
 
     onLayout(e) {
@@ -47,8 +49,8 @@ export default class VideoControlModal extends React.Component {
             const {item} = this.props.navigation.state.params
             if (item) {
                 let videoId = item.contentId ? item.contentId : '5714823997001';
-                console.log("BRIGHTCOVE", NativeModules.RNBrightcoveVC);
-                NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I',{}, this.currentPlayHead);
+
+                NativeModules.RNBrightcoveVC.navigateWithVideoId(videoId, ACCOUNT_ID, POLICY_KEY,{}, this._getPlayPosition(videoId));
             }
         }
         else {
@@ -56,6 +58,18 @@ export default class VideoControlModal extends React.Component {
                 showBrightcove: false
             })
         }
+    }
+
+    _getPlayPosition = (contentId) => {
+        let playhead = 0;
+        if (!_.isEmpty(this.props.watchingHistory.data)) {
+            let item = this.props.watchingHistory.data.find((x)=>x.contentId===contentId);
+            if (item) {
+                console.log("Play position", contentId, item.stop_position);
+                playhead = item.stop_position;
+            }
+        }
+        return playhead;
     }
 
     _showAlertModal = () => {
@@ -90,8 +104,8 @@ export default class VideoControlModal extends React.Component {
 
         this.alertModal = null;
         this.showingBrightcove = false
-        this.subscription = null;
-        this.currentPlayHead = 0
+        this.dismissSub = null;
+        this.updateSub = null;
     }
 
     componentWillMount() {
@@ -100,7 +114,8 @@ export default class VideoControlModal extends React.Component {
     componentWillUnmount() {
         Orientation.removeSpecificOrientationListener(this._orientationDidChange)
         this._navListener.remove();
-        this.subscription.remove();
+        this.dismissSub.remove();
+        this.updateSub.remove();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -147,8 +162,12 @@ export default class VideoControlModal extends React.Component {
         Orientation.unlockAllOrientations();
         Orientation.addSpecificOrientationListener(this._orientationDidChange);
 
-        this.subscription = brightcoveVCEmitter.addListener('DismissBrightcove', (event)=> {
+        this.dismissSub = brightcoveVCEmitter.addListener('DismissBrightcove', (event)=> {
             this.showingBrightcove = false;
+        });
+        this.updateSub = brightcoveVCEmitter.addListener('updateConsumedLength', (event)=> {
+            const {watchingHistory} = this.props;
+            this.props.updateWatchingHistory(watchingHistory.data, event.id, event.stop_position)
         });
     }
 
@@ -161,7 +180,7 @@ export default class VideoControlModal extends React.Component {
             if (it && this.showingBrightcove === false) {
                 let videoId = it.contentId ? it.contentId : '5714823997001';
                 this.showingBrightcove = true;
-                RNBrightcoveVC.navigateWithVideoId(videoId, '5706818955001', 'BCpkADawqM13qhq60TadJ6iG3UAnCE3D-7KfpctIrUWje06x4IHVkl30mo-3P8b7m6TXxBYmvhIdZIAeNlo_h_IfoI17b5_5EhchRk4xPe7N7fEVEkyV4e8u-zBtqnkRHkwBBiD3pHf0ua4I', {}, this.currentPlayHead);
+                RNBrightcoveVC.navigateWithVideoId(videoId, ACCOUNT_ID, POLICY_KEY, {}, this._getPlayPosition(videoId));
             }
         }
     };
@@ -232,7 +251,7 @@ export default class VideoControlModal extends React.Component {
 
     _renderModal = () => {
         const {item, epg, isLive} = this.props.navigation.state.params;
-        const {bcVideos} = this.props;
+        const {bcVideos, watchingHistory} = this.props;
         let itemIndex = epg.findIndex(x => x.title ? x.title === item.title && x.durationInSeconds === item.durationInSeconds : x.channelData.lcn === item.channelData.lcn);
         let url = '';
 
@@ -245,6 +264,7 @@ export default class VideoControlModal extends React.Component {
         return (
             <ControlModal style={{width: '100%', height: '100%', backgroundColor: 'black'}}
                           items={epg}
+                          continueWatching={watchingHistory.data}
                           index={itemIndex}
                           isLive={isLive}
                           onClose={() => this.props.navigation.goBack()}
@@ -254,7 +274,10 @@ export default class VideoControlModal extends React.Component {
                           onIndexChanged={(event)=>this._onSwiperIndexChanged(event.nativeEvent.index)}
                           onBookmark={this._onRecordPress}
                           onFavorite={this._onFavouritePress}
-                          onProgress={(event)=> this.currentPlayHead = event.nativeEvent.current}/>
+                          onProgress={(event)=> this.currentPlayHead = event.nativeEvent.current}
+                          updateWatchingHistory={(event)=>{
+                              this.props.updateWatchingHistory(watchingHistory.data, event.nativeEvent.id, event.nativeEvent.stop_position)
+                          }} />
         )
 
     }

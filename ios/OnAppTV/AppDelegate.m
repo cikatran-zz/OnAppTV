@@ -29,7 +29,8 @@
 
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];  // Initialize AppCenter analytics
 
-  [AppCenterReactNative register];  // Initialize AppCenter 
+  [AppCenterReactNative register];  // Initialize AppCenter
+    application.statusBarStyle = UIStatusBarStyleLightContent;
     
     
     #ifdef DEBUG
@@ -51,6 +52,19 @@
     if (isStarted) {
         UIViewController *rootViewController = [UIViewController new];
         rootViewController.view = _reactNativeView;
+        rootViewController.view.backgroundColor = [[UIColor alloc] initWithRed:255.0/255 green:45.0/255 blue:85.0/255 alpha:1.0];
+        
+        UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+        backgroundView.translatesAutoresizingMaskIntoConstraints = YES;
+        backgroundView.backgroundColor = [[UIColor alloc] initWithRed:255.0/255 green:45.0/255 blue:85.0/255 alpha:1.0];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"ic_onapp_logo"] ];
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [backgroundView addSubview:imageView];
+        [backgroundView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+        [backgroundView addConstraint: [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        //[rootViewController.view insertSubview:backgroundView atIndex:0];
+        
         self.window.rootViewController = rootViewController;
     } else {
         [NSUserDefaults.standardUserDefaults setBool:YES forKey:@"isStarted"];
@@ -117,6 +131,7 @@
                 }
                 if (isPlayMedia) {
                     [[Api sharedApi] hIG_PlayMediaGetPosition:^(BOOL isSuccess, int value) {
+                        NSLog(@"PLAY POSITION", value);
                         [NSNotificationCenter.defaultCenter postNotificationName:@"onapp.controlmodal.VODprogress" object: @{@"isSuccess": [[NSNumber alloc] initWithBool:isSuccess], @"value": [[NSNumber alloc] initWithInt:value] }];
                         dispatch_semaphore_signal(semaphore);
                     }];
