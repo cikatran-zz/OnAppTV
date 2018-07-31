@@ -13,7 +13,8 @@ class TimeshiftInfo {
     
     public static let sharedInstance = TimeshiftInfo()
     public var redBarCheckPoint: Double?
-    public var isPvrPlayed: Bool = false
+    public var offset: Double = 0
+    public var isPvrPlaying: Bool = false
     private let model = RecordModel()
     
     private init() {
@@ -39,5 +40,6 @@ class TimeshiftInfo {
     public func clear() {
         model.lCN = -1
         model.startTime = nil
+        offset = 0
     }
 }

@@ -203,7 +203,8 @@ extension ControlModalCell {
     }
     
     func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
-        self.data!.timeshiftOffset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
+        let timeshiftInfo = TimeshiftInfo.sharedInstance
+        timeshiftInfo.offset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
         playTimeshift(playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime)) { (isSuccess) in
             callback(isSuccess)
         }
@@ -271,8 +272,10 @@ extension ControlModalCell {
             self.shiftTo(currentTime) { (isSuccess) in
                 if (isSuccess) {
                     self.data?.playState = .currentPlaying
+                    timeshiftInfo.isPvrPlaying = true
                 } else {
                     self.data?.playState = .notPlayed
+                    timeshiftInfo.isPvrPlaying = false
                 }
             }
         } else {
@@ -488,22 +491,26 @@ extension ControlModalCell {
     @IBAction func playBackButtonTouched(_ sender: UIButton) {
         
         if (data?.isLive ?? false) {
+            let timeshiftInfo = TimeshiftInfo.sharedInstance
             let playState = data?.playState ?? .notPlayed
             if (playState == .pause || playState == .notPlayed) {
                 // play timeshift
-                let timeshiftInfo = TimeshiftInfo.sharedInstance
                 if (Int32(data!.lcn) == timeshiftInfo.getModel().lCN) {
-                    if (timeshiftInfo.isPvrPlayed == false) {
+                    if (timeshiftInfo.isPvrPlaying == false) {
                         self.shiftTo(0) { (playSuccess) in
                             if (playSuccess) {
                                 self.data?.playState = .currentPlaying
-                                timeshiftInfo.isPvrPlayed = true
+                                timeshiftInfo.isPvrPlaying = true
+                            } else {
+                                self.data?.playState = .notPlayed
+                                timeshiftInfo.isPvrPlaying = false
                             }
                         }
                     } else {
                         Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
                             if (resumeSuccess) {
                                 self.data?.playState = .currentPlaying
+                                timeshiftInfo.isPvrPlaying = true
                             }
                         }
                     }
@@ -514,28 +521,27 @@ extension ControlModalCell {
                         } else {
                             // Stop & delete timeshift after zapped to another channel.
                             cleanTimeshift()
-                            self.data?.timeshiftOffset = 0
                             self.data?.playState = .currentPlaying
+                            timeshiftInfo.isPvrPlaying = false
                         }
                     }
                 }
             } else if (playState == .currentPlaying) {
                 if (redBar.isHidden == true) {
                     // start record timeshift
-                    let timeshiftInfo = TimeshiftInfo.sharedInstance
                     let channel = Int32(data!.lcn)
                     
                     timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
                     recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess) in
                         if (recordSuccess) {
-                            timeshiftInfo.isPvrPlayed = false
+                            timeshiftInfo.isPvrPlaying = false
                         }
                     }
                     self.data?.updateLiveProgress()
                     self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
                     timeshiftInfo.redBarCheckPoint = data!.redBarStartPoint
                 } else {
-                    Api.shared().hIG_PlayPvrPause { (_, _) in
+                    Api.shared().hIG_PlayPvrPause { (pauseSuccess, _) in
                     }
                 }
                 self.data?.playState = .pause
@@ -543,7 +549,6 @@ extension ControlModalCell {
         } else {
             // Stop & delete timeshift when played a media.
             cleanTimeshift()
-            self.data?.timeshiftOffset = 0
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
                 Api.shared().hIG_PlayMediaResume { (isSuccess, error) in

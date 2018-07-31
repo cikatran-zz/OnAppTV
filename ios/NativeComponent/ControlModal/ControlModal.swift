@@ -284,23 +284,27 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                                 self.videosData[self.index.intValue].playState = .currentPlaying
                                 // Stop & delete timeshift after zapped to another channel.
                                 cleanTimeshift()
-                                self.videosData[self.index.intValue].timeshiftOffset = 0
                             }
                         }
                     } else {
-                        // Restore redBar progress. Need more testing.
-                        // FIXME: timeshift not played
+                        // Restore redBar progress.
                         self.videosData[self.index.intValue].redBarStartPoint = timeshiftInfo.redBarCheckPoint!
-                        playTimeshift(playPosition: 0) { (playSuccess) in
-                            if (playSuccess) {
+                        if (!timeshiftInfo.isPvrPlaying) {
+                            playTimeshift(playPosition: 0) { (playSuccess) in
+                                if (playSuccess) {
+                                    self.videosData[self.index.intValue].playState = .currentPlaying
+                                }
+                            }
+                        } else {
+                            Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
                                 self.videosData[self.index.intValue].playState = .currentPlaying
                             }
                         }
+                        self.videosData[self.index.intValue].updateLiveProgress()
                     }
                 } else {
                     // Stop & delete timeshift when played a media.
                     cleanTimeshift()
-                    self.videosData[self.index.intValue].timeshiftOffset = 0
                     currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying
