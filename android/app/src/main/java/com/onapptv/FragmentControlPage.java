@@ -482,22 +482,22 @@ public class FragmentControlPage extends Fragment {
 
         if (ControlPageAdapter.isLive()) {
             GlideApp.with(getContext())
-                    .load(getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
+                    .load(getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.LANDSCAPE.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mTopBanner);
             GlideApp.with(getContext())
-                    .load(getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
+                    .load(getOnAppTVImage((HashMap) ((HashMap) mDataLive.get("videoData")).get("thumbnails"), IMAGE_TYPE.LANDSCAPE.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mMainBanner);
         }
         else {
             GlideApp.with(getContext())
-                    .load(getOnAppTVImage((HashMap)  mData.get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
+                    .load(getOnAppTVImage((HashMap)  mData.get("thumbnails"), IMAGE_TYPE.LANDSCAPE.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mTopBanner);
             GlideApp.with(getContext())
-                    .load(getOnAppTVImage((HashMap) mData.get("thumbnails"), IMAGE_TYPE.PORTRAIT.getType(), IMAGE_SIZE.LARGE.getSize()))
+                    .load(getOnAppTVImage((HashMap) mData.get("thumbnails"), IMAGE_TYPE.LANDSCAPE.getType(), IMAGE_SIZE.LARGE.getSize()))
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(100, 2)))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mMainBanner);
