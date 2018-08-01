@@ -178,6 +178,11 @@ class ControlModalData {
     @objc func updateLiveProgress() {
         let timeshiftInfo = TimeshiftInfo.sharedInstance
         let newProgress = (getCurrentTime().timeIntervalSince1970-self.startTime.timeIntervalSince1970)/(self.endTime.timeIntervalSince1970 - self.startTime.timeIntervalSince1970)
+        if (timeshiftInfo.requireOffsetUpdate) {
+            self.currentProgress = self.redBarStartPoint
+            timeshiftInfo.offset = self.currentProgress - newProgress
+            timeshiftInfo.requireOffsetUpdate = false
+        }
         self.currentProgress = newProgress + timeshiftInfo.offset
         self.redBarProgress = newProgress
     }

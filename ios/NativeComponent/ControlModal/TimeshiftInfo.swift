@@ -14,6 +14,7 @@ class TimeshiftInfo {
     public static let sharedInstance = TimeshiftInfo()
     public var redBarCheckPoint: Double?
     public var offset: Double = 0
+    public var requireOffsetUpdate: Bool = false
     public var isPvrPlaying: Bool = false
     private let model = RecordModel()
     

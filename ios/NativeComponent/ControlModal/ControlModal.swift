@@ -289,6 +289,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                     } else {
                         // Restore redBar progress.
                         self.videosData[self.index.intValue].redBarStartPoint = timeshiftInfo.redBarCheckPoint!
+                        timeshiftInfo.requireOffsetUpdate = true
                         if (!timeshiftInfo.isPvrPlaying) {
                             playTimeshift(playPosition: 0) { (playSuccess) in
                                 if (playSuccess) {
