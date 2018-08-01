@@ -125,9 +125,9 @@ class ControlModalCell: UICollectionViewCell {
             dismissButtonTop.constant += 20
             infoButtonBottom.constant -= 34
         }
-        
-        let playState = (data?.playState ?? .notPlayed)
-        if (playState == .currentPlaying || playState == .pause) {
+
+        let timeshiftInfo = TimeshiftInfo.sharedInstance
+        if (timeshiftInfo.getModel().lCN == Int32(data?.lcn ?? -2)) {
             redBar.isHidden = false
         } else {
             redBar.isHidden = true
