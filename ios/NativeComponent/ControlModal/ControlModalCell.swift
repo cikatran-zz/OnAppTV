@@ -536,6 +536,7 @@ extension ControlModalCell {
                         if (recordSuccess) {
                             timeshiftInfo.isPvrPlaying = false
                         } else {
+                            timeshiftInfo.clear()
                             self.onAlert?(error)
                         }
                     }
