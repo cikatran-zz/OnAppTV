@@ -89,7 +89,7 @@ export default class ZapperChannel extends Component {
             zapIndex: channel.data != null ? channel.data.findIndex(x => x.serviceID === item.serviceID) : 0
         })
         this.props.getLiveEpgInZapper(true, channel.data != null ? channel.data.map(x => x.serviceID) : []);
-        NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
+        (Platform.OS !== "ios") && NativeModules.STBManager.setZapWithJsonString(JSON.stringify({lCN:item.lCN}),(error, events) => {
             if (error) {
                 console.log(error);
             } else {

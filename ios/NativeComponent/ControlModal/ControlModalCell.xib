@@ -82,10 +82,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gIe-es-xgO" userLabel="redBar">
-                                        <rect key="frame" x="0.0" y="279" width="240" height="3"/>
+                                        <rect key="frame" x="0.0" y="279" width="0.0" height="3"/>
                                         <color key="backgroundColor" red="1" green="0.1764705882352941" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="240" id="78N-r7-NDt"/>
+                                            <constraint firstAttribute="width" id="78N-r7-NDt"/>
                                             <constraint firstAttribute="height" constant="3" id="Vkx-5Q-jX3"/>
                                         </constraints>
                                     </view>

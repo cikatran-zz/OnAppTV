@@ -275,20 +275,38 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
             // Zap or play media
             if (isSTBConnected) {
                 if (self.videosData[index.intValue].isLive) {
-                    Api.shared().hIG_SetZap(withLCN: Int32(self.videosData[index.intValue].lcn)) { (isSuccess, error) in
-                        if !isSuccess {
-                            print(error ?? "")
-                        } else {
-                            self.videosData[self.index.intValue].playState = .currentPlaying
-                            
-                            recordTimeshift(lcn: Int32(self.videosData[self.index.intValue].lcn))
-                            self.videosData[self.index.intValue].redBarStartPoint = self.videosData[self.index.intValue].currentProgress
-                            self.videosData[self.index.intValue].redBarProgress = 0
-                            self.videosData[self.index.intValue].updateLiveProgress()
+                    let timeshiftInfo = TimeshiftInfo.sharedInstance
+                    if (Int32(self.videosData[index.intValue].lcn) != timeshiftInfo.getModel().lCN) {
+                        Api.shared().hIG_SetZap(withLCN: Int32(self.videosData[index.intValue].lcn)) { (isSuccess, error) in
+                            if !isSuccess {
+                                print(error ?? "")
+                            } else {
+                                self.videosData[self.index.intValue].playState = .currentPlaying
+                                // Stop & delete timeshift after zapped to another channel.
+                                cleanTimeshift()
+                            }
                         }
+                    } else {
+                        // Restore redBar progress.
+                        self.videosData[self.index.intValue].redBarStartPoint = timeshiftInfo.redBarCheckPoint!
+                        timeshiftInfo.requireOffsetUpdate = true
+                        if (!timeshiftInfo.isPvrPlaying) {
+                            playTimeshift(playPosition: 0) { (playSuccess) in
+                                if (playSuccess) {
+                                    timeshiftInfo.isPvrPlaying = true
+                                    self.videosData[self.index.intValue].playState = .currentPlaying
+                                }
+                            }
+                        } else {
+                            Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
+                                self.videosData[self.index.intValue].playState = .currentPlaying
+                            }
+                        }
+                        self.videosData[self.index.intValue].updateLiveProgress()
                     }
                 } else {
-                    stopRecordTimeshift()
+                    // Stop & delete timeshift when played a media.
+                    cleanTimeshift()
                     currentPlaying = nil
                     if (currentPlaying != nil && self.videosData[index.intValue].contentId == currentPlaying!) {
                         self.videosData[self.index.intValue].playState = .currentPlaying

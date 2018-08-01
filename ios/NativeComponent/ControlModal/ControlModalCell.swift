@@ -125,9 +125,9 @@ class ControlModalCell: UICollectionViewCell {
             dismissButtonTop.constant += 20
             infoButtonBottom.constant -= 34
         }
-        
-        let playState = (data?.playState ?? .notPlayed)
-        if (playState == .currentPlaying || playState == .pause) {
+
+        let timeshiftInfo = TimeshiftInfo.sharedInstance
+        if (timeshiftInfo.getModel().lCN == Int32(data?.lcn ?? -2)) {
             redBar.isHidden = false
         } else {
             redBar.isHidden = true
@@ -203,15 +203,11 @@ extension ControlModalCell {
     }
     
     func shiftTo(_ currentTime: Double, callback:@escaping (Bool)-> Void) {
-        Api.shared().hIG_PlayPvrStart(
-            withRecordName: TIMESHIFT_FILE_NAME,
-            playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime),
-            callback: { (isSuccess, error) in
-                if (!isSuccess) {
-                    print(error ?? "")
-                }
-                callback(isSuccess)
-        })
+        let timeshiftInfo = TimeshiftInfo.sharedInstance
+        timeshiftInfo.offset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
+        playTimeshift(playPosition: Int32((currentTime.isNaN || currentTime.isInfinite) ? 0 : currentTime)) { (isSuccess) in
+            callback(isSuccess)
+        }
     }
 }
 
@@ -234,6 +230,10 @@ extension ControlModalCell {
         let translation = sender.translation(in: progressView)
         let newWidth = translation.x + progressWidth.constant
         if (data?.isLive ?? false) {
+            let timeshiftInfo = TimeshiftInfo.sharedInstance
+            if (timeshiftInfo.getModel().lCN != data!.lcn) {
+                return
+            }
             let SAFE_ZONE_OFFSET: CGFloat = 1   // A workaround to prevent user from seeking to unplayable position of timeshift record.
             let playState = (data?.playState ?? .notPlayed)
             if (newWidth >= (redBarLeading.constant)
@@ -261,13 +261,21 @@ extension ControlModalCell {
     
     public func doneDraggingProgressView() {
         if (data?.isLive ?? false) {
-            let channelDuration = data!.endTime.timeIntervalSince1970 - data!.startTime.timeIntervalSince1970
-            let recordDuration = (getCurrentTime().timeIntervalSince1970 - data!.startTime.timeIntervalSince1970) - (data!.redBarStartPoint * channelDuration)
+            let timeshiftInfo = TimeshiftInfo.sharedInstance
+            if (timeshiftInfo.getModel().lCN != data!.lcn) {
+                return
+            }
+            let channelDuration = self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970
+            let recordDuration = (getCurrentTime().timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970) - (self.data!.redBarStartPoint * channelDuration)
             let progress = (progressWidth.constant - redBarLeading.constant) / redBarWidth.constant
             let currentTime = Double(progress) * recordDuration
             self.shiftTo(currentTime) { (isSuccess) in
                 if (isSuccess) {
-                    self.data?.timeshiftOffset = Double(self.progressWidth.constant / self.progressImage.frame.width) - (getCurrentTime().timeIntervalSince1970-self.data!.startTime.timeIntervalSince1970)/(self.data!.endTime.timeIntervalSince1970 - self.data!.startTime.timeIntervalSince1970)
+                    self.data?.playState = .currentPlaying
+                    timeshiftInfo.isPvrPlaying = true
+                } else {
+                    self.data?.playState = .notPlayed
+                    timeshiftInfo.isPvrPlaying = false
                 }
             }
         } else {
@@ -302,9 +310,13 @@ extension ControlModalCell: ControlModalDataDelegate {
         if (isDragging) {
             return
         }
-        progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
         redBarWidth.constant = CGFloat(((data?.redBarProgress ?? 0) - (data?.redBarStartPoint ?? 0)))*self.progressImage.frame.width
         redBarLeading.constant = CGFloat((data?.redBarStartPoint ?? 0))*self.progressImage.frame.width
+        if (data?.playState != .pause) {
+            progressWidth.constant = CGFloat((data?.currentProgress ?? 0))*self.progressImage.frame.width
+        } else if (progressWidth.constant < redBarLeading.constant && redBar.isHidden == false) {
+            progressWidth.constant = redBarLeading.constant
+        }
         
         // Update label
         if (data?.isLive ?? false) {
@@ -329,8 +341,20 @@ extension ControlModalCell: ControlModalDataDelegate {
         onTVButtonView.isHidden = true
         if (data?.isLive ?? false) {
             //playbackButton.setImage(nil, for: .normal)
+            // display redBar
+            let timeshiftInfo = TimeshiftInfo.sharedInstance
+            if (timeshiftInfo.getModel().lCN == Int32(self.data!.lcn) && timeshiftInfo.getModel().lCN != -1) {
+                redBar.isHidden = false
+            } else {
+                redBar.isHidden = true
+            }
             let playState = data?.playState ?? .notPlayed
-            if (playState == .notPlayed) {
+            if (playState ==  .pause) {
+                self.playbackButton.setImage(UIImage(named: "ic_play_with_border"), for: .normal)
+                playOverButton.isEnabled = true
+                rewindButton.isEnabled = true
+                fastforwardButton.isEnabled = true
+            } else if (playState == .notPlayed) {
                 // normal color
                 //onTVLabel.textColor = onTVLabelColor
                 self.playbackButton.setImage(UIImage(named: "ic_play_with_border"), for: .normal)
@@ -342,9 +366,7 @@ extension ControlModalCell: ControlModalDataDelegate {
                 if (needUpdateAll) {
                     self.onPlayMedia?()
                 }
-                redBar.isHidden = false
             } else {
-                redBar.isHidden = false
                 //onTVLabel.textColor = onTVDarkerLabelColor
                 playOverButton.isEnabled = false
                 rewindButton.isEnabled = false
@@ -420,8 +442,8 @@ extension ControlModalCell {
         if (data?.isLive ?? false) {
             // TODO: - Fastforward for live
         } else {
-            let durationInSeconds = data?.durationInSeconds ?? 0
-            var currentTime = (data?.currentProgress ?? 0) * durationInSeconds
+            let durationInSeconds = self.data?.durationInSeconds ?? 0
+            var currentTime = (self.data?.currentProgress ?? 0) * durationInSeconds
             currentTime = min(currentTime+10,durationInSeconds)
             self.seekTo(currentTime) { (isSuccess) in
                 if (isSuccess) {
@@ -469,23 +491,67 @@ extension ControlModalCell {
     @IBAction func playBackButtonTouched(_ sender: UIButton) {
         
         if (data?.isLive ?? false) {
+            let timeshiftInfo = TimeshiftInfo.sharedInstance
             let playState = data?.playState ?? .notPlayed
-            if (playState == .notPlayed) {
-                Api.shared().hIG_SetZap(withLCN: Int32(self.data?.lcn ?? 0)) { (isSuccess, message) in
-                    if (!isSuccess) {
-                        print(message ?? "")
+            if (playState == .pause || playState == .notPlayed) {
+                // play timeshift
+                if (Int32(data!.lcn) == timeshiftInfo.getModel().lCN) {
+                    if (timeshiftInfo.isPvrPlaying == false) {
+                        self.shiftTo(0) { (playSuccess) in
+                            if (playSuccess) {
+                                self.data?.playState = .currentPlaying
+                                timeshiftInfo.isPvrPlaying = true
+                            } else {
+                                self.data?.playState = .notPlayed
+                                timeshiftInfo.isPvrPlaying = false
+                            }
+                        }
                     } else {
-                        self.data?.playState = .currentPlaying
-                        
-                        recordTimeshift(lcn: Int32(self.data!.lcn))
-                        self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
-                        self.data?.redBarProgress = 0
-                        self.data?.updateLiveProgress()
+                        Api.shared().hIG_PlayPvrResume { (resumeSuccess, error) in
+                            if (resumeSuccess) {
+                                self.data?.playState = .currentPlaying
+                                timeshiftInfo.isPvrPlaying = true
+                            }
+                        }
+                    }
+                } else {
+                    Api.shared().hIG_SetZap(withLCN: Int32(self.data?.lcn ?? 0)) { (isSuccess, message) in
+                        if (!isSuccess) {
+                            print(message ?? "")
+                        } else {
+                            // Stop & delete timeshift after zapped to another channel.
+                            cleanTimeshift()
+                            self.data?.playState = .currentPlaying
+                            timeshiftInfo.isPvrPlaying = false
+                        }
                     }
                 }
+            } else if (playState == .currentPlaying) {
+                if (redBar.isHidden == true) {
+                    // start record timeshift
+                    let channel = Int32(data!.lcn)
+                    
+                    timeshiftInfo.setModel(lcn: channel, startTime: Date.init())
+                    recordTimeshift(model: timeshiftInfo.getModel()) { (recordSuccess, error) in
+                        if (recordSuccess) {
+                            timeshiftInfo.isPvrPlaying = false
+                        } else {
+                            timeshiftInfo.clear()
+                            self.onAlert?(error)
+                        }
+                    }
+                    self.data?.updateLiveProgress()
+                    self.data?.redBarStartPoint = self.data?.currentProgress ?? 0
+                    timeshiftInfo.redBarCheckPoint = data!.redBarStartPoint
+                } else {
+                    Api.shared().hIG_PlayPvrPause { (pauseSuccess, _) in
+                    }
+                }
+                self.data?.playState = .pause
             }
         } else {
-            stopRecordTimeshift()
+            // Stop & delete timeshift when played a media.
+            cleanTimeshift()
             let playState = data?.playState ?? .notPlayed
             if (playState ==  .pause) {
                 Api.shared().hIG_PlayMediaResume { (isSuccess, error) in
