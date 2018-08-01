@@ -1,0 +1,6 @@
+framework module STBAPI {
+  umbrella header "STBAPI.h"
+
+  export *
+  module * { export * }
+}

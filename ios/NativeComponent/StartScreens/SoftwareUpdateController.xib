@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Plantagenet Cherokee.ttf">
+            <string>PlantagenetCherokee</string>
+        </array>
+        <array key="SF-UI-Text-Regular.otf">
+            <string>SFUIText-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SoftwareUpdateController" customModule="OnAppTV" customModuleProvider="target">
+            <connections>
+                <outlet property="bottomLabel" destination="SS0-xs-Y7X" id="QD0-qR-G82"/>
+                <outlet property="content" destination="255-iK-0RB" id="KN5-Lh-dvc"/>
+                <outlet property="install" destination="GQY-Q2-jfZ" id="S3g-u5-3h3"/>
+                <outlet property="nextButton" destination="btd-AK-oPo" id="e9m-Zw-6OC"/>
+                <outlet property="on" destination="S0Y-cX-MQ0" id="iI4-zN-Rft"/>
+                <outlet property="stb" destination="f0q-eT-q3R" id="3ct-QT-Qfq"/>
+                <outlet property="subTitle" destination="39o-2A-myU" id="Nbu-sg-kHZ"/>
+                <outlet property="topic" destination="H3g-wo-lJs" id="Xdy-ku-kVE"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Pof-Yr-XKp">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                </imageView>
+                <view alpha="0.12999999523162842" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Foz-V1-gGs">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3g-wo-lJs">
+                    <rect key="frame" x="185.66666666666666" y="58.666666666666657" width="5" height="20"/>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="255-iK-0RB">
+                    <rect key="frame" x="185" y="396.66666666666669" width="5" height="20.333333333333314"/>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ON" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S0Y-cX-MQ0">
+                    <rect key="frame" x="117.66666666666669" y="314.33333333333331" width="140" height="110"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="92"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Few more steps !" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39o-2A-myU">
+                    <rect key="frame" x="97.666666666666686" y="431.33333333333331" width="180" height="32"/>
+                    <fontDescription key="fontDescription" name="PlantagenetCherokee" family="Plantagenet Cherokee" pointSize="25"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="STB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0q-eT-q3R">
+                    <rect key="frame" x="256.66666666666669" y="329.33333333333331" width="18" height="11"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="9"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SS0-xs-Y7X">
+                    <rect key="frame" x="56.333333333333343" y="644" width="262.66666666666663" height="31.333333333333371"/>
+                    <string key="text">If there is no signal or the quality is too low
+adjust your antenna using these bargraphs</string>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="13"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btd-AK-oPo">
+                    <rect key="frame" x="71" y="718.33333333333337" width="232" height="33.333333333333371"/>
+                    <color key="backgroundColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="btd-AK-oPo" secondAttribute="height" multiplier="232.2:33.35" id="j6b-gI-ss7"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                    <state key="normal">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerCornerRadius">
+                            <real key="value" value="18"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="nextButtonAction:" destination="-1" eventType="touchUpInside" id="YvV-Ig-oDj"/>
+                    </connections>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GQY-Q2-jfZ">
+                    <rect key="frame" x="71" y="657.33333333333337" width="232" height="33.333333333333371"/>
+                    <color key="backgroundColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="GQY-Q2-jfZ" secondAttribute="height" multiplier="230:33" id="yK4-co-1Ll"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                    <state key="normal" title="Install a new STB">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layerCornerRadius">
+                            <real key="value" value="18"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="installButtonAction:" destination="-1" eventType="touchUpInside" id="drM-i8-N1t"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="btd-AK-oPo" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.6192" id="0Xe-Su-1HI"/>
+                <constraint firstItem="S0Y-cX-MQ0" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" multiplier="0.91" id="2Q4-5n-MWD"/>
+                <constraint firstItem="H3g-wo-lJs" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="7fJ-Xb-rCJ"/>
+                <constraint firstItem="GQY-Q2-jfZ" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.6192" id="7qT-Ya-lkX"/>
+                <constraint firstItem="39o-2A-myU" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="DGZ-MG-e9r"/>
+                <constraint firstItem="Pof-Yr-XKp" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="Fzu-Is-pJU"/>
+                <constraint firstItem="btd-AK-oPo" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" multiplier="1.81" id="H4w-63-hx1"/>
+                <constraint firstItem="Foz-V1-gGs" firstAttribute="height" secondItem="Pof-Yr-XKp" secondAttribute="height" id="HON-n1-a9t"/>
+                <constraint firstItem="SS0-xs-Y7X" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" multiplier="1.625" id="I0E-ZL-phd"/>
+                <constraint firstItem="255-iK-0RB" firstAttribute="centerY" secondItem="Pof-Yr-XKp" secondAttribute="centerY" id="I4P-QS-p0E"/>
+                <constraint firstItem="H3g-wo-lJs" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="14.5" id="Jlx-lf-hBG"/>
+                <constraint firstItem="Pof-Yr-XKp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="KhI-Jj-Aeb"/>
+                <constraint firstItem="255-iK-0RB" firstAttribute="centerX" secondItem="Pof-Yr-XKp" secondAttribute="centerX" id="O3W-SX-v5H"/>
+                <constraint firstItem="btd-AK-oPo" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="QNh-yR-1o4"/>
+                <constraint firstItem="S0Y-cX-MQ0" firstAttribute="top" secondItem="f0q-eT-q3R" secondAttribute="bottom" constant="-26" id="R7s-pQ-SnG"/>
+                <constraint firstItem="Pof-Yr-XKp" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="SbD-5E-fb5"/>
+                <constraint firstItem="Foz-V1-gGs" firstAttribute="centerX" secondItem="Pof-Yr-XKp" secondAttribute="centerX" id="bEn-0E-5zw"/>
+                <constraint firstItem="S0Y-cX-MQ0" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ccy-89-dXw"/>
+                <constraint firstItem="Foz-V1-gGs" firstAttribute="centerY" secondItem="Pof-Yr-XKp" secondAttribute="centerY" id="deo-4q-gbh"/>
+                <constraint firstItem="GQY-Q2-jfZ" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="e1M-f8-4qN"/>
+                <constraint firstItem="39o-2A-myU" firstAttribute="top" secondItem="255-iK-0RB" secondAttribute="bottom" multiplier="1.035" id="e9q-0G-d6C"/>
+                <constraint firstItem="GQY-Q2-jfZ" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" multiplier="1.66" id="kyd-ZB-5Ld"/>
+                <constraint firstItem="SS0-xs-Y7X" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="qOn-Ld-Wkp"/>
+                <constraint firstItem="Foz-V1-gGs" firstAttribute="width" secondItem="Pof-Yr-XKp" secondAttribute="width" id="qXe-As-AqJ"/>
+                <constraint firstItem="f0q-eT-q3R" firstAttribute="leading" secondItem="S0Y-cX-MQ0" secondAttribute="trailing" constant="-1" id="rT6-EH-bTx"/>
+                <constraint firstAttribute="bottom" secondItem="Pof-Yr-XKp" secondAttribute="bottom" id="sns-gJ-iPF"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="background" width="375" height="664"/>
+    </resources>
+</document>

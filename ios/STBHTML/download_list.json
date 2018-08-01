@@ -1,0 +1,144 @@
+{
+    "download_list": [
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/Furious7/Furious7PosterLong.jpg",
+                      "title": "Furious 7",
+                      "category": "Action",
+                      "url": "http://192.168.10.172/hermes/HLS/Fight-Club/HLS-2500/Fight-Club.m3u8",
+                      "time": "2h30"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/Inception/InceptionPosterLong.jpg",
+                      "title": "Inception",
+                      "category": "Action",
+                      "url": "http://192.168.10.172/hermes/HLS/Alien-Covenant/HLS-2500/Alien-Covenant.m3u8",
+                      "time": "1h45"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/Goodfellas/GoodfellasPosterLong.jpg",
+                      "title": "Goodfellas",
+                      "category": "Crime",
+                      "url": "http://192.168.10.172/hermes/HLS/Avengers-Age-of-Ultron/HLS-2500/Avengers-Age-of-Ultron.m3u8",
+                      "time": "1h30"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/ForrestGump/ForrestGumpPosterLong.jpg",
+                      "title": "Forrest Gump",
+                      "category": "Family",
+                      "url": "http://192.168.10.172/hermes/HLS/Ant-Man-Trialer/HLS-2500/Ant-Man-Trialer.m3u8",
+                      "time": "1h40"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/InsideOut/InsideOutPosterLong.png",
+                      "title": "Inside Out",
+                      "category": "Comedy",
+                      "url": "http://192.168.10.172/hermes/HLS/Argo-Trailer/HLS-2500/Argo-Trailer.m3u8",
+                      "time": "1h30"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/FiftyShadesofGrey/FiftyShadesofGreyPosterLong.jpg",
+                      "title": "Fifty Shades of Grey",
+                      "category": "Drama",
+                      "url": "http://192.168.10.172/hermes/HLS/Trailer-Wonderful-Life/HLS-2500/Trailer-Wonderful-Life.m3u8",
+                      "time": "1h35"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/JurassicWorld/JurassicWorldPosterLong.jpg",
+                      "title": "Jurassic World",
+                      "category": "Adventure",
+                      "url": "http://192.168.10.172/hermes/HLS/The-Raid-2-Trailer/HLS-2500/The-Raid-2-Trailer.m3u8",
+                      "time": "2h35"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/Movies/PulpFiction/PulpFictionPosterLong.jpg",
+                      "title": "Pulp Fiction",
+                      "category": "Crime",
+                      "url": "http://192.168.10.172/hermes/HLS/Breaking-Bad/HLS-2500/Breaking-Bad.m3u8",
+                      "time": "2h45"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/Toystory3/ToyStory3PosterLong.jpg",
+                      "title": "Toy Story 3",
+                      "category": "Animation",
+                      "url": "http://192.168.10.172/hermes/HLS/Fight-Club/HLS-2500/Fight-Club.m3u8",
+                      "time": "2h15"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/Titanic/TitanicPosterLong.jpg",
+                      "title": "Titanic",
+                      "category": "Romance",
+                      "url": "http://192.168.10.172/hermes/HLS/Alien-Covenant/HLS-2500/Alien-Covenant.m3u8",
+                      "time": "3h30"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/MoulinRouge/MoulinRougePosterLong.jpg",
+                      "title": "Moulin Rouge",
+                      "category": "Musical",
+                      "url": "http://192.168.10.172/hermes/HLS/Avengers-Age-of-Ultron/HLS-2500/Avengers-Age-of-Ultron.m3u8",
+                      "time": "1h30"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/Shrek2/Shrek2PosterLong.jpg",
+                      "title": "Shrek 2",
+                      "category": "Animation",
+                      "url": "http://192.168.10.172/hermes/HLS/Ant-Man-Trialer/HLS-2500/Ant-Man-Trialer.m3u8",
+                      "time": "2h15"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/TheAvengers/TheAvengersPosterLong.jpg",
+                      "title": "The Avengers",
+                      "category": "Adventure",
+                      "url": "http://192.168.10.172/hermes/HLS/Argo-Trailer/HLS-2500/Argo-Trailer.m3u8",
+                      "time": "2h45"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/FrozenFever/FrozenFeverPosterLong.jpg",
+                      "title": "Frozen Fever",
+                      "category": "Adventure",
+                      "url": "http://192.168.10.172/hermes/HLS/Trailer-Wonderful-Life/HLS-2500/Trailer-Wonderful-Life.m3u8",
+                      "time": "1h45"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/BigHero6/BigHero6PosterLong.jpg",
+                      "title": "Big Hero 6",
+                      "category": "Adventure",
+                      "url": "http://192.168.10.172/hermes/HLS/The-Raid-2-Trailer/HLS-2500/The-Raid-2-Trailer.m3u8",
+                      "time": "2h15"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/Brave/BravePosterLong.jpg",
+                      "title": "Brave",
+                      "category": "Comedy",
+                      "url": "http://192.168.10.172/hermes/HLS/Breaking-Bad/HLS-2500/Breaking-Bad.m3u8",
+                      "time": "1h35"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/Cinderella/CinderellaPosterLong.jpg",
+                      "title": "Cinderella",
+                      "category": "Fantasy",
+                      "url": "http://192.168.10.172/hermes/HLS/Fight-Club/HLS-2500/Fight-Club.m3u8",
+                      "time": "2h10"
+                      },
+                      {
+                      "image": "http://192.168.10.172/svod/Movies/TheLionKing/TheLionKingPosterLong.jpg",
+                      "title": "The Lion King",
+                      "category": "Animation",
+                      "url": "http://192.168.10.172/hermes/HLS/Alien-Covenant/HLS-2500/Alien-Covenant.m3u8",
+                      "time": "2h30"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/TVshows/HouseofCardsPosterLong.jpg",
+                      "title": "House of cards",
+                      "category": "Family",
+                      "url": "http://192.168.10.172/hermes/HLS/Avengers-Age-of-Ultron/HLS-2500/Avengers-Age-of-Ultron.m3u8",
+                      "time": "40min"
+                      },
+                      {
+                      "image": "http://192.168.10.172/tvod/TVshows/LawandOrderPosterLong.jpg",
+                      "title": "Law and Order",
+                      "category": "Crime",
+                      "url": "http://192.168.10.172/hermes/HLS/Ant-Man-Trialer/HLS-2500/Ant-Man-Trialer.m3u8",
+                      "time": "40min"
+                      }
+                      ]
+}

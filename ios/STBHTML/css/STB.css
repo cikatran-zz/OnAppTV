@@ -1,0 +1,212 @@
+* {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+/*禁用文本长按复制*/
+* {
+-webkit-touch-callout:none;
+-webkit-user-select:none;
+-khtml-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+body {
+	background: url(../img/bg.png) fixed center center no-repeat;
+	display: block;
+	background-size: cover;
+	background-attachment: fixed;
+}
+header {
+	padding-top: 20px;
+    /* iOS11+中状态栏的高度 */
+    padding-top: constant(safe-area-inset-top);
+}
+.STBContainer-top {
+	width: 100%;
+	height: 20%;
+	vertical-align: middle;
+}
+
+.STBContainer-top .white {
+	height: 40%;
+}
+
+.STB_Title {
+	height: 60%;
+	font-family: helvetica;
+	font-weight: bold;
+	font-size: 22px;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+.STBContainer-body {
+	width: 100%;
+	height: 55%;
+}
+
+.STB_form {
+	margin: 0px auto;
+	max-width: 80%;
+}
+
+.STBName {
+	width: 100%;
+	border-bottom: 1px solid #FFFFFF;
+	line-height: 40px;
+	height: 40px;
+	padding-bottom: 10px;
+	font-size: 17px;
+	color: #FFFFFF;
+	text-align: left;
+}
+
+.STB_button {
+	height: 70%;
+	border: 1px solid #FFFFFF;
+	border-radius: 30px;
+	text-align: center;
+	margin: 0 auto;
+	width: 60%;
+	position: relative;
+	max-height: 45px;
+}
+
+.STB_button button {
+	padding: 10px;
+	font-family: helvetica;
+	font-weight: 400;
+	font-size: 20px;
+	color: #FFFFFF;
+	background: none;
+	border-style: none;
+}
+
+.STBContainer-footer {
+	width: 100%;
+	font-size: 12px;
+	height: 25%;
+	position: fixed;
+	max-height: 85px;
+    bottom:0px;
+}
+
+.STBContainer-footer .line-top {
+	height: 15%;
+}
+
+.footer-line {
+	height: 15%;
+	display: inline;
+	width: 100%;
+}
+
+.footer-left {
+	float: left;
+	width: 50%;
+	height: 80%;
+	left: 50px;
+	text-align: left;
+	margin-left: 30px;
+}
+
+.STBContainer-footer .left-text {
+	color: #93EAFF;
+	font-weight: bold;
+}
+
+.footer-right {
+	height: 80%;
+	font-family: SF UI Text;
+	float: right;
+	width: 30%;
+	text-align: right;
+}
+.footer-right span{
+	margin-right: 30px;
+}
+.mui-switch {
+	width: 52px;
+	height: 31px;
+	position: relative;
+	border: 1px solid #dfdfdf;
+	/*	background-color: #fdfdfd;*/
+	box-shadow: #dfdfdf 0 0 0 0 inset;
+	border-radius: 20px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	background-clip: content-box;
+	display: inline-block;
+	-webkit-appearance: none;
+	user-select: none;
+	outline: none;
+	float: right;
+}
+
+.mui-switch:before {
+	content: '';
+	width: 29px;
+	height: 29px;
+	position: absolute;
+	top: 0px;
+	left: 0;
+	border-radius: 20px;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	background-color: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.mui-switch:checked {
+	border-color: #FF5E4C;
+	box-shadow: #FF5E4C 0 0 0 16px inset;
+	background-color: #FF5E4C;
+}
+
+.mui-switch:checked:before {
+	left: 21px;
+}
+
+.mui-switch.mui-switch-animbg {
+	transition: background-color ease 0.4s;
+}
+
+.mui-switch.mui-switch-animbg:before {
+	transition: left 0.3s;
+}
+
+.mui-switch.mui-switch-animbg:checked {
+	box-shadow: #dfdfdf 0 0 0 0 inset;
+	background-color: #FF5E4C;
+	transition: border-color 0.4s, background-color ease 0.4s;
+}
+
+.mui-switch.mui-switch-animbg:checked:before {
+	transition: left 0.3s;
+}
+
+.mui-switch.mui-switch-anim {
+	transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+}
+
+.mui-switch.mui-switch-anim:before {
+	transition: left 0.3s;
+}
+
+.mui-switch.mui-switch-anim:checked {
+	box-shadow: #FF5E4C 0 0 0 16px inset;
+	background-color: #FF5E4C;
+	transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+}
+
+.mui-switch.mui-switch-anim:checked:before {
+	transition: left 0.3s;
+}

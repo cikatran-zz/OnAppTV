@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SF-UI-Text-Regular.otf">
+            <string>SFUIText-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WlanAPViewController" customModule="STB" customModuleProvider="target">
+            <connections>
+                <outlet property="connectWlan" destination="PNu-l1-3Uo" id="akJ-Xd-2qZ"/>
+                <outlet property="showPwd" destination="8js-Eg-fQC" id="ewT-pd-Cdx"/>
+                <outlet property="swiperView" destination="nHI-v6-e4y" id="Olc-im-eGK"/>
+                <outlet property="textFiledBg1" destination="4pZ-3N-cTY" id="kTr-f7-bZG"/>
+                <outlet property="textFiledBg2" destination="lwe-qu-cM1" id="uw4-PD-Cfp"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="wifiName" destination="74Q-M3-Uxn" id="Lwb-lz-O7B"/>
+                <outlet property="wifiTitle" destination="cJC-eS-1ME" id="fRR-Yv-TkH"/>
+                <outlet property="wlanPwd" destination="oGx-BD-Pgf" id="sMm-v0-ff1"/>
+                <outlet property="wlanView" destination="w9i-XW-uGO" id="rBR-3F-62Y"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wifi connection" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sDb-5q-2HV">
+                    <rect key="frame" x="99.5" y="34.5" width="176" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="sDb-5q-2HV" secondAttribute="height" multiplier="176:20" id="fAp-0p-gAu"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                    <color key="textColor" red="0.51764705879999995" green="0.51764705879999995" blue="0.51764705879999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nHI-v6-e4y" customClass="SwiperView" customModule="STB" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w9i-XW-uGO">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.56999999999999995" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WIFI" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJC-eS-1ME">
+                            <rect key="frame" x="30" y="243" width="316" height="28"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="cJC-eS-1ME" secondAttribute="height" multiplier="316:28" id="8Yl-C1-c4U"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4pZ-3N-cTY">
+                            <rect key="frame" x="20" y="348.5" width="335" height="41"/>
+                            <subviews>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oGx-BD-Pgf">
+                                    <rect key="frame" x="32" y="0.0" width="271" height="41"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="4pZ-3N-cTY" secondAttribute="height" multiplier="335:41" id="1un-6H-Qd3"/>
+                                <constraint firstItem="oGx-BD-Pgf" firstAttribute="width" secondItem="4pZ-3N-cTY" secondAttribute="width" multiplier="271:335" id="9KS-ly-MWd"/>
+                                <constraint firstItem="oGx-BD-Pgf" firstAttribute="centerY" secondItem="4pZ-3N-cTY" secondAttribute="centerY" id="9Mr-Km-VJi"/>
+                                <constraint firstItem="oGx-BD-Pgf" firstAttribute="centerX" secondItem="4pZ-3N-cTY" secondAttribute="centerX" id="ZOo-Dv-0co"/>
+                                <constraint firstItem="oGx-BD-Pgf" firstAttribute="height" secondItem="4pZ-3N-cTY" secondAttribute="height" id="ipr-qE-bsk"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lwe-qu-cM1">
+                            <rect key="frame" x="20" y="283" width="335" height="41"/>
+                            <subviews>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Wifi" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="74Q-M3-Uxn">
+                                    <rect key="frame" x="32" y="0.0" width="271" height="41"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="74Q-M3-Uxn" firstAttribute="centerX" secondItem="lwe-qu-cM1" secondAttribute="centerX" id="5wc-XG-UpD"/>
+                                <constraint firstAttribute="width" secondItem="lwe-qu-cM1" secondAttribute="height" multiplier="335:41" id="L1h-KH-Gkd"/>
+                                <constraint firstItem="74Q-M3-Uxn" firstAttribute="centerY" secondItem="lwe-qu-cM1" secondAttribute="centerY" id="pVf-tr-yfx"/>
+                                <constraint firstItem="74Q-M3-Uxn" firstAttribute="width" secondItem="lwe-qu-cM1" secondAttribute="width" multiplier="271:335" id="vrE-w3-h2i"/>
+                                <constraint firstItem="74Q-M3-Uxn" firstAttribute="height" secondItem="lwe-qu-cM1" secondAttribute="height" id="zn6-eB-dHb"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8js-Eg-fQC">
+                            <rect key="frame" x="22.5" y="402" width="180" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="8js-Eg-fQC" secondAttribute="height" multiplier="180:25" id="hbs-wo-8g9"/>
+                            </constraints>
+                            <state key="normal" image="start-wifi_connect_select_normal">
+                                <attributedString key="attributedTitle">
+                                    <fragment content="Show password">
+                                        <attributes>
+                                            <color key="NSColor" red="0.22352941176470587" green="0.22352941176470587" blue="0.22352941176470587" alpha="0.56999999999999995" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="12" name="Helvetica"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                            </state>
+                            <state key="selected" image="start-wifi_connect_select_selected"/>
+                            <connections>
+                                <action selector="showPwd:" destination="-1" eventType="touchUpInside" id="1WR-Jv-Sp1"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNu-l1-3Uo">
+                            <rect key="frame" x="64.5" y="452" width="246" height="33.5"/>
+                            <color key="backgroundColor" red="0.98823529409999999" green="0.20784313730000001" blue="0.35686274509999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="PNu-l1-3Uo" secondAttribute="height" multiplier="245.69:33.48" id="ysu-TE-g14"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFUIText-Regular" family="SF UI Text" pointSize="17"/>
+                            <state key="normal" title="Validate">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <state key="highlighted">
+                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="connectWlanAP:" destination="-1" eventType="touchUpInside" id="ikZ-nS-5rZ"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="cJC-eS-1ME" firstAttribute="width" secondItem="w9i-XW-uGO" secondAttribute="width" multiplier="316:375" id="1xT-ih-0iL"/>
+                        <constraint firstItem="4pZ-3N-cTY" firstAttribute="centerX" secondItem="w9i-XW-uGO" secondAttribute="centerX" id="443-sp-g9N"/>
+                        <constraint firstItem="8js-Eg-fQC" firstAttribute="centerY" secondItem="w9i-XW-uGO" secondAttribute="centerY" multiplier="1.243" id="4dD-Um-5hV"/>
+                        <constraint firstItem="8js-Eg-fQC" firstAttribute="width" secondItem="w9i-XW-uGO" secondAttribute="width" multiplier="180:375" id="9h8-Xn-HT9"/>
+                        <constraint firstItem="lwe-qu-cM1" firstAttribute="centerX" secondItem="w9i-XW-uGO" secondAttribute="centerX" id="Chv-1v-4Cv"/>
+                        <constraint firstItem="PNu-l1-3Uo" firstAttribute="centerX" secondItem="w9i-XW-uGO" secondAttribute="centerX" id="Exj-OM-hLZ"/>
+                        <constraint firstItem="PNu-l1-3Uo" firstAttribute="width" secondItem="w9i-XW-uGO" secondAttribute="width" multiplier="245.69:375" id="PMj-OT-3sw"/>
+                        <constraint firstItem="cJC-eS-1ME" firstAttribute="centerY" secondItem="w9i-XW-uGO" secondAttribute="centerY" multiplier="0.77" id="QZo-NZ-cHl"/>
+                        <constraint firstItem="cJC-eS-1ME" firstAttribute="centerX" secondItem="w9i-XW-uGO" secondAttribute="centerX" id="TP1-jN-FsZ"/>
+                        <constraint firstItem="PNu-l1-3Uo" firstAttribute="centerY" secondItem="w9i-XW-uGO" secondAttribute="centerY" multiplier="1.405" id="WqP-q4-uZe"/>
+                        <constraint firstItem="4pZ-3N-cTY" firstAttribute="centerY" secondItem="w9i-XW-uGO" secondAttribute="centerY" multiplier="1.107" id="j6x-rc-p23"/>
+                        <constraint firstItem="lwe-qu-cM1" firstAttribute="centerY" secondItem="w9i-XW-uGO" secondAttribute="centerY" multiplier="0.91" id="pVo-6f-v6p"/>
+                        <constraint firstItem="8js-Eg-fQC" firstAttribute="centerX" secondItem="w9i-XW-uGO" secondAttribute="centerX" multiplier="0.6" id="szQ-zd-KLQ"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cwg-W0-bzG">
+                    <rect key="frame" x="312" y="30" width="44" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="cwg-W0-bzG" secondAttribute="height" multiplier="1:1" id="nAd-Yp-UEe"/>
+                    </constraints>
+                    <state key="normal" image="start-wifi_connect_close"/>
+                    <connections>
+                        <action selector="comeBack:" destination="-1" eventType="touchUpInside" id="Hu4-JG-3us"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="sDb-5q-2HV" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="1If-Ja-Msq"/>
+                <constraint firstItem="nHI-v6-e4y" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="9QI-E2-LMC"/>
+                <constraint firstItem="4pZ-3N-cTY" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="335:375" id="9ug-dF-OJk"/>
+                <constraint firstItem="cwg-W0-bzG" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="44:375" id="BHL-zi-gxa"/>
+                <constraint firstItem="cwg-W0-bzG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="30.5" id="BbD-0q-vAK"/>
+                <constraint firstItem="nHI-v6-e4y" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" id="IJl-Zr-E8K"/>
+                <constraint firstItem="sDb-5q-2HV" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="34.5" id="Nc5-zD-GFr"/>
+                <constraint firstItem="w9i-XW-uGO" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="VON-xV-tVm"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="cwg-W0-bzG" secondAttribute="trailing" constant="18.5" id="W1g-SZ-T33"/>
+                <constraint firstItem="lwe-qu-cM1" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="335:375" id="c16-W2-7pg"/>
+                <constraint firstItem="w9i-XW-uGO" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="cze-H7-mCC"/>
+                <constraint firstItem="nHI-v6-e4y" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="gXZ-sy-Jby"/>
+                <constraint firstItem="w9i-XW-uGO" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" id="hmj-g1-gse"/>
+                <constraint firstItem="w9i-XW-uGO" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="vt6-Sz-bw9"/>
+                <constraint firstItem="nHI-v6-e4y" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="zwm-uP-bcb"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="32.5" y="53"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="start-wifi_connect_close" width="44" height="44"/>
+        <image name="start-wifi_connect_select_normal" width="17" height="17"/>
+        <image name="start-wifi_connect_select_selected" width="17" height="17"/>
+    </resources>
+</document>

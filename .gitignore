@@ -39,7 +39,6 @@ yarn-error.log
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
 
 # fastlane
 #
@@ -51,3 +50,15 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+
+<<<<<<< ours
+*Vscode
+.vscode/
+package-lock.json
+ios/Pods/*
+ios/assets/*
+
+=======
+# Bundle artifact
+*.jsbundle
+>>>>>>> theirs

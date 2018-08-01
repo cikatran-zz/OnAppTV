@@ -1,57 +1,61 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import Home from './Home'
+import {connect} from 'react-redux';
+import {getBanner} from '../../actions/getBanner'
+import {getChannel} from '../../actions/getChannel'
+import {getLive} from '../../actions/getLive'
+import {getVOD}from '../../actions/getVOD'
+import {getAds} from "../../actions/getAds";
+import {getCategory} from "../../actions/getCategory";
+import {getNews} from "../../actions/getNews";
+import {getWatchingHistory} from "../../actions/watchingHistory";
+import {getPlaylist} from '../../actions/getPlaylist'
+import { getLiveEpgInZapper } from '../../actions/getLiveEpgInZapper'
+import { disableTouch} from '../../actions/disableTouch'
+import getBookList from '../../actions/getBookList'
+import getRecordList from '../../actions/getRecordList'
+import { readUsbDir } from '../../actions/getUsbDir'
+import { getPvrList } from '../../actions/getPvrList'
+import actions from '../../actions'
 
-import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-  'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-  'Shake or press menu button for dev menu',
-});
-
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, yeah aaaaaaaa
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
-    );
-  }
+function mapStateToProps(state) {
+    return {
+        banner: state.bannerReducer,
+        live: state.liveReducer,
+        vod: state.vodReducer,
+        ads: state.adsReducer,
+        category: state.categoryReducer,
+        news: state.newsReducer,
+        watchingHistory: state.watchingHistoryReducer,
+        channel: state.channelReducer,
+        playlist: state.playlistReducer,
+        epgZap: state.liveEpgInZapperReducer,
+        connectStatus: state.connectStatusReducer
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+function mapDispatchToProps(dispatch) {
+    return {
+        getBanner: () => dispatch(getBanner()),
+        getLive: (time, page, perPage) => dispatch(getLive(time, page, perPage)),
+        getVOD: (page, itemPerPage) => dispatch(getVOD(page, itemPerPage)),
+        getAds: () => dispatch(getAds()),
+        getCategory: () => dispatch(getCategory()),
+        getNews: () => dispatch(getNews()),
+        getWatchingHistory: () => dispatch(getWatchingHistory(dispatch)),
+        getChannel: () => dispatch(getChannel()),
+        getPlaylist: (playlist) => dispatch(getPlaylist(playlist)),
+        getLiveEpgInZapper: (currentTime, serviceId) => dispatch(getLiveEpgInZapper(currentTime, serviceId)),
+        disableTouch: (isDisable, screen) => dispatch(disableTouch(isDisable, screen)),
+        setStatusConnected: () => dispatch(actions.getConnectStatus.setStatusConnected()),
+        setStatusDisconnected: () => dispatch(actions.getConnectStatus.setStatusDisconnected()),
+        getList: () => dispatch(getBookList()),
+        getRecordList: () => dispatch(getRecordList()),
+        getUsbDirFiles: (dir_path) => dispatch(readUsbDir(dir_path)),
+        getPvrList: () => dispatch(getPvrList())
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);
