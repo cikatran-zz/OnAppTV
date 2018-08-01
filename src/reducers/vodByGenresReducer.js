@@ -41,16 +41,14 @@ export default function vodByGenresReducer(state = initialState, action) {
             let newVOD = action.data;
             let newLatestVOD = data.latestVOD;
             let fetchedVOD = data.vod;
-            let newBelowVOD = null;
             if (action.page === 1) {
-                newLatestVOD = newVOD.slice(0,3);
-                newBelowVOD = newVOD.slice(3);
+                newLatestVOD = newVOD.slice(0,1);
             } else {
                 newBelowVOD = _.concat(fetchedVOD, newVOD)
             }
             vodMap.set(genresId, {
                 page: action.page,
-                vod: newBelowVOD,
+                vod: newVOD,
                 isFetching: false,
                 latestVOD: newLatestVOD,
                 fetched: true

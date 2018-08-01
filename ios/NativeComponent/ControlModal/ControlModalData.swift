@@ -147,7 +147,7 @@ class ControlModalData {
             // LIVE
             isLive = true
             
-            self.imageURL = getOnAppTVImage(thumbnails: asJsonObj(videoData[JSONKeys.thumbnails]) , type: IMAGE_TYPE.PORTRAIT.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
+            self.imageURL = getOnAppTVImage(thumbnails: asJsonObj(videoData[JSONKeys.thumbnails]) , type: IMAGE_TYPE.LANDSCAPE.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
             self.title = (videoData[JSONKeys.title] as? String) ?? ""
             parseGenres(asJsonArr(videoData[JSONKeys.genresData]))
             
@@ -174,7 +174,7 @@ class ControlModalData {
         } else {
             // VOD
             isLive = false
-            self.imageURL = getOnAppTVImage(thumbnails: asJsonObj(json[JSONKeys.thumbnails]), type: IMAGE_TYPE.PORTRAIT.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
+            self.imageURL = getOnAppTVImage(thumbnails: asJsonObj(json[JSONKeys.thumbnails]), type: IMAGE_TYPE.LANDSCAPE.rawValue, size: IMAGE_SIZE.LARGE.rawValue)
             self.durationInSeconds = (json[JSONKeys.durationInSeconds] as? Double) ?? 0
             self.title = (json[JSONKeys.title] as? String) ?? ""
             parseGenres(asJsonArr(json[JSONKeys.genresData]))

@@ -322,7 +322,7 @@ export default class Home extends Component {
                 <ImageBackground
                     removeClippedSubviews={true}
                     style={styles.adsContainer}
-                    source={{uri: getOnAppTVImage(item.data.thumbnails, IMAGE_TYPE.LOGO, IMAGE_SIZE.LARGE)}}>
+                    source={{uri: getOnAppTVImage(item.data.thumbnails, IMAGE_TYPE.LANDSCAPE, IMAGE_SIZE.LARGE)}}>
                     {this._renderAdsPinkRoundedLabel(item)}
                 </ImageBackground>
             </TouchableOpacity>
