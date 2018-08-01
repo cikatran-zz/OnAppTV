@@ -293,6 +293,7 @@ extension ControlModal: UICollectionViewDelegateFlowLayout, UICollectionViewDele
                         if (!timeshiftInfo.isPvrPlaying) {
                             playTimeshift(playPosition: 0) { (playSuccess) in
                                 if (playSuccess) {
+                                    timeshiftInfo.isPvrPlaying = true
                                     self.videosData[self.index.intValue].playState = .currentPlaying
                                 }
                             }
